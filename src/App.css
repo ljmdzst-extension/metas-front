@@ -36,3 +36,85 @@
     transform: rotate(360deg);
   }
 }
+
+/*NavBar*/
+.ConteinerBanner,img{
+  height: 20vh;
+  width: 100%;
+}
+
+/*CardYear*/
+.card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  height: 300px;
+  background: rgba(0, 156, 180, 1);
+  border: 1px solid white;
+  box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(6px);
+  border-radius: 17px;
+  text-align: center;
+  font-size:xx-large;
+  cursor: pointer;
+  transition: all 0.5s;
+  align-items: center;
+  justify-content:center;
+  user-select: none;
+  font-weight: bolder;
+  color: white;
+}
+.imgCard{
+  border-radius: 17px;
+  height: 240px;
+  width: 225px;
+}
+
+.card:hover {
+  border: 1px solid white;
+  transform: scale(1.05);
+}
+
+.card:active {
+  transform: scale(0.95) rotateZ(1.7deg);
+}
+
+.ConteinerCardMenu{
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 20px;
+}
+.menu{
+  height: 400px;
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.programa{
+  background-color: rgba(245, 245, 245, 1);
+  padding: 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+.programa:hover {
+  border: 1px solid white;
+  transform: scale(1.05);
+}
+
+/*Main*/
+.ConteinerCards{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+  width: 100%;
+  height:80vh;
+}
+.ConteinerMain{
+  background-color: rgba(156, 156, 156, 1);
+}
