@@ -1,42 +1,3 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /*NavBar*/
 .ConteinerBanner,img{
   height: 20vh;
@@ -60,14 +21,14 @@
   cursor: pointer;
   transition: all 0.5s;
   align-items: center;
-  justify-content:center;
+  justify-content:space-around;
   user-select: none;
   font-weight: bolder;
   color: white;
 }
 .imgCard{
   border-radius: 17px;
-  height: 240px;
+  height: 170px;
   width: 225px;
 }
 
@@ -85,6 +46,8 @@ display: flex;
 align-items: center;
 justify-content: center;
 gap: 20px;
+margin-top: 20px;
+margin-bottom: 20px;
 }
 .menu{
   height: 400px;
@@ -104,6 +67,47 @@ gap: 20px;
   border: 1px solid white;
   transform: scale(1.05);
 }
+.programa:active{
+  width: 500px;
+}
+button {
+  font-size: 18px;
+  display: inline-block;
+  outline: 0;
+  border: 0;
+  cursor: pointer;
+  padding: 0 2em;
+  border-radius: 0.3em;
+  color: #fff;
+  height: 2.6em;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 40%);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  background-color: darkslategray;
+}
+button:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px darkslategray;
+  transform: translateY(-0.1em);
+}
+
+button:active {
+  box-shadow: inset 0px 0.1em 0.6em darkslategray;
+  transform: translateY(0em);
+}
+.ConteinerMenuSubprogram{
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: rgba(245, 245, 245, 1);
+  border-radius: 10px;
+}
+li{
+  list-style: none;
+  margin-bottom: 5px;}
+a{
+text-decoration-line: none;
+color: black;
+}
 
 /*Main*/
 .ConteinerCards{
@@ -111,10 +115,115 @@ gap: 20px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   gap: 100px;
-  width: 100%;
-  height:80vh;
+  width: 100vw;
+  min-height: 80vh;
 }
 .ConteinerMain{
   background-color: rgba(156, 156, 156, 1);
+  min-height: 80vh;
+}
+
+/*Menu Activity*/
+.MenuActivity{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 50%;
+  height: 80vh;
+}
+.ConteinerActivity{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(156, 156, 156, 1);
+  min-height: 80vh;
+  padding: 20px;
+}
+.Activity{
+  background-color: rgba(245, 245, 245, 1);
+  width: 300px;
+  padding: 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+.Activity:hover {
+  border: 1px solid white;
+  transform: scale(1.05);
+}
+.MenuOptions{
+  width: 40%;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.Options{
+  background-color: rgba(245, 245, 245, 1);
+  width: 300px;
+  height: 50px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+.Options:hover {
+  border: 1px solid white;
+  transform: scale(1.05);
+}
+.MenuOptionsAux{
+  display: flex;
+  justify-content: space-around;
+  background-color: rgba(156, 156, 156, 1);
+  padding: 10px;
+}
+.MenuPlanification{
+  width: 100%;
+  height: 80vh;
+  border-radius: 5px;
+  background-color: rgba(245, 245, 245, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.ConteinerColumn{
+  display: flex;
+  width: 100%;
+  height: 70%;
+
+}
+.Column{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 100%;
+  width: 50%;
+}
+.Form{
+  background-color: rgba(156, 156, 156, 1);
+  width: 300px;
+  height: 50px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+.Form:hover {
+  border: 1px solid white;
+  transform: scale(1.05);
+}
+.ButtonPlanification{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  padding: 10px;
 }
