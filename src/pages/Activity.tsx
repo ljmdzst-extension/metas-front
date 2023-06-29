@@ -22,9 +22,9 @@ export default function Activity() {
     <>
       {isPlanificationOpen && (
         <div className="MenuOptionsAux">
+          <div className="Options">Agregar Actividad</div>
           <div className="Options">Carga de Presupuesto</div>
           <div className="Options">Ver Resumen y Graficos</div>
-          <div className="Options">Agregar Actividad</div>
         </div>
       )}
       <div className="ConteinerActivity">
@@ -42,9 +42,7 @@ export default function Activity() {
             <div className="Options">Agregar Actividad</div>
           </div>
         )}
-        {isPlanificationOpen && (
-          <PlanificationPanel/>
-        )}
+        {isPlanificationOpen && <PlanificationPanel />}
       </div>
     </>
   );
