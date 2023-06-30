@@ -1,5 +1,6 @@
 /*NavBar*/
-.ConteinerBanner,img{
+.ConteinerBanner,
+img {
   height: 20vh;
   width: 100%;
 }
@@ -17,16 +18,16 @@
   backdrop-filter: blur(6px);
   border-radius: 17px;
   text-align: center;
-  font-size:xx-large;
+  font-size: xx-large;
   cursor: pointer;
   transition: all 0.5s;
   align-items: center;
-  justify-content:space-around;
+  justify-content: space-around;
   user-select: none;
   font-weight: bolder;
   color: white;
 }
-.imgCard{
+.imgCard {
   border-radius: 17px;
   height: 170px;
   width: 225px;
@@ -41,22 +42,22 @@
   transform: scale(0.95) rotateZ(1.7deg);
 }
 
-.ConteinerCardMenu{
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 20px;
-margin-top: 20px;
-margin-bottom: 20px;
+.ConteinerCardMenu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
-.menu{
+.menu {
   height: 400px;
   width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
-.programa{
+.programa {
   background-color: rgba(245, 245, 245, 1);
   padding: 10px;
   border-radius: 9px;
@@ -67,7 +68,7 @@ margin-bottom: 20px;
   border: 1px solid white;
   transform: scale(1.05);
 }
-.programa:active{
+.programa:active {
   width: 500px;
 }
 button {
@@ -85,7 +86,9 @@ button {
   background-color: darkslategray;
 }
 button:hover {
-  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px darkslategray;
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%),
+    0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%),
+    inset 0px -0.1em 0px darkslategray;
   transform: translateY(-0.1em);
 }
 
@@ -93,7 +96,7 @@ button:active {
   box-shadow: inset 0px 0.1em 0.6em darkslategray;
   transform: translateY(0em);
 }
-.ConteinerMenuSubprogram{
+.ConteinerMenuSubprogram {
   width: 500px;
   display: flex;
   flex-direction: column;
@@ -101,16 +104,17 @@ button:active {
   background-color: rgba(245, 245, 245, 1);
   border-radius: 10px;
 }
-li{
+li {
   list-style: none;
-  margin-bottom: 5px;}
-a{
-text-decoration-line: none;
-color: black;
+  margin-bottom: 5px;
+}
+a {
+  text-decoration-line: none;
+  color: black;
 }
 
 /*Main*/
-.ConteinerCards{
+.ConteinerCards {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -120,13 +124,13 @@ color: black;
   width: 100vw;
   min-height: 80vh;
 }
-.ConteinerMain{
+.ConteinerMain {
   background-color: rgba(156, 156, 156, 1);
   min-height: 80vh;
 }
 
 /*Menu Activity*/
-.MenuActivity{
+.MenuActivity {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -134,7 +138,7 @@ color: black;
   width: 50%;
   height: 80vh;
 }
-.ConteinerActivity{
+.ConteinerActivity {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,7 +146,7 @@ color: black;
   min-height: 80vh;
   padding: 20px;
 }
-.Activity{
+.Activity {
   background-color: rgba(245, 245, 245, 1);
   width: 300px;
   padding: 10px;
@@ -154,14 +158,14 @@ color: black;
   border: 1px solid white;
   transform: scale(1.05);
 }
-.MenuOptions{
+.MenuOptions {
   width: 40%;
   min-height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
-.Options{
+.Options {
   background-color: rgba(245, 245, 245, 1);
   width: 300px;
   height: 50px;
@@ -175,13 +179,13 @@ color: black;
   border: 1px solid white;
   transform: scale(1.05);
 }
-.MenuOptionsAux{
+.MenuOptionsAux {
   display: flex;
   justify-content: space-around;
   background-color: rgba(156, 156, 156, 1);
   padding: 10px;
 }
-.MenuPlanification{
+.MenuPlanification {
   width: 100%;
   height: 80vh;
   border-radius: 5px;
@@ -191,13 +195,12 @@ color: black;
   align-items: center;
   justify-content: space-around;
 }
-.ConteinerColumn{
+.ConteinerColumn {
   display: flex;
   width: 100%;
   height: 70%;
-
 }
-.Column{
+.Column {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -205,7 +208,7 @@ color: black;
   height: 100%;
   width: 50%;
 }
-.Form{
+.Form {
   background-color: rgba(156, 156, 156, 1);
   width: 400px;
   height: 80px;
@@ -214,7 +217,7 @@ color: black;
   border-radius: 9px;
   cursor: pointer;
 }
-.ButtonPlanification{
+.ButtonPlanification {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -224,7 +227,7 @@ color: black;
 }
 
 /*Footer*/
-.ConteinerFooter{
+.ConteinerFooter {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -232,35 +235,141 @@ color: black;
   width: 100%;
   background-color: rgb(204, 204, 204);
 }
-.ConteinerContacto{
+.ConteinerContacto {
   display: flex;
   flex-direction: column;
-
 }
-.ConteinerLinks{
+.ConteinerLinks {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.FormDescription{
+.FormDescription {
   width: 100%;
   height: 100%;
-  background-color: aqua;
+  background-color: rgb(227, 230, 230);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.buttonCloseForm{
+.buttonCloseForm {
   align-self: start;
   justify-self: end;
   width: 40px;
   height: 35px;
   padding: 0;
 }
-h1{
+h1 {
   width: 100%;
   text-align: center;
 }
-.ConteinerTitle{
+.ConteinerTitle {
   display: flex;
   align-items: flex-end;
   width: 100%;
+}
+
+/*Periodo*/
+.ConteinerDate {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+}
+.ConteinerRange {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  height: 80%;
+}
+.ConteinerDay{
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ConteinerBigDate{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+.SaveChange{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.ConteinerDaysSelected{
+  width: 100%;
+  height: 70%;
+  background-color: antiquewhite;
+}
+
+/*Form PIE*/
+.FormPie{
+  width: 100%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+.ConteinerEje{
+  width: 90%;
+  height: 40%;  
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  background-color: rgb(222, 222, 222);
+}
+.ConteinerPlan{
+  width: 90%;
+  height: 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  background-color: rgb(222, 222, 222);
+}
+.FormPlan{
+width: 90%;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+}
+.TitlePie{
+  margin: 5px;
+}
+.SubtitlePie{
+  align-self: start;
+}
+.FormEje{
+  width: 90%;
+}
+.ConteinerChecksPlan{
+  width: 80%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Lie{
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.Eje{
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
