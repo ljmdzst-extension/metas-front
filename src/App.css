@@ -1,3 +1,9 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
 /*NavBar*/
 .ConteinerBanner,
 img {
@@ -103,6 +109,7 @@ button:active {
   justify-content: space-around;
   background-color: rgba(245, 245, 245, 1);
   border-radius: 10px;
+  padding: 7px;
 }
 li {
   list-style: none;
@@ -135,7 +142,7 @@ a {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  width: 50%;
+  width: 30%;
   height: 80vh;
 }
 .ConteinerActivity {
@@ -144,7 +151,8 @@ a {
   justify-content: center;
   background-color: rgba(156, 156, 156, 1);
   min-height: 80vh;
-  padding: 20px;
+  width: 100%;
+  padding: 5px;
 }
 .Activity {
   background-color: rgba(245, 245, 245, 1);
@@ -163,6 +171,7 @@ a {
   min-height: 80vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: space-around;
 }
 .Options {
@@ -186,14 +195,15 @@ a {
   padding: 10px;
 }
 .MenuPlanification {
-  width: 100%;
-  height: 80vh;
+  width: 90%;
+  min-height: 80vh;
   border-radius: 5px;
   background-color: rgba(245, 245, 245, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding: 5px;
 }
 .ConteinerColumn {
   display: flex;
@@ -207,6 +217,7 @@ a {
   justify-content: space-around;
   height: 100%;
   width: 50%;
+  gap: 10px;
 }
 .Form {
   background-color: rgba(156, 156, 156, 1);
@@ -223,7 +234,6 @@ a {
   align-items: center;
   width: 100%;
   height: 50px;
-  padding: 10px;
 }
 
 /*Footer*/
@@ -247,7 +257,7 @@ a {
 
 .FormDescription {
   width: 100%;
-  height: 100%;
+  height: 400px;
   background-color: rgb(227, 230, 230);
   display: flex;
   flex-direction: column;
@@ -312,7 +322,7 @@ h1 {
 /*Form PIE*/
 .FormPie{
   width: 100%;
-  height: 90%;
+  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -377,7 +387,7 @@ align-items: center;
 /*Form ObjetivoEstrategico*/
 .FormObjetivo{
   width: 100%;
-  height: 90%;
+  min-height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -386,7 +396,10 @@ align-items: center;
 }
 .FormObj{
   width: 80%;
-  height: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .Obj{
   width: 100%;
@@ -397,4 +410,58 @@ align-items: center;
 }
 .SubtitleObj{
   margin: 5px;
+}
+
+/*FormArSecUU*/
+.FormArSecuu{
+  width: 100%;
+  min-height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px;
+  gap: 20px;
+}
+.Areas{
+  width: 100%;
+  min-height: 100px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(222, 222, 222);
+  padding: 20px;
+}
+.Secretarias{
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(222, 222, 222);
+  padding: 20px;
+}
+.UUAA{
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(222, 222, 222);
+  padding: 20px;
+}
+.SelectArea{
+  width: 90%;
+  margin-top: 10px;
+}
+.SelectSec{
+  width: 90%;
+  margin-top: 10px;
+}
+.SelectUUAA{
+  width: 90%;
+  margin-top: 10px;
+}
+.parrafo{
+  align-self: flex-start;
+  margin-bottom: 5px;
 }

@@ -29,6 +29,7 @@ export default function FormPeriodo() {
     setRangeEnd(d);
   };
   return (
+    <>
     <div className="FormDescription">
       <h1>Periodo</h1>
       <div className="ConteinerBigDate">
@@ -81,7 +82,9 @@ export default function FormPeriodo() {
           </div>
         </div>
       </div>
-      <button className="SaveChange">Guardar Cambios</button>
     </div>
+    <button className="SaveChange">Guardar Cambios</button>
+    </>
+    
   );
 }
