@@ -78,7 +78,7 @@ export default function CardYear({ title, id }: YearProps) {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuOpenSubprogram, setIsMenuOpenSubprogram] = useState(false);
-  const [indexActivity, setIndexActivity] = useState<string[]>([]);
+const [indexActivity, setIndexActivity] = useState<string[]>([]);
   const handleCardClick = () => {
     setIsMenuOpen(!isMenuOpen);
     setIsMenuOpenSubprogram(false);

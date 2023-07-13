@@ -17,8 +17,6 @@ export default function FormPeriodo() {
   const selectDateHandler = (d: Date) => {
     setDate(d);
     setIndexDates([...indexDates, d.getDate()+ "-"+ (d.getMonth()+1) +"-"+ d.getFullYear().toString()])
-    console.log();
-    
 };
 
   const selectStartDate = (d: Date) => {
