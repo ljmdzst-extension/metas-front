@@ -7,7 +7,7 @@ export default function FormObjetiveEst() {
       <div className="FormObjetivo">
         <h2 className="TitleObjetivo">Objetivo Estrategico</h2>
         <Form className="FormObj">
-          <p className="SubtitleObj">Seleccione los ejes:</p>
+          <p className="SubtitleObj"><span>Seleccione los objetivos:</span></p>
           <div className="Obj">
             <Form.Check
               id={`1`}

@@ -37,6 +37,7 @@ export default function FormPeriodo() {
             <div>
               <p>Desde:</p>
               <DatePicker
+                wrapperClassName="datePicker"
                 locale="es"
                 selectsStart
                 dateFormat="dd/MM/yyyy"
@@ -45,6 +46,7 @@ export default function FormPeriodo() {
                 startDate={rangeStart}
                 endDate={rangeEnd}
                 onChange={selectStartDate}
+                open
               />
             </div>
             <div>
@@ -57,12 +59,15 @@ export default function FormPeriodo() {
                 startDate={rangeStart}
                 endDate={rangeEnd}
                 onChange={selectEndDate}
+                open
               />
             </div>
           </div>
         </div>
         <div className="ConteinerDay">
-          <h3>Seleccion Fechas Puntuales</h3>
+          <h3>Seleccionar Fechas Puntuales</h3>
+          <div>
+          <p>Seleccione una Fecha:</p>
           <DatePicker
             dateFormat="dd/MM/yyyy"
             locale="es"
@@ -71,8 +76,9 @@ export default function FormPeriodo() {
             selected={startDate}
             onChange={selectDateHandler}
           />
+          </div>
           <div className="ConteinerDaysSelected">
-            <ul>Fechas Seleccionadas:
+            <ul><span>Fechas Seleccionadas:</span>
               {indexDates.map((date, index) => (
                 <li key={index}>{date}</li>
               ))}

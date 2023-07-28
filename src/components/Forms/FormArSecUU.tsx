@@ -185,6 +185,7 @@ export default function FormArSecUU() {
               components={animatedComponents}
               isMulti
               options={options}
+              placeholder={'seleccionar'}
             />
           </div>
         </div>
@@ -197,6 +198,7 @@ export default function FormArSecUU() {
               components={animatedComponents}
               isMulti
               options={secretarias}
+              placeholder={'seleccionar'}
             />
           </div>
         </div>
@@ -209,6 +211,7 @@ export default function FormArSecUU() {
               components={animatedComponents}
               isMulti
               options={unidadesAcadmicas}
+              placeholder={'seleccionar'}
             />
           </div>
         </div>

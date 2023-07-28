@@ -7,7 +7,7 @@ export default function FormPIE() {
         <div className="ConteinerEje">
           <h2 className="TitlePie">Ejes Transversales</h2>
           <Form className="FormEje">
-            <p className="SubtitlePie">Seleccione los ejes:</p>
+            <p className="SubtitlePie"><span>Seleccione los ejes:</span></p>
             <div className="Eje">
             <Form.Check id={`1`} label={`Sostenibilidad Ambiental`} />
             <Form.Check id={`2`} label={`Inclusión y Equidad`} />
@@ -18,7 +18,7 @@ export default function FormPIE() {
         <div className="ConteinerPlan">
           <h2 className="TitlePie">Plan Institucional</h2>
           <Form className="FormPlan">
-            <p className="SubtitlePie">Seleccione los planes:</p>
+            <p className="SubtitlePie"><span>Seleccione los planes:</span></p>
             <div className="ConteinerChecksPlan">
               <div className="Lie">
                 <Form.Check id={`4`} label={`L.I.E N°1 - Objetivo 1`} />

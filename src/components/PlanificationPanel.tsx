@@ -32,80 +32,160 @@ export default function PlanificationPanel() {
         <>
           <div className="ConteinerColumn">
             <div className="Column">
-              <button
-                className="Form"
-                onClick={() => {
-                  setIndexForm("descr");
-                  setIsFormOpen(true);
-                }}
-              >
-                Descripcion / Ubicacion
-              </button>
-              <button
-                className="Form"
-                onClick={() => {
-                  setIndexForm("pie");
-                  setIsFormOpen(true);
-                }}
-              >
-                PIE
-              </button>
-              <button
-                className="Form"
-                onClick={() => {
-                  setIndexForm("area");
-                  setIsFormOpen(true);
-                }}
-              >
-                Áreas, secretarías y UUAA UNL relacionadas
-              </button>
-              <button
-                className="Form"
-                onClick={() => {
-                  setIndexForm("redes");
-                  setIsFormOpen(true);
-                }}
-              >
-                Redes Sociales
-              </button>
+              <div className="rowForm">
+                <button
+                  className="Form"
+                  onClick={() => {
+                    setIndexForm("descr");
+                    setIsFormOpen(true);
+                  }}
+                >
+                  Descripcion / Ubicacion
+                </button>
+                <div className="containerCheck">
+                  <p className="textCheck">Descripcion guardada</p>
+                  <img
+                    src="./assets/img/check.png"
+                    alt="check"
+                    className="check"
+                  />
+                </div>
+              </div>
+              <div className="rowForm">
+                <button
+                  className="Form"
+                  onClick={() => {
+                    setIndexForm("pie");
+                    setIsFormOpen(true);
+                  }}
+                >
+                  PIE
+                </button>
+                <div className="containerCheck">
+                  <p className="textCheck">PIE guardadas</p>
+                  <img
+                    src="./assets/img/check.png"
+                    alt="check"
+                    className="check"
+                  />
+                </div>
+              </div>
+              <div className="rowForm">
+                <button
+                  className="Form"
+                  onClick={() => {
+                    setIndexForm("area");
+                    setIsFormOpen(true);
+                  }}
+                >
+                  Áreas, secretarías y UUAA UNL relacionadas
+                </button>
+                <div className="containerCheck">
+                  <p className="textCheck">Areas guardadas</p>
+                  <img
+                    src="./assets/img/check.png"
+                    alt="check"
+                    className="check"
+                  />
+                </div>
+              </div>
+              <div className="rowForm">
+                <button
+                  className="Form"
+                  onClick={() => {
+                    setIndexForm("redes");
+                    setIsFormOpen(true);
+                  }}
+                >
+                  Redes Sociales
+                </button>
+                <div className="containerCheck">
+                  <p className="textCheck">Descripcion guardada</p>
+                  <img
+                    src="./assets/img/check.png"
+                    alt="check"
+                    className="check"
+                  />
+                </div>
+              </div>
             </div>
             <div className="Column">
-              <button
-                className="Form"
-                onClick={() => {
-                  setIndexForm("periodo");
-                  setIsFormOpen(true);
-                }}
-              >
-                Periodo
-              </button>
-              <button
-                className="Form"
-                onClick={() => {
-                  setIndexForm("objetivo");
-                  setIsFormOpen(true);
-                }}
-              >
-                Objetivo Estrategico
-              </button>
-              <button
-                className="Form"
-                onClick={() => {
-                  setIndexForm("organi");
-                  setIsFormOpen(true);
-                }}
-              >
-                Organizaciones e instituciones relacionadas
-              </button>
-              <button
-                className="Form"
-                onClick={() => {
-                  setIndexForm("metas");
-                  setIsFormOpen(true);
-                }}
-              >
-                Metas y Resultados
-              </button>
+              <div className="rowForm">
+                <button
+                  className="Form"
+                  onClick={() => {
+                    setIndexForm("periodo");
+                    setIsFormOpen(true);
+                  }}
+                >
+                  Periodo
+                </button>
+                <div className="containerCheck">
+                  <p className="textCheck">Periodo guardado</p>
+                  <img
+                    src="./assets/img/check.png"
+                    alt="check"
+                    className="check"
+                  />
+                </div>
+              </div>
+              <div className="rowForm">
+                <button
+                  className="Form"
+                  onClick={() => {
+                    setIndexForm("objetivo");
+                    setIsFormOpen(true);
+                  }}
+                >
+                  Objetivo Estrategico
+                </button>
+                <div className="containerCheck">
+                  <p className="textCheck">Obejtivo guardado</p>
+                  <img
+                    src="./assets/img/check.png"
+                    alt="check"
+                    className="check"
+                  />
+                </div>
+              </div>
+              <div className="rowForm">
+                <button
+                  className="Form"
+                  onClick={() => {
+                    setIndexForm("organi");
+                    setIsFormOpen(true);
+                  }}
+                >
+                  Organizaciones e instituciones relacionadas
+                </button>
+                <div className="containerCheck">
+                  <p className="textCheck">Organizacion guardada</p>
+                  <img
+                    src="./assets/img/check.png"
+                    alt="check"
+                    className="check"
+                  />
+                </div>
+              </div>
+              <div className="rowForm">
+                <button
+                  className="Form"
+                  onClick={() => {
+                    setIndexForm("metas");
+                    setIsFormOpen(true);
+                  }}
+                >
+                  Metas y Resultados
+                </button>
+                <div className="containerCheck">
+                  <p className="textCheck">Metas guardadas</p>
+                  <img
+                    src="./assets/img/check.png"
+                    alt="check"
+                    className="check"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className="ButtonPlanification">
