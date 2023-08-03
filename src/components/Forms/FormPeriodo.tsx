@@ -41,7 +41,7 @@ export default function FormPeriodo() {
             <h3>Seleccionar Periodo</h3>
             <div className="ConteinerRange">
               <div>
-                <p>Desde:</p>
+                <p>Inicio:</p>
                 <DatePicker
                   wrapperClassName="datePicker"
                   locale="es"
@@ -56,7 +56,7 @@ export default function FormPeriodo() {
                 />
               </div>
               <div>
-                <p>Hasta:</p>
+                <p>Fin:</p>
                 <DatePicker
                   selectsEnd
                   locale="es"
