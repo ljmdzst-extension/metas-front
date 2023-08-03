@@ -9,16 +9,6 @@ export default function FormMetas() {
     observaciones: string;
   }
   const [indexMetas, setIndexMetas] = useState<metas[]>([]);
-  const arrayDeMetas: metas[] = [
-    {
-      id:0,
-      descripcion: " Gestión de Becas docentes ",
-      resultadoEsperado: "Fortalecimiento de equipos docentes de programas",
-      resultadoLogrado: "16 becas docentes (renovaciones/asignaciones)",
-      observaciones: "",
-    },
-  ];
-
   const agregarMeta = () => {
     setIndexMetas([
       ...indexMetas,
