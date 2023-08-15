@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Button from 'react-bootstrap/Button';
-
+import Button from "react-bootstrap/Button";
+import { Card } from "react-bootstrap";
+import Col from "react-bootstrap/Col";
+import ListGroup from "react-bootstrap/ListGroup";
+import Row from "react-bootstrap/Row";
+import Tab from "react-bootstrap/Tab";
 type YearProps = {
   title: string;
   id: number;
@@ -78,47 +82,100 @@ export default function CardYear({ title, id }: YearProps) {
   ];
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMenuOpenSubprogram, setIsMenuOpenSubprogram] = useState(false);
-const [indexActivity, setIndexActivity] = useState<string[]>([]);
+  const [indexActivity, setIndexActivity] = useState<string[]>([]);
   const handleCardClick = () => {
     setIsMenuOpen(!isMenuOpen);
-    setIsMenuOpenSubprogram(false);
   };
 
   return (
     <>
       <div className="ConteinerCardMenu">
-        <div className="cards" onClick={handleCardClick}>
-          <img className="imgCard" src="" alt="imagen carta" />
-          {title}
-          {isMenuOpen && <Button variant="success"> Ver Resumen</Button>}
-        </div>
+        <Card style={{ width: "18rem" }} onClick={handleCardClick}>
+          <Card.Img variant="top" src="holder.js/100px180" />
+          <Card.Body
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Card.Title>{title}</Card.Title>
+            <Card.Text style={{ textAlign: "center" }}>
+              Para obtener un analisis de datos generales, presione en "Ver
+              resumen"
+            </Card.Text>
+            {isMenuOpen && <Button variant="success">Ver Resumen</Button>}
+          </Card.Body>
+        </Card>
         {isMenuOpen && (
           <div className="menu">
-            {ArrayProgramas.map((item, index) => (
-              <div
-                className="programa"
-                key={index}
-                onClick={() => {
-                  //buscar la forma para abreviar la funcion if
-                  if (isMenuOpenSubprogram === false){
-                    setIsMenuOpenSubprogram(!isMenuOpenSubprogram)
-                  }
-                  setIndexActivity(item.subProgramas);
-                }}
-              >
-                {item.nombre}
-              </div>
-            ))}
-          </div>
-        )}
-        {isMenuOpenSubprogram && (
-          <div className="ConteinerMenuSubprogram">
-            <ul>
-              {indexActivity.map((elemento, index) => (
-                <li key={index}><Link to='/activity'>{elemento}</Link></li>
-              ))}
-            </ul>
+            <Tab.Container
+              id="list-group-tabs-example"
+              defaultActiveKey="#link1"
+            >
+              <Row>
+                <Col sm={4}>
+                  <ListGroup
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      width: "400px",
+                      gap: "10px",
+                    }}
+                  >
+                    {ArrayProgramas.map((item, index) => (
+                      <ListGroup.Item
+                        action
+                        variant="secondary"
+                        onClick={() => {
+                          setIndexActivity(item.subProgramas);
+                        }}
+                        key={index}
+                      >
+                        {item.nombre}
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Col>
+              </Row>
+            </Tab.Container>
+            <Tab.Container
+              id="list-group-tabs-example"
+              defaultActiveKey="#link1"
+            >
+              <Row>
+                <Col sm={4}>
+                  <ListGroup
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "400px",
+                      gap: "10px",
+                    }}
+                  >
+                    {indexActivity.map((elemento, index) => (
+                      <ListGroup.Item
+                        key={index}
+                        action
+                        variant="light"
+                      >
+                        <Link
+                          rel="stylesheet"
+                          to="/activity"
+                          style={{
+                            textDecoration: "none",
+                            color:"black"
+                          }}
+                        >
+                        {elemento}
+                        </Link>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Col>
+              </Row>
+            </Tab.Container>
           </div>
         )}
       </div>
