@@ -1,7 +1,24 @@
 import React from "react";
 import { useState } from "react";
 import PlanificationPanel from "../components/PlanificationPanel";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    display: "flex",
+  },
+};
 export default function Activity() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const arrayActivity = [
     "actividad 1",
     "actividad 2",
@@ -22,8 +39,32 @@ export default function Activity() {
     <>
       {isPlanificationOpen && (
         <div className="MenuOptionsAux">
-          <div className="Options">Agregar Actividad</div>
-          <div className="Options">Carga de Presupuesto</div>
+          <div className="Options" onClick={handleShow}>Agregar Actividad</div>
+          <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Crear Actividad</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Nombre de la Actividad:</Form.Label>
+              <Form.Control
+                type="nombre"
+                placeholder="nombre"
+                autoFocus
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleClose}>
+            Guardar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+          <div className="Options">
+            Carga de Presupuesto
+          </div>
           <div className="Options">Ver Resumen y Graficos</div>
         </div>
       )}

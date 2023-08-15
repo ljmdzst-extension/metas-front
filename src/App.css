@@ -12,7 +12,7 @@ img {
 }
 
 /*CardYear*/
-.card {
+.cards {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -76,31 +76,6 @@ img {
 }
 .programa:active {
   width: 500px;
-}
-button {
-  font-size: 18px;
-  display: inline-block;
-  outline: 0;
-  border: 0;
-  cursor: pointer;
-  padding: 0 2em;
-  border-radius: 0.3em;
-  color: #fff;
-  height: 2.6em;
-  text-shadow: 0 1px 0 rgb(0 0 0 / 40%);
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
-  background-color: darkslategray;
-}
-button:hover {
-  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%),
-    0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%),
-    inset 0px -0.1em 0px darkslategray;
-  transform: translateY(-0.1em);
-}
-
-button:active {
-  box-shadow: inset 0px 0.1em 0.6em darkslategray;
-  transform: translateY(0em);
 }
 .ConteinerMenuSubprogram {
   width: 500px;
@@ -720,4 +695,11 @@ gap: 5px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.containerModal{
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  height: 200px;
+  gap: 20px;
 }

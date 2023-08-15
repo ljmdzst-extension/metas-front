@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
 
 type YearProps = {
   title: string;
@@ -87,10 +88,10 @@ const [indexActivity, setIndexActivity] = useState<string[]>([]);
   return (
     <>
       <div className="ConteinerCardMenu">
-        <div className="card" onClick={handleCardClick}>
+        <div className="cards" onClick={handleCardClick}>
           <img className="imgCard" src="" alt="imagen carta" />
           {title}
-          {isMenuOpen && <button> Ver Resumen</button>}
+          {isMenuOpen && <Button variant="success"> Ver Resumen</Button>}
         </div>
         {isMenuOpen && (
           <div className="menu">
