@@ -1,5 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 
 export default function FormDescriptionUbication() {
   interface ubicaciones {
@@ -11,7 +14,7 @@ export default function FormDescriptionUbication() {
     setIndexUbicacion([
       ...indexUbiacion,
       {
-        id: indexUbiacion.length +1,
+        id: indexUbiacion.length + 1,
         ubicacion: " Gestión de Becas docentes ",
       },
     ]);
@@ -22,49 +25,62 @@ export default function FormDescriptionUbication() {
   return (
     <>
       <div className="FormDescription">
-        <h1>Descripcion y ubicaciones</h1>
+        <h2>Descripcion y ubicaciones</h2>
         <div className="ConteinerGrande">
           <div className="ConteinerDescriptionMetas">
             <div className="ConteinerDescripcion">
               <div className="Descripcion">
                 <span className="SubtituloMetas">Descripcion:</span>
-                <textarea className="ParrafoDescripcion"></textarea>
-              </div>
-              <div className="ConteinerButton">
-                <button className="ButtonDeleteUbi">
-                  <img
-                    src="./assets/img/boton-editar.png"
-                    className="imgboton"
-                    alt="editar"
+                <InputGroup className="mb-3 gap-1">
+                  <Form.Control
+                    placeholder="Inserte descripcion"
+                    aria-label="Inserte descripcion"
+                    aria-describedby="basic-addon2"
                   />
-                </button>
+                  <Button variant="secondary" id="button-addon2">
+                    <img
+                      src="./assets/img/boton-editar.png"
+                      className="imgboton"
+                      alt="editar"
+                    />
+                  </Button>
+                </InputGroup>
               </div>
             </div>
             {indexUbiacion.map((item, index) => (
               <div className="ConteinerUbicacion">
                 <div className="Ubicacion">
                   <span className="SubtituloMetas">Ubicacion:</span>
-                  <textarea className="ParrafoResultados"></textarea>
+                  <InputGroup className="mb-3 gap-1">
+                    <Form.Control
+                      placeholder="Inserte link de ubicacion"
+                      aria-label="Inserte link de ubicacion"
+                      aria-describedby="basic-addon2"
+                    />
+                    <Button
+                      variant="secondary"
+                      id="button-addon2"
+                      onClick={() => eliminarMeta(item.id)}
+                    >
+                      <img
+                        src="./assets/img/eliminar.png"
+                        className="imgboton"
+                        alt="eliminar"
+                      />
+                    </Button>
+                  </InputGroup>
                 </div>
-                <button
-                  className="ButtonDeleteUbi"
-                  onClick={() => eliminarMeta(item.id)}
-                >
-                  <img
-                    src="./assets/img/eliminar.png"
-                    className="imgboton"
-                    alt="eliminar"
-                  />
-                </button>
               </div>
             ))}
           </div>
         </div>
-        <button className="SaveChange" onClick={agregarUbicacion}>
+        <Button variant="outline-success" className="SaveChange" onClick={agregarUbicacion}>
           Agregar Ubicacion
-        </button>
+        </Button>
       </div>
-      <button className="SaveChange">Guardar Cambios</button>
+      <Button variant="success" className="SaveChange">
+        Guardar Cambios
+      </Button>
     </>
   );
 }

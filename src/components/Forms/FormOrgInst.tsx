@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "react-bootstrap/Button";
 
 export default function FormOrgInst() {
   return (
@@ -28,7 +29,7 @@ export default function FormOrgInst() {
           <h3>Las intituciones cargadas son:</h3>
         </div>
       </div>
-      <button className="SaveChange">Guardar Cambios</button>
+      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
     </>
   );
 }

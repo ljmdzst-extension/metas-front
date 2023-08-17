@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Button from "react-bootstrap/Button";
 
 export default function FormMetas() {
   interface metas {
@@ -83,7 +84,7 @@ export default function FormMetas() {
           Agregar meta
         </button>
       </div>
-      <button className="SaveChange">Guardar Cambios</button>
+      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
     </>
   );
 }

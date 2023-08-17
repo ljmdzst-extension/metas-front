@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import PlanificationPanel from "../components/PlanificationPanel";
 import Button from "react-bootstrap/Button";
+import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 type IState = {
@@ -11,15 +12,13 @@ type IState = {
 export default function Activity() {
   const [show, setShow] = useState(false);
   const [term, setTerm] = useState("");
+  const [nameActivity,setNameActivity] = useState ("")
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [arrayActivity, setArrayActivity] = useState<IState>({
     myArray: ["actividad1", "actividad2"]
    });
   const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
-  const handleCardClick = () => {
-    setIsPlanificationOpen(!isPlanificationOpen);
-  };
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setArrayActivity({ myArray: [...arrayActivity.myArray, term] })
@@ -62,9 +61,26 @@ export default function Activity() {
       <div className="ConteinerActivity">
         <div className="MenuActivity">
           {arrayActivity.myArray.map((item, index) => (
-            <div className="Activity" key={index} onClick={handleCardClick}>
-              {item}
-            </div>
+            <ListGroup.Item
+            action
+            variant="secondary"
+            style={{
+              width: "300px",
+              height:"50px",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+            key={index} onClick={() => {
+              if (isPlanificationOpen === true) 
+                setNameActivity(item)
+              else
+              {
+                setIsPlanificationOpen(!isPlanificationOpen)
+                setNameActivity(item)
+              }
+            }}>
+              {item} 
+            </ListGroup.Item>
           ))}
         </div>
         {!isPlanificationOpen && (
@@ -76,7 +92,7 @@ export default function Activity() {
             </div>
           </div>
         )}
-        {isPlanificationOpen && <PlanificationPanel />}
+        {isPlanificationOpen && <PlanificationPanel name={nameActivity} />}
       </div>
     </>
   );

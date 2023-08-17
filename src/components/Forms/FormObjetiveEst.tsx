@@ -1,5 +1,6 @@
 import React from "react";
 import { Form } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 
 export default function FormObjetiveEst() {
   return (
@@ -28,7 +29,7 @@ export default function FormObjetiveEst() {
           </div>
         </Form>
       </div>
-      <button className="SaveChange">Guardar Cambios</button>
+      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
     </>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import {Form } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 export default function FormPIE() {
   return (
     <>
@@ -43,7 +44,7 @@ export default function FormPIE() {
           </Form>
         </div>
       </div>
-      <button className="SaveChange">Guardar Cambios</button>
+      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
     </>
   );
 }

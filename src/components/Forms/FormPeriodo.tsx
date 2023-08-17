@@ -3,6 +3,7 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import es from "date-fns/locale/es";
+import Button from "react-bootstrap/Button";
 registerLocale("es", es);
 
 export default function FormPeriodo() {
@@ -104,7 +105,7 @@ export default function FormPeriodo() {
           </div>
         </div>
       </div>
-      <button className="SaveChange">Guardar Cambios</button>
+      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
     </>
   );
 }

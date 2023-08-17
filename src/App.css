@@ -84,6 +84,7 @@ a {
   gap: 15px;
   width: 30%;
   height: 80vh;
+  padding: 10px;
 }
 .ConteinerActivity {
   display: flex;
@@ -96,7 +97,8 @@ a {
 }
 .Activity {
   background-color: rgba(245, 245, 245, 1);
-  width: 300px;
+  width: 200px;
+  height: 50px;
   padding: 10px;
   border-radius: 9px;
   cursor: pointer;
@@ -112,7 +114,10 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 20px;
+  border-radius: 10px;
+  background-color: #b4b4b4;
 }
 .Options {
   background-color: rgba(245, 245, 245, 1);

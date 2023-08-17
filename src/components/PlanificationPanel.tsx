@@ -9,23 +9,28 @@ import FormPeriodo from "./Forms/FormPeriodo";
 import FormObjetiveEst from "./Forms/FormObjetiveEst";
 import FormOrgInst from "./Forms/FormOrgInst";
 import FormMetas from "./Forms/FormMetas";
+import Button from "react-bootstrap/Button";
 
-export default function PlanificationPanel() {
+type Props = {
+  name: string;
+};
+export default function PlanificationPanel({ name }: Props) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [indexForm, setIndexForm] = useState(String);
   return (
     <div className="MenuPlanification">
       <div className="ConteinerTitle">
-        <h1>Planificacion Actividad 1</h1>
+        <h1>Planificacion {name}</h1>
         {isFormOpen && (
-          <button
+          <Button
+            variant="success"
             className="buttonCloseForm"
             onClick={() => {
               setIsFormOpen(false);
             }}
           >
             X
-          </button>
+          </Button>
         )}
       </div>
       {!isFormOpen ? (
@@ -33,7 +38,8 @@ export default function PlanificationPanel() {
           <div className="ConteinerColumn">
             <div className="Column">
               <div className="rowForm">
-                <button
+                <Button
+                  variant="outline-success"
                   className="Form"
                   onClick={() => {
                     setIndexForm("descr");
@@ -41,7 +47,7 @@ export default function PlanificationPanel() {
                   }}
                 >
                   Descripcion / Ubicacion
-                </button>
+                </Button>
                 <div className="containerCheck">
                   <p className="textCheck">Descripcion guardada</p>
                   <img
@@ -52,7 +58,8 @@ export default function PlanificationPanel() {
                 </div>
               </div>
               <div className="rowForm">
-                <button
+                <Button
+                  variant="outline-success"
                   className="Form"
                   onClick={() => {
                     setIndexForm("pie");
@@ -60,7 +67,7 @@ export default function PlanificationPanel() {
                   }}
                 >
                   PIE
-                </button>
+                </Button>
                 <div className="containerCheck">
                   <p className="textCheck">PIE guardadas</p>
                   <img
@@ -71,7 +78,8 @@ export default function PlanificationPanel() {
                 </div>
               </div>
               <div className="rowForm">
-                <button
+                <Button
+                  variant="outline-success"
                   className="Form"
                   onClick={() => {
                     setIndexForm("area");
@@ -79,7 +87,7 @@ export default function PlanificationPanel() {
                   }}
                 >
                   Áreas, secretarías y UUAA UNL relacionadas
-                </button>
+                </Button>
                 <div className="containerCheck">
                   <p className="textCheck">Areas guardadas</p>
                   <img
@@ -90,7 +98,8 @@ export default function PlanificationPanel() {
                 </div>
               </div>
               <div className="rowForm">
-                <button
+                <Button
+                  variant="outline-success"
                   className="Form"
                   onClick={() => {
                     setIndexForm("redes");
@@ -98,7 +107,7 @@ export default function PlanificationPanel() {
                   }}
                 >
                   Redes Sociales
-                </button>
+                </Button>
                 <div className="containerCheck">
                   <p className="textCheck">Descripcion guardada</p>
                   <img
@@ -111,7 +120,8 @@ export default function PlanificationPanel() {
             </div>
             <div className="Column">
               <div className="rowForm">
-                <button
+                <Button
+                  variant="outline-success"
                   className="Form"
                   onClick={() => {
                     setIndexForm("periodo");
@@ -119,7 +129,7 @@ export default function PlanificationPanel() {
                   }}
                 >
                   Periodo
-                </button>
+                </Button>
                 <div className="containerCheck">
                   <p className="textCheck">Periodo guardado</p>
                   <img
@@ -130,7 +140,8 @@ export default function PlanificationPanel() {
                 </div>
               </div>
               <div className="rowForm">
-                <button
+                <Button
+                  variant="outline-success"
                   className="Form"
                   onClick={() => {
                     setIndexForm("objetivo");
@@ -138,7 +149,7 @@ export default function PlanificationPanel() {
                   }}
                 >
                   Objetivo Estrategico
-                </button>
+                </Button>
                 <div className="containerCheck">
                   <p className="textCheck">Obejtivo guardado</p>
                   <img
@@ -149,7 +160,8 @@ export default function PlanificationPanel() {
                 </div>
               </div>
               <div className="rowForm">
-                <button
+                <Button
+                  variant="outline-success"
                   className="Form"
                   onClick={() => {
                     setIndexForm("organi");
@@ -157,7 +169,7 @@ export default function PlanificationPanel() {
                   }}
                 >
                   Organizaciones e instituciones relacionadas
-                </button>
+                </Button>
                 <div className="containerCheck">
                   <p className="textCheck">Organizacion guardada</p>
                   <img
@@ -168,7 +180,8 @@ export default function PlanificationPanel() {
                 </div>
               </div>
               <div className="rowForm">
-                <button
+                <Button
+                  variant="outline-success"
                   className="Form"
                   onClick={() => {
                     setIndexForm("metas");
@@ -176,7 +189,7 @@ export default function PlanificationPanel() {
                   }}
                 >
                   Metas y Resultados
-                </button>
+                </Button>
                 <div className="containerCheck">
                   <p className="textCheck">Metas guardadas</p>
                   <img
@@ -189,9 +202,9 @@ export default function PlanificationPanel() {
             </div>
           </div>
           <div className="ButtonPlanification">
-            <button className="Suspend">Suspender Actividad</button>
-            <button className="Save">Guardar Actividad</button>
-            <button className="Delete">Eliminar Actividad</button>
+            <Button variant="warning" className="Suspend">Suspender Actividad</Button>
+            <Button variant="success" className="Save">Guardar Actividad</Button>
+            <Button variant="danger" className="Delete">Eliminar Actividad</Button>
           </div>
         </>
       ) : (

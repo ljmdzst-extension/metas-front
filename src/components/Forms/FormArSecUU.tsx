@@ -1,7 +1,9 @@
 import React from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import Button from "react-bootstrap/Button";
 const animatedComponents = makeAnimated();
+
 export default function FormArSecUU() {
   const options = [
     {
@@ -216,7 +218,7 @@ export default function FormArSecUU() {
           </div>
         </div>
       </div>
-      <button className="SaveChange">Guardar Cambios</button>
+      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
     </>
   );
 }
