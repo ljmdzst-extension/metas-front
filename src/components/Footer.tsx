@@ -5,12 +5,12 @@ export default function Footer() {
   return (
     <div className='ConteinerFooter'>
         <div className='ConteinerLinks'>
-        <NavLink to={'/'}>Home</NavLink>
-        <NavLink to={'/'}>Login</NavLink>
+        <NavLink to={'/'} style={{color:"black",textDecoration:"none"}}>Home</NavLink>
+        <NavLink to={'/'} style={{color:"black",textDecoration:"none"}}>Login</NavLink>
         </div>
         <div className='ConteinerContacto'>
-        <p>Contacto:</p>
-        <a href='mailto:evaluacion.extension@gmail.com'> evaluacion.extension@gmail.com</a>
+        <p style={{margin:"0",fontWeight:"bolder"}}>Contacto:</p>
+        <a href='mailto:evaluacion.extension@gmail.com'  style={{color:"black",textDecoration:"none"}}> evaluacion.extension@gmail.com</a>
         <p>Te: 45678910</p>
         </div>
 

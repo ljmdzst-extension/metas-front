@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
+import {Form} from "react-bootstrap"
 
 export default function FormOrgInst() {
   return (
@@ -14,19 +15,19 @@ export default function FormOrgInst() {
         <p>
           Si necesita ayuda para compartir el enlace , consulte en este video.
         </p>
-        <form className="formInstituciones">
+        <Form className="formInstituciones">
           <label>
             Nombre:
-            <input type="text" name="name" className="inputInstituciones"/>
+            <Form.Control type="text" name="name"/>
           </label>
           <label>
             Ubicacion:
-            <input type="text" name="ubicacion" className="inputInstituciones" />
+            <Form.Control type="text" name="ubicacion"/>
           </label>
-        </form>
-        <button className="SaveChange">Agregar Institucion</button>
+        </Form>
+        <Button variant="success" className="SaveChange">Agregar Institucion</Button>
         <div className="ListaInstituciones">
-          <h3>Las intituciones cargadas son:</h3>
+          <h6>Las intituciones cargadas son:</h6>
         </div>
       </div>
       <Button variant="success" className="SaveChange">Guardar Cambios</Button>

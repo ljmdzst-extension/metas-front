@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
+import { Form } from "react-bootstrap";
 
 export default function FormMetas() {
   interface metas {
-    id : number;
+    id: number;
     descripcion: string;
     resultadoEsperado: string;
     resultadoLogrado: string;
@@ -14,7 +15,7 @@ export default function FormMetas() {
     setIndexMetas([
       ...indexMetas,
       {
-        id:indexMetas.length +1,
+        id: indexMetas.length + 1,
         descripcion: " Gestión de Becas docentes ",
         resultadoEsperado: "Fortalecimiento de equipos docentes de programas",
         resultadoLogrado: "16 becas docentes (renovaciones/asignaciones)",
@@ -23,8 +24,8 @@ export default function FormMetas() {
     ]);
   };
 
-  const eliminarMeta = (id :number) => {
-    setIndexMetas(indexMetas.filter(item => item.id !== id));
+  const eliminarMeta = (id: number) => {
+    setIndexMetas(indexMetas.filter((item) => item.id !== id));
   };
 
   return (
@@ -36,55 +37,75 @@ export default function FormMetas() {
             <div className="ConteinerDescriptionMetas">
               <div className="Descripcion">
                 <span className="SubtituloMetas">Descripcion:</span>
-                <textarea className="ParrafoDescripcion">
-                  {item.descripcion}
-                </textarea>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  className="ParrafoDescripcion"
+                  placeholder={item.descripcion}
+                />
               </div>
               <div className="Resultados">
                 <div className="ResultadoEsperado">
                   <span className="SubtituloMetas">Resultado Esperado:</span>
-                  <textarea className="ParrafoResultados">
-                    {item.resultadoEsperado}
-                  </textarea>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    className="ParrafoResultados"
+                    placeholder={item.resultadoEsperado}
+                  />
                 </div>
                 <div className="ResultadoLogrado">
                   <span className="SubtituloMetas">Resultado Logrado:</span>
-                  <textarea className="ParrafoResultados">
-                    {item.resultadoLogrado}
-                  </textarea>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    className="ParrafoResultados"
+                    placeholder={item.resultadoLogrado}
+                  />
                 </div>
                 <div className="Observaciones">
-                  <span className="SubtituloMetas">Observaciones:{item.id}</span>
-                  <textarea className="ParrafoObservaciones">
-                    {item.observaciones}
-                  </textarea>
+                  <span className="SubtituloMetas">
+                    Observaciones:{item.id}
+                  </span>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    className="ParrafoObservaciones"
+                    placeholder={item.observaciones} 
+                  />
                 </div>
               </div>
             </div>
             <div className="ConteinerButton">
-              <button className="ButtonEdit">
+              <Button variant="secondary" className="ButtonEdit">
                 <img
                   src="./assets/img/boton-editar.png"
                   className="imgboton"
                   alt="editar"
                 />
-              </button>
-              <button className="ButtonEdit">
+              </Button>
+              <Button variant="danger" className="ButtonEdit">
                 <img
                   src="./assets/img/eliminar.png"
                   className="imgboton"
                   alt="eliminar"
                   onClick={() => eliminarMeta(item.id)}
                 />
-              </button>
+              </Button>
             </div>
           </div>
         ))}
-        <button className="SaveChange" onClick={agregarMeta}>
+        <Button
+          variant="outline-success"
+          className="SaveChange"
+          onClick={agregarMeta}
+        >
           Agregar meta
-        </button>
+        </Button>
       </div>
-      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
+      <Button variant="success" className="SaveChange">
+        Guardar Cambios
+      </Button>
     </>
   );
 }

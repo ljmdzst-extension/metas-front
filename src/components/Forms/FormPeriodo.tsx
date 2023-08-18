@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import es from "date-fns/locale/es";
 import Button from "react-bootstrap/Button";
+import ListGroup from "react-bootstrap/ListGroup";
 registerLocale("es", es);
 
 export default function FormPeriodo() {
@@ -30,8 +31,8 @@ export default function FormPeriodo() {
   const selectEndDate = (d: Date) => {
     setRangeEnd(d);
   };
-  const eliminarFecha = (date :string) => {
-    setIndexDates(indexDates.filter(item => item !== date));
+  const eliminarFecha = (date: string) => {
+    setIndexDates(indexDates.filter((item) => item !== date));
   };
   return (
     <>
@@ -88,24 +89,38 @@ export default function FormPeriodo() {
               <div className="ConteinerFechas">
                 <span>Fechas Seleccionadas:</span>
                 {indexDates.map((date, index) => (
-                  <div key={index} className="rowFecha">
+                  <ListGroup.Item
+                    key={index}
+                    variant="secondary"
+                    style={{
+                      width: "200px",
+                      display: "flex",
+                      padding:"3px",
+                      justifyContent:"space-between",
+                      alignItems:"center",
+                      marginBottom: "5px",
+                      borderRadius: "7px"
+                    }}
+                  >
                     {date}
-                    <button className="ButtonDeleteDate">
+                    <Button variant="success">
                       <img
                         src="./assets/img/eliminar.png"
                         className="imgboton"
                         alt="eliminar"
                         onClick={() => eliminarFecha(date)}
                       />
-                    </button>
-                  </div>
+                    </Button>
+                  </ListGroup.Item>
                 ))}
               </div>
             </div>
           </div>
         </div>
       </div>
-      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
+      <Button variant="success" className="SaveChange">
+        Guardar Cambios
+      </Button>
     </>
   );
 }
