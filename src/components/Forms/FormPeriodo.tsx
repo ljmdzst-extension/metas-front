@@ -93,7 +93,7 @@ export default function FormPeriodo() {
                     key={index}
                     variant="secondary"
                     style={{
-                      width: "200px",
+                      width: "100%",
                       display: "flex",
                       padding:"3px",
                       justifyContent:"space-between",
@@ -103,7 +103,7 @@ export default function FormPeriodo() {
                     }}
                   >
                     {date}
-                    <Button variant="success">
+                    <Button variant="danger">
                       <img
                         src="./assets/img/eliminar.png"
                         className="imgboton"

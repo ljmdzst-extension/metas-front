@@ -11,10 +11,16 @@ type IState = {
 
 export default function Activity() {
   const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
   const [term, setTerm] = useState("");
   const [nameActivity,setNameActivity] = useState ("")
+  const [nameActivityAux,setNameActivityAux] = useState ("")
   const handleClose = () => setShow(false);
+  const handleClose2 = () => setShow2(false);
   const handleShow = () => setShow(true);
+  const handleShow2 = () => {
+    setShow2(true)
+  };
   const [arrayActivity, setArrayActivity] = useState<IState>({
     myArray: ["actividad1", "actividad2"]
    });
@@ -49,6 +55,31 @@ export default function Activity() {
           </Form>
         </Modal.Body>
       </Modal>
+      <Modal show={show2} onHide={handleClose2} name={nameActivityAux}>
+        <Modal.Header closeButton>
+          <Modal.Title>¿Quieres cambiar de Actividad?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Usted tiene una actividad en curso, ¿desea cambiar de actividad?
+              </Form.Label>
+              <Form.Label>Los cambios no guardados se perderan.
+              </Form.Label>
+            </Form.Group>
+            <Form.Group style={{display: "flex",
+            justifyContent:"space-between"}}  >
+            <Button variant="danger" onClick={handleClose2}>
+              Cancelar
+            </Button>
+            <Button variant="success" onClick={()=>{setNameActivity(nameActivityAux)
+            handleClose2()}}>
+              Cambiar de Actividad
+            </Button>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+      </Modal>
       {isPlanificationOpen && (
         <div className="MenuOptionsAux">
           <div className="Options" onClick={handleShow}>
@@ -72,7 +103,10 @@ export default function Activity() {
             }}
             key={index} onClick={() => {
               if (isPlanificationOpen === true) 
-                setNameActivity(item)
+              {
+                handleShow2()
+                setNameActivityAux(item)
+              }
               else
               {
                 setIsPlanificationOpen(!isPlanificationOpen)

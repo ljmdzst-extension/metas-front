@@ -230,7 +230,6 @@ a {
 }
 .ListaInstituciones,h3{
   font-weight: 100;
-  text-decoration: underline;
 }
 .inputInstituciones{
   border: 1px solid rgb(187, 187, 187);
@@ -397,12 +396,14 @@ input.form-check-input:checked {
 
 /*Form ObjetivoEstrategico*/
 .FormObjetivo{
-  width: 100%;
+  width: 90%;
   min-height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  padding: 10px;
+  border-radius: 10px;
   background-color: rgb(222, 222, 222);
 }
 .FormObj{
