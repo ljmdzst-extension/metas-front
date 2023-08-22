@@ -22,7 +22,7 @@ export default function Activity() {
     setShow2(true)
   };
   const [arrayActivity, setArrayActivity] = useState<IState>({
-    myArray: ["actividad1", "actividad2"]
+    myArray: ["actividad 1", "actividad 2"]
    });
   const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
@@ -72,7 +72,8 @@ export default function Activity() {
             <Button variant="danger" onClick={handleClose2}>
               Cancelar
             </Button>
-            <Button variant="success" onClick={()=>{setNameActivity(nameActivityAux)
+            <Button variant="success" onClick={()=>{
+            setNameActivity(nameActivityAux)
             handleClose2()}}>
               Cambiar de Actividad
             </Button>

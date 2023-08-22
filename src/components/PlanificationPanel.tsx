@@ -20,7 +20,7 @@ export default function PlanificationPanel({ name }: Props) {
   return (
     <div className="MenuPlanification">
       <div className="ConteinerTitle">
-        <h1>Planificacion {name}</h1>
+        <h1>{name}</h1>
         {isFormOpen && (
           <Button
             variant="success"
