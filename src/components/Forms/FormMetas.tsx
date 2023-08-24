@@ -11,6 +11,7 @@ export default function FormMetas() {
     observaciones: string;
   }
   const [indexMetas, setIndexMetas] = useState<metas[]>([]);
+  const [disable,setDisable] = useState(true)
   const agregarMeta = () => {
     setIndexMetas([
       ...indexMetas,
@@ -42,6 +43,7 @@ export default function FormMetas() {
                   name="name"
                   className="ParrafoDescripcion"
                   placeholder={item.descripcion}
+                  disabled={disable}
                 />
               </div>
               <div className="Resultados">
@@ -52,6 +54,7 @@ export default function FormMetas() {
                     name="name"
                     className="ParrafoResultados"
                     placeholder={item.resultadoEsperado}
+                    disabled={disable}
                   />
                 </div>
                 <div className="ResultadoLogrado">
@@ -61,6 +64,7 @@ export default function FormMetas() {
                     name="name"
                     className="ParrafoResultados"
                     placeholder={item.resultadoLogrado}
+                    disabled={disable}
                   />
                 </div>
                 <div className="Observaciones">
@@ -71,13 +75,14 @@ export default function FormMetas() {
                     type="text"
                     name="name"
                     className="ParrafoObservaciones"
-                    placeholder={item.observaciones} 
+                    placeholder={item.observaciones}
+                    disabled={disable} 
                   />
                 </div>
               </div>
             </div>
             <div className="ConteinerButton">
-              <Button variant="secondary" className="ButtonEdit">
+              <Button variant="secondary" className="ButtonEdit" onClick={()=>{setDisable(!disable)}}>
                 <img
                   src="./assets/img/boton-editar.png"
                   className="imgboton"

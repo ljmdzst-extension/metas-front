@@ -57,12 +57,12 @@ export default function Activity() {
       </Modal>
       <Modal show={show2} onHide={handleClose2} name={nameActivityAux}>
         <Modal.Header closeButton>
-          <Modal.Title>¿Quieres cambiar de Actividad?</Modal.Title>
+          <Modal.Title>¿Quieres salir de la Actividad?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Usted tiene una actividad en curso, ¿desea cambiar de actividad?
+              <Form.Label>Usted tiene una actividad en curso, ¿desea salir de la actividad?
               </Form.Label>
               <Form.Label>Los cambios no guardados se perderan.
               </Form.Label>
@@ -73,9 +73,9 @@ export default function Activity() {
               Cancelar
             </Button>
             <Button variant="success" onClick={()=>{
-            setNameActivity(nameActivityAux)
+            setIsPlanificationOpen(!isPlanificationOpen)
             handleClose2()}}>
-              Cambiar de Actividad
+              Salir de la actividad
             </Button>
             </Form.Group>
           </Form>
