@@ -10,6 +10,8 @@ import FormObjetiveEst from "./Forms/FormObjetiveEst";
 import FormOrgInst from "./Forms/FormOrgInst";
 import FormMetas from "./Forms/FormMetas";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
 
 type Props = {
   name: string;
@@ -17,8 +19,47 @@ type Props = {
 export default function PlanificationPanel({ name }: Props) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [indexForm, setIndexForm] = useState(String);
+  const [show2, setShow2] = useState(false);
+  const handleClose2 = () => {
+    setShow2(false);
+  };
+  const handleShow2 = () => {
+    setShow2(true);
+  };
   return (
     <div className="MenuPlanification">
+      <Modal show={show2} onHide={handleClose2}>
+        <Modal.Header>
+          <Modal.Title>¿Quieres salir de la Actividad?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>
+                Usted tiene una actividad en curso, ¿desea salir de la
+                actividad?
+              </Form.Label>
+              <Form.Label>Los cambios no guardados se perderan.</Form.Label>
+            </Form.Group>
+            <Form.Group
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Button variant="danger" onClick={handleClose2}>
+                Cancelar
+              </Button>
+              <Button
+                variant="success"
+                onClick={() => {
+                  handleClose2();
+                  setIsFormOpen(false);
+                }}
+              >
+                Salir de la actividad
+              </Button>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+      </Modal>
       <div className="ConteinerTitle">
         <h1>{name}</h1>
         {isFormOpen && (
@@ -26,7 +67,7 @@ export default function PlanificationPanel({ name }: Props) {
             variant="success"
             className="buttonCloseForm"
             onClick={() => {
-              setIsFormOpen(false);
+              handleShow2();
             }}
           >
             X
@@ -202,9 +243,15 @@ export default function PlanificationPanel({ name }: Props) {
             </div>
           </div>
           <div className="ButtonPlanification">
-            <Button variant="warning" className="Suspend">Suspender Actividad</Button>
-            <Button variant="success" className="Save">Guardar Actividad</Button>
-            <Button variant="danger" className="Delete">Eliminar Actividad</Button>
+            <Button variant="warning" className="Suspend">
+              Suspender Actividad
+            </Button>
+            <Button variant="success" className="Save">
+              Guardar Actividad
+            </Button>
+            <Button variant="danger" className="Delete">
+              Eliminar Actividad
+            </Button>
           </div>
         </>
       ) : (
