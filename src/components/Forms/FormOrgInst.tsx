@@ -102,9 +102,6 @@ export default function FormOrgInst() {
           </Table>
         </div>
       </div>
-      <Button variant="success" className="SaveChange">
-        Guardar Cambios
-      </Button>
     </>
   );
 }

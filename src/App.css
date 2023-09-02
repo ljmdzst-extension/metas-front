@@ -9,6 +9,21 @@
 img {
   height: 20vh;
   width: 100%;
+  object-fit: contain;
+}
+.imgCard{
+  width: 100%;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #009cb3;
+  object-fit: cover;
+}
+.fontYear{
+  color: white;
+  font-weight: bolder;
 }
 .ConteinerCardMenu {
   display: flex;

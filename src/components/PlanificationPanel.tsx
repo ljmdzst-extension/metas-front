@@ -12,6 +12,8 @@ import FormMetas from "./Forms/FormMetas";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import Toast from "react-bootstrap/Toast";
+import ToastContainer from "react-bootstrap/ToastContainer";
 
 type Props = {
   name: string;
@@ -25,6 +27,11 @@ export default function PlanificationPanel({ name }: Props) {
   };
   const handleShow2 = () => {
     setShow2(true);
+  };
+
+  const eliminarActividad = (name: string) => {};
+  const guardarActividad = (indexForm: string) => {
+    setIsFormOpen(false);
   };
   return (
     <div className="MenuPlanification">
@@ -89,14 +96,6 @@ export default function PlanificationPanel({ name }: Props) {
                 >
                   Descripcion / Ubicacion
                 </Button>
-                <div className="containerCheck">
-                  <p className="textCheck">Descripcion guardada</p>
-                  <img
-                    src="./assets/img/check.png"
-                    alt="check"
-                    className="check"
-                  />
-                </div>
               </div>
               <div className="rowForm">
                 <Button
@@ -109,14 +108,6 @@ export default function PlanificationPanel({ name }: Props) {
                 >
                   PIE
                 </Button>
-                <div className="containerCheck">
-                  <p className="textCheck">PIE guardadas</p>
-                  <img
-                    src="./assets/img/check.png"
-                    alt="check"
-                    className="check"
-                  />
-                </div>
               </div>
               <div className="rowForm">
                 <Button
@@ -129,14 +120,6 @@ export default function PlanificationPanel({ name }: Props) {
                 >
                   Áreas, secretarías y UUAA UNL relacionadas
                 </Button>
-                <div className="containerCheck">
-                  <p className="textCheck">Areas guardadas</p>
-                  <img
-                    src="./assets/img/check.png"
-                    alt="check"
-                    className="check"
-                  />
-                </div>
               </div>
               <div className="rowForm">
                 <Button
@@ -147,16 +130,8 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Redes Sociales
+                  SIPPE
                 </Button>
-                <div className="containerCheck">
-                  <p className="textCheck">Descripcion guardada</p>
-                  <img
-                    src="./assets/img/check.png"
-                    alt="check"
-                    className="check"
-                  />
-                </div>
               </div>
             </div>
             <div className="Column">
@@ -171,14 +146,6 @@ export default function PlanificationPanel({ name }: Props) {
                 >
                   Periodo
                 </Button>
-                <div className="containerCheck">
-                  <p className="textCheck">Periodo guardado</p>
-                  <img
-                    src="./assets/img/check.png"
-                    alt="check"
-                    className="check"
-                  />
-                </div>
               </div>
               <div className="rowForm">
                 <Button
@@ -191,14 +158,6 @@ export default function PlanificationPanel({ name }: Props) {
                 >
                   Objetivo Estrategico
                 </Button>
-                <div className="containerCheck">
-                  <p className="textCheck">Obejtivo guardado</p>
-                  <img
-                    src="./assets/img/check.png"
-                    alt="check"
-                    className="check"
-                  />
-                </div>
               </div>
               <div className="rowForm">
                 <Button
@@ -211,14 +170,6 @@ export default function PlanificationPanel({ name }: Props) {
                 >
                   Organizaciones e instituciones relacionadas
                 </Button>
-                <div className="containerCheck">
-                  <p className="textCheck">Organizacion guardada</p>
-                  <img
-                    src="./assets/img/check.png"
-                    alt="check"
-                    className="check"
-                  />
-                </div>
               </div>
               <div className="rowForm">
                 <Button
@@ -231,14 +182,6 @@ export default function PlanificationPanel({ name }: Props) {
                 >
                   Metas y Resultados
                 </Button>
-                <div className="containerCheck">
-                  <p className="textCheck">Metas guardadas</p>
-                  <img
-                    src="./assets/img/check.png"
-                    alt="check"
-                    className="check"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -249,7 +192,13 @@ export default function PlanificationPanel({ name }: Props) {
             <Button variant="success" className="Save">
               Guardar Actividad
             </Button>
-            <Button variant="danger" className="Delete">
+            <Button
+              variant="danger"
+              className="Delete"
+              onClick={() => {
+                eliminarActividad(name);
+              }}
+            >
               Eliminar Actividad
             </Button>
           </div>
@@ -259,21 +208,125 @@ export default function PlanificationPanel({ name }: Props) {
           {(() => {
             switch (indexForm) {
               case "descr":
-                return <FormDescriptionUbication />;
+                return (
+                  <>
+                    <FormDescriptionUbication />
+                    <Button
+                      variant="success"
+                      className="SaveChange"
+                      onClick={() => {
+                        guardarActividad(indexForm);
+                      }}
+                    >
+                      Guardar Cambios
+                    </Button>
+                  </>
+                );
               case "pie":
-                return <FormPIE />;
+                return (
+                  <>
+                    <FormPIE />
+                    <Button
+                      variant="success"
+                      className="SaveChange"
+                      onClick={() => {
+                        guardarActividad(indexForm);
+                      }}
+                    >
+                      Guardar Cambioss
+                    </Button>
+                  </>
+                );
               case "area":
-                return <FormArSecUU />;
+                return (
+                  <>
+                    <FormArSecUU />
+                    <Button
+                      variant="success"
+                      className="SaveChange"
+                      onClick={() => {
+                        guardarActividad(indexForm);
+                      }}
+                    >
+                      Guardar Cambioss
+                    </Button>
+                  </>
+                );
               case "redes":
-                return <FormSocialNetwork />;
+                return (
+                  <>
+                    <FormSocialNetwork />
+                    <Button
+                      variant="success"
+                      className="SaveChange"
+                      onClick={() => {
+                        guardarActividad(indexForm);
+                      }}
+                    >
+                      Guardar Cambioss
+                    </Button>
+                  </>
+                );
               case "periodo":
-                return <FormPeriodo />;
+                return (
+                  <>
+                    <FormPeriodo />
+                    <Button
+                      variant="success"
+                      className="SaveChange"
+                      onClick={() => {
+                        guardarActividad(indexForm);
+                      }}
+                    >
+                      Guardar Cambioss
+                    </Button>
+                  </>
+                );
               case "objetivo":
-                return <FormObjetiveEst />;
+                return (
+                  <>
+                    <FormObjetiveEst />
+                    <Button
+                      variant="success"
+                      className="SaveChange"
+                      onClick={() => {
+                        guardarActividad(indexForm);
+                      }}
+                    >
+                      Guardar Cambioss
+                    </Button>
+                  </>
+                );
               case "organi":
-                return <FormOrgInst />;
+                return (
+                  <>
+                    <FormOrgInst />
+                    <Button
+                      variant="success"
+                      className="SaveChange"
+                      onClick={() => {
+                        guardarActividad(indexForm);
+                      }}
+                    >
+                      Guardar Cambioss
+                    </Button>
+                  </>
+                );
               case "metas":
-                return <FormMetas />;
+                return (
+                  <>
+                    <FormMetas />
+                    <Button
+                      variant="success"
+                      className="SaveChange"
+                      onClick={() => {
+                        guardarActividad(indexForm);
+                      }}
+                    >
+                      Guardar Cambioss
+                    </Button>
+                  </>
+                );
               default:
                 return null;
             }

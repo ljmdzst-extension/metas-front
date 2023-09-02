@@ -44,7 +44,6 @@ export default function FormPIE() {
           </Form>
         </div>
       </div>
-      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
     </>
   );
 }

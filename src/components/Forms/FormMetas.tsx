@@ -108,9 +108,6 @@ export default function FormMetas() {
           Agregar meta
         </Button>
       </div>
-      <Button variant="success" className="SaveChange">
-        Guardar Cambios
-      </Button>
     </>
   );
 }

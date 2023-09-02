@@ -54,7 +54,6 @@ export default function FormPeriodo() {
                   startDate={rangeStart}
                   endDate={rangeEnd}
                   onChange={selectStartDate}
-                  open
                 />
               </div>
               <div>
@@ -67,7 +66,6 @@ export default function FormPeriodo() {
                   startDate={rangeStart}
                   endDate={rangeEnd}
                   onChange={selectEndDate}
-                  open
                 />
               </div>
             </div>
@@ -118,9 +116,6 @@ export default function FormPeriodo() {
           </div>
         </div>
       </div>
-      <Button variant="success" className="SaveChange">
-        Guardar Cambios
-      </Button>
     </>
   );
 }

@@ -29,7 +29,6 @@ export default function FormObjetiveEst() {
           </div>
         </Form>
       </div>
-      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
     </>
   );
 }

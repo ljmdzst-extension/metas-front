@@ -218,7 +218,6 @@ export default function FormArSecUU() {
           </div>
         </div>
       </div>
-      <Button variant="success" className="SaveChange">Guardar Cambios</Button>
     </>
   );
 }

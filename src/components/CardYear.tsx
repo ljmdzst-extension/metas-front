@@ -6,83 +6,38 @@ import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+
 type YearProps = {
   title: string;
-  id: number;
 };
 
-export default function CardYear({ title, id }: YearProps) {
-  interface programas {
-    nombre: string;
-    subProgramas: string[];
+export default function CardYear({title}: YearProps) {
+  interface Programa {
+    idPrograma: number;
+    nom: string;
+    anio: number;
+    listaAreas: Area[];
   }
-  const ArrayProgramas: programas[] = [
-    {
-      nombre: "Programa Intervención Sociocultural",
-      subProgramas: [
-        "Programas",
-        "Practicas Academicas Solidarias",
-        "Cultura Expansiva (Innovacion y diversidad Cultural)",
-        "Cultura Expansiva (Formacion cultural)",
-        "Cultura Expansiva (Producciones y Contenido Culturales)",
-        "Patrimonio Vivo (Museo Historico)",
-        "Patrimonio Vivo (Biblioteca Galvez)",
-        "Pryectos",
-      ],
-    },
-    {
-      nombre: "Programa de Integración de Funciones",
-      subProgramas: [
-        "Incorporacion Curricular de la Extension",
-        "Integracion de funciones",
-        "Catedra Abiertas",
-        "Asignatura electivas",
-      ],
-    },
-    {
-      nombre: "Programa de Formación y Capacitación",
-      subProgramas: [
-        "Cursos de Extension presencial",
-        "Programa de Formacion y Capacitacion Laboral",
-        "Cursos de extension a distancia",
-      ],
-    },
-    {
-      nombre: "Programa de publicaciones",
-      subProgramas: [
-        "Publicaciones Institucionales",
-        "Publicaciones Museo Historico",
-        "Reviste +E",
-        "Publicaciones Culturales",
-      ],
-    },
-    {
-      nombre: "Áreas Estratégicas",
-      subProgramas: [
-        "Comunicacion Estrategica",
-        "Planeamiento y Evaluacion",
-        "Territorio Sociocultural",
-        "Internacionalizacion de la extension",
-      ],
-    },
-    {
-      nombre: "Programas de extensión (SIPPE)",
-      subProgramas: [
-        "Programa Alimentos de Interes Social",
-        "Programa Ambiente y Sociedad",
-        "Programa Delito y Sociedad",
-        "Programa Derechos Humanos",
-        "Programa Genero,Sociedad y Universidad",
-        "Programa Economia Social y Solidaria",
-        "Programa Equidad en Salud",
-        "Programa Educacion y Sociedad",
-        "Programa Historia y Memoria",
-      ],
-    },
-  ];
-
+  interface Area {
+    idArea: number;
+    nom: string;
+    idPrograma: number;
+    listaActividades: any[];
+  }
+  const listPrograms: Programa[] = useSelector((state: RootState) => state.programReducer.ListProgramas)
+  const programasTransformados: Programa[] = listPrograms.map((programa) => {
+    return {
+      idPrograma: programa.idPrograma,
+      nom: programa.nom,
+      anio: programa.anio,
+      listaAreas: programa.listaAreas, 
+    };
+  });
+  console.log(programasTransformados);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [indexActivity, setIndexActivity] = useState<string[]>([]);
+  const [indexActivity, setIndexActivity] = useState<Area[]>([]);
   const handleCardClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -91,7 +46,9 @@ export default function CardYear({ title, id }: YearProps) {
     <>
       <div className="ConteinerCardMenu">
         <Card style={{ width: "18rem" }} onClick={handleCardClick}>
-          <Card.Img variant="top" src="holder.js/100px180" />
+          <div className="imgCard">
+            <h1><span className="fontYear">{title}</span></h1>
+          </div>
           <Card.Body
             style={{
               display: "flex",
@@ -99,12 +56,11 @@ export default function CardYear({ title, id }: YearProps) {
               alignItems: "center",
             }}
           >
-            <Card.Title>{title}</Card.Title>
             <Card.Text style={{ textAlign: "center" }}>
               Para obtener un analisis de datos generales, presione en "Ver
               resumen"
             </Card.Text>
-            {isMenuOpen && <Button variant="success">Ver Resumen</Button>}
+           <Button variant="success">Ver Resumen</Button>
           </Card.Body>
         </Card>
         {isMenuOpen && (
@@ -124,16 +80,16 @@ export default function CardYear({ title, id }: YearProps) {
                       gap: "10px",
                     }}
                   >
-                    {ArrayProgramas.map((item, index) => (
+                    {programasTransformados.map((item, index) => (
                       <ListGroup.Item
                         action
                         variant="secondary"
                         onClick={() => {
-                          setIndexActivity(item.subProgramas);
+                          setIndexActivity(item.listaAreas);
                         }}
                         key={index}
                       >
-                        {item.nombre}
+                        {item.nom}
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
@@ -168,7 +124,7 @@ export default function CardYear({ title, id }: YearProps) {
                             color:"black"
                           }}
                         >
-                        {elemento}
+                        {elemento.nom}
                         </Link>
                       </ListGroup.Item>
                     ))}

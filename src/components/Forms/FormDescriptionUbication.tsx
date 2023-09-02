@@ -58,7 +58,7 @@ export default function FormDescriptionUbication() {
                       aria-describedby="basic-addon2"
                     />
                     <Button
-                      variant="secondary"
+                      variant="danger"
                       id="button-addon2"
                       onClick={() => eliminarMeta(item.id)}
                     >
@@ -74,13 +74,14 @@ export default function FormDescriptionUbication() {
             ))}
           </div>
         </div>
-        <Button variant="outline-success" className="SaveChange" onClick={agregarUbicacion}>
+        <Button
+          variant="outline-success"
+          className="SaveChange"
+          onClick={agregarUbicacion}
+        >
           Agregar Ubicacion
         </Button>
       </div>
-      <Button variant="success" className="SaveChange">
-        Guardar Cambios
-      </Button>
     </>
   );
 }
