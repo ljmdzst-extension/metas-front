@@ -11,7 +11,7 @@ function App() {
       <NavBar/>
       <Routes>
         <Route path="/" element={<Main/>}/>
-        <Route path="/activity" element={<Activity/>}/>
+        <Route path="/:idPrograma/:idArea" element={<Activity/>}/>
       </Routes>
       <Footer/>
     </>

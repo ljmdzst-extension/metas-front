@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { Card } from "react-bootstrap";
@@ -6,38 +6,53 @@ import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import axios from "axios";
 
 type YearProps = {
   title: string;
 };
 
-export default function CardYear({title}: YearProps) {
-  interface Programa {
-    idPrograma: number;
-    nom: string;
-    anio: number;
-    listaAreas: Area[];
-  }
-  interface Area {
-    idArea: number;
-    nom: string;
-    idPrograma: number;
-    listaActividades: any[];
-  }
-  const listPrograms: Programa[] = useSelector((state: RootState) => state.programReducer.ListProgramas)
-  const programasTransformados: Programa[] = listPrograms.map((programa) => {
-    return {
-      idPrograma: programa.idPrograma,
-      nom: programa.nom,
-      anio: programa.anio,
-      listaAreas: programa.listaAreas, 
-    };
-  });
-  console.log(programasTransformados);
+interface Programa {
+  idPrograma: number;
+  nom: string;
+  anio: number;
+  listaAreas: Area[];
+}
+
+interface Area {
+  idArea: number;
+  nom: string;
+  idPrograma: number;
+  listaActividades: any[];
+}
+
+export default function CardYear({ title }: YearProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [programasTransformados, setProgramasTransformados] = useState<Programa[]>(
+    []
+  );
   const [indexActivity, setIndexActivity] = useState<Area[]>([]);
+
+  useEffect(() => {
+    // Realizar la solicitud GET en el efecto
+    axios
+      .get("http://localhost:4000/metas/v2/programas/2023")
+      .then((response) => {
+        const data = response.data;
+
+        // Verifica si la respuesta tiene la estructura esperada
+        if (data && data.ok && data.data) {
+          const programas: Programa[] = data.data;
+          setProgramasTransformados(programas);
+        } else {
+          console.error("La respuesta no tiene la estructura esperada.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error al realizar la solicitud GET:", error);
+      });
+  }, []); // Ejecutar una sola vez al montar el componente
+
   const handleCardClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -47,7 +62,9 @@ export default function CardYear({title}: YearProps) {
       <div className="ConteinerCardMenu">
         <Card style={{ width: "18rem" }} onClick={handleCardClick}>
           <div className="imgCard">
-            <h1><span className="fontYear">{title}</span></h1>
+            <h1>
+              <span className="fontYear">{title}</span>
+            </h1>
           </div>
           <Card.Body
             style={{
@@ -57,10 +74,10 @@ export default function CardYear({title}: YearProps) {
             }}
           >
             <Card.Text style={{ textAlign: "center" }}>
-              Para obtener un analisis de datos generales, presione en "Ver
+              Para obtener un análisis de datos generales, presione en "Ver
               resumen"
             </Card.Text>
-           <Button variant="success">Ver Resumen</Button>
+            <Button variant="success">Ver Resumen</Button>
           </Card.Body>
         </Card>
         {isMenuOpen && (
@@ -117,14 +134,13 @@ export default function CardYear({title}: YearProps) {
                         variant="light"
                       >
                         <Link
-                          rel="stylesheet"
-                          to="/activity"
+                          to={`${elemento.idPrograma}/${elemento.idArea}`}
                           style={{
                             textDecoration: "none",
-                            color:"black"
+                            color: "black",
                           }}
                         >
-                        {elemento.nom}
+                          {elemento.nom}
                         </Link>
                       </ListGroup.Item>
                     ))}

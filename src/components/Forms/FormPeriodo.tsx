@@ -1,39 +1,96 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
 import es from "date-fns/locale/es";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { cargarPeriodo } from "../../redux/actions/activityAction";
+
 registerLocale("es", es);
 
-export default function FormPeriodo() {
-  const [startDate, setDate] = useState(new Date());
-  const [rangeStart, setRangeStart] = useState(new Date());
+interface FormPeriodoProps {
+  onClose: () => void;
+}
+
+export default function FormPeriodo({ onClose }: FormPeriodoProps) {
+  const dispatch = useDispatch();
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.activityReducer
+  );
+
+  const [fechaDesde, setFechaDesde] = useState<string | null>(
+    estadoActualizado.fechaDesde ?? null
+  );
+  const [fechaHasta, setFechaHasta] = useState<string | null>(
+    estadoActualizado.fechaHasta ?? null
+  );
+  const [listaFechasPuntuales, setListaFechasPuntuales] = useState<
+    { idFecha: number | null; fecha: string | null }[]
+  >(estadoActualizado.listaFechasPuntuales ?? []);
+  const [startDate, setDate] = useState<Date>(new Date());
+  const [rangeStart, setRangeStart] = useState<Date>(new Date());
   const defaultEndDate = new Date();
   defaultEndDate.setDate(defaultEndDate.getDate() + 7);
-  const [rangeEnd, setRangeEnd] = useState(defaultEndDate);
+  const [rangeEnd, setRangeEnd] = useState<Date>(defaultEndDate);
   const today = new Date();
-  const [indexDates, setIndexDates] = useState<string[]>([]);
+
+  // Sincronizar indexDates con listaFechasPuntuales al principio
+  const initialIndexDates = listaFechasPuntuales.filter(
+    (fecha) => fecha.fecha !== null
+  );
+  const [indexDates, setIndexDates] =
+    useState<{ idFecha: number | null; fecha: string | null }[]>(
+      initialIndexDates
+    );
+
+  useEffect(() => {
+    setIndexDates(initialIndexDates);
+  }, [initialIndexDates]);
+
+  const dateToString = (date: Date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
   const selectDateHandler = (d: Date) => {
-    setDate(d);
-    setIndexDates([
-      ...indexDates,
-      d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear().toString(),
-    ]);
+    const dateString = dateToString(d);
+
+    if (!indexDates.find((date) => date.fecha === dateString)) {
+      setDate(d);
+      const nuevaFecha = {
+        idFecha: null,
+        fecha: dateString,
+      };
+      setListaFechasPuntuales([...listaFechasPuntuales, nuevaFecha]);
+    }
   };
 
   const selectStartDate = (d: Date) => {
     setRangeStart(d);
+    setFechaDesde(dateToString(d));
   };
 
   const selectEndDate = (d: Date) => {
     setRangeEnd(d);
+    setFechaHasta(dateToString(d));
   };
+
   const eliminarFecha = (date: string) => {
-    setIndexDates(indexDates.filter((item) => item !== date));
+    const filteredDates = listaFechasPuntuales.filter(
+      (fecha) => fecha.fecha !== date
+    );
+    setListaFechasPuntuales(filteredDates);
   };
+
+  const handleCargarFechas = () => {
+    dispatch(cargarPeriodo(fechaDesde, fechaHasta, listaFechasPuntuales));
+    onClose();
+  };
+
   return (
     <>
       <div className="FormDescription">
@@ -41,6 +98,10 @@ export default function FormPeriodo() {
         <div className="ConteinerBigDate">
           <div className="ConteinerDate">
             <h3>Seleccionar Periodo</h3>
+            <p>
+              Período que abarca desde el inicio de la planificación hasta la
+              fecha de realización de la actividad.
+            </p>
             <div className="ConteinerRange">
               <div>
                 <p>Inicio:</p>
@@ -69,9 +130,18 @@ export default function FormPeriodo() {
                 />
               </div>
             </div>
+            <div>
+              <p style={{border:"solid black 1px",padding:"2px"}}>
+                  El rango seleccionado es desde <span style={{fontSize:"15px",textDecoration:"underline black"}}>{fechaDesde}</span> hasta <span style={{fontSize:"15px", textDecoration:"underline black"}}>{fechaHasta}</span>
+              </p>
+            </div>
           </div>
           <div className="ConteinerDay">
             <h3>Seleccionar Fechas Puntuales</h3>
+            <p>
+              Seleccione si la actividad se realiza en una fecha puntual
+              (recuerde que debe estar en el intervalo de meses seleccionado)
+            </p>
             <div>
               <p>Seleccione una Fecha:</p>
               <DatePicker
@@ -93,21 +163,19 @@ export default function FormPeriodo() {
                     style={{
                       width: "100%",
                       display: "flex",
-                      padding:"3px",
-                      justifyContent:"space-between",
-                      alignItems:"center",
+                      padding: "3px",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                       marginBottom: "5px",
-                      borderRadius: "7px"
+                      borderRadius: "7px",
                     }}
                   >
-                    {date}
-                    <Button variant="danger">
-                      <img
-                        src="./assets/img/eliminar.png"
-                        className="imgboton"
-                        alt="eliminar"
-                        onClick={() => eliminarFecha(date)}
-                      />
+                    {date.fecha}
+                    <Button
+                      variant="danger"
+                      onClick={() => eliminarFecha(date.fecha || "")}
+                    >
+                      Eliminar
                     </Button>
                   </ListGroup.Item>
                 ))}
@@ -116,6 +184,13 @@ export default function FormPeriodo() {
           </div>
         </div>
       </div>
+      <Button
+        variant="success"
+        className="SaveChange"
+        onClick={handleCargarFechas}
+      >
+        Guardar Cambios
+      </Button>
     </>
   );
 }

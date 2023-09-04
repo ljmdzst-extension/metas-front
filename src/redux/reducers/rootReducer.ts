@@ -1,5 +1,6 @@
-import programReducer from "./programReducer"
-const routeReducer = {
-    programReducer
-}
+import activityReducer from "./ActivityReducer"
+import { combineReducers } from "redux"
+const routeReducer = combineReducers({
+    activityReducer
+})
 export default routeReducer

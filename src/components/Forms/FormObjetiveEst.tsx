@@ -1,8 +1,44 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+interface FormObjetiveEstProps {
+  onClose: () => void;
+}
+interface Objetivo {
+  idObjetivo: number;
+  nom: string;
+  tipoObjetivo: {
+    idTipoObj: number;
+    nom: string;
+  };
+}
+export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
+  const handleCargarObjetivoEstrategico = () => {
+    onClose();
+  };
+  const [objetivos, setObjetivos] = useState<Objetivo[]>([])
+  useEffect(() => {
+    // Función para realizar la solicitud GET
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/metas/v2/bases/");
+        if (response.data.ok) {
+          // Extraer la lista de objetivos de la respuesta
+          const listaObjetivos = response.data.data.listaObjetivos;
+          setObjetivos(listaObjetivos);
+        } else {
+          console.error("Error en la respuesta de la API");
+        }
+      } catch (error) {
+        console.error("Error al obtener la lista de objetivos:", error);
+      }
+    };
 
-export default function FormObjetiveEst() {
+    // Llamar a la función para obtener los datos cuando el componente se monte
+    fetchData();
+  }, []); 
+  const objetivosDesde0a4 = objetivos?.slice(0, 4);
   return (
     <>
       <div className="FormObjetivo">
@@ -10,25 +46,23 @@ export default function FormObjetiveEst() {
         <Form className="FormObj">
           <p className="SubtitleObj"><span>Seleccione los objetivos:</span></p>
           <div className="Obj">
+          {objetivosDesde0a4.map((objetivo) => (
             <Form.Check
-              id={`1`}
-              label={`Profundizar la integración de funciones, con especial énfasis en el fortalecimiento de las condiciones que permitan incrementar los espacios y carreras con Prácticas de Extensión de Educación Experiencial.`}
+             id={objetivo.idObjetivo.toString()} label={objetivo.nom} key={objetivo.idObjetivo}
             />
-            <Form.Check
-              id={`2`}
-              label={`Promover la intervención territorial, las actividades culturales, la preservación y circulación del patrimonio tangible e intangible de la UNL y la región, profundizando la transversalidad entre las Áreas Centrales y las Unidades Académicas.`}
-            />
-            <Form.Check
-              id={`3`}
-              label={`Generar y propiciar actividades de formación y capacitación desde una mirada inclusiva con carácter interdisciplinario favoreciendo la inserción en el mundo del trabajo.`}
-            />
-            <Form.Check
-              id={`4`}
-              label={`Consolidar la jerarquización e internacionalización de la extensión, las actividades culturales y artísticas, mediante estrategias de formación, capacitación y comunicación.`}
-            />
+            ))}
           </div>
         </Form>
       </div>
+      <Button
+        variant="success"
+        className="SaveChange"
+        onClick={() => {
+          handleCargarObjetivoEstrategico();
+        }}
+      >
+        Guardar Cambios
+      </Button>
     </>
   );
 }

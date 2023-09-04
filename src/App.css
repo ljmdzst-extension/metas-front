@@ -11,7 +11,7 @@ img {
   width: 100%;
   object-fit: contain;
 }
-.imgCard{
+.imgCard {
   width: 100%;
   height: 180px;
   display: flex;
@@ -21,7 +21,7 @@ img {
   background-color: #009cb3;
   object-fit: cover;
 }
-.fontYear{
+.fontYear {
   color: white;
   font-weight: bolder;
 }
@@ -98,8 +98,9 @@ a {
   align-items: center;
   gap: 15px;
   width: 30%;
-  height: 80vh;
+  min-height: 70vh;
   padding: 10px;
+  border: 3px solid #c0c0c0;
 }
 .ConteinerActivity {
   display: flex;
@@ -107,7 +108,7 @@ a {
   justify-content: center;
   min-height: 80vh;
   width: 100%;
-  padding: 5px;
+  padding: 10px;
 }
 .Activity {
   background-color: rgba(245, 245, 245, 1);
@@ -132,10 +133,9 @@ a {
   justify-content: center;
   gap: 20px;
   border-radius: 10px;
-  background-color: #d3d3d3;
 }
 .Options {
-  background-color: rgba(245, 245, 245, 1);
+  background-color: rgb(214, 214, 214);
   width: 300px;
   height: 50px;
   text-align: center;
@@ -151,8 +151,8 @@ a {
 .MenuOptionsAux {
   display: flex;
   justify-content: space-around;
-  background-color: rgba(156, 156, 156, 1);
   padding: 10px;
+  background-color: rgb(233, 233, 233);
 }
 .MenuPlanification {
   width: 90%;
@@ -163,7 +163,6 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 5px;
 }
 .ConteinerColumn {
   display: flex;
@@ -218,7 +217,6 @@ a {
 .FormDescription {
   width: 100%;
   min-height: 500px;
-  background-color: rgb(227, 230, 230);
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -226,7 +224,7 @@ a {
   gap: 10px;
   padding: 10px;
 }
-.FormOrgInst{
+.FormOrgInst {
   width: 100%;
   min-height: 500px;
   background-color: rgb(227, 230, 230);
@@ -237,23 +235,25 @@ a {
   gap: 20px;
   padding: 10px;
 }
-.ListaInstituciones{
+.ListaInstituciones {
   width: 100%;
-  min-height:300px;
+  min-height: 300px;
   background-color: rgb(243, 243, 243);
   padding: 10px;
 }
-.ListaInstituciones,h3{
+.ListaInstituciones,
+h3 {
   font-weight: 100;
 }
-.inputInstituciones{
+.inputInstituciones {
   border: 1px solid rgb(187, 187, 187);
   height: 30px;
   width: 300px;
   font-size: medium;
   padding: 5px;
 }
-.FormOrgInst,h2{
+.FormOrgInst,
+h2 {
   align-self: center;
 }
 .buttonCloseForm {
@@ -271,16 +271,21 @@ h1 {
   display: flex;
   align-items: flex-end;
   width: 100%;
+  border-radius: 5px;
+  background-color: #c0c0c0;
 }
 
 /*Periodo*/
 .ConteinerDate {
   width: 60%;
-  height: 100%;
+  height: 515px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  border: 3px solid #c0c0c0;
+  border-radius: 10px;
+  padding: 10px;
 }
 .ConteinerRange {
   display: flex;
@@ -289,20 +294,20 @@ h1 {
   height: 80%;
   padding: 20px;
 }
-.react-datepicker-wrapper{
-  width: 240.300px;
+.react-datepicker-wrapper {
+  width: 240.3px;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
 .react-datepicker__input-container,
-  .react-datepicker__input-container input{
+.react-datepicker__input-container input {
   width: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
-.ConteinerDay{
+.ConteinerDay {
   width: 30%;
   min-height: 85%;
   display: flex;
@@ -312,29 +317,30 @@ h1 {
   gap: 20px;
   padding: 10px;
   border-radius: 10px;
-  background-color: #d3d3d3;
+  border: 3px solid #c0c0c0;
 }
-.ConteinerBigDate{
+.ConteinerBigDate {
   width: 100%;
   min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  gap: 10px;
 }
-.SaveChange{
+.SaveChange {
   margin-top: 5px;
   margin-bottom: 5px;
 }
-.ConteinerDaysSelected{
+.ConteinerDaysSelected {
   width: 90%;
   min-height: 200px;
 }
-span{
+span {
   font-weight: bolder;
 }
 
 /*Form PIE*/
-.FormPie{
+.FormPie {
   width: 100%;
   min-height: 400px;
   display: flex;
@@ -343,18 +349,7 @@ span{
   align-items: center;
   gap: 10px;
 }
-.ConteinerEje{
-  width: 90%;
-  min-height: 120px;  
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: rgb(222, 222, 222);
-}
-.ConteinerPlan{
+.ConteinerEje {
   width: 90%;
   min-height: 120px;
   display: flex;
@@ -363,25 +358,36 @@ span{
   align-items: center;
   padding: 10px;
   border-radius: 10px;
-  background-color: rgb(222, 222, 222);
+  border: 3px solid #c0c0c0;
 }
-.FormPlan{
-width: 70%;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
+.ConteinerPlan {
+  width: 90%;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  border: 3px solid #c0c0c0;
 }
-.TitlePie{
+.FormPlan {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.TitlePie {
   margin: 5px;
 }
-.SubtitlePie{
+.SubtitlePie {
   align-self: start;
 }
-.FormEje{
+.FormEje {
   width: 70%;
 }
-.ConteinerChecksPlan{
+.ConteinerChecksPlan {
   width: 100%;
   height: 70%;
   display: flex;
@@ -390,16 +396,16 @@ align-items: center;
 }
 input.form-check-input:checked {
   background-color: #198754;
-  border-color:#198754;
+  border-color: #198754;
 }
-.Lie{
+.Lie {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2.5px;
   justify-content: space-around;
 }
-.Eje{
+.Eje {
   width: 100%;
   height: 50px;
   display: flex;
@@ -410,7 +416,7 @@ input.form-check-input:checked {
 }
 
 /*Form ObjetivoEstrategico*/
-.FormObjetivo{
+.FormObjetivo {
   width: 90%;
   min-height: 350px;
   display: flex;
@@ -421,14 +427,14 @@ input.form-check-input:checked {
   border-radius: 10px;
   background-color: rgb(222, 222, 222);
 }
-.FormObj{
+.FormObj {
   width: 80%;
   height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
-.Obj{
+.Obj {
   width: 100%;
   height: 80%;
   display: flex;
@@ -436,12 +442,12 @@ input.form-check-input:checked {
   flex-direction: column;
   justify-content: space-around;
 }
-.SubtitleObj{
+.SubtitleObj {
   margin: 5px;
 }
 
 /*FormArSecUU*/
-.FormArSecuu{
+.FormArSecuu {
   width: 100%;
   min-height: 90%;
   display: flex;
@@ -450,17 +456,7 @@ input.form-check-input:checked {
   padding: 10px;
   gap: 20px;
 }
-.Areas{
-  width: 100%;
-  min-height: 100px;
-  display:flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: rgb(222, 222, 222);
-  padding: 20px;
-  border-radius: 5px;
-}
-.Secretarias{
+.Areas {
   width: 100%;
   min-height: 100px;
   display: flex;
@@ -470,7 +466,7 @@ input.form-check-input:checked {
   padding: 20px;
   border-radius: 5px;
 }
-.UUAA{
+.Secretarias {
   width: 100%;
   min-height: 100px;
   display: flex;
@@ -480,25 +476,35 @@ input.form-check-input:checked {
   padding: 20px;
   border-radius: 5px;
 }
-.SelectArea{
+.UUAA {
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(222, 222, 222);
+  padding: 20px;
+  border-radius: 5px;
+}
+.SelectArea {
   width: 90%;
   margin-top: 10px;
 }
-.SelectSec{
+.SelectSec {
   width: 90%;
   margin-top: 10px;
 }
-.SelectUUAA{
+.SelectUUAA {
   width: 90%;
   margin-top: 10px;
 }
-.parrafo{
+.parrafo {
   align-self: flex-start;
   margin-bottom: 5px;
 }
 
 /*Form Metas*/
-.FormMetas{
+.FormMetas {
   width: 100%;
   min-height: 400px;
   background-color: rgb(227, 230, 230);
@@ -506,109 +512,108 @@ input.form-check-input:checked {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-padding: 10px;
+  padding: 10px;
 }
-.ConteinerDescriptionMetas{
+.ConteinerDescriptionMetas {
   width: 90%;
-  min-height:60px ;
-  padding: 7px;
+  min-height: 60px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   border-radius: 10px;
-  background-color: rgb(223, 223, 223);
+  border: 3px solid #c0c0c0;
 }
-.Resultados{
+.Resultados {
   width: 90%;
   min-height: 20%;
   padding: 7px;
 }
-.ConteinerUbicacion{
-  width: 90%;
+.ConteinerUbicacion {
+  width: 100%;
   min-height: 20%;
   padding: 7px;
   display: flex;
   align-items: flex-start;
 }
-.ConteinerDescripcion{
+.ConteinerDescripcion {
   width: 100%;
   display: flex;
 }
-.ResultadoEsperado{
+.ResultadoEsperado {
   width: 100%;
   display: flex;
   flex-direction: column;
   min-height: 50%;
   padding: 7px;
 }
-.Ubicacion{
+.Ubicacion {
   width: 90%;
   display: flex;
   flex-direction: column;
   min-height: 50%;
   padding: 7px;
 }
-.ResultadoLogrado{
+.ResultadoLogrado {
   width: 100%;
   display: flex;
   flex-direction: column;
   min-height: 50%;
   padding: 7px;
 }
-.Observaciones{
+.Observaciones {
   width: 100%;
   display: flex;
   flex-direction: column;
   min-height: 50%;
   padding: 7px;
 }
-.Descripcion{
-  width: 90%;
+.Descripcion {
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
-.SubtituloMetas{
+.SubtituloMetas {
   font-weight: bolder;
 }
-.ConteinerButton{
+.ConteinerButton {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
   width: 70px;
 }
-.ButtonEdit{
+.ButtonEdit {
   width: 50px;
   height: 50px;
   padding: 7px;
 }
-.ButtonDeleteDate{
+.ButtonDeleteDate {
   width: 35px;
   height: 35px;
   padding: 5px;
 }
-.ButtonDeleteUbi{
+.ButtonDeleteUbi {
   width: 50px;
   height: 50px;
   padding: 7px;
   margin-top: 18px;
 }
 
-.ConteinerGrande{
-width: 100%;
-display: flex;
-justify-content: center;
-align-items: start;
-gap: 5px;
+.ConteinerGrande {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  gap: 5px;
 }
 
-.imgboton{
+.imgboton {
   width: 24px;
   height: 24px;
 }
-
-.ParrafoDescripcion{
+.ParrafoDescripcion {
   width: 100%;
   min-height: 20px;
   resize: none;
@@ -616,7 +621,7 @@ gap: 5px;
   padding: 5px;
   font-style: italic;
 }
-.ParrafoResultados{
+.ParrafoResultados {
   width: 100%;
   min-height: 20px;
   resize: none;
@@ -624,7 +629,7 @@ gap: 5px;
   padding: 5px;
   font-style: italic;
 }
-.ParrafoObservaciones{
+.ParrafoObservaciones {
   width: 100%;
   min-height: 20px;
   resize: none;
@@ -632,35 +637,35 @@ gap: 5px;
   padding: 5px;
   font-style: italic;
 }
-.rowForm{
+.rowForm {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
 }
-.check{
+.check {
   width: 50px;
   height: 50px;
   padding: 0px;
 }
 .containerCheck {
-  display:inline-block;
-  position:relative;
+  display: inline-block;
+  position: relative;
 }
-.textCheck{
-  position:absolute;
-  top:0;
-  left:0;
-  padding:10px;
-  margin:0;
-  z-index:-1;
+.textCheck {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  margin: 0;
+  z-index: -1;
   font-size: small;
 }
 
-.containerCheck:hover .textCheck{
-  z-index:+1;
+.containerCheck:hover .textCheck {
+  z-index: +1;
 }
-.containerCheck:hover .check{
+.containerCheck:hover .check {
   opacity: 0.07;
   -webkit-transition: opacity 500ms;
   -moz-transition: opacity 500ms;
@@ -669,11 +674,11 @@ gap: 5px;
   transition: opacity 500ms;
   visibility: hidden;
 }
-.ConteinerFechas{
+.ConteinerFechas {
   display: flex;
   flex-direction: column;
 }
-.rowFecha{
+.rowFecha {
   width: 100%;
   height: 40px;
   margin-bottom: 10px;
@@ -684,13 +689,13 @@ gap: 5px;
   justify-content: space-between;
   align-items: center;
 }
-.formInstituciones{
+.formInstituciones {
   width: 200px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.containerModal{
+.containerModal {
   display: flex;
   flex-direction: column;
   width: 700px;

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import { Form } from "react-bootstrap";
-
-export default function FormMetas() {
+interface FormMetas {
+  onClose: () => void;
+}
+export default function FormMetas({ onClose }: FormMetas) {
   interface metas {
     id: number;
     descripcion: string;
@@ -10,6 +12,9 @@ export default function FormMetas() {
     resultadoLogrado: string;
     observaciones: string;
   }
+  const handleCargarMetas = () => {
+    onClose();
+  };
   const [indexMetas, setIndexMetas] = useState<metas[]>([]);
   const [disable,setDisable] = useState(true)
   const agregarMeta = () => {
@@ -48,22 +53,12 @@ export default function FormMetas() {
               </div>
               <div className="Resultados">
                 <div className="ResultadoEsperado">
-                  <span className="SubtituloMetas">Resultado Esperado:</span>
+                  <span className="SubtituloMetas">Resultado:</span>
                   <Form.Control
                     type="text"
                     name="name"
                     className="ParrafoResultados"
                     placeholder={item.resultadoEsperado}
-                    disabled={disable}
-                  />
-                </div>
-                <div className="ResultadoLogrado">
-                  <span className="SubtituloMetas">Resultado Logrado:</span>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    className="ParrafoResultados"
-                    placeholder={item.resultadoLogrado}
                     disabled={disable}
                   />
                 </div>
@@ -84,14 +79,14 @@ export default function FormMetas() {
             <div className="ConteinerButton">
               <Button variant="secondary" className="ButtonEdit" onClick={()=>{setDisable(!disable)}}>
                 <img
-                  src="./assets/img/boton-editar.png"
+                  src="../assets/img/boton-editar.png"
                   className="imgboton"
                   alt="editar"
                 />
               </Button>
               <Button variant="danger" className="ButtonEdit">
                 <img
-                  src="./assets/img/eliminar.png"
+                  src="../assets/img/eliminar.png"
                   className="imgboton"
                   alt="eliminar"
                   onClick={() => eliminarMeta(item.id)}
@@ -108,6 +103,15 @@ export default function FormMetas() {
           Agregar meta
         </Button>
       </div>
+      <Button
+        variant="success"
+        className="SaveChange"
+        onClick={() => {
+          handleCargarMetas();
+        }}
+      >
+        Guardar Cambios
+      </Button>
     </>
   );
 }

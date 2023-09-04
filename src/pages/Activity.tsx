@@ -1,13 +1,20 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import PlanificationPanel from "../components/PlanificationPanel";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 type IState = {
   myArray: string[];
 };
+interface Area {
+  idArea: number;
+  nom: string;
+  listaActividades: any[]; // Reemplaza esto con el tipo correcto si es necesario
+}
 
 export default function Activity() {
   const [show, setShow] = useState(false);
@@ -22,7 +29,7 @@ export default function Activity() {
     setShow2(true);
   };
   const [arrayActivity, setArrayActivity] = useState<IState>({
-    myArray: ["actividad 1", "actividad 2"],
+    myArray: [],
   });
   const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
@@ -31,6 +38,25 @@ export default function Activity() {
     handleClose();
     setTerm("");
   };
+  //---------------------------------
+  const { idPrograma, idArea } = useParams<{ idPrograma?: string; idArea?: string }>();
+  const [area, setArea] = useState<Area | null>(null);
+  useEffect(() => {
+    // Verifica si idPrograma y idArea son definidos antes de usar parseInt
+    if (idPrograma && idArea) {
+      axios.get(`http://localhost:4000/metas/v2/areas/${idPrograma}`)
+        .then((response) => {
+          const data: Area[] = response.data.data;
+          const selectedArea = data.find((item) => item.idArea === parseInt(idArea, 10));
+          setArea(selectedArea || null);
+        })
+        .catch((error) => {
+          console.error('Error al obtener datos:', error);
+        });
+    }
+  }, [idPrograma, idArea]);
+  console.log(area);
+  
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -87,6 +113,7 @@ export default function Activity() {
           </Form>
         </Modal.Body>
       </Modal>
+      <h1>{area?.nom}</h1>
       {isPlanificationOpen && (
         <div className="MenuOptionsAux">  
           <div className="Options">Carga de Presupuesto</div>
@@ -95,6 +122,9 @@ export default function Activity() {
       )}
       <div className="ConteinerActivity">
         <div className="MenuActivity">
+          <Button variant="outline-success" className="Options" onClick={handleShow}>
+            Agregar Actividad
+          </Button>
           {arrayActivity.myArray.map((item, index) => (
             <ListGroup.Item
               action
@@ -121,9 +151,6 @@ export default function Activity() {
               {item}
             </ListGroup.Item>
           ))}
-          <Button variant="outline-success" className="Options" onClick={handleShow}>
-            Agregar Actividad
-          </Button>
         </div>
         {!isPlanificationOpen && (
           <div className="MenuOptions">

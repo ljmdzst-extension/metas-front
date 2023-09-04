@@ -9,7 +9,13 @@ type Institucion = {
   nameInst: string;
   ubicationInst: string;
 };
-export default function FormOrgInst() {
+interface FormOrgInst {
+  onClose: () => void;
+}
+export default function FormOrgInst({ onClose }:FormOrgInst) {
+  const handleCargarOrgInst = () => {
+    onClose();
+  };
   const [arrayUbication, setArrayUbication] = useState<Institucion[]>([]);
   const [name, setName] = useState("");
   const [idInstitucion, setIdInstitucion] = useState<number>(0);
@@ -40,7 +46,7 @@ export default function FormOrgInst() {
         </p>
         <p>
           Si necesita ayuda para compartir el enlace , consulte{" "}
-          <a href="https://www.youtube.com/watch?v=KoN9aRs6a4E">
+          <a href="https://www.youtube.com/watch?v=KoN9aRs6a4E" target="_blank">
             en este video.
           </a>
         </p>
@@ -102,6 +108,15 @@ export default function FormOrgInst() {
           </Table>
         </div>
       </div>
+      <Button
+        variant="success"
+        className="SaveChange"
+        onClick={() => {
+          handleCargarOrgInst();
+        }}
+      >
+        Guardar Cambios
+      </Button>
     </>
   );
 }

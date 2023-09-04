@@ -1,10 +1,8 @@
-import { type } from "os";
-import React from "react";
 import { useState } from "react";
 import FormDescriptionUbication from "./Forms/FormDescriptionUbication";
 import FormPIE from "./Forms/FormPIE";
 import FormArSecUU from "./Forms/FormArSecUU";
-import FormSocialNetwork from "./Forms/FormSocialNetwork";
+import FormSIPPE from "./Forms/FormSIPPE";
 import FormPeriodo from "./Forms/FormPeriodo";
 import FormObjetiveEst from "./Forms/FormObjetiveEst";
 import FormOrgInst from "./Forms/FormOrgInst";
@@ -12,8 +10,8 @@ import FormMetas from "./Forms/FormMetas";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import Toast from "react-bootstrap/Toast";
-import ToastContainer from "react-bootstrap/ToastContainer";
+import { RootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 type Props = {
   name: string;
@@ -28,9 +26,13 @@ export default function PlanificationPanel({ name }: Props) {
   const handleShow2 = () => {
     setShow2(true);
   };
-
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.activityReducer
+  );
+  console.log(estadoActualizado);
+  
   const eliminarActividad = (name: string) => {};
-  const guardarActividad = (indexForm: string) => {
+  const handleCloseForm = () => {
     setIsFormOpen(false);
   };
   return (
@@ -73,6 +75,7 @@ export default function PlanificationPanel({ name }: Props) {
           <Button
             variant="success"
             className="buttonCloseForm"
+            style={{width:'60px',height:'60px'}}
             onClick={() => {
               handleShow2();
             }}
@@ -210,121 +213,49 @@ export default function PlanificationPanel({ name }: Props) {
               case "descr":
                 return (
                   <>
-                    <FormDescriptionUbication />
-                    <Button
-                      variant="success"
-                      className="SaveChange"
-                      onClick={() => {
-                        guardarActividad(indexForm);
-                      }}
-                    >
-                      Guardar Cambios
-                    </Button>
+                    <FormDescriptionUbication onClose={handleCloseForm}/>
                   </>
                 );
               case "pie":
                 return (
                   <>
-                    <FormPIE />
-                    <Button
-                      variant="success"
-                      className="SaveChange"
-                      onClick={() => {
-                        guardarActividad(indexForm);
-                      }}
-                    >
-                      Guardar Cambioss
-                    </Button>
+                    <FormPIE onClose={handleCloseForm}/>
                   </>
                 );
               case "area":
                 return (
                   <>
-                    <FormArSecUU />
-                    <Button
-                      variant="success"
-                      className="SaveChange"
-                      onClick={() => {
-                        guardarActividad(indexForm);
-                      }}
-                    >
-                      Guardar Cambioss
-                    </Button>
+                    <FormArSecUU  onClose={handleCloseForm}/>
                   </>
                 );
               case "redes":
                 return (
                   <>
-                    <FormSocialNetwork />
-                    <Button
-                      variant="success"
-                      className="SaveChange"
-                      onClick={() => {
-                        guardarActividad(indexForm);
-                      }}
-                    >
-                      Guardar Cambioss
-                    </Button>
+                    <FormSIPPE onClose={handleCloseForm} />
                   </>
                 );
               case "periodo":
                 return (
                   <>
-                    <FormPeriodo />
-                    <Button
-                      variant="success"
-                      className="SaveChange"
-                      onClick={() => {
-                        guardarActividad(indexForm);
-                      }}
-                    >
-                      Guardar Cambioss
-                    </Button>
+                    <FormPeriodo onClose={handleCloseForm} />
                   </>
                 );
               case "objetivo":
                 return (
                   <>
-                    <FormObjetiveEst />
-                    <Button
-                      variant="success"
-                      className="SaveChange"
-                      onClick={() => {
-                        guardarActividad(indexForm);
-                      }}
-                    >
-                      Guardar Cambioss
-                    </Button>
+                    <FormObjetiveEst onClose={handleCloseForm} />
                   </>
                 );
               case "organi":
                 return (
                   <>
-                    <FormOrgInst />
-                    <Button
-                      variant="success"
-                      className="SaveChange"
-                      onClick={() => {
-                        guardarActividad(indexForm);
-                      }}
-                    >
-                      Guardar Cambioss
-                    </Button>
+                    <FormOrgInst onClose={handleCloseForm}/>
                   </>
                 );
               case "metas":
                 return (
                   <>
-                    <FormMetas />
-                    <Button
-                      variant="success"
-                      className="SaveChange"
-                      onClick={() => {
-                        guardarActividad(indexForm);
-                      }}
-                    >
-                      Guardar Cambioss
-                    </Button>
+                    <FormMetas onClose={handleCloseForm}/>
                   </>
                 );
               default:
