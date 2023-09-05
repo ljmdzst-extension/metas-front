@@ -62,7 +62,7 @@ export default function FormPIE({ onClose }: FormPIEProps) {
   const objetivosDesde12a16 = objetivos?.slice(12, 16);
 
   const estadoObjetivosSeleccionados = useSelector(
-    (state: RootState) => state.activityReducer.listaObjetivos
+    (state: RootState) => state.actividadSlice.listaObjetivos
   );
 
   // Función para sincronizar objetivosSeleccionados con Redux

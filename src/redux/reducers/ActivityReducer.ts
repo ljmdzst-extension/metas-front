@@ -1,41 +1,56 @@
-import { CARGAR_PERIODO, CARGAR_DESCRIPCION, CARGAR_PIE ,CargarPieAction,CargarDescripcionAction, CargarPeriodoAction } from '../actions/activityAction';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  CargarDatosActividadAction,
+  CargarDescripcionAction,
+  CargarPeriodoAction,
+  CargarPieAction,
+  CargarIdAreaYNroAction,
+} from "../actions/activityAction";
 
 interface ActividadState {
-  idActividad: number | null;
-  idArea: number | null;
+  idActividad: number;
+  idArea: number;
   nro: number | null;
   desc: string | null;
   fechaDesde: string | null;
   fechaHasta: string | null;
-  listaMetas: {
-    idMeta: number | null;
-    descripcion: string | null;
-    resultado: string | null;
-    observaciones: string | null;
-  }[] | null;
+  listaMetas:
+    | {
+        idMeta: number | null;
+        descripcion: string | null;
+        resultado: string | null;
+        observaciones: string | null;
+      }[]
+    | null;
   listaProgramasSIPPE: number[] | null;
   listaRelaciones: number[] | null;
   listaObjetivos: number[] | null;
-  listaUbicaciones: {
-    idUbicacion: number | null;
-    idActividad: number | null;
-    nom: string;
-    enlace: string | null;
-  }[] | null;
-  listaEnlaces: {
-    idEnlace: number | null;
-    desc: string | null;
-    link: string | null;
-  }[] | null;
-  listaFechasPuntuales: {
-    idFecha: number | null;
-    fecha: string | null;
-  }[] | null;
+  listaUbicaciones:
+    | {
+        idUbicacion: number | null;
+        idActividad: number | null;
+        nom: string;
+        enlace: string | null;
+      }[]
+    | null;
+  listaEnlaces:
+    | {
+        idEnlace: number | null;
+        desc: string | null;
+        link: string | null;
+      }[]
+    | null;
+  listaFechasPuntuales:
+    | {
+        idFecha: number | null;
+        fecha: string | null;
+      }[]
+    | null;
 }
 
 const initialState: ActividadState = {
-  idActividad: null,
-  idArea: null,
+  idActividad: 0,
+  idArea: 0,
   nro: null,
   desc: null,
   fechaDesde: null,
@@ -49,31 +64,84 @@ const initialState: ActividadState = {
   listaFechasPuntuales: [],
 };
 
-type Action = CargarDescripcionAction | CargarPeriodoAction | CargarPieAction ;
-
-const actividadReducer = (state: ActividadState = initialState, action: Action): ActividadState => {
-  switch (action.type) {
-    case CARGAR_DESCRIPCION:
-      return {
-        ...state,
-        desc: action.payload.descripcion,
-        listaUbicaciones: action.payload.ubicaciones,
-      };
-      case CARGAR_PERIODO:
+const actividadSlice = createSlice({
+  name: "actividad",
+  initialState,
+  reducers: {
+    cargarDescripcion: (
+      state,
+      action: PayloadAction<{
+        descripcion: string | null;
+        ubicaciones: any[] | null;
+      }>
+    ) => {
+      state.desc = action.payload.descripcion;
+      state.listaUbicaciones = action.payload.ubicaciones;
+    },
+    cargarPeriodo: (
+      state,
+      action: PayloadAction<{
+        fechaDesde: string | null;
+        fechaHasta: string | null;
+        listaFechasPuntuales: {
+          idFecha: number | null;
+          fecha: string | null;
+        }[];
+      }>
+    ) => {
+      state.fechaDesde = action.payload.fechaDesde;
+      state.fechaHasta = action.payload.fechaHasta;
+      state.listaFechasPuntuales = action.payload.listaFechasPuntuales;
+    },
+    cargarPie: (
+      state,
+      action: PayloadAction<{
+        objetivosSeleccionados: number[];
+      }>
+    ) => {
+      state.listaObjetivos = action.payload.objetivosSeleccionados;
+    },
+    cargarIdAreaYNro: (
+      state,
+      action: PayloadAction<{
+        idArea: number;
+        nro: number | null;
+      }>
+    ) => {
+      state.idArea = action.payload.idArea;
+      state.nro = action.payload.nro;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(
+      CargarDatosActividadAction.fulfilled,
+      (state, action: PayloadAction<any>) => {
         return {
           ...state,
+          idActividad: action.payload.idActividad,
+          idArea: action.payload.idArea,
+          nro: action.payload.nro,
+          desc: action.payload.desc,
           fechaDesde: action.payload.fechaDesde,
           fechaHasta: action.payload.fechaHasta,
+          listaMetas: action.payload.listaMetas,
+          listaProgramasSIPPE: action.payload.listaProgramasSIPPE,
+          listaRelaciones: action.payload.listaRelaciones,
+          listaObjetivos: action.payload.listaObjetivos,
+          listaUbicaciones: action.payload.listaUbicaciones,
+          listaEnlaces: action.payload.listaEnlaces,
           listaFechasPuntuales: action.payload.listaFechasPuntuales,
         };
-        case CARGAR_PIE:
-          return {
-            ...state,
-            listaObjetivos: action.payload.objetivosSeleccionados,
-          };
-    default:
-      return state;
-  }
-};
+      }
+    );
+  },
+});
 
-export default actividadReducer;
+export const {
+  cargarDescripcion,
+  cargarPeriodo,
+  cargarPie,
+  cargarIdAreaYNro,
+} = actividadSlice.actions;
+
+export default actividadSlice.reducer;

@@ -1,15 +1,20 @@
-import React from "react";
-import { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PlanificationPanel from "../components/PlanificationPanel";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { useParams } from "react-router-dom";
+import { CargarDatosActividadAction } from "../redux/actions/activityAction";
 import axios from "axios";
-type IState = {
-  myArray: string[];
-};
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../redux/store";
+
+interface Activity {
+  idActividad: number;
+  desc: string;
+}
+
 interface Area {
   idArea: number;
   nom: string;
@@ -25,38 +30,66 @@ export default function Activity() {
   const handleClose = () => setShow(false);
   const handleClose2 = () => setShow2(false);
   const handleShow = () => setShow(true);
-  const handleShow2 = () => {
-    setShow2(true);
-  };
-  const [arrayActivity, setArrayActivity] = useState<IState>({
-    myArray: [],
-  });
+  const handleShow2 = () => setShow2(true);
+  const [arrayActivity, setArrayActivity] = useState<Activity[]>([]);
   const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
+  const { idArea } = useParams<{ idArea?: string }>();
+  const [area, setArea] = useState<Area | null>(null);
+
+  interface Data {
+    idActividad: 0;
+    idArea: number;
+    nro: number;
+    desc: string;
+    fechaDesde: string | null;
+    fechaHasta: string | null;
+  }
+
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    mostrarActividades();
+  }, []);
+
+  let postActivity = async function (data: Data) {
+    axios
+      .post("http://localhost:4000/metas/v2/actividad", data)
+      .then(() => {
+        mostrarActividades();
+      })
+      .catch((Error) => console.log(Error));
+  };
+
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setArrayActivity({ myArray: [...arrayActivity.myArray, term] });
+    postActivity({
+      idActividad: 0,
+      idArea: parseInt(idArea ?? "0", 10),
+      nro: arrayActivity.length + 1,
+      desc: term,
+      fechaDesde: null,
+      fechaHasta: null,
+    });
     handleClose();
     setTerm("");
   };
-  //---------------------------------
-  const { idPrograma, idArea } = useParams<{ idPrograma?: string; idArea?: string }>();
-  const [area, setArea] = useState<Area | null>(null);
-  useEffect(() => {
-    // Verifica si idPrograma y idArea son definidos antes de usar parseInt
-    if (idPrograma && idArea) {
-      axios.get(`http://localhost:4000/metas/v2/areas/${idPrograma}`)
-        .then((response) => {
-          const data: Area[] = response.data.data;
-          const selectedArea = data.find((item) => item.idArea === parseInt(idArea, 10));
-          setArea(selectedArea || null);
-        })
-        .catch((error) => {
-          console.error('Error al obtener datos:', error);
-        });
-    }
-  }, [idPrograma, idArea]);
-  console.log(area);
-  
+
+  let mostrarActividades = async function () {
+    axios
+      .get(`http://localhost:4000/metas/v2/areas/${idArea}/actividades`)
+      .then((response) => {
+        const actividades = response.data;
+        setArrayActivity(actividades.data);
+      })
+      .catch((error) => {
+        console.error("Error al realizar la solicitud GET:", error);
+      });
+  };
+
+  const handleButtonClick = (id:number) => {
+    dispatch(CargarDatosActividadAction(id));
+  };
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -66,17 +99,20 @@ export default function Activity() {
         <Modal.Body>
           <Form onSubmit={submitForm}>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Nombre de la Actividad:</Form.Label>
+              <Form.Label>Ingrese la descripcion de la actividad</Form.Label>
               <Form.Control
                 type="nombre"
-                placeholder="nombre"
+                placeholder="Descripcion"
                 autoFocus
+                as="textarea"
+                rows={2}
+                style={{ resize: "none" }}
                 value={term}
                 onChange={(e) => setTerm(e.target.value)}
               />
             </Form.Group>
             <Button variant="success" type="submit">
-              Guardar
+              Crear
             </Button>
           </Form>
         </Modal.Body>
@@ -115,40 +151,50 @@ export default function Activity() {
       </Modal>
       <h1>{area?.nom}</h1>
       {isPlanificationOpen && (
-        <div className="MenuOptionsAux">  
+        <div className="MenuOptionsAux">
           <div className="Options">Carga de Presupuesto</div>
           <div className="Options">Ver Resumen y Graficos</div>
         </div>
       )}
       <div className="ConteinerActivity">
         <div className="MenuActivity">
-          <Button variant="outline-success" className="Options" onClick={handleShow}>
+          <Button
+            variant="outline-success"
+            className="Options"
+            onClick={handleShow}
+          >
             Agregar Actividad
           </Button>
-          {arrayActivity.myArray.map((item, index) => (
+          {arrayActivity.map((item, index) => (
             <ListGroup.Item
               action
               variant="secondary"
+              title={item.desc}
               style={{
                 width: "300px",
                 height: "50px",
                 padding: "10px",
                 borderRadius: "10px",
-                display:"flex",
-                justifyContent:"center",
+                display: "flex",
+                justifyContent: "center",
               }}
               key={index}
               onClick={() => {
                 if (isPlanificationOpen === true) {
                   handleShow2();
-                  setNameActivityAux(item);
+                  setNameActivityAux(
+                    `Planificacion de la Actividad: ${index + 1}`
+                  );
                 } else {
                   setIsPlanificationOpen(!isPlanificationOpen);
-                  setNameActivity(item);
+                  setNameActivity(
+                    `Planificacion de la Actividad: ${index + 1}`
+                  );
+                  handleButtonClick(item.idActividad)
                 }
               }}
             >
-              {item}
+              {index + 1}
             </ListGroup.Item>
           ))}
         </div>
@@ -163,3 +209,6 @@ export default function Activity() {
     </>
   );
 }
+
+
+  

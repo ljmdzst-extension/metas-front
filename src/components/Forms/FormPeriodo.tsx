@@ -17,7 +17,7 @@ interface FormPeriodoProps {
 export default function FormPeriodo({ onClose }: FormPeriodoProps) {
   const dispatch = useDispatch();
   const estadoActualizado = useSelector(
-    (state: RootState) => state.activityReducer
+    (state: RootState) => state.actividadSlice
   );
 
   const [fechaDesde, setFechaDesde] = useState<string | null>(

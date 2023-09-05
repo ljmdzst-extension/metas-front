@@ -14,7 +14,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
 }) => {
   const dispatch = useDispatch();
   const estadoActualizado = useSelector(
-    (state: RootState) => state.activityReducer
+    (state: RootState) => state.actividadSlice
   );
   const [descripcion, setDescripcion] = useState<string>(
     estadoActualizado.desc ?? ""

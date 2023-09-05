@@ -27,7 +27,7 @@ export default function PlanificationPanel({ name }: Props) {
     setShow2(true);
   };
   const estadoActualizado = useSelector(
-    (state: RootState) => state.activityReducer
+    (state: RootState) => state.actividadSlice
   );
   console.log(estadoActualizado);
   
