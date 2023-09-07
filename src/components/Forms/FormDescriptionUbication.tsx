@@ -19,6 +19,8 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   const [descripcion, setDescripcion] = useState<string>(
     estadoActualizado.desc ?? ""
   );
+  console.log(estadoActualizado);
+  
   const [ubicacion, setUbicacion] = useState<string>("");
   const [ubicaciones, setUbicaciones] = useState<{ idUbicacion: number | null; idActividad: number | null; nom: string; enlace: string | null; }[]>([]);
 
@@ -45,10 +47,10 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   const agregarUbicacion = () => {
     if (ubicacion.trim() !== "") {
       const nuevaUbicacion = {
-        idUbicacion: null, // O proporciona el valor correcto si es necesario
-        idActividad: null, // O proporciona el valor correcto si es necesario
+        idUbicacion: null,
+        idActividad: null,
         nom: ubicacion,
-        enlace: null, // O proporciona el valor correcto si es necesario
+        enlace: null,
       };
   
       setUbicaciones([...ubicaciones, nuevaUbicacion]);

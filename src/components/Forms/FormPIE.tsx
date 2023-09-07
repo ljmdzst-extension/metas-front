@@ -38,19 +38,14 @@ export default function FormPIE({ onClose }: FormPIEProps) {
         console.error("Error al obtener la lista de objetivos:", error);
       }
     };
-
-    // Llamar a la función para obtener los datos cuando el componente se monte
     fetchData();
   }, []);
 
   const handleSeleccionarObjetivo = (idObjetivo: number) => {
-    // Lógica para agregar o quitar el objetivo de objetivosSeleccionados
     const objetivoIndex = objetivosSeleccionados.indexOf(idObjetivo);
     if (objetivoIndex === -1) {
-      // Si el objetivo no estaba seleccionado, agrégalo
       setObjetivosSeleccionados([...objetivosSeleccionados, idObjetivo]);
     } else {
-      // Si el objetivo ya estaba seleccionado, quítalo
       const newSeleccionados = objetivosSeleccionados.filter((id) => id !== idObjetivo);
       setObjetivosSeleccionados(newSeleccionados);
     }
@@ -72,13 +67,11 @@ export default function FormPIE({ onClose }: FormPIEProps) {
     }
   };
 
-  // Sincronizar cuando cambie el estado de estadoObjetivosSeleccionados
   useEffect(() => {
     sincronizarCheckboxes();
   }, [estadoObjetivosSeleccionados]);
 
   const handleCargarPIE = () => {
-    // Actualiza el estado de objetivos en Redux usando la acción cargarPIE
     dispatch(cargarPIE(objetivosSeleccionados));
     onClose();
   };

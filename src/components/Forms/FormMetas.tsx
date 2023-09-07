@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { Form } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 interface FormMetas {
   onClose: () => void;
 }
 export default function FormMetas({ onClose }: FormMetas) {
   interface metas {
-    id: number;
+    idMeta: number;
     descripcion: string;
-    resultadoEsperado: string;
-    resultadoLogrado: string;
+    resultado: string;
     observaciones: string;
   }
   const handleCargarMetas = () => {
@@ -17,23 +18,23 @@ export default function FormMetas({ onClose }: FormMetas) {
   };
   const [indexMetas, setIndexMetas] = useState<metas[]>([]);
   const [disable,setDisable] = useState(true)
-  const agregarMeta = () => {
-    setIndexMetas([
-      ...indexMetas,
-      {
-        id: indexMetas.length + 1,
-        descripcion: " Gestión de Becas docentes ",
-        resultadoEsperado: "Fortalecimiento de equipos docentes de programas",
-        resultadoLogrado: "16 becas docentes (renovaciones/asignaciones)",
-        observaciones: "",
-      },
-    ]);
+  const agregarMeta = () => {}
+  const estadoMetas = useSelector(
+    (state: RootState) => state.actividadSlice.listaMetas
+  );
+  const sincronizarMetas = () => {
+    if (estadoMetas) {
+      setIndexMetas(estadoMetas);
+    }
   };
-
-  const eliminarMeta = (id: number) => {
-    setIndexMetas(indexMetas.filter((item) => item.id !== id));
-  };
-
+  useEffect(() => {
+    sincronizarMetas();
+  }, [estadoMetas]);
+  // const eliminarMeta = (id: number) => {
+  //   setIndexMetas(indexMetas.filter((item) => item. !== id));
+  // };
+  console.log(estadoMetas);
+  
   return (
     <>
       <div className="FormMetas">
@@ -58,13 +59,13 @@ export default function FormMetas({ onClose }: FormMetas) {
                     type="text"
                     name="name"
                     className="ParrafoResultados"
-                    placeholder={item.resultadoEsperado}
                     disabled={disable}
+                    placeholder={item.resultado}
                   />
                 </div>
                 <div className="Observaciones">
                   <span className="SubtituloMetas">
-                    Observaciones:{item.id}
+                    Observaciones:
                   </span>
                   <Form.Control
                     type="text"
@@ -89,7 +90,6 @@ export default function FormMetas({ onClose }: FormMetas) {
                   src="../assets/img/eliminar.png"
                   className="imgboton"
                   alt="eliminar"
-                  onClick={() => eliminarMeta(item.id)}
                 />
               </Button>
             </div>

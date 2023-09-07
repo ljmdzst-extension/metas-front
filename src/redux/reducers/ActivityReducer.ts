@@ -16,10 +16,10 @@ interface ActividadState {
   fechaHasta: string | null;
   listaMetas:
     | {
-        idMeta: number | null;
-        descripcion: string | null;
-        resultado: string | null;
-        observaciones: string | null;
+        idMeta: number;
+        descripcion: string;
+        resultado: string;
+        observaciones: string;
       }[]
     | null;
   listaProgramasSIPPE: number[] | null;

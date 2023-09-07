@@ -2,7 +2,6 @@ import { useState } from "react";
 import FormDescriptionUbication from "./Forms/FormDescriptionUbication";
 import FormPIE from "./Forms/FormPIE";
 import FormArSecUU from "./Forms/FormArSecUU";
-import FormSIPPE from "./Forms/FormSIPPE";
 import FormPeriodo from "./Forms/FormPeriodo";
 import FormObjetiveEst from "./Forms/FormObjetiveEst";
 import FormOrgInst from "./Forms/FormOrgInst";
@@ -28,9 +27,7 @@ export default function PlanificationPanel({ name }: Props) {
   };
   const estadoActualizado = useSelector(
     (state: RootState) => state.actividadSlice
-  );
-  console.log(estadoActualizado);
-  
+  ); 
   const eliminarActividad = (name: string) => {};
   const handleCloseForm = () => {
     setIsFormOpen(false);
@@ -39,14 +36,13 @@ export default function PlanificationPanel({ name }: Props) {
     <div className="MenuPlanification">
       <Modal show={show2} onHide={handleClose2}>
         <Modal.Header>
-          <Modal.Title>¿Quieres salir de la Actividad?</Modal.Title>
+          <Modal.Title>¿Quieres salir del formulario?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>
-                Usted tiene una actividad en curso, ¿desea salir de la
-                actividad?
+                Usted tiene un formulario en curso, ¿desea salir del formulario?
               </Form.Label>
               <Form.Label>Los cambios no guardados se perderan.</Form.Label>
             </Form.Group>
@@ -63,7 +59,7 @@ export default function PlanificationPanel({ name }: Props) {
                   setIsFormOpen(false);
                 }}
               >
-                Salir de la actividad
+                Salir del Formulario
               </Button>
             </Form.Group>
           </Form>
@@ -122,18 +118,6 @@ export default function PlanificationPanel({ name }: Props) {
                   }}
                 >
                   Áreas, secretarías y UUAA UNL relacionadas
-                </Button>
-              </div>
-              <div className="rowForm">
-                <Button
-                  variant="outline-success"
-                  className="Form"
-                  onClick={() => {
-                    setIndexForm("redes");
-                    setIsFormOpen(true);
-                  }}
-                >
-                  SIPPE
                 </Button>
               </div>
             </div>
@@ -226,12 +210,6 @@ export default function PlanificationPanel({ name }: Props) {
                 return (
                   <>
                     <FormArSecUU  onClose={handleCloseForm}/>
-                  </>
-                );
-              case "redes":
-                return (
-                  <>
-                    <FormSIPPE onClose={handleCloseForm} />
                   </>
                 );
               case "periodo":

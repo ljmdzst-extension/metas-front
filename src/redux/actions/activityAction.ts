@@ -103,10 +103,10 @@ export const CargarDatosActividadAction = createAsyncThunk(
         throw new Error("Error al cargar los datos de actividad");
       }
       const data = await response.json();
-      return data.data; // Asumo que `data.data` contiene los datos que deseas asignar al estado
+      return data.data;
     } catch (error) {
       console.log("error");
-      ; // Debes propagar el error para que Redux Toolkit maneje las acciones de error automáticamente
+      ;
     }
   }
 );
