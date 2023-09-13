@@ -3,8 +3,9 @@ import makeAnimated from "react-select/animated";
 import Button from "react-bootstrap/Button";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { CARGAR_RELACION } from "../../redux/reducers/ActivityReducer";
 const animatedComponents = makeAnimated();
 interface FormArSecUUrops {
   onClose: () => void;
@@ -23,14 +24,20 @@ interface listaProgramasSIPPE {
   subProgramaDe: string | null;
 }
 export default function FormArSecUU({ onClose }: FormArSecUUrops) {
-  const handleCargarArSecUU = () => {
-    onClose();
-  };
+  const dispatch = useDispatch();
   const [relaciones, setRelaciones] = useState<Relacion[]>([]);
   const [sippe, setSippe] = useState<listaProgramasSIPPE[]>([]);
-
-  const [relacionSeleccionadas, setRelacionSeleccionadas] = useState<
+  const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<
   number[]
+>([]);
+const [relacionSeleccionadas2, setRelacionSeleccionadas2] = useState<
+number[]
+>([]);
+const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<
+number[]
+>([]);
+const [relacionesSeleccionadas, setRelacionesSeleccionadas] = useState<
+number[]
 >([]);
 const [sippeSeleccionadas, setSippeSeleccionadas] = useState<
 number[]
@@ -43,7 +50,9 @@ number[]
   );
   const sincronizarSelectsRelacion = () => {
     if (estadoRelacionesSeleccionadas) {
-      setRelacionSeleccionadas(estadoRelacionesSeleccionadas);
+      setRelacionSeleccionadas1(estadoRelacionesSeleccionadas);
+      setRelacionSeleccionadas2(estadoRelacionesSeleccionadas);
+      setRelacionSeleccionadas3(estadoRelacionesSeleccionadas);
     }
   };
   const sincronizarSelectsSIPPE = () => {
@@ -104,6 +113,27 @@ number[]
     value: sippe.idProgramaSIPPE,
     label: sippe.nom,
   }));
+  const handleCargarArSecUU = () => {
+    console.log(relacionSeleccionadas3);
+    //dispatch(CARGAR_RELACION({relacionesSeleccionadas}));
+    onClose();
+  };
+  const handleRelacionChange1 = (selectedOptions: any) => {
+    const selectedValues = selectedOptions.map((option: any) => option.value);
+    setRelacionSeleccionadas1(selectedValues);
+  };
+   const handleRelacionChange2 = (selectedOptions: any) => {
+     const selectedValues = selectedOptions.map((option: any) => option.value);
+     setRelacionSeleccionadas2(selectedValues);
+   };
+   const handleRelacionChange3 = (selectedOptions: any) => {
+     const selectedValues = selectedOptions.map((option: any) => option.value);
+     setRelacionSeleccionadas3(selectedValues);
+   };
+  const handleSippeChange = (selectedOptions: any) => {
+    const selectedValues = selectedOptions.map((option: any) => option.value);
+    setSippeSeleccionadas(selectedValues);
+  };
   return (
     <>
       <div className="FormArSecuu">
@@ -117,7 +147,8 @@ number[]
               isMulti
               options={relacionesInternaExtension}
               placeholder={"seleccionar"}
-              value={relacionesInternaExtension.filter(option => relacionSeleccionadas.includes(option.value))}
+              value={relacionesInternaExtension.filter(option => relacionSeleccionadas1.includes(option.value))}
+              onChange={handleRelacionChange1}
             />
           </div>
         </div>
@@ -131,7 +162,8 @@ number[]
               isMulti
               options={relacionesInternaUnl}
               placeholder={"seleccionar"}
-              value={relacionesInternaUnl.filter(option => relacionSeleccionadas.includes(option.value))}
+              value={relacionesInternaUnl.filter(option => relacionSeleccionadas2.includes(option.value))}
+              onChange={handleRelacionChange2}
             />
           </div>
         </div>
@@ -145,7 +177,8 @@ number[]
               isMulti
               options={relacionesUA}
               placeholder={"seleccionar"}
-              value={relacionesUA.filter(option => relacionSeleccionadas.includes(option.value))}
+              value={relacionesUA.filter(option => relacionSeleccionadas3.includes(option.value))}
+              onChange={handleRelacionChange3}
             />
           </div>
         </div>
@@ -160,6 +193,7 @@ number[]
               options={listaProgramasSIPPE}
               placeholder={"seleccionar"}
               value={listaProgramasSIPPE.filter(option => sippeSeleccionadas.includes(option.value))}
+              onChange={handleSippeChange}
             />
           </div>
         </div>

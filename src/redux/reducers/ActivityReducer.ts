@@ -1,11 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  CargarDatosActividadAction,
-  CargarDescripcionAction,
-  CargarPeriodoAction,
-  CargarPieAction,
-  CargarIdAreaYNroAction,
-} from "../actions/activityAction";
+import { CargarDatosActividadAction } from '../actions/activityAction';
 
 interface ActividadState {
   idActividad: number;
@@ -68,15 +62,10 @@ const actividadSlice = createSlice({
   name: "actividad",
   initialState,
   reducers: {
-    cargarDescripcion: (
-      state,
-      action: PayloadAction<{
-        descripcion: string | null;
-        ubicaciones: any[] | null;
-      }>
-    ) => {
+    CARGAR_DESCRIPCION: (state, action: PayloadAction<{ descripcion: string | null; ubicaciones: any[] | null }>) => {
       state.desc = action.payload.descripcion;
       state.listaUbicaciones = action.payload.ubicaciones;
+      console.log("cargo la descripcion");
     },
     cargarPeriodo: (
       state,
@@ -93,7 +82,7 @@ const actividadSlice = createSlice({
       state.fechaHasta = action.payload.fechaHasta;
       state.listaFechasPuntuales = action.payload.listaFechasPuntuales;
     },
-    cargarPie: (
+    CARGAR_PIE: (
       state,
       action: PayloadAction<{
         objetivosSeleccionados: number[];
@@ -101,15 +90,13 @@ const actividadSlice = createSlice({
     ) => {
       state.listaObjetivos = action.payload.objetivosSeleccionados;
     },
-    cargarIdAreaYNro: (
+    CARGAR_RELACION: (
       state,
       action: PayloadAction<{
-        idArea: number;
-        nro: number | null;
+        relacionesSeleccionadas: number[];
       }>
     ) => {
-      state.idArea = action.payload.idArea;
-      state.nro = action.payload.nro;
+      state.listaRelaciones = action.payload.relacionesSeleccionadas;
     },
   },
   extraReducers: (builder) => {
@@ -138,10 +125,10 @@ const actividadSlice = createSlice({
 });
 
 export const {
-  cargarDescripcion,
+  CARGAR_DESCRIPCION,
   cargarPeriodo,
-  cargarPie,
-  cargarIdAreaYNro,
+  CARGAR_PIE,
+  CARGAR_RELACION
 } = actividadSlice.actions;
 
 export default actividadSlice.reducer;

@@ -1,9 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { CARGAR_PIE } from "../../redux/reducers/ActivityReducer";
 interface FormObjetiveEstProps {
   onClose: () => void;
 }
@@ -16,10 +17,8 @@ interface Objetivo {
   };
 }
 export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
-  const handleCargarObjetivoEstrategico = () => {
-    onClose();
-  };
   const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,6 +60,10 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
       const newSeleccionados = objetivosSeleccionados.filter((id) => id !== idObjetivo);
       setObjetivosSeleccionados(newSeleccionados);
     }
+  };
+  const handleCargarObjetivoEstrategico = () => {
+    dispatch(CARGAR_PIE({objetivosSeleccionados}));
+    onClose();
   };
   return (
     <>

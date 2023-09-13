@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDispatch, useSelector } from "react-redux";
-import { cargarDescripcion } from "../../redux/actions/activityAction";
+import { CARGAR_DESCRIPCION } from '../../redux/reducers/ActivityReducer';
 import { RootState } from "../../redux/store";
 
 interface FormDescriptionUbicationProps {
@@ -19,8 +19,6 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   const [descripcion, setDescripcion] = useState<string>(
     estadoActualizado.desc ?? ""
   );
-  console.log(estadoActualizado);
-  
   const [ubicacion, setUbicacion] = useState<string>("");
   const [ubicaciones, setUbicaciones] = useState<{ idUbicacion: number | null; idActividad: number | null; nom: string; enlace: string | null; }[]>([]);
 
@@ -30,7 +28,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
     }
   }, []);
   const handleCargarDescripcion = () => {
-    dispatch(cargarDescripcion(descripcion, ubicaciones));
+    dispatch(CARGAR_DESCRIPCION({ descripcion, ubicaciones: [] }));
     onClose();
   };
   const handleDescripcionChange = (

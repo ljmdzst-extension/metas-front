@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { cargarPIE } from "../../redux/actions/activityAction";
 import { RootState } from "../../redux/store";
+import { CARGAR_PIE } from "../../redux/reducers/ActivityReducer";
 
 interface FormPIEProps {
   onClose: () => void;
@@ -59,8 +59,6 @@ export default function FormPIE({ onClose }: FormPIEProps) {
   const estadoObjetivosSeleccionados = useSelector(
     (state: RootState) => state.actividadSlice.listaObjetivos
   );
-
-  // Función para sincronizar objetivosSeleccionados con Redux
   const sincronizarCheckboxes = () => {
     if (estadoObjetivosSeleccionados) {
       setObjetivosSeleccionados(estadoObjetivosSeleccionados);
@@ -72,7 +70,7 @@ export default function FormPIE({ onClose }: FormPIEProps) {
   }, [estadoObjetivosSeleccionados]);
 
   const handleCargarPIE = () => {
-    dispatch(cargarPIE(objetivosSeleccionados));
+    dispatch(CARGAR_PIE({objetivosSeleccionados}));
     onClose();
   };
 

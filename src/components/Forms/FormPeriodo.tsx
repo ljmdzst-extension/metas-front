@@ -47,7 +47,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 
   useEffect(() => {
     setIndexDates(initialIndexDates);
-  }, [initialIndexDates]);
+  }, []);
 
   const dateToString = (date: Date) => {
     const day = date.getDate();
