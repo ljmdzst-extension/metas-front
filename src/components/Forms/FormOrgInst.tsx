@@ -1,40 +1,85 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Form } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
+import { CARGAR_INSTITUCION } from '../../redux/reducers/ActivityReducer';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 type Institucion = {
-  id:number,
-  nameInst: string;
-  ubicationInst: string;
+  idInstitucion:number | null,
+  nom: string | null;
+  ubicacion: string | null;
 };
 interface FormOrgInst {
   onClose: () => void;
 }
 export default function FormOrgInst({ onClose }:FormOrgInst) {
-  const handleCargarOrgInst = () => {
-    onClose();
-  };
-  const [arrayUbication, setArrayUbication] = useState<Institucion[]>([]);
+  const dispatch = useDispatch();
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.actividadSlice
+  );
+  const [arrayInstitucion, setArrayInstitucion] = useState<Institucion[]>( estadoActualizado.listaInstituciones || [] );
+  const [arraySearchInstitucion, setArraySearchInstitucion] = useState<Institucion[]>( [] );
+  const [searchInstitucion, setSearchInstitucion] = useState<Institucion |undefined>( undefined );
+  
   const [name, setName] = useState("");
-  const [idInstitucion, setIdInstitucion] = useState<number>(0);
   const [ubicacion, setUbicacion] = useState("");
   const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setArrayUbication([
-      ...arrayUbication,
-      {id:idInstitucion, nameInst: name, ubicationInst: ubicacion},
+    setArrayInstitucion([
+      ...arrayInstitucion,
+      {idInstitucion : 0, nom: name, ubicacion},
     ]);
-    setIdInstitucion(idInstitucion+1)
     setName("");
     setUbicacion("");
   };
-  const eliminarInstitucion = (id:number) => {
-    console.log(id);
-    
-    setArrayUbication(arrayUbication.filter((item) => item.id !== id));
+  const eliminarInstitucion = (index:number | null) => {
+    console.log(index);
+    if(index !== null) {
+     setArrayInstitucion(arrayInstitucion.filter((item,i) => i !== index));
+    }
   };
+
+  const handleCargarOrgInst = () => {
+    dispatch( CARGAR_INSTITUCION({
+      instituciones : arrayInstitucion
+    }) )
+    onClose();
+  };
+
+  useEffect(() => {
+    if(searchInstitucion && arrayInstitucion.every( inst => inst.nom !== searchInstitucion.nom)){
+      
+      setArrayInstitucion([...arrayInstitucion,searchInstitucion]);
+    }
+  }, [searchInstitucion])
+  
+
+  useEffect(() => {
+    if(name) {
+      fetch(`http://localhost:4000/metas/v2/bases/instituciones/${name}/0/10`)
+      .then( resp => resp.json())
+      .then( data => data.ok && setArraySearchInstitucion(data.data))
+      .catch( error => console.log(error))
+    }
+  
+    return () => {
+      setArraySearchInstitucion([])
+    }
+  }, [name])
+  
+  const handleInstChange = (e :React.ChangeEvent<any>)=>{
+    e.preventDefault();
+    setSearchInstitucion( arraySearchInstitucion.find( inst => inst.nom === e.currentTarget.value )  )
+    
+    if(!searchInstitucion) {
+      setName(e.currentTarget.value);
+    }
+    
+  }
+
   return (
     <>
       <div className="FormOrgInst">
@@ -57,8 +102,16 @@ export default function FormOrgInst({ onClose }:FormOrgInst) {
               type="text"
               name="name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => handleInstChange(e)}
+              
+              list='listSearchInstituciones'
             />
+            <datalist id='listSearchInstituciones' >{
+                arraySearchInstitucion &&
+                arraySearchInstitucion.map(
+                  (inst,i) => <option key={i} value={inst.nom ||'#'} >{inst.nom}</option>
+                )
+              }</datalist>
           </label>
           <label>
             Ubicacion:
@@ -85,20 +138,22 @@ export default function FormOrgInst({ onClose }:FormOrgInst) {
               </tr>
             </thead>
             <tbody>
-              {arrayUbication.map((item, index) => (
+              {arrayInstitucion.map((item, index) => (
                 <tr
                   key={index}
                 >
-                  <td style={{width:"30px"}}>{item.id}</td>
-                  <td style={{width:"20%"}}>{item.nameInst}</td>
-                  <td>{item.ubicationInst}</td>
+                  <td style={{width:"30px"}}>{index+1}</td>
+                  <td style={{width:"20%"}}>{item.nom}</td>
+                  <td>{item.ubicacion}</td>
                   <td style={{width:"15px"}}>
-                    <Button variant="danger">
+                    <Button variant="danger"
+                       onClick={() => eliminarInstitucion(index)}
+                    >
                       <img
-                        src="./assets/img/eliminar.png"
+                        src="../assets/img/eliminar.png"
                         className="imgboton"
                         alt="eliminar"
-                        onClick={() => eliminarInstitucion(item.id)}
+                       
                       />
                     </Button>
                   </td>

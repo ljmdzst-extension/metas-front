@@ -41,6 +41,13 @@ interface ActividadState {
         fecha: string | null;
       }[]
     | null;
+  listaInstituciones : 
+   | {
+      idInstitucion : number | null,
+      nom : string | null,
+      ubicacion : string | null
+   }[]
+   | null;
 }
 
 const initialState: ActividadState = {
@@ -58,6 +65,7 @@ const initialState: ActividadState = {
   listaUbicaciones: [],
   listaEnlaces: [],
   listaFechasPuntuales: [],
+  listaInstituciones : []
 };
 
 const actividadSlice = createSlice({
@@ -69,7 +77,7 @@ const actividadSlice = createSlice({
       state.listaUbicaciones = action.payload.ubicaciones;
       console.log("cargo la descripcion");
     },
-    cargarPeriodo: (
+    CARGAR_PERIODO: (
       state,
       action: PayloadAction<{
         fechaDesde: string | null;
@@ -83,6 +91,7 @@ const actividadSlice = createSlice({
       state.fechaDesde = action.payload.fechaDesde;
       state.fechaHasta = action.payload.fechaHasta;
       state.listaFechasPuntuales = action.payload.listaFechasPuntuales;
+      console.log('cargo el periodo')
     },
     CARGAR_PIE: (
       state,
@@ -100,6 +109,14 @@ const actividadSlice = createSlice({
     ) => {
       state.listaRelaciones = action.payload.relacionesSeleccionadas;
     },
+    CARGAR_INSTITUCION: (
+      state,
+      action : PayloadAction<{
+        instituciones : { idInstitucion : number |null, nom : string | null , ubicacion : string | null}[]
+      }>
+    )=>{
+      state.listaInstituciones = action.payload.instituciones
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -128,9 +145,10 @@ const actividadSlice = createSlice({
 
 export const {
   CARGAR_DESCRIPCION,
-  cargarPeriodo,
+  CARGAR_PERIODO,
   CARGAR_PIE,
-  CARGAR_RELACION
+  CARGAR_RELACION,
+  CARGAR_INSTITUCION
 } = actividadSlice.actions;
 
 export default actividadSlice.reducer;
