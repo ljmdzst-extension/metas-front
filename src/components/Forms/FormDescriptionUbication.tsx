@@ -29,6 +29,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   }, []);
   const handleCargarDescripcion = () => {
     dispatch(CARGAR_DESCRIPCION({ descripcion, ubicaciones: [] }));
+    console.log(estadoActualizado);
     onClose();
   };
   const handleDescripcionChange = (
