@@ -115,7 +115,12 @@ number[]
   }));
   const handleCargarArSecUU = () => {
     console.log(relacionSeleccionadas3);
-    //dispatch(CARGAR_RELACION({relacionesSeleccionadas}));
+    dispatch(CARGAR_RELACION({relacionesSeleccionadas : Array.from(new Set([
+      ...relacionSeleccionadas1,
+      ...relacionSeleccionadas2,
+      ...relacionSeleccionadas3,
+      ...sippeSeleccionadas
+    ]))}));
     onClose();
   };
   const handleRelacionChange1 = (selectedOptions: any) => {

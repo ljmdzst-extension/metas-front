@@ -6,6 +6,7 @@ interface ActividadState {
   idArea: number;
   nro: number | null;
   desc: string | null;
+  mot_cancel : string | null;
   fechaDesde: string | null;
   fechaHasta: string | null;
   listaMetas:
@@ -47,6 +48,7 @@ const initialState: ActividadState = {
   idArea: 0,
   nro: null,
   desc: null,
+  mot_cancel : null,
   fechaDesde: null,
   fechaHasta: null,
   listaMetas: [],
