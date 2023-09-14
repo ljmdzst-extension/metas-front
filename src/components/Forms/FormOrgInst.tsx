@@ -59,7 +59,7 @@ export default function FormOrgInst({ onClose }:FormOrgInst) {
 
   useEffect(() => {
     if(name) {
-      fetch(`http://localhost:4000/metas/v2/bases/instituciones/${name}/0/10`)
+      fetch(`http://168.197.50.94:4005/metas/v2/bases/instituciones/${name}/0/10`)
       .then( resp => resp.json())
       .then( data => data.ok && setArraySearchInstitucion(data.data))
       .catch( error => console.log(error))

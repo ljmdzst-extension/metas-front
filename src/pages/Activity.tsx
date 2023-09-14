@@ -53,7 +53,7 @@ export default function Activity() {
 
   let postActivity = async function (data: Data) {
     axios
-      .post("http://localhost:4000/metas/v2/actividad", data)
+      .post("http://168.197.50.94:4005/metas/v2/actividad", data)
       .then(() => {
         mostrarActividades();
       })
@@ -76,7 +76,7 @@ export default function Activity() {
 
   let mostrarActividades = async function () {
     axios
-      .get(`http://localhost:4000/metas/v2/areas/${idArea}/actividades`)
+      .get(`http://168.197.50.94:4005/metas/v2/areas/${idArea}/actividades`)
       .then((response) => {
         const actividades = response.data;
         setArrayActivity(actividades.data);

@@ -102,7 +102,7 @@ export const CargarDatosActividadAction = createAsyncThunk(
   async (id: number) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/metas/v2/actividad/${id}`
+        `http://168.197.50.94:4005/metas/v2/actividad/${id}`
       );
       if (!response.ok) {
         throw new Error("Error al cargar los datos de actividad");

@@ -30,7 +30,7 @@ export default function PlanificationPanel({ name }: Props) {
   ); 
 
   const guardarActividad = ()=>{
-     fetch('http://localhost:4000/metas/v2/actividad',{
+     fetch('http://168.197.50.94:4005/metas/v2/actividad',{
       method : 'PUT',
       headers : {
         'Content-Type' : 'application/json'

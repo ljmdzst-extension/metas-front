@@ -70,7 +70,7 @@ number[]
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/metas/v2/bases/"
+          "http://168.197.50.94:4005/metas/v2/bases/"
         );
         if (response.data.ok) {
           const listaRelaciones = response.data.data.listaRelaciones;
