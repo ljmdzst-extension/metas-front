@@ -11,6 +11,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
+import FormDocuments from './Forms/FormDocuments';
 
 type Props = {
   name: string;
@@ -120,6 +121,18 @@ export default function PlanificationPanel({ name }: Props) {
                   Áreas, secretarías y UUAA UNL relacionadas
                 </Button>
               </div>
+              <div className="rowForm">
+                <Button
+                  variant="outline-success"
+                  className="Form"
+                  onClick={() => {
+                    setIndexForm("metas");
+                    setIsFormOpen(true);
+                  }}
+                >
+                  Metas y Resultados
+                </Button>
+              </div>
             </div>
             <div className="Column">
               <div className="rowForm">
@@ -163,11 +176,11 @@ export default function PlanificationPanel({ name }: Props) {
                   variant="outline-success"
                   className="Form"
                   onClick={() => {
-                    setIndexForm("metas");
+                    setIndexForm("documentacion");
                     setIsFormOpen(true);
                   }}
                 >
-                  Metas y Resultados
+                  Documentacion
                 </Button>
               </div>
             </div>
@@ -200,6 +213,12 @@ export default function PlanificationPanel({ name }: Props) {
                     <FormDescriptionUbication onClose={handleCloseForm}/>
                   </>
                 );
+                case "documentacion":
+                  return (
+                    <>
+                      <FormDocuments onClose={handleCloseForm}/>
+                    </>
+                  );
               case "pie":
                 return (
                   <>
