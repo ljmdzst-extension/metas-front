@@ -17,14 +17,17 @@ export default function FormMetas({ onClose }: FormMetas) {
   const handleCargarMetas = () => {
     onClose();
   };
-  const [indexMetas, setIndexMetas] = useState<metas[]>([]);
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.actividadSlice
+  );
   const [disable,setDisable] = useState(true)
+  const [indexMetas, setIndexMetas] = useState<metas[]>(estadoActualizado.listaMetas ?? []);
   const agregarMeta = () => {
     setIndexMetas([...indexMetas,{
-      idMeta: 1,
-      descripcion: "Acompañar  en la gestión institucional para la visibilizacion de acciones de los programas",
-      resultado: "3 programas completos, 1 parcialmente.Todos los programas se modifica el campo de datos generales",
-      observaciones: "https://www.unl.edu.ar/extension/programas/Programa de Genero, sociedad, universidadPrograma Delito y SociedadPrograma Ambiente y sociedad (particalmente)Programa Economia social y solidariaPrograma Educación y sociedadTodos los programas se modifica el campo de datos generales.De todos los programas se logra modificar datos generales: Tomando como referencia Ficha ténica de Publicaicón SIPPE 25 años y actrualizando.  Se piensa en dos veces al año para recibir estas actualizaciones. ",
+      idMeta:1,
+      descripcion:"",
+      resultado:"",
+      observaciones:""
     }])
   }
   const estadoMetas = useSelector(
