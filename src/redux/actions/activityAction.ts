@@ -51,6 +51,16 @@ export const cargarInstitucionesAction = (
   }
 })
 
+export const CARGAR_META = 'CARGAR_META';
+export const cargarMetaAction = (
+  metas : { idMeta : number |null, descripcion : string | null , observaciones : string | null, resultado : string | null, valoracion : number | null}[]
+)=>({
+  type : CARGAR_META,
+  payload : {
+    metas
+  }
+})
+
 export const CARGAR_RELACION = "CARGAR_RELACION";
 export const cargarRelacion = (
   relacionesSeleccionadas: number[]

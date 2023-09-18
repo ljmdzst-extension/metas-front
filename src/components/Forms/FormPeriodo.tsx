@@ -115,7 +115,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
                   selectsStart
                   dateFormat="dd/MM/yyyy"
                   selected={rangeStart}
-                  minDate={ new Date('2023-01-01')}
+                  minDate={new Date( rangeStart.toString() || '2023-01-01')}
                   startDate={rangeStart}
                   endDate={rangeEnd}
                   onChange={selectStartDate}
@@ -174,7 +174,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
                       borderRadius: "7px",
                     }}
                   >
-                    {date.fecha}
+                    {printDMA(date.fecha ||'')}
                     <Button
                       variant="danger"
                       onClick={() => eliminarFecha(date.fecha || "")}

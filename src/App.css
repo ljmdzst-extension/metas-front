@@ -569,6 +569,13 @@ input.form-check-input:checked {
   min-height: 50%;
   padding: 7px;
 }
+.Valoraciones {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 50%;
+  padding: 7px;
+}
 .Descripcion {
   width: 100%;
   display: flex;
@@ -630,6 +637,14 @@ input.form-check-input:checked {
   font-style: italic;
 }
 .ParrafoObservaciones {
+  width: 100%;
+  min-height: 20px;
+  resize: none;
+  border-radius: 5px;
+  padding: 5px;
+  font-style: italic;
+}
+.ParrafoValoraciones {
   width: 100%;
   min-height: 20px;
   resize: none;

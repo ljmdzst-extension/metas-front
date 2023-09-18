@@ -11,10 +11,11 @@ interface ActividadState {
   fechaHasta: string | null;
   listaMetas:
     | {
-        idMeta: number;
-        descripcion: string;
-        resultado: string;
-        observaciones: string;
+        idMeta: number |null;
+        descripcion: string |null;
+        resultado: string |null;
+        observaciones: string |null;
+        valoracion : number |null;
       }[]
     | null;
   listaProgramasSIPPE: number[] | null;
@@ -109,6 +110,14 @@ const actividadSlice = createSlice({
     ) => {
       state.listaRelaciones = action.payload.relacionesSeleccionadas;
     },
+    CARGAR_META: (
+      state,
+      action : PayloadAction<{
+        metas : { idMeta : number |null, descripcion : string | null , observaciones : string | null, resultado : string | null, valoracion : number | null}[]
+      }>
+    )=>{
+      state.listaMetas = action.payload.metas
+    },
     CARGAR_INSTITUCION: (
       state,
       action : PayloadAction<{
@@ -116,7 +125,7 @@ const actividadSlice = createSlice({
       }>
     )=>{
       state.listaInstituciones = action.payload.instituciones
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -148,7 +157,8 @@ export const {
   CARGAR_PERIODO,
   CARGAR_PIE,
   CARGAR_RELACION,
-  CARGAR_INSTITUCION
+  CARGAR_INSTITUCION,
+  CARGAR_META
 } = actividadSlice.actions;
 
 export default actividadSlice.reducer;
