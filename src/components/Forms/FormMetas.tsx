@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+
 import axios from "axios";
 import { CARGAR_META } from "../../redux/reducers/ActivityReducer";
 interface FormMetas {
@@ -31,7 +32,6 @@ export default function FormMetas({ onClose }: FormMetas) {
     valoracion : 0
   })
   const [disable,setDisable] = useState(true)
-
   const estadoMetas = useSelector(
     (state: RootState) => state.actividadSlice.listaMetas
   );
