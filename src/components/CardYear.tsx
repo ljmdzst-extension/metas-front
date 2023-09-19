@@ -36,7 +36,7 @@ export default function CardYear({ title }: YearProps) {
   useEffect(() => {
     // Realizar la solicitud GET en el efecto
     axios
-      .get("http://localhost:4000/metas/v2/programas/2023")
+      .get("http://168.197.50.94:4005/metas/v2/programas/2023")
       .then((response) => {
         const data = response.data;
 

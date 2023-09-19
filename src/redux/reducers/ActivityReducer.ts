@@ -6,14 +6,16 @@ interface ActividadState {
   idArea: number;
   nro: number | null;
   desc: string | null;
+  mot_cancel : string | null;
   fechaDesde: string | null;
   fechaHasta: string | null;
   listaMetas:
     | {
-        idMeta: number;
-        descripcion: string;
-        resultado: string;
-        observaciones: string;
+        idMeta: number |null;
+        descripcion: string |null;
+        resultado: string |null;
+        observaciones: string |null;
+        valoracion : number |null;
       }[]
     | null;
   listaProgramasSIPPE: number[] | null;
@@ -40,6 +42,13 @@ interface ActividadState {
         fecha: string | null;
       }[]
     | null;
+  listaInstituciones : 
+   | {
+      idInstitucion : number | null,
+      nom : string | null,
+      ubicacion : string | null
+   }[]
+   | null;
 }
 
 const initialState: ActividadState = {
@@ -47,6 +56,7 @@ const initialState: ActividadState = {
   idArea: 0,
   nro: null,
   desc: null,
+  mot_cancel : null,
   fechaDesde: null,
   fechaHasta: null,
   listaMetas: [],
@@ -56,6 +66,7 @@ const initialState: ActividadState = {
   listaUbicaciones: [],
   listaEnlaces: [],
   listaFechasPuntuales: [],
+  listaInstituciones : []
 };
 
 const actividadSlice = createSlice({
@@ -67,7 +78,7 @@ const actividadSlice = createSlice({
       state.listaUbicaciones = action.payload.ubicaciones;
       console.log("cargo la descripcion");
     },
-    cargarPeriodo: (
+    CARGAR_PERIODO: (
       state,
       action: PayloadAction<{
         fechaDesde: string | null;
@@ -81,6 +92,7 @@ const actividadSlice = createSlice({
       state.fechaDesde = action.payload.fechaDesde;
       state.fechaHasta = action.payload.fechaHasta;
       state.listaFechasPuntuales = action.payload.listaFechasPuntuales;
+      console.log('cargo el periodo')
     },
     CARGAR_PIE: (
       state,
@@ -97,6 +109,22 @@ const actividadSlice = createSlice({
       }>
     ) => {
       state.listaRelaciones = action.payload.relacionesSeleccionadas;
+    },
+    CARGAR_META: (
+      state,
+      action : PayloadAction<{
+        metas : { idMeta : number |null, descripcion : string | null , observaciones : string | null, resultado : string | null, valoracion : number | null}[]
+      }>
+    )=>{
+      state.listaMetas = action.payload.metas
+    },
+    CARGAR_INSTITUCION: (
+      state,
+      action : PayloadAction<{
+        instituciones : { idInstitucion : number |null, nom : string | null , ubicacion : string | null}[]
+      }>
+    )=>{
+      state.listaInstituciones = action.payload.instituciones
     },
   },
   extraReducers: (builder) => {
@@ -126,9 +154,11 @@ const actividadSlice = createSlice({
 
 export const {
   CARGAR_DESCRIPCION,
-  cargarPeriodo,
+  CARGAR_PERIODO,
   CARGAR_PIE,
-  CARGAR_RELACION
+  CARGAR_RELACION,
+  CARGAR_INSTITUCION,
+  CARGAR_META
 } = actividadSlice.actions;
 
 export default actividadSlice.reducer;

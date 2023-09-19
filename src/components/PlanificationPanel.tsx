@@ -29,6 +29,19 @@ export default function PlanificationPanel({ name }: Props) {
   const estadoActualizado = useSelector(
     (state: RootState) => state.actividadSlice
   ); 
+
+  const guardarActividad = ()=>{
+     fetch('http://168.197.50.94:4005/metas/v2/actividad',{
+      method : 'PUT',
+      headers : {
+        'Content-Type' : 'application/json'
+      },
+      body : JSON.stringify(estadoActualizado)
+     })
+     .then( resp => resp.json() )
+     .then( data => data.ok ? alert('actividad guardada !') : alert(data.error))
+     .catch( error => alert(JSON.stringify(error)))
+  };
   const eliminarActividad = (name: string) => {};
   const handleCloseForm = () => {
     setIsFormOpen(false);
@@ -189,7 +202,11 @@ export default function PlanificationPanel({ name }: Props) {
             <Button variant="warning" className="Suspend">
               Suspender Actividad
             </Button>
-            <Button variant="success" className="Save">
+            <Button variant="success" className="Save"
+              onClick={()=>{
+                guardarActividad();
+              }}
+            >
               Guardar Actividad
             </Button>
             <Button

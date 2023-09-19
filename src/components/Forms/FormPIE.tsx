@@ -27,7 +27,7 @@ export default function FormPIE({ onClose }: FormPIEProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/metas/v2/bases/");
+        const response = await axios.get("http://168.197.50.94:4005/metas/v2/bases/");
         if (response.data.ok) {
           const listaObjetivos = response.data.data.listaObjetivos;
           setObjetivos(listaObjetivos);

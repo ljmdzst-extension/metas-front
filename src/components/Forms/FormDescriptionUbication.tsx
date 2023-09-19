@@ -20,7 +20,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
     estadoActualizado.desc ?? ""
   );
   const [ubicacion, setUbicacion] = useState<string>("");
-  const [ubicaciones, setUbicaciones] = useState<{ idUbicacion: number | null; idActividad: number | null; nom: string; enlace: string | null; }[]>([]);
+  const [ubicaciones, setUbicaciones] = useState<{ idUbicacion: number | null; nom : string |null; idActividad: number | null; enlace: string | null; }[]>([]);
 
   useEffect(() => {
     if (estadoActualizado.listaUbicaciones) {
@@ -28,8 +28,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
     }
   }, []);
   const handleCargarDescripcion = () => {
-    dispatch(CARGAR_DESCRIPCION({ descripcion, ubicaciones: [] }));
-    console.log(estadoActualizado);
+    dispatch(CARGAR_DESCRIPCION({ descripcion, ubicaciones }));
     onClose();
   };
   const handleDescripcionChange = (
@@ -46,10 +45,10 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   const agregarUbicacion = () => {
     if (ubicacion.trim() !== "") {
       const nuevaUbicacion = {
-        idUbicacion: null,
+        idUbicacion: 0,
         idActividad: null,
-        nom: ubicacion,
-        enlace: null,
+        nom : '',
+        enlace: ubicacion,
       };
   
       setUbicaciones([...ubicaciones, nuevaUbicacion]);
@@ -138,7 +137,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
               <div className="Ubicacion">
                 <InputGroup className="mb-3 gap-1">
                   <Form.Control
-                    placeholder={ubicacion.nom}
+                    placeholder={ubicacion.enlace ||''}
                     aria-label="Inserte link de ubicación"
                     aria-describedby="basic-addon2"
                     readOnly

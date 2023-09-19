@@ -1,4 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+
+
 export const CARGAR_DESCRIPCION = "CARGAR_DESCRIPCION";
 export const CargarDescripcionAction = (
   descripcion: string | null,
@@ -17,7 +19,7 @@ export interface CargarPeriodoAction {
     listaFechasPuntuales: { idFecha: number | null; fecha: string | null }[];
   };
 }
-export const cargarPeriodo = (
+export const cargarPeriodoAction = (
   fechaDesde: string | null,
   fechaHasta: string | null,
   listaFechasPuntuales: { idFecha: number | null; fecha: string | null }[]
@@ -37,6 +39,27 @@ export const cargarPIE = (
   type: CARGAR_PIE,
   payload: { objetivosSeleccionados },
 });
+
+export const CARGAR_INSTITUCION = 'CARGAR_INSTITUCIONES';
+
+export const cargarInstitucionesAction = (
+  instituciones : { idInstitucion : number |null, nom : string | null , ubicacion : string | null}[]
+)=>({
+  type : CARGAR_INSTITUCION,
+  payload : {
+    instituciones
+  }
+})
+
+export const CARGAR_META = 'CARGAR_META';
+export const cargarMetaAction = (
+  metas : { idMeta : number |null, descripcion : string | null , observaciones : string | null, resultado : string | null, valoracion : number | null}[]
+)=>({
+  type : CARGAR_META,
+  payload : {
+    metas
+  }
+})
 
 export const CARGAR_RELACION = "CARGAR_RELACION";
 export const cargarRelacion = (
@@ -70,7 +93,6 @@ export interface CargarDatosActividadAction {
       | {
           idUbicacion: number | null;
           idActividad: number | null;
-          nom: string;
           enlace: string | null;
         }[]
       | null;
@@ -84,12 +106,13 @@ export interface CargarDatosActividadAction {
   };
 }
 
+
 export const CargarDatosActividadAction = createAsyncThunk(
   "CargarDatosActividadAction",
   async (id: number) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/metas/v2/actividad/${id}`
+        `http://168.197.50.94:4005/metas/v2/actividad/${id}`
       );
       if (!response.ok) {
         throw new Error("Error al cargar los datos de actividad");
