@@ -31,12 +31,13 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
     { idFecha: number | null; fecha: string | null }[]
   >(estadoActualizado.listaFechasPuntuales ?? []);
   const [startDate, setDate] = useState<Date>(new Date());
-  const [rangeStart, setRangeStart] = useState<Date>( new Date( estadoActualizado.fechaDesde || Date.now()));
-  const defaultEnd = new Date();
-  defaultEnd.setDate( rangeStart.getDate() + 7 );
-  const [rangeEnd, setRangeEnd] = useState<Date>(  new Date(estadoActualizado.fechaHasta ||  defaultEnd ));
+  const [rangeStart, setRangeStart] = useState<Date>( new Date( estadoActualizado.fechaDesde?.split('-').join('/') || '2023/01/01'));
 
- 
+  const [rangeEnd, setRangeEnd] = useState<Date>(  new Date(estadoActualizado.fechaHasta?.split('-').join('/') ||  '2023/12/31' ));
+
+  console.log(estadoActualizado.fechaDesde);
+  
+
   const [indexDates, setIndexDates] =
     useState<{ idFecha: number | null; fecha: string | null }[]>(
       listaFechasPuntuales.filter(
@@ -115,7 +116,8 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
                   selectsStart
                   dateFormat="dd/MM/yyyy"
                   selected={rangeStart}
-                  minDate={new Date( rangeStart.toString() || '2023-01-01')}
+                  minDate={new Date( '2023/01/01')}
+                  maxDate={new Date(indexDates[0]?.fecha || '2080-01-01')}
                   startDate={rangeStart}
                   endDate={rangeEnd}
                   onChange={selectStartDate}
@@ -130,6 +132,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
                   selected={rangeEnd}
                   startDate={rangeStart}
                   endDate={rangeEnd}
+                  minDate={new Date(indexDates[indexDates.length-1]?.fecha?.split('-').join('/') || '2023/01/02')}
                   onChange={selectEndDate}
                 />
               </div>
