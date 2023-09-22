@@ -106,9 +106,11 @@ const actividadSlice = createSlice({
       state,
       action: PayloadAction<{
         relacionesSeleccionadas: number[];
+        sippeSeleccionadas : number[];
       }>
     ) => {
       state.listaRelaciones = action.payload.relacionesSeleccionadas;
+      state.listaProgramasSIPPE = action.payload.sippeSeleccionadas;
     },
     CARGAR_META: (
       state,
