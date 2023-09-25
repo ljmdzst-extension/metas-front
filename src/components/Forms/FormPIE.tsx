@@ -107,6 +107,11 @@ export default function FormPIE({ onClose }: FormPIEProps) {
                 {objetivosDesde4a7.map((objetivo) => (
                   <Form.Check
                     id={objetivo.idObjetivo.toString()}
+                    title={ objetivo.idObjetivo === 5 
+                      ?
+                      `Asegurar el pleno funcionamiento del co-gobierno, el ejercicio de la autonomía universitaria y la autarquía en la administración de sus recursos, profundizando la participación de toda la comunidad universitaria, con arreglo al régimen de cada claustro, en instancias deliberativas, participativas y democráticas, y con sus acciones articuladas en torno al proceso de planeamiento.`  
+                     : undefined
+                    }
                     label={objetivo.nom}
                     key={objetivo.idObjetivo}
                     onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}

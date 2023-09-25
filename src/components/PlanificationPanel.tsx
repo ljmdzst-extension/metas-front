@@ -80,7 +80,7 @@ export default function PlanificationPanel({ name }: Props) {
         </Modal.Body>
       </Modal>
       <div className="ConteinerTitle">
-        <h1>{name}</h1>
+        <h1 style={{ wordWrap : "break-word" }}>{name}</h1>
         {isFormOpen && (
           <Button
             variant="success"
@@ -107,7 +107,7 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Descripcion / Ubicacion
+                  Descripción / Ubicación
                 </Button>
               </div>
               <div className="rowForm">
@@ -169,7 +169,7 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Objetivo Estrategico
+                  Objetivo Estratégico
                 </Button>
               </div>
               <div className="rowForm">
@@ -193,7 +193,7 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Documentacion
+                  Documentación
                 </Button>
               </div>
             </div>

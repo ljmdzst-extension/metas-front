@@ -72,7 +72,7 @@ export default function FormOrgInst({ onClose }: FormOrgInstProps) {
               onChange={(e) => setTipo(e.target.value as "enlace" | "documento")}
             >
               <option value="enlace">Enlace</option>
-              <option value="documento">Documento</option>
+              <option value="documento" hidden>Documento</option>
             </Form.Control>
           </label>
         <Form className="formInstituciones" onSubmit={submitForm} style={{width:"500px"}}>

@@ -83,9 +83,10 @@ export default function FormMetas({ onClose }: FormMetas) {
     <>
       <div className="FormMetas">
         <h1>Metas y Resultados</h1>
+        <h4>Se puede cargar más de una.</h4>
         <div className="ConteinerDescriptionMetas">
               <div className="Descripcion">
-                <span className="SubtituloMetas">Descripcion:</span>
+                <span className="SubtituloMetas">Meta/resultado esperado :</span>
                 <Form.Control
                   type="text"
                   name="descripcion"
@@ -98,7 +99,7 @@ export default function FormMetas({ onClose }: FormMetas) {
               </div>
               <div className="Resultados">
                 <div className="ResultadoEsperado">
-                  <span className="SubtituloMetas">Resultado:</span>
+                  <span className="SubtituloMetas">Resultado alcanzado :</span>
                   <Form.Control
                     type="text"
                     name="resultado"
@@ -111,7 +112,12 @@ export default function FormMetas({ onClose }: FormMetas) {
                 </div>
                 <div className="Observaciones">
                   <span className="SubtituloMetas">
-                    Observaciones:
+                    {
+                      `
+                      Observaciones (puede incorporarse cualquier detalle o 
+                        información adicional que complemente los resultados alcanzados. También pueden ingresarse links a documentos o recursos anexo).
+                      `
+                    }
                   </span>
                   <Form.Control
                     type="text"
@@ -125,7 +131,7 @@ export default function FormMetas({ onClose }: FormMetas) {
                 </div>
                 <div className="Valoraciones">
                   <span className="SubtituloMetas">
-                    Valoración:
+                    {`Valoración general de la actividad y los resultados alcanzados :`}
                   </span>
                   <Form.Select
                     name="valoracion"
@@ -160,7 +166,7 @@ export default function FormMetas({ onClose }: FormMetas) {
           <div className="ConteinerGrande" key={index}>
             <div className="ConteinerDescriptionMetas">
               <div className="Descripcion">
-                <span className="SubtituloMetas">Descripcion:</span>
+                <span className="SubtituloMetas">Descripción:</span>
                 <Form.Control
                   type="text"
                   name="descripcion"

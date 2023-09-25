@@ -176,25 +176,25 @@ export default function Activity() {
                 padding: "10px",
                 borderRadius: "10px",
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "center"
               }}
               key={index}
               onClick={() => {
                 if (isPlanificationOpen === true) {
                   handleShow2();
                   setNameActivityAux(
-                    `Planificacion de la Actividad: ${index + 1}`
+                    `${item.desc}`
                   );
                 } else {
                   setIsPlanificationOpen(!isPlanificationOpen);
                   setNameActivity(
-                    `Planificacion de la Actividad: ${index + 1}`
+                    `${item.desc}`
                   );
                   handleButtonClick(item.idActividad)
                 }
               }}
             >
-              {index + 1}
+              <span style={{textOverflow : "ellipsis" , overflow : "hidden", fontWeight : "normal", whiteSpace : "nowrap"}} >{item.desc}</span>
             </ListGroup.Item>
           ))}
         </div>

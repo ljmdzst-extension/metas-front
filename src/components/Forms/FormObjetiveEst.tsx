@@ -71,7 +71,7 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
         <h2 className="TitleObjetivo">Objetivo Estrategico</h2>
         <Form className="FormObj">
           <p className="SubtitleObj">
-            <span>Seleccione los objetivos:</span>
+            <span>Seleccione el/los objetivo/s estratégico/s vinculado/s a la actividad :</span>
           </p>
           <div className="Obj">
             {objetivosDesde0a4.map((objetivo) => (
