@@ -117,7 +117,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
                   dateFormat="dd/MM/yyyy"
                   selected={rangeStart}
                   minDate={new Date( '2023/01/01')}
-                  maxDate={new Date(indexDates[0]?.fecha || '2080-01-01')}
+                  maxDate={new Date(indexDates[0]?.fecha?.split('-').join('/') || '2080-01-01')}
                   startDate={rangeStart}
                   endDate={rangeEnd}
                   onChange={selectStartDate}
