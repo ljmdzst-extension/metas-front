@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import { Form } from "react-bootstrap";
+import { Form, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 import axios from "axios";
-import { CARGAR_META } from "../../redux/reducers/ActivityReducer";
 import { guardarActividad } from "../../redux/actions/putActividad";
 interface FormMetas {
   onClose: () => void;
@@ -25,13 +24,14 @@ export default function FormMetas({ onClose }: FormMetas) {
   const dispatch = useDispatch();
   const [Valoraciones, setValoraciones] = useState<Valoracion[]>([])
   const [indexMetas, setIndexMetas] = useState<metas[]>([]);
-  const [nuevaMeta, setNuevaMeta] = useState<metas>({
+  const defaultNuevaMeta = {
     idMeta : 0,
     descripcion : '',
     resultado: '',
     observaciones : '',
     valoracion : 0
-  })
+  }
+  const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta)
   const [disable,setDisable] = useState(true)
   const estadoActualizado = useSelector(
     (state: RootState) => state.actividadSlice
@@ -64,17 +64,23 @@ export default function FormMetas({ onClose }: FormMetas) {
     sincronizarMetas();
   }, [estadoActualizado.listaMetas]);
 
-  const eliminarMeta = (id: number | null) => {
-   if(id !== null)  setIndexMetas(indexMetas.filter((item) => item.idMeta !== id));
+  const eliminarMeta = (_index: number | null) => {
+   if(_index !== null)  setIndexMetas(indexMetas.filter((item,index) => index !== _index));
   };
 
   const agregarMeta = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if(nuevaMeta.descripcion?.length){
-      
-     setIndexMetas([...indexMetas,nuevaMeta])
+      if(nuevaMeta.idMeta && nuevaMeta.idMeta > 0) {
+        setIndexMetas(indexMetas.map( meta => meta.idMeta === nuevaMeta.idMeta ? nuevaMeta : meta))
+      } else {  
+        setIndexMetas([...indexMetas,nuevaMeta])
+      }
+     setNuevaMeta(defaultNuevaMeta)
     }
   }
+
+  
   return (
     <>
       <div className="FormMetas">
@@ -157,74 +163,61 @@ export default function FormMetas({ onClose }: FormMetas) {
         >
           Agregar meta
         </Button>
+        <div className="ListaInstituciones">
+          <h6>Metas cargadas:</h6>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Descripción</th>
+                <th>Resultado</th>
+                <th>Observaciones</th>
+                <th>Valoración</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            {indexMetas.map((item, index) => (
+               <tr
+               key={index}
+             >
+               <td style={{width:"30px"}}>{index+1}</td>
+               <td style={{width:"20%"}}>{item.descripcion}</td>
+               <td>{
+                item.resultado
+                
+                }</td>
+               <td>{item.observaciones}</td>
+               <td>{item.valoracion}</td>
+               <td style={{width:"20px"}}>
+               {/* <Button variant="secondary"
+                    onClick={() => editarMeta(item)}
+                 >
+                   <img
+                     src="../assets/img/boton-editar.png"
+                     className="imgboton"
+                     alt="eliminar"
+                    
+                   />
+                 </Button> */}
+                 <Button variant="danger"
+                    onClick={() => eliminarMeta(index)}
+                 >
+                   <img
+                     src="../assets/img/eliminar.png"
+                     className="imgboton"
+                     alt="eliminar"
+                    
+                   />
+                 </Button>
+               </td>
+             </tr>
+            ))}
+            </tbody>
+          </Table>
+        </div>
 
-        {indexMetas.map((item, index) => (
-          <div className="ConteinerGrande" key={index}>
-            <div className="ConteinerDescriptionMetas">
-              <div className="Descripcion">
-                <span className="SubtituloMetas">Descripción:</span>
-                <Form.Control
-                  type="text"
-                  name="descripcion"
-                  className="ParrafoDescripcion"
-                  placeholder={item.descripcion ||''}
-                  disabled={disable}
-                />
-              </div>
-              <div className="Resultados">
-                <div className="ResultadoEsperado">
-                  <span className="SubtituloMetas">Resultado:</span>
-                  <Form.Control
-                    type="text"
-                    name="resultado"
-                    className="ParrafoResultados"
-                    disabled={disable}
-                    placeholder={item.resultado ||''}
-                  />
-                </div>
-                <div className="Observaciones">
-                  <span className="SubtituloMetas">
-                    Observaciones:
-                  </span>
-                  <Form.Control
-                    type="text"
-                    name="observaciones"
-                    className="ParrafoObservaciones"
-                    placeholder={item.observaciones ||''}
-                    disabled={disable} 
-                  />
-                </div>
-                <div className="Valoraciones">
-                  <span className="SubtituloMetas">
-                    Valoración:
-                  </span>
-                  <Form.Select
-                    name="valoracion"
-                    className="ParrafoValoraciones"
-                    disabled={disable} 
-                    placeholder={ `${item.valoracion}` }
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="ConteinerButton">
-              <Button variant="secondary" className="ButtonEdit" onClick={()=>{setDisable(!disable)}}>
-                <img
-                  src="../assets/img/boton-editar.png"
-                  className="imgboton"
-                  alt="editar"
-                />
-              </Button>
-              <Button variant="danger" className="ButtonEdit" onClick={()=>{eliminarMeta(item.idMeta)}}>
-                <img
-                  src="../assets/img/eliminar.png"
-                  className="imgboton"
-                  alt="eliminar"
-                />
-              </Button>
-            </div>
-          </div>
-        ))}
+        
         
       </div>
       <Button

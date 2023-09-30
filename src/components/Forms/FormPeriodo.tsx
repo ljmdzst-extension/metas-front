@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
@@ -6,7 +6,6 @@ import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { CARGAR_PERIODO } from "../../redux/reducers/ActivityReducer";
 import { guardarActividad } from "../../redux/actions/putActividad";
 
 registerLocale("es", es);

@@ -4,7 +4,6 @@ import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { CARGAR_PIE } from "../../redux/reducers/ActivityReducer";
 import { guardarActividad } from "../../redux/actions/putActividad";
 
 interface FormPIEProps {

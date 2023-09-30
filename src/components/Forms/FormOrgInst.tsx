@@ -3,7 +3,6 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import { Form } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
-import { CARGAR_INSTITUCION } from '../../redux/reducers/ActivityReducer';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { guardarActividad } from "../../redux/actions/putActividad";
