@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { CARGAR_PIE } from "../../redux/reducers/ActivityReducer";
+import { guardarActividad } from "../../redux/actions/putActividad";
 
 interface FormPIEProps {
   onClose: () => void;
@@ -56,23 +57,18 @@ export default function FormPIE({ onClose }: FormPIEProps) {
   const objetivosDesde8a11 = objetivos?.slice(8, 11);
   const objetivosDesde12a16 = objetivos?.slice(12, 16);
 
-  const estadoObjetivosSeleccionados = useSelector(
-    (state: RootState) => state.actividadSlice.listaObjetivos
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.actividadSlice
   );
   const sincronizarCheckboxes = () => {
-    if (estadoObjetivosSeleccionados) {
-      setObjetivosSeleccionados(estadoObjetivosSeleccionados);
+    if (estadoActualizado.listaObjetivos) {
+      setObjetivosSeleccionados(estadoActualizado.listaObjetivos);
     }
   };
 
   useEffect(() => {
     sincronizarCheckboxes();
-  }, [estadoObjetivosSeleccionados]);
-
-  const handleCargarPIE = () => {
-    dispatch(CARGAR_PIE({objetivosSeleccionados}));
-    onClose();
-  };
+  }, [estadoActualizado.listaObjetivos]);
 
   return (
     <>
@@ -147,12 +143,16 @@ export default function FormPIE({ onClose }: FormPIEProps) {
       </div>
       <Button
         variant="success"
-        className="SaveChange"
+        className="Save"
         onClick={() => {
-          handleCargarPIE();
+          guardarActividad({
+            ...estadoActualizado,
+            listaObjetivos: objetivosSeleccionados,
+          },dispatch);
+          onClose();
         }}
       >
-        Guardar Cambios
+        Guardar Actividad
       </Button>
     </>
   );

@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { CARGAR_RELACION } from "../../redux/reducers/ActivityReducer";
+import { guardarActividad } from "../../redux/actions/putActividad";
 const animatedComponents = makeAnimated();
 interface FormArSecUUrops {
   onClose: () => void;
@@ -42,30 +43,27 @@ number[]
 const [sippeSeleccionadas, setSippeSeleccionadas] = useState<
 number[]
 >([]);
-  const estadoRelacionesSeleccionadas = useSelector(
-    (state: RootState) => state.actividadSlice.listaRelaciones
-  );
-  const estadoSIPPESeleccionadas = useSelector(
-    (state: RootState) => state.actividadSlice.listaProgramasSIPPE
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.actividadSlice
   );
   const sincronizarSelectsRelacion = () => {
-    if (estadoRelacionesSeleccionadas) {
-      setRelacionSeleccionadas1(estadoRelacionesSeleccionadas);
-      setRelacionSeleccionadas2(estadoRelacionesSeleccionadas);
-      setRelacionSeleccionadas3(estadoRelacionesSeleccionadas);
+    if (estadoActualizado.listaRelaciones) {
+      setRelacionSeleccionadas1(estadoActualizado.listaRelaciones);
+      setRelacionSeleccionadas2(estadoActualizado.listaRelaciones);
+      setRelacionSeleccionadas3(estadoActualizado.listaRelaciones);
     }
   };
   const sincronizarSelectsSIPPE = () => {
-    if (estadoSIPPESeleccionadas) {
-      setSippeSeleccionadas(estadoSIPPESeleccionadas);
+    if (estadoActualizado.listaProgramasSIPPE) {
+      setSippeSeleccionadas(estadoActualizado.listaProgramasSIPPE);
     }
   };
   useEffect(() => {
     sincronizarSelectsRelacion();
-  }, [estadoRelacionesSeleccionadas]);
+  }, [estadoActualizado.listaRelaciones]);
   useEffect(() => {
     sincronizarSelectsSIPPE();
-  }, [estadoSIPPESeleccionadas]);
+  }, [estadoActualizado.listaProgramasSIPPE]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -208,12 +206,21 @@ number[]
       </div>
       <Button
         variant="success"
-        className="SaveChange"
+        className="Save"
         onClick={() => {
-          handleCargarArSecUU();
+          guardarActividad({
+            ...estadoActualizado,
+            listaRelaciones : Array.from(new Set([
+              ...relacionSeleccionadas1,
+              ...relacionSeleccionadas2,
+              ...relacionSeleccionadas3
+              ])),
+              listaProgramasSIPPE : Array.from(new Set([...sippeSeleccionadas]))
+          },dispatch);
+          onClose();
         }}
       >
-        Guardar Cambios
+        Guardar Actividad
       </Button>
     </>
   );

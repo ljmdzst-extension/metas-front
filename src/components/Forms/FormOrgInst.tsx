@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup";
 import { Form } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { CARGAR_INSTITUCION } from '../../redux/reducers/ActivityReducer';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { guardarActividad } from "../../redux/actions/putActividad";
 type Institucion = {
   idInstitucion:number | null,
   nom: string | null;
@@ -40,13 +40,6 @@ export default function FormOrgInst({ onClose }:FormOrgInst) {
     if(index !== null) {
      setArrayInstitucion(arrayInstitucion.filter((item,i) => i !== index));
     }
-  };
-
-  const handleCargarOrgInst = () => {
-    dispatch( CARGAR_INSTITUCION({
-      instituciones : arrayInstitucion
-    }) )
-    onClose();
   };
 
   useEffect(() => {
@@ -165,12 +158,16 @@ export default function FormOrgInst({ onClose }:FormOrgInst) {
       </div>
       <Button
         variant="success"
-        className="SaveChange"
+        className="Save"
         onClick={() => {
-          handleCargarOrgInst();
+          guardarActividad({
+            ...estadoActualizado,
+            listaInstituciones : arrayInstitucion,
+          },dispatch);
+          onClose();
         }}
       >
-        Guardar Cambios
+        Guardar Actividad
       </Button>
     </>
   );

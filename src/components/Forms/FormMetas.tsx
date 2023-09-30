@@ -6,6 +6,7 @@ import { RootState } from "../../redux/store";
 
 import axios from "axios";
 import { CARGAR_META } from "../../redux/reducers/ActivityReducer";
+import { guardarActividad } from "../../redux/actions/putActividad";
 interface FormMetas {
   onClose: () => void;
 }
@@ -32,8 +33,8 @@ export default function FormMetas({ onClose }: FormMetas) {
     valoracion : 0
   })
   const [disable,setDisable] = useState(true)
-  const estadoMetas = useSelector(
-    (state: RootState) => state.actividadSlice.listaMetas
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.actividadSlice
   );
 
   useEffect(() => {
@@ -55,13 +56,13 @@ export default function FormMetas({ onClose }: FormMetas) {
     fetchData();
   }, []);
   const sincronizarMetas = () => {
-    if (estadoMetas) {
-      setIndexMetas(estadoMetas);
+    if (estadoActualizado.listaMetas) {
+      setIndexMetas(estadoActualizado.listaMetas);
     }
   };
   useEffect(() => {
     sincronizarMetas();
-  }, [estadoMetas]);
+  }, [estadoActualizado.listaMetas]);
 
   const eliminarMeta = (id: number | null) => {
    if(id !== null)  setIndexMetas(indexMetas.filter((item) => item.idMeta !== id));
@@ -74,11 +75,6 @@ export default function FormMetas({ onClose }: FormMetas) {
      setIndexMetas([...indexMetas,nuevaMeta])
     }
   }
-
-  const handleCargarMetas = () => {
-    dispatch(CARGAR_META({metas : indexMetas}));
-    onClose();
-  };
   return (
     <>
       <div className="FormMetas">
@@ -233,12 +229,16 @@ export default function FormMetas({ onClose }: FormMetas) {
       </div>
       <Button
         variant="success"
-        className="SaveChange"
+        className="Save"
         onClick={() => {
-          handleCargarMetas();
+          guardarActividad({
+            ...estadoActualizado,
+            listaMetas : indexMetas,
+          },dispatch);
+          onClose();
         }}
       >
-        Guardar Cambios
+        Guardar Actividad
       </Button>
     </>
   );

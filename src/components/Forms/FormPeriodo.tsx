@@ -7,6 +7,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { CARGAR_PERIODO } from "../../redux/reducers/ActivityReducer";
+import { guardarActividad } from "../../redux/actions/putActividad";
 
 registerLocale("es", es);
 
@@ -31,36 +32,35 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
     { idFecha: number | null; fecha: string | null }[]
   >(estadoActualizado.listaFechasPuntuales ?? []);
   const [startDate, setDate] = useState<Date>(new Date());
-  const [rangeStart, setRangeStart] = useState<Date>( new Date( estadoActualizado.fechaDesde?.split('-').join('/') || '2023/01/01'));
+  const [rangeStart, setRangeStart] = useState<Date>(
+    new Date(estadoActualizado.fechaDesde?.split("-").join("/") || "2023/01/01")
+  );
 
-  const [rangeEnd, setRangeEnd] = useState<Date>(  new Date(estadoActualizado.fechaHasta?.split('-').join('/') ||  '2023/12/31' ));
+  const [rangeEnd, setRangeEnd] = useState<Date>(
+    new Date(estadoActualizado.fechaHasta?.split("-").join("/") || "2023/12/31")
+  );
 
-  console.log(estadoActualizado.fechaDesde);
-  
 
-  const [indexDates, setIndexDates] =
-    useState<{ idFecha: number | null; fecha: string | null }[]>(
-      listaFechasPuntuales.filter(
-        (fecha) => fecha.fecha !== null
-      )
-    );
+  const [indexDates, setIndexDates] = useState<
+    { idFecha: number | null; fecha: string | null }[]
+  >(listaFechasPuntuales.filter((fecha) => fecha.fecha !== null));
 
   useEffect(() => {
-    setIndexDates( listaFechasPuntuales.filter(
-      (fecha) => fecha.fecha !== null
-    ));
+    setIndexDates(listaFechasPuntuales.filter((fecha) => fecha.fecha !== null));
   }, [listaFechasPuntuales]);
 
-  const printDMA = (fecha : string) => fecha?.split('-').reverse().join('/');
+  const printDMA = (fecha: string) => fecha?.split("-").reverse().join("/");
 
   const dateToString = (date: Date) => {
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
-    return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+    return `${year}-${month < 10 ? `0${month}` : month}-${
+      day < 10 ? `0${day}` : day
+    }`;
   };
 
-  const selectDateHandler = (d: Date ) => {
+  const selectDateHandler = (d: Date) => {
     const dateString = dateToString(d);
 
     if (!indexDates.find((date) => date.fecha === dateString)) {
@@ -90,12 +90,6 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
     setListaFechasPuntuales(filteredDates);
   };
 
-  const handleCargarFechas = () => {
-    console.log('llamando dispatch')
-    dispatch(CARGAR_PERIODO({fechaDesde, fechaHasta, listaFechasPuntuales}));
-    onClose();
-  };
-
   return (
     <>
       <div className="FormDescription">
@@ -116,8 +110,12 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
                   selectsStart
                   dateFormat="dd/MM/yyyy"
                   selected={rangeStart}
-                  minDate={new Date( '2023/01/01')}
-                  maxDate={new Date(indexDates[0]?.fecha?.split('-').join('/') || '2080-01-01')}
+                  minDate={new Date("2023/01/01")}
+                  maxDate={
+                    new Date(
+                      indexDates[0]?.fecha?.split("-").join("/") || "2080-01-01"
+                    )
+                  }
                   startDate={rangeStart}
                   endDate={rangeEnd}
                   onChange={selectStartDate}
@@ -132,14 +130,37 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
                   selected={rangeEnd}
                   startDate={rangeStart}
                   endDate={rangeEnd}
-                  minDate={new Date(indexDates[indexDates.length-1]?.fecha?.split('-').join('/') || '2023/01/02')}
+                  minDate={
+                    new Date(
+                      indexDates[indexDates.length - 1]?.fecha
+                        ?.split("-")
+                        .join("/") || "2023/01/02"
+                    )
+                  }
                   onChange={selectEndDate}
                 />
               </div>
             </div>
             <div>
-              <p style={{border:"solid black 1px",padding:"2px"}}>
-                  El rango seleccionado es desde <span style={{fontSize:"15px",textDecoration:"underline black"}}>{printDMA(fechaDesde || '')}</span> hasta <span style={{fontSize:"15px", textDecoration:"underline black"}}>{printDMA(fechaHasta || '')}</span>
+              <p style={{ border: "solid black 1px", padding: "2px" }}>
+                El rango seleccionado es desde{" "}
+                <span
+                  style={{
+                    fontSize: "15px",
+                    textDecoration: "underline black",
+                  }}
+                >
+                  {printDMA(fechaDesde || "")}
+                </span>{" "}
+                hasta{" "}
+                <span
+                  style={{
+                    fontSize: "15px",
+                    textDecoration: "underline black",
+                  }}
+                >
+                  {printDMA(fechaHasta || "")}
+                </span>
               </p>
             </div>
           </div>
@@ -177,7 +198,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
                       borderRadius: "7px",
                     }}
                   >
-                    {printDMA(date.fecha ||'')}
+                    {printDMA(date.fecha || "")}
                     <Button
                       variant="danger"
                       onClick={() => eliminarFecha(date.fecha || "")}
@@ -193,10 +214,18 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
       </div>
       <Button
         variant="success"
-        className="SaveChange"
-        onClick={()=>handleCargarFechas()}
+        className="Save"
+        onClick={() => {
+          guardarActividad({
+            ...estadoActualizado,
+            fechaDesde: fechaDesde,
+            fechaHasta: fechaHasta,
+            listaFechasPuntuales: listaFechasPuntuales,
+          },dispatch);
+          onClose();
+        }}
       >
-        Guardar Cambios
+        Guardar Actividad
       </Button>
     </>
   );

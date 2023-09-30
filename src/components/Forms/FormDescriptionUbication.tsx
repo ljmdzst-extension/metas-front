@@ -158,12 +158,12 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
               variant="success"
               className="Save"
               onClick={() => {
-                guardarActividad({...estadoActualizado,desc:descripcion, listaUbicaciones: ubicaciones });
+                guardarActividad({...estadoActualizado,desc:descripcion, listaUbicaciones: ubicaciones },dispatch);
                 onClose();
               }}
             >
               Guardar Actividad
-            </Button>
+      </Button>
     </div>
   );
 };
