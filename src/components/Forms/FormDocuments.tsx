@@ -30,8 +30,8 @@ export default function FormOrgInst({ onClose }: FormOrgInstProps) {
 
   useEffect(() => {
     if (estadoActualizado.listaEnlaces) {
-      const enlacesMapeados = estadoActualizado.listaEnlaces.map((enlace, index) => ({
-        idEnlace: index + 1,
+      const enlacesMapeados = estadoActualizado.listaEnlaces.map((enlace) => ({
+        idEnlace: enlace.idEnlace,
         link: enlace.link || null,
         desc: enlace.desc || null,
       }));
@@ -46,7 +46,7 @@ export default function FormOrgInst({ onClose }: FormOrgInstProps) {
       setArrayDocumentos([
         ...arrayDocumentos,
         {
-          idEnlace: arrayDocumentos.length + 1,
+          idEnlace: 0,
           link: nombreArchivo,
           desc: descripcion,
         },
@@ -103,7 +103,7 @@ export default function FormOrgInst({ onClose }: FormOrgInstProps) {
             <tbody>
               {arrayDocumentos.map((item, index) => (
                 <tr key={index}>
-                  <td style={{ width: "30px" }}>{item.idEnlace}</td>
+                  <td style={{ width: "30px" }}>{index + 1}</td>
                   <td style={{ width: "20%" }}>{item.desc}</td>
                   <td>
                     <a
