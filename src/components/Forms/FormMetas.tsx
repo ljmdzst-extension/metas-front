@@ -32,7 +32,7 @@ export default function FormMetas({ onClose }: FormMetas) {
     valoracion : 0
   }
   const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta)
-  const [disable,setDisable] = useState(true)
+  const [disable,setDisable] = useState<{index : number, state : boolean}[]>([])
   const estadoActualizado = useSelector(
     (state: RootState) => state.actividadSlice
   );
@@ -58,6 +58,7 @@ export default function FormMetas({ onClose }: FormMetas) {
   const sincronizarMetas = () => {
     if (estadoActualizado.listaMetas) {
       setIndexMetas(estadoActualizado.listaMetas);
+      setDisable( indexMetas.map( (item,index) => ({ index, state : true })))
     }
   };
   useEffect(() => {
@@ -182,16 +183,72 @@ export default function FormMetas({ onClose }: FormMetas) {
                key={index}
              >
                <td style={{width:"30px"}}>{index+1}</td>
-               <td style={{width:"20%"}}>{item.descripcion}</td>
-               <td>{
-                item.resultado
-                
+               <td style={{width:"20%"}}>
+                {
+                  (!disable[index]) || disable[index].state 
+                  ? item.descripcion
+                  : <Form.Control
+                      type="text"
+                      name="editDescripcion"
+                      className="ParrafoDescripcion"
+                      placeholder={'Descripción'}
+                      value={item.descripcion ||''}
+                      onChange={ (e)=>{setIndexMetas(indexMetas.map( meta => meta.idMeta === item.idMeta ? {...item , descripcion : e.target.value} : meta))}}
+
+                    />
+                }
+              </td>
+               <td> {
+                  (!disable[index]) || disable[index].state 
+                  ? item.resultado
+                  : <Form.Control
+                      type="text"
+                      name="editResultado"
+                      className="ParrafoResultado"
+                      placeholder={'Resultado'}
+                      value={item.resultado ||''}
+                      onChange={ (e)=>{setIndexMetas(indexMetas.map( meta => meta.idMeta === item.idMeta ? {...item , resultado : e.target.value} : meta))}}
+
+                    />
                 }</td>
-               <td>{item.observaciones}</td>
-               <td>{item.valoracion}</td>
+               <td> {
+                  (!disable[index]) || disable[index].state 
+                  ? item.observaciones
+                  : <Form.Control
+                      type="text"
+                      name="editObservaciones"
+                      className="ParrafoObservaciones"
+                      placeholder={'Observaciones'}
+                      value={item.observaciones ||''}
+                      onChange={ (e)=>{setIndexMetas(indexMetas.map( meta => meta.idMeta === item.idMeta ? {...item , observaciones : e.target.value} : meta))}}
+
+                    />
+                }</td>
+               <td> {
+                  (!disable[index]) || disable[index].state 
+                  ? Valoraciones.find( valoracion => valoracion.idValoracion === item.valoracion)?.nom || ''
+                  :<Form.Select
+                      name="valoracion"
+                      className="ParrafoObservaciones"
+                      placeholder={'Valoración'}
+                      value={item.valoracion || ''}
+                      onChange={ (e)=>{console.log(e.target.value);setIndexMetas(indexMetas.map( meta => meta.idMeta === item.idMeta ? {...item , valoracion : Number(e.target.value)} : meta))}}
+                      
+                    >
+                      <option key={'nn'} value={''}>Seleccione</option>
+                      {
+                        Valoraciones &&
+                        Valoraciones.map( (valoracion,index) => 
+                            
+                            <option key={index} value={valoracion.idValoracion} >{valoracion.nom}</option>
+                          
+                          )
+                      }
+                    </Form.Select>
+                }</td>
                <td style={{width:"20px"}}>
-               {/* <Button variant="secondary"
-                    onClick={() => editarMeta(item)}
+               <Button variant="secondary"
+                    onClick={() => setDisable(disable.map( item => item.index === index ? {...item,state : !item.state} : item ))}
                  >
                    <img
                      src="../assets/img/boton-editar.png"
@@ -199,7 +256,7 @@ export default function FormMetas({ onClose }: FormMetas) {
                      alt="eliminar"
                     
                    />
-                 </Button> */}
+                 </Button>
                  <Button variant="danger"
                     onClick={() => eliminarMeta(index)}
                  >
