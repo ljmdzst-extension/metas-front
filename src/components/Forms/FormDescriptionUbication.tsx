@@ -3,9 +3,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDispatch, useSelector } from "react-redux";
-import { CARGAR_DESCRIPCION } from '../../redux/reducers/ActivityReducer';
 import { RootState } from "../../redux/store";
-
+import { guardarActividad } from "../../redux/actions/putActividad";
 interface FormDescriptionUbicationProps {
   onClose: () => void;
 }
@@ -27,10 +26,6 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
       setUbicaciones(estadoActualizado.listaUbicaciones);
     }
   }, []);
-  const handleCargarDescripcion = () => {
-    dispatch(CARGAR_DESCRIPCION({ descripcion, ubicaciones }));
-    onClose();
-  };
   const handleDescripcionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -160,14 +155,15 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
         </div>
       </div>
       <Button
-        variant="success"
-        className="SaveChange"
-        onClick={() => {
-          handleCargarDescripcion();
-        }}
-      >
-        Guardar Cambios
-      </Button>
+              variant="success"
+              className="Save"
+              onClick={() => {
+                guardarActividad({...estadoActualizado,desc:descripcion, listaUbicaciones: ubicaciones });
+                onClose();
+              }}
+            >
+              Guardar Actividad
+            </Button>
     </div>
   );
 };

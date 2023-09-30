@@ -87,7 +87,7 @@ export default function Activity() {
   };
 
   const handleButtonClick = (id:number) => {
-    dispatch(CargarDatosActividadAction(id));
+    dispatch(CargarDatosActividadAction(id))
   };
 
   return (
