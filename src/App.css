@@ -717,3 +717,8 @@ input.form-check-input:checked {
   height: 200px;
   gap: 20px;
 }
+
+th{
+  font-size: small;
+  vertical-align: middle;
+}

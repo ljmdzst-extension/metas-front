@@ -66,7 +66,10 @@ export default function FormMetas({ onClose }: FormMetas) {
   }, [estadoActualizado.listaMetas]);
 
   const eliminarMeta = (_index: number | null) => {
-   if(_index !== null)  setIndexMetas(indexMetas.filter((item,index) => index !== _index));
+   if(_index !== null) {
+    setIndexMetas(indexMetas.filter((item,index) => index !== _index));
+    setDisable( disable.slice(0,disable.length-1) )
+   }
   };
 
   const agregarMeta = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -78,6 +81,7 @@ export default function FormMetas({ onClose }: FormMetas) {
         setIndexMetas([...indexMetas,nuevaMeta])
       }
      setNuevaMeta(defaultNuevaMeta)
+     setDisable( [...disable,{index : disable.length, state : true}])
     }
   }
 
@@ -91,7 +95,7 @@ export default function FormMetas({ onClose }: FormMetas) {
               <div className="Descripcion">
                 <span className="SubtituloMetas">Meta/resultado esperado :</span>
                 <Form.Control
-                  type="text"
+                  as="textarea"
                   name="descripcion"
                   className="ParrafoDescripcion"
                   placeholder={'Descripción'}
@@ -100,11 +104,10 @@ export default function FormMetas({ onClose }: FormMetas) {
 
                 />
               </div>
-              <div className="Resultados">
-                <div className="ResultadoEsperado">
+              {/* <div className="ResultadoEsperado">
                   <span className="SubtituloMetas">Resultado alcanzado :</span>
                   <Form.Control
-                    type="text"
+                    as="textarea"
                     name="resultado"
                     className="ParrafoResultados"
     
@@ -115,15 +118,12 @@ export default function FormMetas({ onClose }: FormMetas) {
                 </div>
                 <div className="Observaciones">
                   <span className="SubtituloMetas">
-                    {
-                      `
-                      Observaciones (puede incorporarse cualquier detalle o 
-                        información adicional que complemente los resultados alcanzados. También pueden ingresarse links a documentos o recursos anexo).
-                      `
-                    }
+                    {`Observaciones ` }
                   </span>
+                  <small>{`(puede incorporarse cualquier detalle o 
+                        información adicional que complemente los resultados alcanzados. También pueden ingresarse links a documentos o recursos anexo).`}</small>
                   <Form.Control
-                    type="text"
+                    as="textarea"
                     name="observaciones"
                     className="ParrafoObservaciones"
                     placeholder={'Observaciones'}
@@ -154,8 +154,7 @@ export default function FormMetas({ onClose }: FormMetas) {
                         )
                     }
                   </Form.Select>
-                </div>
-              </div>
+                </div> */}
             </div>
         <Button
           variant="outline-success"
@@ -169,12 +168,18 @@ export default function FormMetas({ onClose }: FormMetas) {
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>#</th>
-                <th>Descripción</th>
-                <th>Resultado</th>
-                <th>Observaciones</th>
-                <th>Valoración</th>
-                <th></th>
+                <th style={{width:"30px"}}>#</th>
+                <th style={{width:"30%"}}>Meta/resultado esperado</th>
+                <th style={{width:"30%"}}>Resultado alcanzado</th>
+                <th style={{width:"20%"}}>
+                  Observaciones  
+                  <small>
+                    {
+                    ` (puede incorporarse cualquier detalle o información adicional que complemente los resultados alcanzados. 
+                      También pueden ingresarse links a documentos o recursos anexo).`
+                    }</small></th>
+                <th style={{width:"20%"}}>Valoración general de la actividad y los resultados alcanzados</th>
+                <th style={{width:"20px"}}></th>
               </tr>
             </thead>
             <tbody>
@@ -183,48 +188,51 @@ export default function FormMetas({ onClose }: FormMetas) {
                key={index}
              >
                <td style={{width:"30px"}}>{index+1}</td>
-               <td style={{width:"20%"}}>
+               <td style={{width:"30%"}}>
                 {
                   (!disable[index]) || disable[index].state 
                   ? item.descripcion
                   : <Form.Control
-                      type="text"
+                      as="textarea"
+                      rows={4}
                       name="editDescripcion"
                       className="ParrafoDescripcion"
                       placeholder={'Descripción'}
                       value={item.descripcion ||''}
-                      onChange={ (e)=>{setIndexMetas(indexMetas.map( meta => meta.idMeta === item.idMeta ? {...item , descripcion : e.target.value} : meta))}}
+                      onChange={ (e)=>{setIndexMetas(indexMetas.map( (meta,_index) => _index === index ? {...item , descripcion : e.target.value} : meta))}}
 
                     />
                 }
               </td>
-               <td> {
+               <td style={{width:"30%"}}> {
                   (!disable[index]) || disable[index].state 
                   ? item.resultado
                   : <Form.Control
-                      type="text"
+                      as="textarea"
+                      rows={4}
                       name="editResultado"
                       className="ParrafoResultado"
                       placeholder={'Resultado'}
                       value={item.resultado ||''}
-                      onChange={ (e)=>{setIndexMetas(indexMetas.map( meta => meta.idMeta === item.idMeta ? {...item , resultado : e.target.value} : meta))}}
+                      onChange={ (e)=>{setIndexMetas(indexMetas.map((meta,_index) => _index === index  ? {...item , resultado : e.target.value} : meta))}}
 
                     />
                 }</td>
-               <td> {
+               <td style={{width:"20%"}}> {
                   (!disable[index]) || disable[index].state 
                   ? item.observaciones
                   : <Form.Control
-                      type="text"
+                      as="textarea"
+                      rows={4}
                       name="editObservaciones"
                       className="ParrafoObservaciones"
                       placeholder={'Observaciones'}
                       value={item.observaciones ||''}
-                      onChange={ (e)=>{setIndexMetas(indexMetas.map( meta => meta.idMeta === item.idMeta ? {...item , observaciones : e.target.value} : meta))}}
+                      onChange={ (e)=>{setIndexMetas(indexMetas.map((meta,_index) => _index === index  ? {...item , observaciones : e.target.value} : meta))}}
 
                     />
                 }</td>
-               <td> {
+               <td style={{width:"20%"}}> {
                   (!disable[index]) || disable[index].state 
                   ? Valoraciones.find( valoracion => valoracion.idValoracion === item.valoracion)?.nom || ''
                   :<Form.Select
@@ -232,7 +240,7 @@ export default function FormMetas({ onClose }: FormMetas) {
                       className="ParrafoObservaciones"
                       placeholder={'Valoración'}
                       value={item.valoracion || ''}
-                      onChange={ (e)=>{console.log(e.target.value);setIndexMetas(indexMetas.map( meta => meta.idMeta === item.idMeta ? {...item , valoracion : Number(e.target.value)} : meta))}}
+                      onChange={ (e)=>{console.log(e.target.value);setIndexMetas(indexMetas.map( (meta,_index) => _index === index  ? {...item , valoracion : Number(e.target.value)} : meta))}}
                       
                     >
                       <option key={'nn'} value={''}>Seleccione</option>
@@ -247,13 +255,13 @@ export default function FormMetas({ onClose }: FormMetas) {
                     </Form.Select>
                 }</td>
                <td style={{width:"20px"}}>
-               <Button variant="secondary"
+                  <Button variant="secondary"
                     onClick={() => setDisable(disable.map( item => item.index === index ? {...item,state : !item.state} : item ))}
-                 >
+                  >
                    <img
-                     src="../assets/img/boton-editar.png"
+                     src={(!disable[index]) || disable[index].state  ? '../assets/img/boton-editar.png' : '../assets/img/guardar.png'}
                      className="imgboton"
-                     alt="eliminar"
+                     alt={(!disable[index]) || disable[index].state  ? 'editar' : 'guardar'}
                     
                    />
                  </Button>
