@@ -1,9 +1,21 @@
-import React from 'react'
+import React from 'react';
+import { Container, Image, Navbar } from 'react-bootstrap';
 
 export default function NavBar() {
-  return (
-    <div className='ConteinerBanner'>
-        <img src="../assets/img/banner.jpg" alt="banner pagina inicial" />
-    </div>
-  )
+	return (
+		<Navbar className='NavBar'>
+			<Container>
+				<Navbar.Brand href='#home'>
+					<Image
+						src='../assets/img/unl_identidad.svg'
+						alt='UNL Logo'
+						width='30'
+						height='30'
+						className='logo ml-2'
+					/>{' '}
+					<a href=''>Secretaria de extension y cultura</a>
+				</Navbar.Brand>
+			</Container>
+		</Navbar>
+	);
 }
