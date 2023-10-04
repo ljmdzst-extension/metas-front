@@ -6,6 +6,18 @@
 }
 /*NavBar*/
 
+.bg-color-primary {
+	background-color: #009cb3;
+}
+
+.bg-color-secondary {
+	background-color: #333c4e;
+}
+
+.bg-color-slate {
+	background-color: #f5f5f5;
+}
+
 .NavBar {
 	display: flex;
 	justify-content: space-between;

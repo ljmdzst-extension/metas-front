@@ -5,14 +5,14 @@ import { Outlet } from 'react-router-dom';
 
 const Layout = ({ children }: any) => {
 	return (
-		<>
+		<div className='vh-100'>
 			<NavBar />
-			<div className='ConteinerMain'>
+			<div className='h-100'>
 				{children}
 				<Outlet />
 			</div>
 			<Footer />
-		</>
+		</div>
 	);
 };
 
