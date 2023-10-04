@@ -1,21 +1,23 @@
-import React from "react";
-import "./App.css";
-import Main from "./pages/Main";
-import Activity from "./pages/Activity";
-import NavBar from "./components/NavBar";
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Footer from "./components/Footer";
+
+import Activity from './pages/Activity';
+import Layout from './components/Layout/Layout';
+import Main from './pages/Main';
+
+import './App.css';
+
 function App() {
-  return (
-    <>
-      <NavBar/>
-      <Routes>
-        <Route path="/" element={<Main/>}/>
-        <Route path="/:idPrograma/:idArea" element={<Activity/>}/>
-      </Routes>
-      <Footer/>
-    </>
-  );
+	return (
+		<>
+			<Routes>
+				<Route path='/' element={<Layout />}>
+					<Route index element={<Main />} />
+					<Route path='/:idPrograma/:idArea' element={<Activity />} />
+				</Route>
+			</Routes>
+		</>
+	);
 }
 
 export default App;
