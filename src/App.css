@@ -17,10 +17,7 @@
 	color: white;
 	font-size: 14px;
 }
-.NavBar a:hover,
-.Logo:hover {
-	color: #c0c0c0;
-}
+
 .imgCard {
 	width: 100%;
 	height: 180px;

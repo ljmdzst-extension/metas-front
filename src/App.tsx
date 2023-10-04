@@ -13,6 +13,7 @@ function App() {
 			<Routes>
 				<Route path='/' element={<Layout />}>
 					<Route index element={<Main />} />
+
 					<Route path='/:idPrograma/:idArea' element={<Activity />} />
 				</Route>
 			</Routes>
