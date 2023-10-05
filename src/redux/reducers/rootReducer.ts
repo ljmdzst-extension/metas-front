@@ -1,8 +1,10 @@
-import actividadSlice from "./ActivityReducer";
-import { combineReducers } from "redux";
+import actividadSlice from './ActivityReducer';
+import { combineReducers } from 'redux';
+import authSlice from './AuthReducer';
 
 const routeReducer = combineReducers({
-    actividadSlice
+	actividadSlice,
+	authSlice,
 });
 
 export default routeReducer;

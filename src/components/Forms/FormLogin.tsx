@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import * as Yup from 'yup';
+import { login } from '../../redux/reducers/AuthReducer';
 
 const FormLogin = () => {
+	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
+
 	const [userData, setUserData] = useState({
 		email: '',
 		password: '',
@@ -18,6 +25,13 @@ const FormLogin = () => {
 		<Formik
 			initialValues={userData}
 			onSubmit={(values) => {
+				setUserData(values);
+				//BORRAR ESTO EQUIS DE
+				if (values.email === 'admin@admin.com' && values.password === 'admin') {
+					dispatch(login({ user: 'admin', token: 'token1234' }));
+					navigate('/');
+				}
+
 				console.log(values);
 			}}
 			validationSchema={validations}
