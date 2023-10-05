@@ -26,7 +26,7 @@ const FormLogin = () => {
 				return (
 					<Form
 						onSubmit={handleSubmit}
-						className=' w-50 border rounded p-5 bg-color-slate  '
+						className=' w-25 border rounded p-5 bg-color-slate  '
 						noValidate
 					>
 						<Form.Group className=' position-relative mb-5'>
