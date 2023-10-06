@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
@@ -11,11 +11,6 @@ const FormLogin = () => {
 
 	const navigate = useNavigate();
 
-	const [userData, setUserData] = useState({
-		email: '',
-		password: '',
-	});
-
 	const validations = Yup.object().shape({
 		email: Yup.string().email('El campo debe ser un correo valido').required('Campo requerido'),
 		password: Yup.string().required('Campo requerido'),
@@ -23,9 +18,11 @@ const FormLogin = () => {
 
 	return (
 		<Formik
-			initialValues={userData}
+			initialValues={{
+				email: '',
+				password: '',
+			}}
 			onSubmit={(values) => {
-				setUserData(values);
 				//BORRAR ESTO EQUIS DE
 				if (values.email === 'admin@admin.com' && values.password === 'admin') {
 					dispatch(login({ user: 'admin', token: 'token1234' }));

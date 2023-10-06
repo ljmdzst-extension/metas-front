@@ -7,8 +7,8 @@ import Main from './pages/Main';
 import Login from './pages/Login';
 import Register from './pages/Register';
 
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import './App.css';
 
 function App() {
 	return (
