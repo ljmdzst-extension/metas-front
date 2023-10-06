@@ -23,7 +23,7 @@ const FormRegister = () => {
 				lastName: '',
 				name: '',
 				email: '',
-				uuaa: '',
+				ua: '',
 				password: '',
 				confirmPassword: '',
 			}}
@@ -112,16 +112,16 @@ const FormRegister = () => {
 						<Form.Group className=' position-relative mb-4'>
 							<Form.Control
 								type='text'
-								placeholder=' UUAA'
-								name='uuaa'
+								placeholder='Unidad académica'
+								name='ua'
 								onChange={handleChange}
 								onBlur={handleBlur}
-								value={values.uuaa}
-								isInvalid={!!errors.uuaa && touched.uuaa}
+								value={values.ua}
+								isInvalid={!!errors.ua && touched.ua}
 								aria-describedby='inputGroupPrepend'
 							/>
 							<Form.Control.Feedback type='invalid' tooltip>
-								{errors.uuaa}
+								{errors.ua}
 							</Form.Control.Feedback>
 						</Form.Group>
 
@@ -170,7 +170,11 @@ const FormRegister = () => {
 							<p>Una vez registrado, se le enviará un mail para validar el registro.</p>
 							<p>
 								Ya posee un usuario? Ingrese{' '}
-								<Link to={'/login'} style={{ color: '#a6b8b6' }}>
+								<Link
+									to={'/login'}
+									style={{ color: '#08473f' }}
+									className=' text-decoration-underline'
+								>
 									aqui
 								</Link>
 								.

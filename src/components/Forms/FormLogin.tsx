@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { login } from '../../redux/reducers/AuthReducer';
+import { Link } from 'react-router-dom';
 
 const FormLogin = () => {
 	const dispatch = useDispatch();
@@ -35,13 +36,9 @@ const FormLogin = () => {
 		>
 			{({ errors, touched, values, handleBlur, handleChange, handleSubmit }) => {
 				return (
-					<Form
-						onSubmit={handleSubmit}
-						className=' w-25 border rounded p-5 bg-color-slate  '
-						noValidate
-					>
-						<Form.Group className=' position-relative mb-5'>
-							<Form.Label>Email</Form.Label>
+					<Form onSubmit={handleSubmit} className=' border rounded p-5 bg-color-slate  ' noValidate>
+						<p>Ingrese sus datos de usuario.</p>
+						<Form.Group className=' position-relative mb-5 d-flex justify-content-center'>
 							<Form.Control
 								type='email'
 								placeholder='Ingrese su email'
@@ -51,30 +48,64 @@ const FormLogin = () => {
 								value={values.email}
 								isInvalid={!!errors.email && touched.email}
 								aria-describedby='inputGroupPrepend'
+								className='w-50'
 							/>
 							<Form.Control.Feedback type='invalid' tooltip>
 								{errors.email}
 							</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group className=' position-relative mb-5'>
-							<Form.Label>Contraseña</Form.Label>
+						<Form.Group className='position-relative mb-5 d-flex justify-content-center'>
 							<Form.Control
 								type='password'
-								placeholder='Ingrese su password'
+								placeholder='Ingrese su contraseña'
 								name='password'
 								onChange={handleChange}
 								onBlur={handleBlur}
 								value={values.password}
 								isInvalid={!!errors.password && touched.password}
+								className='w-50'
 							/>
 							<Form.Control.Feedback type='invalid' tooltip>
 								{errors.password}
 							</Form.Control.Feedback>
 						</Form.Group>
+
 						<div className='d-flex justify-content-center'>
 							<Button type='submit' className='btn btn-primary'>
 								Iniciar
 							</Button>
+						</div>
+
+						<div>
+							<p className='mt-4'>
+								¿No tienes cuenta?{' '}
+								<Link
+									to='/register'
+									style={{ color: '#08473f' }}
+									className='text-decoration-underline'
+								>
+									Registrate
+								</Link>
+							</p>
+
+							<p>
+								Si olvidó su contraseña, comuníquese con Mesa de Ayuda
+								<Link
+									to='mailto:gestor.extunl@gmail.com'
+									style={{ color: '#08473f' }}
+									className='text-decoration-underline'
+								>
+									gestor.extunl@gmail.com
+								</Link>
+							</p>
+
+							<p>
+								Para mayor información, ingrese a{' '}
+								<Link to='' style={{ color: '#08473f' }} className=' text-decoration-underline'>
+									Seccion de ayuda
+								</Link>
+								.
+							</p>
 						</div>
 					</Form>
 				);
