@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import { Form } from "react-bootstrap";
+import { Form, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 import axios from "axios";
-import { CARGAR_META } from "../../redux/reducers/ActivityReducer";
+import { guardarActividad } from "../../redux/actions/putActividad";
 interface FormMetas {
   onClose: () => void;
 }
@@ -24,16 +24,17 @@ export default function FormMetas({ onClose }: FormMetas) {
   const dispatch = useDispatch();
   const [Valoraciones, setValoraciones] = useState<Valoracion[]>([])
   const [indexMetas, setIndexMetas] = useState<metas[]>([]);
-  const [nuevaMeta, setNuevaMeta] = useState<metas>({
+  const defaultNuevaMeta = {
     idMeta : 0,
     descripcion : '',
     resultado: '',
     observaciones : '',
     valoracion : 0
-  })
-  const [disable,setDisable] = useState(true)
-  const estadoMetas = useSelector(
-    (state: RootState) => state.actividadSlice.listaMetas
+  }
+  const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta)
+  const [disable,setDisable] = useState<{index : number, state : boolean}[]>([])
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.actividadSlice
   );
 
   useEffect(() => {
@@ -55,39 +56,46 @@ export default function FormMetas({ onClose }: FormMetas) {
     fetchData();
   }, []);
   const sincronizarMetas = () => {
-    if (estadoMetas) {
-      setIndexMetas(estadoMetas);
+    if (estadoActualizado.listaMetas) {
+      setIndexMetas(estadoActualizado.listaMetas);
+      setDisable( indexMetas.map( (item,index) => ({ index, state : true })))
     }
   };
   useEffect(() => {
     sincronizarMetas();
-  }, [estadoMetas]);
+  }, [estadoActualizado.listaMetas]);
 
-  const eliminarMeta = (id: number | null) => {
-   if(id !== null)  setIndexMetas(indexMetas.filter((item) => item.idMeta !== id));
+  const eliminarMeta = (_index: number | null) => {
+   if(_index !== null) {
+    setIndexMetas(indexMetas.filter((item,index) => index !== _index));
+    setDisable( disable.slice(0,disable.length-1) )
+   }
   };
 
   const agregarMeta = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if(nuevaMeta.descripcion?.length){
-      
-     setIndexMetas([...indexMetas,nuevaMeta])
+      if(nuevaMeta.idMeta && nuevaMeta.idMeta > 0) {
+        setIndexMetas(indexMetas.map( meta => meta.idMeta === nuevaMeta.idMeta ? nuevaMeta : meta))
+      } else {  
+        setIndexMetas([...indexMetas,nuevaMeta])
+      }
+     setNuevaMeta(defaultNuevaMeta)
+     setDisable( [...disable,{index : disable.length, state : true}])
     }
   }
 
-  const handleCargarMetas = () => {
-    dispatch(CARGAR_META({metas : indexMetas}));
-    onClose();
-  };
+  
   return (
     <>
       <div className="FormMetas">
         <h1>Metas y Resultados</h1>
+        <h4>Se puede cargar más de una.</h4>
         <div className="ConteinerDescriptionMetas">
               <div className="Descripcion">
-                <span className="SubtituloMetas">Descripcion:</span>
+                <span className="SubtituloMetas">Meta/resultado esperado :</span>
                 <Form.Control
-                  type="text"
+                  as="textarea"
                   name="descripcion"
                   className="ParrafoDescripcion"
                   placeholder={'Descripción'}
@@ -96,11 +104,10 @@ export default function FormMetas({ onClose }: FormMetas) {
 
                 />
               </div>
-              <div className="Resultados">
-                <div className="ResultadoEsperado">
-                  <span className="SubtituloMetas">Resultado:</span>
+              {/* <div className="ResultadoEsperado">
+                  <span className="SubtituloMetas">Resultado alcanzado :</span>
                   <Form.Control
-                    type="text"
+                    as="textarea"
                     name="resultado"
                     className="ParrafoResultados"
     
@@ -111,10 +118,12 @@ export default function FormMetas({ onClose }: FormMetas) {
                 </div>
                 <div className="Observaciones">
                   <span className="SubtituloMetas">
-                    Observaciones:
+                    {`Observaciones ` }
                   </span>
+                  <small>{`(puede incorporarse cualquier detalle o 
+                        información adicional que complemente los resultados alcanzados. También pueden ingresarse links a documentos o recursos anexo).`}</small>
                   <Form.Control
-                    type="text"
+                    as="textarea"
                     name="observaciones"
                     className="ParrafoObservaciones"
                     placeholder={'Observaciones'}
@@ -125,7 +134,7 @@ export default function FormMetas({ onClose }: FormMetas) {
                 </div>
                 <div className="Valoraciones">
                   <span className="SubtituloMetas">
-                    Valoración:
+                    {`Valoración general de la actividad y los resultados alcanzados :`}
                   </span>
                   <Form.Select
                     name="valoracion"
@@ -145,8 +154,7 @@ export default function FormMetas({ onClose }: FormMetas) {
                         )
                     }
                   </Form.Select>
-                </div>
-              </div>
+                </div> */}
             </div>
         <Button
           variant="outline-success"
@@ -155,84 +163,140 @@ export default function FormMetas({ onClose }: FormMetas) {
         >
           Agregar meta
         </Button>
+        <div className="ListaInstituciones">
+          <h6>Metas cargadas:</h6>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th style={{width:"30px"}}>#</th>
+                <th style={{width:"30%"}}>Meta/resultado esperado</th>
+                <th style={{width:"30%"}}>Resultado alcanzado</th>
+                <th style={{width:"20%"}}>
+                  Observaciones  
+                  <small>
+                    {
+                    ` (puede incorporarse cualquier detalle o información adicional que complemente los resultados alcanzados. 
+                      También pueden ingresarse links a documentos o recursos anexo).`
+                    }</small></th>
+                <th style={{width:"20%"}}>Valoración general de la actividad y los resultados alcanzados</th>
+                <th style={{width:"20px"}}></th>
+              </tr>
+            </thead>
+            <tbody>
+            {indexMetas.map((item, index) => (
+               <tr
+               key={index}
+             >
+               <td style={{width:"30px"}}>{index+1}</td>
+               <td style={{width:"30%"}}>
+                {
+                  (!disable[index]) || disable[index].state 
+                  ? item.descripcion
+                  : <Form.Control
+                      as="textarea"
+                      rows={4}
+                      name="editDescripcion"
+                      className="ParrafoDescripcion"
+                      placeholder={'Descripción'}
+                      value={item.descripcion ||''}
+                      onChange={ (e)=>{setIndexMetas(indexMetas.map( (meta,_index) => _index === index ? {...item , descripcion : e.target.value} : meta))}}
 
-        {indexMetas.map((item, index) => (
-          <div className="ConteinerGrande" key={index}>
-            <div className="ConteinerDescriptionMetas">
-              <div className="Descripcion">
-                <span className="SubtituloMetas">Descripcion:</span>
-                <Form.Control
-                  type="text"
-                  name="descripcion"
-                  className="ParrafoDescripcion"
-                  placeholder={item.descripcion ||''}
-                  disabled={disable}
-                />
-              </div>
-              <div className="Resultados">
-                <div className="ResultadoEsperado">
-                  <span className="SubtituloMetas">Resultado:</span>
-                  <Form.Control
-                    type="text"
-                    name="resultado"
-                    className="ParrafoResultados"
-                    disabled={disable}
-                    placeholder={item.resultado ||''}
-                  />
-                </div>
-                <div className="Observaciones">
-                  <span className="SubtituloMetas">
-                    Observaciones:
-                  </span>
-                  <Form.Control
-                    type="text"
-                    name="observaciones"
-                    className="ParrafoObservaciones"
-                    placeholder={item.observaciones ||''}
-                    disabled={disable} 
-                  />
-                </div>
-                <div className="Valoraciones">
-                  <span className="SubtituloMetas">
-                    Valoración:
-                  </span>
-                  <Form.Select
-                    name="valoracion"
-                    className="ParrafoValoraciones"
-                    disabled={disable} 
-                    placeholder={ `${item.valoracion}` }
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="ConteinerButton">
-              <Button variant="secondary" className="ButtonEdit" onClick={()=>{setDisable(!disable)}}>
-                <img
-                  src="../assets/img/boton-editar.png"
-                  className="imgboton"
-                  alt="editar"
-                />
-              </Button>
-              <Button variant="danger" className="ButtonEdit" onClick={()=>{eliminarMeta(item.idMeta)}}>
-                <img
-                  src="../assets/img/eliminar.png"
-                  className="imgboton"
-                  alt="eliminar"
-                />
-              </Button>
-            </div>
-          </div>
-        ))}
+                    />
+                }
+              </td>
+               <td style={{width:"30%"}}> {
+                  (!disable[index]) || disable[index].state 
+                  ? item.resultado
+                  : <Form.Control
+                      as="textarea"
+                      rows={4}
+                      name="editResultado"
+                      className="ParrafoResultado"
+                      placeholder={'Resultado'}
+                      value={item.resultado ||''}
+                      onChange={ (e)=>{setIndexMetas(indexMetas.map((meta,_index) => _index === index  ? {...item , resultado : e.target.value} : meta))}}
+
+                    />
+                }</td>
+               <td style={{width:"20%"}}> {
+                  (!disable[index]) || disable[index].state 
+                  ? item.observaciones
+                  : <Form.Control
+                      as="textarea"
+                      rows={4}
+                      name="editObservaciones"
+                      className="ParrafoObservaciones"
+                      placeholder={'Observaciones'}
+                      value={item.observaciones ||''}
+                      onChange={ (e)=>{setIndexMetas(indexMetas.map((meta,_index) => _index === index  ? {...item , observaciones : e.target.value} : meta))}}
+
+                    />
+                }</td>
+               <td style={{width:"20%"}}> {
+                  (!disable[index]) || disable[index].state 
+                  ? Valoraciones.find( valoracion => valoracion.idValoracion === item.valoracion)?.nom || ''
+                  :<Form.Select
+                      name="valoracion"
+                      className="ParrafoObservaciones"
+                      placeholder={'Valoración'}
+                      value={item.valoracion || ''}
+                      onChange={ (e)=>{console.log(e.target.value);setIndexMetas(indexMetas.map( (meta,_index) => _index === index  ? {...item , valoracion : Number(e.target.value)} : meta))}}
+                      
+                    >
+                      <option key={'nn'} value={''}>Seleccione</option>
+                      {
+                        Valoraciones &&
+                        Valoraciones.map( (valoracion,index) => 
+                            
+                            <option key={index} value={valoracion.idValoracion} >{valoracion.nom}</option>
+                          
+                          )
+                      }
+                    </Form.Select>
+                }</td>
+               <td style={{width:"20px"}}>
+                  <Button variant="secondary"
+                    onClick={() => setDisable(disable.map( item => item.index === index ? {...item,state : !item.state} : item ))}
+                  >
+                   <img
+                     src={(!disable[index]) || disable[index].state  ? '../assets/img/boton-editar.png' : '../assets/img/guardar.png'}
+                     className="imgboton"
+                     alt={(!disable[index]) || disable[index].state  ? 'editar' : 'guardar'}
+                    
+                   />
+                 </Button>
+                 <Button variant="danger"
+                    onClick={() => eliminarMeta(index)}
+                 >
+                   <img
+                     src="../assets/img/eliminar.png"
+                     className="imgboton"
+                     alt="eliminar"
+                    
+                   />
+                 </Button>
+               </td>
+             </tr>
+            ))}
+            </tbody>
+          </Table>
+        </div>
+
+        
         
       </div>
       <Button
         variant="success"
-        className="SaveChange"
+        className="Save"
         onClick={() => {
-          handleCargarMetas();
+          guardarActividad({
+            ...estadoActualizado,
+            listaMetas : indexMetas,
+          },dispatch);
+          onClose();
         }}
       >
-        Guardar Cambios
+        Guardar Actividad
       </Button>
     </>
   );

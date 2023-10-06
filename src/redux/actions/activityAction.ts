@@ -9,6 +9,13 @@ export const CargarDescripcionAction = (
   type: CARGAR_DESCRIPCION,
   payload: { descripcion, ubicaciones },
 });
+export const CARGAR_MOTIVOCANCEL = "CARGAR_MOTIVOCANCEL";
+export const CargarMotivoCancel = (
+  motivo: string | null
+) => ({
+  type: CARGAR_MOTIVOCANCEL,
+  payload: {motivo},
+});
 
 export const CARGAR_PERIODO = "CARGAR_PERIODO";
 export interface CargarPeriodoAction {
@@ -63,10 +70,13 @@ export const cargarMetaAction = (
 
 export const CARGAR_RELACION = "CARGAR_RELACION";
 export const cargarRelacion = (
-  relacionesSeleccionadas: number[]
+  seleecionadas : {
+    relacionesSeleccionadas: number[],
+    sippeSeleccionadas : number[]
+  }
 ) => ({
   type: CARGAR_RELACION,
-  payload: {relacionesSeleccionadas},
+  payload: seleecionadas,
 });
 
 export const CARGAR_DATOS_ACTIVIDAD = "CARGAR_DATOS_ACTIVIDAD";

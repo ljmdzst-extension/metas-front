@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormDescriptionUbication from "./Forms/FormDescriptionUbication";
 import FormPIE from "./Forms/FormPIE";
 import FormArSecUU from "./Forms/FormArSecUU";
@@ -10,8 +10,10 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { RootState } from "../redux/store";
-import { useSelector } from "react-redux";
-import FormDocuments from './Forms/FormDocuments';
+import { useDispatch, useSelector } from "react-redux";
+import FormDocuments from "./Forms/FormDocuments";
+import { CARGAR_MOTIVOCANCEL } from "../redux/reducers/ActivityReducer";
+import { CargarDatosActividadAction } from "../redux/actions/activityAction";
 
 type Props = {
   name: string;
@@ -20,31 +22,92 @@ export default function PlanificationPanel({ name }: Props) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [indexForm, setIndexForm] = useState(String);
   const [show2, setShow2] = useState(false);
+  const [term, setTerm] = useState(String);
+  const [showCancel, setShowCancel] = useState(false);
+  const [showSuspensionCancel, setShowSuspensionCancel] = useState(false);
+  const [showEliminarActividad, setShowEliminarActividad] = useState(false);
+  const dispatch = useDispatch();
+  const [motCancel, setMotCancel] = useState<string | null>(null);
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.actividadSlice
+  );
+  useEffect(() => {
+    setMotCancel(estadoActualizado?.motivoCancel);
+  }, [estadoActualizado?.motivoCancel]);
+  const handleCloseSuspensionCancel = () => {
+    setShowSuspensionCancel(false);
+  };
+  const handleCloseEliminarActividad = () => {
+    setShowEliminarActividad(false);
+  };
+  const handleShowEliminarActividad = () => {
+    setShowEliminarActividad(true);
+  };
   const handleClose2 = () => {
     setShow2(false);
   };
   const handleShow2 = () => {
     setShow2(true);
   };
-  const estadoActualizado = useSelector(
-    (state: RootState) => state.actividadSlice
-  ); 
-
-  const guardarActividad = ()=>{
-     fetch('http://168.197.50.94:4005/metas/v2/actividad',{
-      method : 'PUT',
-      headers : {
-        'Content-Type' : 'application/json'
-      },
-      body : JSON.stringify(estadoActualizado)
-     })
-     .then( resp => resp.json() )
-     .then( data => data.ok ? alert('actividad guardada !') : alert(data.error))
-     .catch( error => alert(JSON.stringify(error)))
+  const handleCloseCancel = () => {
+    setShowCancel(false);
   };
-  const eliminarActividad = (name: string) => {};
+  const handleShowCancel = () => {
+    {
+      motCancel ? setShowSuspensionCancel(true) : setShowCancel(true);
+    }
+  };
+  const suspenderActividad = (data: any) => {
+    fetch("http://168.197.50.94:4005/metas/v2/actividad/cancel", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        idActividad: data.idActividad,
+        motivoCancel: data.motivo,
+      }),
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+       data.ok ? alert("Actividad Guardada !") : alert(data.error);
+        window.location.replace('');
+      })
+      .catch((error) => alert(JSON.stringify(error)));
+    console.log(data);
+  };
+  const eliminarActividad = () => {
+    fetch("http://168.197.50.94:4005/metas/v2/actividad", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ idActividad: estadoActualizado.idActividad }),
+    })
+      .then((resp) => resp.json())
+      .then((data) =>{
+        data.ok ? alert("Actividad Eliminada !") : alert(data.error)
+        window.location.replace("");
+      }
+       
+      )
+      .catch((error) => alert(JSON.stringify(error)));
+  };
+
   const handleCloseForm = () => {
     setIsFormOpen(false);
+  };
+  const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (term.length > 0) {
+      suspenderActividad({
+        idActividad: estadoActualizado.idActividad,
+        motivo: term,
+      });
+      handleCloseCancel();
+    }
+
+    setTerm("");
   };
   return (
     <div className="MenuPlanification">
@@ -79,13 +142,101 @@ export default function PlanificationPanel({ name }: Props) {
           </Form>
         </Modal.Body>
       </Modal>
+      <Modal show={showCancel} onHide={handleCloseCancel}>
+        <Modal.Header closeButton>
+          <Modal.Title>Suspender Actividad</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={submitForm}>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>
+                Ingrese el motivo de suspension de Actividad
+              </Form.Label>
+              <Form.Control
+                type="nombre"
+                placeholder="Motivo"
+                autoFocus
+                as="textarea"
+                rows={2}
+                style={{ resize: "none" }}
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Button variant="warning" className="Suspend" type="submit">
+                Suspender
+              </Button>
+              <Button variant="danger" onClick={handleCloseCancel}>
+                Cancelar
+              </Button>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+      </Modal>
+      <Modal show={showSuspensionCancel} onHide={handleCloseSuspensionCancel}>
+        <Modal.Header>
+          <Modal.Title>Desea anular la Suspension</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Button variant="danger" onClick={handleCloseSuspensionCancel}>
+                Cancelar
+              </Button>
+              <Button
+                variant="success"
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleCloseSuspensionCancel();
+                  suspenderActividad({
+                    idActividad: estadoActualizado.idActividad,
+                    motivo: null,
+                  });
+                }}
+              >
+                Anular Suspension
+              </Button>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+      </Modal>
+      <Modal show={showEliminarActividad} onHide={handleCloseEliminarActividad}>
+        <Modal.Header>
+          <Modal.Title>Desea Eliminar la actividad</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Button variant="danger" onClick={handleCloseEliminarActividad}>
+                Cancelar
+              </Button>
+              <Button
+                variant="success"
+                onClick={() => {
+                  eliminarActividad();
+                  handleCloseEliminarActividad();
+                }}
+              >
+                Eliminar Actividad
+              </Button>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+      </Modal>
       <div className="ConteinerTitle">
-        <h1>{name}</h1>
+        <h1 style={{ wordWrap: "break-word" }}>{name}</h1>
         {isFormOpen && (
           <Button
             variant="success"
             className="buttonCloseForm"
-            style={{width:'60px',height:'60px'}}
+            style={{ width: "60px", height: "60px" }}
             onClick={() => {
               handleShow2();
             }}
@@ -94,6 +245,18 @@ export default function PlanificationPanel({ name }: Props) {
           </Button>
         )}
       </div>
+      {motCancel !== null && (
+        <h2
+          style={{
+            textAlign: "center",
+            fontSize: 30,
+            fontWeight: "bold",
+            backgroundColor: "yellow",
+          }}
+        >
+          ACTIVIDAD SUSPENDIDA
+        </h2>
+      )}
       {!isFormOpen ? (
         <>
           <div className="ConteinerColumn">
@@ -107,7 +270,7 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Descripcion / Ubicacion
+                  Descripción / Ubicación
                 </Button>
               </div>
               <div className="rowForm">
@@ -169,7 +332,7 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Objetivo Estrategico
+                  Objetivo Estratégico
                 </Button>
               </div>
               <div className="rowForm">
@@ -193,27 +356,26 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Documentacion
+                  Documentación
                 </Button>
               </div>
             </div>
           </div>
           <div className="ButtonPlanification">
-            <Button variant="warning" className="Suspend">
-              Suspender Actividad
-            </Button>
-            <Button variant="success" className="Save"
-              onClick={()=>{
-                guardarActividad();
+            <Button
+              variant="warning"
+              className="Suspend"
+              onClick={() => {
+                handleShowCancel();
               }}
             >
-              Guardar Actividad
+              {motCancel ? "Cancelar Suspension" : "Suspender Actividad"}
             </Button>
             <Button
               variant="danger"
               className="Delete"
               onClick={() => {
-                eliminarActividad(name);
+                handleShowEliminarActividad();
               }}
             >
               Eliminar Actividad
@@ -227,25 +389,25 @@ export default function PlanificationPanel({ name }: Props) {
               case "descr":
                 return (
                   <>
-                    <FormDescriptionUbication onClose={handleCloseForm}/>
+                    <FormDescriptionUbication onClose={handleCloseForm} />
                   </>
                 );
-                case "documentacion":
-                  return (
-                    <>
-                      <FormDocuments onClose={handleCloseForm}/>
-                    </>
-                  );
+              case "documentacion":
+                return (
+                  <>
+                    <FormDocuments onClose={handleCloseForm} />
+                  </>
+                );
               case "pie":
                 return (
                   <>
-                    <FormPIE onClose={handleCloseForm}/>
+                    <FormPIE onClose={handleCloseForm} />
                   </>
                 );
               case "area":
                 return (
                   <>
-                    <FormArSecUU  onClose={handleCloseForm}/>
+                    <FormArSecUU onClose={handleCloseForm} />
                   </>
                 );
               case "periodo":
@@ -263,13 +425,13 @@ export default function PlanificationPanel({ name }: Props) {
               case "organi":
                 return (
                   <>
-                    <FormOrgInst onClose={handleCloseForm}/>
+                    <FormOrgInst onClose={handleCloseForm} />
                   </>
                 );
               case "metas":
                 return (
                   <>
-                    <FormMetas onClose={handleCloseForm}/>
+                    <FormMetas onClose={handleCloseForm} />
                   </>
                 );
               default:
