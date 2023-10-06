@@ -1,11 +1,10 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import { Button, Form } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { login } from '../../redux/reducers/AuthReducer';
-import { Link } from 'react-router-dom';
 
 const FormLogin = () => {
 	const dispatch = useDispatch();

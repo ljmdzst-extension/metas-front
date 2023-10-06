@@ -1,8 +1,7 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Col, Form } from 'react-bootstrap';
-import { Row } from 'react-bootstrap';
+import { Button, Col, Form,Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const FormRegister = () => {
