@@ -88,7 +88,7 @@ const FormLogin = () => {
 							</p>
 
 							<p>
-								Si olvidó su contraseña, comuníquese con Mesa de Ayuda
+								Si olvidó su contraseña, comuníquese con Mesa de Ayuda{' '}
 								<Link
 									to='mailto:gestor.extunl@gmail.com'
 									style={{ color: '#08473f' }}
@@ -96,6 +96,7 @@ const FormLogin = () => {
 								>
 									gestor.extunl@gmail.com
 								</Link>
+								.
 							</p>
 
 							<p>

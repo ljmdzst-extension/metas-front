@@ -18,7 +18,7 @@ export default function NavBar() {
 							className='me-2 '
 						/>{' '}
 					</a>
-					<a href='/'>Secretaria de extension y cultura</a>
+					<a href='/'>Secretaría de extensión y cultura</a>
 				</Navbar.Brand>
 				<Nav>
 					{user ? (
@@ -26,11 +26,11 @@ export default function NavBar() {
 							<p className=' text-white m-auto'>
 								<span>Usuario:</span> {user}
 							</p>
-							<Nav.Link href='/login'>Cerrar Sesion</Nav.Link>
+							<Nav.Link href='/login'>Cerrar Sesión</Nav.Link>
 						</>
 					) : (
 						<>
-							<Nav.Link href='/login'>Iniciar Sesion</Nav.Link>
+							<Nav.Link href='/login'>Iniciar Sesión</Nav.Link>
 							<Nav.Link href='/register'>Registrarse</Nav.Link>
 						</>
 					)}
