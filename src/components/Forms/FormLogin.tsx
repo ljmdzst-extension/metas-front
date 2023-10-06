@@ -37,8 +37,8 @@ const FormLogin = () => {
 			{({ errors, touched, values, handleBlur, handleChange, handleSubmit }) => {
 				return (
 					<Form onSubmit={handleSubmit} className=' border rounded p-5 bg-color-slate  ' noValidate>
-						<p>Ingrese sus datos de usuario.</p>
-						<Form.Group className=' position-relative mb-5 d-flex justify-content-center'>
+						<p className='mb-4'>Ingrese sus datos de usuario.</p>
+						<Form.Group className=' position-relative mb-4 d-flex justify-content-center'>
 							<Form.Control
 								type='email'
 								placeholder='Ingrese su email'
@@ -54,7 +54,7 @@ const FormLogin = () => {
 								{errors.email}
 							</Form.Control.Feedback>
 						</Form.Group>
-						<Form.Group className='position-relative mb-5 d-flex justify-content-center'>
+						<Form.Group className='position-relative mb-4 d-flex justify-content-center'>
 							<Form.Control
 								type='password'
 								placeholder='Ingrese su contraseña'
