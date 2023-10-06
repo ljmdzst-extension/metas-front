@@ -10,7 +10,7 @@ const FormRegister = () => {
 		lastName: Yup.string().required('Campo requerido'),
 		name: Yup.string().required('Campo requerido'),
 		email: Yup.string().email('El campo debe ser un correo valido').required('Campo requerido'),
-		uuaa: Yup.string().required('Campo requerido'),
+		ua: Yup.string().required('Campo requerido'),
 		password: Yup.string().required('Campo requerido'),
 		confirmPassword: Yup.string().required('Campo requerido'),
 	});
