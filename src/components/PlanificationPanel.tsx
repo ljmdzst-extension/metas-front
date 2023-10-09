@@ -10,11 +10,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { RootState } from "../redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import FormDocuments from "./Forms/FormDocuments";
-import { CARGAR_MOTIVOCANCEL } from "../redux/reducers/ActivityReducer";
-import { CargarDatosActividadAction } from "../redux/actions/activityAction";
-
+import {ArrowBack} from '@mui/icons-material'
 type Props = {
   name: string;
 };
@@ -26,7 +24,7 @@ export default function PlanificationPanel({ name }: Props) {
   const [showCancel, setShowCancel] = useState(false);
   const [showSuspensionCancel, setShowSuspensionCancel] = useState(false);
   const [showEliminarActividad, setShowEliminarActividad] = useState(false);
-  const dispatch = useDispatch();
+
   const [motCancel, setMotCancel] = useState<string | null>(null);
   const estadoActualizado = useSelector(
     (state: RootState) => state.actividadSlice
@@ -113,15 +111,13 @@ export default function PlanificationPanel({ name }: Props) {
     <div className="MenuPlanification">
       <Modal show={show2} onHide={handleClose2}>
         <Modal.Header>
-          <Modal.Title>¿Quieres salir del formulario?</Modal.Title>
+          <Modal.Title>¿Quiere salir de la sección?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>
-                Usted tiene un formulario en curso, ¿desea salir del formulario?
-              </Form.Label>
-              <Form.Label>Los cambios no guardados se perderan.</Form.Label>
+            
+              <Form.Label>Los cambios no guardados se perderán.</Form.Label>
             </Form.Group>
             <Form.Group
               style={{ display: "flex", justifyContent: "space-between" }}
@@ -136,7 +132,7 @@ export default function PlanificationPanel({ name }: Props) {
                   setIsFormOpen(false);
                 }}
               >
-                Salir del Formulario
+                Salir
               </Button>
             </Form.Group>
           </Form>
@@ -150,7 +146,7 @@ export default function PlanificationPanel({ name }: Props) {
           <Form onSubmit={submitForm}>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>
-                Ingrese el motivo de suspension de Actividad
+                Ingrese el motivo de suspensión
               </Form.Label>
               <Form.Control
                 type="nombre"
@@ -178,7 +174,7 @@ export default function PlanificationPanel({ name }: Props) {
       </Modal>
       <Modal show={showSuspensionCancel} onHide={handleCloseSuspensionCancel}>
         <Modal.Header>
-          <Modal.Title>Desea anular la Suspension</Modal.Title>
+          <Modal.Title>¿Desea anular la Suspensión?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -199,7 +195,7 @@ export default function PlanificationPanel({ name }: Props) {
                   });
                 }}
               >
-                Anular Suspension
+                Anular Suspensión
               </Button>
             </Form.Group>
           </Form>
@@ -207,10 +203,14 @@ export default function PlanificationPanel({ name }: Props) {
       </Modal>
       <Modal show={showEliminarActividad} onHide={handleCloseEliminarActividad}>
         <Modal.Header>
-          <Modal.Title>Desea Eliminar la actividad</Modal.Title>
+          <Modal.Title>¿Desea Eliminar la actividad?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            
+            <Form.Label>La actividad desaparecerá completamente.</Form.Label>
+          </Form.Group>
             <Form.Group
               style={{ display: "flex", justifyContent: "space-between" }}
             >
@@ -241,7 +241,7 @@ export default function PlanificationPanel({ name }: Props) {
               handleShow2();
             }}
           >
-            X
+            <ArrowBack fontSize={'large'}/>
           </Button>
         )}
       </div>
