@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Container, Image, Navbar, Nav } from 'react-bootstrap';
+import { ReactComponent as LogoutIcon } from '../../../assets/logout.svg';
 
 export default function NavBar() {
 	const { user } = useSelector((state: any) => state.authSlice);
@@ -15,7 +16,7 @@ export default function NavBar() {
 							alt='UNL Logo'
 							width='30'
 							height='30'
-							className='me-2 '
+							className='me-2'
 						/>{' '}
 					</a>
 					<a href='/'>Secretaría de extensión y cultura</a>
@@ -23,10 +24,14 @@ export default function NavBar() {
 				<Nav>
 					{user ? (
 						<>
-							<p className=' text-white m-auto'>
-								<span>Usuario:</span> {user}
-							</p>
-							<Nav.Link href='/login'>Cerrar Sesión</Nav.Link>
+							<p className=' text-white m-auto bold me-2'>Usuario: {user}</p>
+							<LogoutIcon
+								width={30}
+								height={30}
+								fill='#fff'
+								stroke='#fff'
+								className='me-2 logout-icon'
+							/>
 						</>
 					) : (
 						<>

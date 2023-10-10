@@ -34,6 +34,10 @@
 	font-size: 14px;
 }
 
+.logout-icon {
+	cursor: pointer;
+}
+
 .imgCard {
 	width: 100%;
 	height: 180px;
@@ -741,7 +745,7 @@ input.form-check-input:checked {
 	gap: 20px;
 }
 
-th{
-  font-size: small;
-  vertical-align: middle;
+th {
+	font-size: small;
+	vertical-align: middle;
 }
