@@ -1,35 +1,47 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+
+import { useDispatch } from 'react-redux';
+import { loginAsync } from '../../redux/actions/authAction';
+
 import { Formik } from 'formik';
-import { Button, Form } from 'react-bootstrap';
 import * as Yup from 'yup';
-import { login } from '../../redux/reducers/AuthReducer';
+import { Button, Form } from 'react-bootstrap';
+import { AppDispatch } from '../../redux/store';
+
+interface FormLoginProps {
+	email: string;
+	password: string;
+}
+
+const initialValues: FormLoginProps = {
+	email: '',
+	password: '',
+};
 
 const FormLogin = () => {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const navigate = useNavigate();
 
 	const validations = Yup.object().shape({
-		email: Yup.string().email('El campo debe ser un correo valido').required('Campo requerido'),
+		email: Yup.string().required('Campo requerido'),
 		password: Yup.string().required('Campo requerido'),
 	});
 
+	const handleLogin = async (values: any) => {
+		const action = await dispatch(loginAsync({ email: values.email, pass: values.password }));
+
+		if (loginAsync.fulfilled.match(action)) {
+			navigate('/');
+		}
+	};
+
 	return (
 		<Formik
-			initialValues={{
-				email: '',
-				password: '',
-			}}
+			initialValues={initialValues}
 			onSubmit={(values) => {
-				//BORRAR ESTO EQUIS DE
-				if (values.email === 'admin@admin.com' && values.password === 'admin') {
-					dispatch(login({ user: 'admin', token: 'token1234' }));
-					navigate('/');
-				}
-
-				console.log(values);
+				handleLogin(values);
 			}}
 			validationSchema={validations}
 		>

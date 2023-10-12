@@ -1,15 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-export const login = 'login';
-export const loginAction = (user: string, token: string) => ({
-	type: login,
-	payload: { user, token },
-});
-
 export const loginAsync = createAsyncThunk(
 	'auth/login',
-	async (credentials: { user: string; password: string }) => {
-		const response = await fetch('http://localhost:3001/auth/login', {
+	async (credentials: { email: string; pass: string }, thunkAPI) => {
+		const response = await fetch(`http://168.197.50.94:4004/api/gestor/usr/login`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -19,7 +13,7 @@ export const loginAsync = createAsyncThunk(
 
 		if (!response.ok) {
 			const message = `An error has occured: ${response.status}`;
-			throw new Error(message);
+			return thunkAPI.rejectWithValue(message);
 		}
 
 		const data = await response.json();
