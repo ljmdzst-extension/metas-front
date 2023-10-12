@@ -615,7 +615,11 @@ input.form-check-input:checked {
   align-items: start;
   gap: 5px;
 }
-
+.imgvolver {
+  width: 35px;
+  height: 35px;
+  
+}
 .imgboton {
   width: 24px;
   height: 24px;
@@ -716,4 +720,9 @@ input.form-check-input:checked {
   width: 700px;
   height: 200px;
   gap: 20px;
+}
+
+th{
+  font-size: small;
+  vertical-align: middle;
 }

@@ -4,7 +4,7 @@ import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { CARGAR_PIE } from "../../redux/reducers/ActivityReducer";
+import { guardarActividad } from "../../redux/actions/putActividad";
 interface FormObjetiveEstProps {
   onClose: () => void;
 }
@@ -41,17 +41,17 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
     number[]
   >([]);
   const objetivosDesde0a4 = objetivos?.slice(0, 4);
-  const estadoObjetivosSeleccionados = useSelector(
-    (state: RootState) => state.actividadSlice.listaObjetivos
+  const estadoActualizado = useSelector(
+    (state: RootState) => state.actividadSlice
   );
   const sincronizarCheckboxes = () => {
-    if (estadoObjetivosSeleccionados) {
-      setObjetivosSeleccionados(estadoObjetivosSeleccionados);
+    if (estadoActualizado.listaObjetivos) {
+      setObjetivosSeleccionados(estadoActualizado.listaObjetivos);
     }
   };
   useEffect(() => {
     sincronizarCheckboxes();
-  }, [estadoObjetivosSeleccionados]);
+  }, [estadoActualizado.listaObjetivos]);
   const handleSeleccionarObjetivo = (idObjetivo: number) => {
     const objetivoIndex = objetivosSeleccionados.indexOf(idObjetivo);
     if (objetivoIndex === -1) {
@@ -61,17 +61,13 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
       setObjetivosSeleccionados(newSeleccionados);
     }
   };
-  const handleCargarObjetivoEstrategico = () => {
-    dispatch(CARGAR_PIE({objetivosSeleccionados}));
-    onClose();
-  };
   return (
     <>
       <div className="FormObjetivo">
         <h2 className="TitleObjetivo">Objetivo Estrategico</h2>
         <Form className="FormObj">
           <p className="SubtitleObj">
-            <span>Seleccione los objetivos:</span>
+            <span>Seleccione el/los objetivo/s estratégico/s vinculado/s a la actividad :</span>
           </p>
           <div className="Obj">
             {objetivosDesde0a4.map((objetivo) => (
@@ -88,12 +84,16 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
       </div>
       <Button
         variant="success"
-        className="SaveChange"
+        className="Save"
         onClick={() => {
-          handleCargarObjetivoEstrategico();
+          guardarActividad({
+            ...estadoActualizado,
+            listaObjetivos: objetivosSeleccionados,
+          },dispatch);
+          onClose();
         }}
       >
-        Guardar Cambios
+        Guardar Actividad
       </Button>
     </>
   );

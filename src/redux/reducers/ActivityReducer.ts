@@ -6,7 +6,7 @@ interface ActividadState {
   idArea: number;
   nro: number | null;
   desc: string | null;
-  mot_cancel : string | null;
+  motivoCancel : string | null;
   fechaDesde: string | null;
   fechaHasta: string | null;
   listaMetas:
@@ -56,7 +56,7 @@ const initialState: ActividadState = {
   idArea: 0,
   nro: null,
   desc: null,
-  mot_cancel : null,
+  motivoCancel : null,
   fechaDesde: null,
   fechaHasta: null,
   listaMetas: [],
@@ -73,6 +73,11 @@ const actividadSlice = createSlice({
   name: "actividad",
   initialState,
   reducers: {
+    CARGAR_MOTIVOCANCEL: (state, action: PayloadAction<{ motivo: string |null }>) => {
+      state.motivoCancel = action.payload.motivo;
+      console.log(state.motivoCancel);
+      console.log("cargo el motivo");
+    },
     CARGAR_DESCRIPCION: (state, action: PayloadAction<{ descripcion: string | null; ubicaciones: any[] | null }>) => {
       state.desc = action.payload.descripcion;
       state.listaUbicaciones = action.payload.ubicaciones;
@@ -106,9 +111,11 @@ const actividadSlice = createSlice({
       state,
       action: PayloadAction<{
         relacionesSeleccionadas: number[];
+        sippeSeleccionadas : number[]
       }>
     ) => {
       state.listaRelaciones = action.payload.relacionesSeleccionadas;
+      state.listaProgramasSIPPE = action.payload.sippeSeleccionadas;
     },
     CARGAR_META: (
       state,
@@ -137,6 +144,7 @@ const actividadSlice = createSlice({
           idArea: action.payload.idArea,
           nro: action.payload.nro,
           desc: action.payload.desc,
+          motivoCancel: action.payload.motivoCancel,
           fechaDesde: action.payload.fechaDesde,
           fechaHasta: action.payload.fechaHasta,
           listaMetas: action.payload.listaMetas,
@@ -158,7 +166,8 @@ export const {
   CARGAR_PIE,
   CARGAR_RELACION,
   CARGAR_INSTITUCION,
-  CARGAR_META
+  CARGAR_META,
+  CARGAR_MOTIVOCANCEL
 } = actividadSlice.actions;
 
 export default actividadSlice.reducer;

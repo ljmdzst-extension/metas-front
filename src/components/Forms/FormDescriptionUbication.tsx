@@ -3,39 +3,45 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDispatch, useSelector } from "react-redux";
-import { CARGAR_DESCRIPCION } from '../../redux/reducers/ActivityReducer';
 import { RootState } from "../../redux/store";
-
+import { guardarActividad } from "../../redux/actions/putActividad";
 interface FormDescriptionUbicationProps {
   onClose: () => void;
 }
 const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   onClose,
 }) => {
+
   const dispatch = useDispatch();
+
   const estadoActualizado = useSelector(
     (state: RootState) => state.actividadSlice
   );
+  const [editandoDescripcion, setEditandoDescripcion] = useState(false);
   const [descripcion, setDescripcion] = useState<string>(
     estadoActualizado.desc ?? ""
   );
+
   const [ubicacion, setUbicacion] = useState<string>("");
-  const [ubicaciones, setUbicaciones] = useState<{ idUbicacion: number | null; nom : string |null; idActividad: number | null; enlace: string | null; }[]>([]);
+  const [ubicaciones, setUbicaciones] = useState<{ 
+    idUbicacion: number | null; 
+    nom : string | null; 
+    idActividad: number | null; 
+    enlace: string | null; 
+  }[]>([]);
 
   useEffect(() => {
     if (estadoActualizado.listaUbicaciones) {
       setUbicaciones(estadoActualizado.listaUbicaciones);
     }
   }, []);
-  const handleCargarDescripcion = () => {
-    dispatch(CARGAR_DESCRIPCION({ descripcion, ubicaciones }));
-    onClose();
-  };
+
   const handleDescripcionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setDescripcion(event.target.value);
   };
+
   const handleUbicacionInputChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -55,6 +61,14 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
       setUbicacion("");
     }
   };
+
+  const handleClickEditarDescripcion = ( event : React.MouseEvent<HTMLButtonElement, MouseEvent> )=>{
+      event.preventDefault();
+      setEditandoDescripcion(!editandoDescripcion);
+
+
+  }
+
   const eliminarUbicacion = (index: number) => {
     const newUbicaciones = [...ubicaciones];
     newUbicaciones.splice(index, 1);
@@ -77,18 +91,20 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
                   as="textarea"
                   rows={4}
                   style={{ resize: "none" }}
-                  placeholder={descripcion}
                   aria-label="Inserte descripción"
                   aria-describedby="basic-addon2"
                   onChange={handleDescripcionChange}
+                  disabled={ !editandoDescripcion }
+                  value={ descripcion }
                 />
                 <Button
                   variant="secondary"
                   id="button-addon2"
                   style={{ width: "50px", height: "50px" }}
+                  onClick={ handleClickEditarDescripcion }
                 >
                   <img
-                    src="../assets/img/boton-editar.png"
+                    src={`../assets/img/${ !editandoDescripcion ? 'boton-editar' : 'guardar'}.png`}
                     className="imgboton"
                     alt="editar"
                   />
@@ -160,13 +176,14 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
         </div>
       </div>
       <Button
-        variant="success"
-        className="SaveChange"
-        onClick={() => {
-          handleCargarDescripcion();
-        }}
-      >
-        Guardar Cambios
+              variant="success"
+              className="Save"
+              onClick={() => {
+                guardarActividad({...estadoActualizado,desc:descripcion, listaUbicaciones: ubicaciones },dispatch);
+                onClose();
+              }}
+            >
+              Guardar Actividad
       </Button>
     </div>
   );
