@@ -1,21 +1,28 @@
-import React from "react";
-import "./App.css";
-import Main from "./pages/Main";
-import Activity from "./pages/Activity";
-import NavBar from "./components/NavBar";
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Footer from "./components/Footer";
+
+import Activity from './pages/Activity';
+import Layout from './components/Layout/Layout';
+import Main from './pages/Main';
+import Login from './pages/Login';
+import Register from './pages/Register';
+
+import 'bootstrap/dist/css/bootstrap.css';
+import './App.css';
+
 function App() {
-  return (
-    <>
-      <NavBar/>
-      <Routes>
-        <Route path="/" element={<Main/>}/>
-        <Route path="/:idPrograma/:idArea" element={<Activity/>}/>
-      </Routes>
-      <Footer/>
-    </>
-  );
+	return (
+		<>
+			<Routes>
+				<Route path='/' element={<Layout />}>
+					<Route index element={<Main />} />
+					<Route path='/login' element={<Login />} />
+					<Route path='/register' element={<Register />} />
+					<Route path='/:idPrograma/:idArea' element={<Activity />} />
+				</Route>
+			</Routes>
+		</>
+	);
 }
 
 export default App;
