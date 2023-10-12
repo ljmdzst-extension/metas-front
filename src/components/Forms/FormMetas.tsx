@@ -58,17 +58,26 @@ export default function FormMetas({ onClose }: FormMetas) {
   const sincronizarMetas = () => {
     if (estadoActualizado.listaMetas) {
       setIndexMetas(estadoActualizado.listaMetas);
-      setDisable( indexMetas.map( (item,index) => ({ index, state : true })))
+      
     }
   };
   useEffect(() => {
     sincronizarMetas();
   }, [estadoActualizado.listaMetas]);
 
+  useEffect(() => {
+    setDisable( indexMetas.map( (item,index) => ({ index, state : true })))
+  
+    return () => {
+      setDisable( [] )
+    }
+  }, [indexMetas])
+  
+
   const eliminarMeta = (_index: number | null) => {
    if(_index !== null) {
     setIndexMetas(indexMetas.filter((item,index) => index !== _index));
-    setDisable( disable.slice(0,disable.length-1) )
+
    }
   };
 
@@ -81,7 +90,6 @@ export default function FormMetas({ onClose }: FormMetas) {
         setIndexMetas([...indexMetas,nuevaMeta])
       }
      setNuevaMeta(defaultNuevaMeta)
-     setDisable( [...disable,{index : disable.length, state : true}])
     }
   }
 
