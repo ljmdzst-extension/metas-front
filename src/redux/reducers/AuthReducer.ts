@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loginAsync } from '../actions/authAction';
+import { authAsync, loginAsync } from '../actions/authAction';
 interface AuthState {
 	user: string;
 	token: string;
@@ -18,12 +18,12 @@ const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
-
 		logout(state) {
 			state.user = '';
 			state.token = '';
 			state.loading = false;
 			state.error = null;
+			console.log('usuario deslogueado');
 		},
 		loginFailed(state, action: PayloadAction<string>) {
 			state.user = '';
@@ -31,23 +31,43 @@ const authSlice = createSlice({
 			state.loading = false;
 			state.error = action.payload;
 		},
+		setUserData(state, action: PayloadAction<{ user: string; token: string }>) {
+			state.user = action.payload.user;
+			state.token = action.payload.token;
+		},
 	},
 	extraReducers: (builder) => {
+		// LOGIN
 		builder.addCase(loginAsync.pending, (state) => {
 			state.loading = true;
 		});
 		builder.addCase(loginAsync.fulfilled, (state, action) => {
+			console.log(action.payload);
 			state.loading = false;
-			state.user = action.payload.user;
+			state.user = action.payload.nom + ' ' + action.payload.ape;
 			state.token = action.payload.token;
 		});
 		builder.addCase(loginAsync.rejected, (state, action) => {
+			console.log(action.payload);
+			state.loading = false;
+			state.error = (action.payload as { error: string }).error;
+		});
+
+		// AUTH
+		builder.addCase(authAsync.pending, (state) => {
+			state.loading = true;
+		});
+		builder.addCase(authAsync.fulfilled, (state, action) => {
+			state.loading = false;
+			state.token = action.payload.token;
+		});
+		builder.addCase(authAsync.rejected, (state, action) => {
 			state.loading = false;
 			state.error = action.error.message;
 		});
-	},	
+	},
 });
 
-export const { logout, loginFailed } = authSlice.actions;
+export const { logout, loginFailed, setUserData } = authSlice.actions;
 
 export default authSlice.reducer;

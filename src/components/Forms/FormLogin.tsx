@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginAsync } from '../../redux/actions/authAction';
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form } from 'react-bootstrap';
-import { AppDispatch } from '../../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
+import Swal from 'sweetalert2';
 
 interface FormLoginProps {
 	email: string;
@@ -25,14 +26,31 @@ const FormLogin = () => {
 	const navigate = useNavigate();
 
 	const validations = Yup.object().shape({
-		email: Yup.string().required('Campo requerido'),
+		email: Yup.string().email().required('Campo requerido'),
 		password: Yup.string().required('Campo requerido'),
 	});
 
 	const handleLogin = async (values: any) => {
 		const action = await dispatch(loginAsync({ email: values.email, pass: values.password }));
-
-		if (loginAsync.fulfilled.match(action)) {
+		if (loginAsync.rejected.match(action)) {
+			const { error } = action.payload as { error: string };
+			Swal.fire({
+				title: 'Error!',
+				text: `${error}`,
+				icon: 'error',
+				confirmButtonText: 'Ok',
+			});
+		} else {
+			const { token, nom, ape } = action.payload as { token: string, nom: string, ape: string };
+			localStorage.setItem('token', token);
+			localStorage.setItem('user', `${nom} ${ape}`);
+			Swal.fire({
+				title: 'Bienvenido!',
+				text: `${nom} ${ape}`,
+				icon: 'success',
+				confirmButtonText: 'Ok',
+				timer: 2000,
+			});
 			navigate('/');
 		}
 	};
