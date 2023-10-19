@@ -1,33 +1,67 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Col, Form,Row } from 'react-bootstrap';
+import { Button, Col, Form, FormSelect, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { RegisterProps } from '../../types/AuthProps';
 
 const FormRegister = () => {
+	const [unidadesAcademicas, setUnidadesAcademicas] = React.useState([]);
+
 	const validations = Yup.object().shape({
-		DNI: Yup.string().required('Campo requerido'),
-		lastName: Yup.string().required('Campo requerido'),
-		name: Yup.string().required('Campo requerido'),
+		dni: Yup.string().required('Campo requerido'),
+		ape: Yup.string().required('Campo requerido'),
+		nom: Yup.string().required('Campo requerido'),
 		email: Yup.string().email('El campo debe ser un correo valido').required('Campo requerido'),
-		ua: Yup.string().required('Campo requerido'),
-		password: Yup.string().required('Campo requerido'),
-		confirmPassword: Yup.string().required('Campo requerido'),
+		pass: Yup.string().required('Campo requerido'),
+		confirmPass: Yup.string()
+			.required('Campo requerido')
+			.oneOf([Yup.ref('pass')], 'Las contraseñas no coinciden'),
+		idUnidadAcademica: Yup.number()
+			.required('Campo requerido')
+			.test('is-not-zero', 'Campo requerido', (value) => value !== 0)
+			.typeError('Campo requerido')
+			.positive('Campo requerido'),
 	});
+
+	const getUnidadesAcademicas = async () => {
+		await fetch('http://168.197.50.94:4006/api/v2/usr/bases/', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data.data.unidadesAcademicas);
+				setUnidadesAcademicas(data.data.unidadesAcademicas);
+			})
+			.catch((error) => console.log(error));
+	};
+
+	useEffect(() => {
+		getUnidadesAcademicas();
+	}, []);
+
+	const handleRegister = async (values: RegisterProps) => {
+		console.log(values);
+	};
 
 	return (
 		<Formik
-			initialValues={{
-				DNI: '',
-				lastName: '',
-				name: '',
-				email: '',
-				ua: '',
-				password: '',
-				confirmPassword: '',
-			}}
+			initialValues={
+				{
+					dni: '',
+					ape: '',
+					nom: '',
+					email: '',
+					idUnidadAcademica: -1,
+					pass: '',
+					confirmPass: '',
+				} as RegisterProps
+			}
 			onSubmit={(values) => {
-				console.log(values);
+				handleRegister(values);
 			}}
 			validationSchema={validations}
 		>
@@ -40,16 +74,16 @@ const FormRegister = () => {
 								<Form.Group className='position-relative mb-4'>
 									<Form.Control
 										type='text'
-										placeholder='DNI'
-										name='DNI'
+										placeholder='dni'
+										name='dni'
 										onChange={handleChange}
 										onBlur={handleBlur}
-										value={values.DNI}
-										isInvalid={!!errors.DNI && touched.DNI}
+										value={values.dni}
+										isInvalid={!!errors.dni && touched.dni}
 										aria-describedby='inputGroupPrepend'
 									/>
 									<Form.Control.Feedback type='invalid' tooltip>
-										{errors.DNI}
+										{errors.dni}
 									</Form.Control.Feedback>
 								</Form.Group>
 							</Col>
@@ -61,15 +95,15 @@ const FormRegister = () => {
 									<Form.Control
 										type='text'
 										placeholder='Nombre'
-										name='name'
+										name='nom'
 										onChange={handleChange}
 										onBlur={handleBlur}
-										value={values.name}
-										isInvalid={!!errors.name && touched.name}
+										value={values.nom}
+										isInvalid={!!errors.nom && touched.nom}
 										aria-describedby='inputGroupPrepend'
 									/>
 									<Form.Control.Feedback type='invalid' tooltip>
-										{errors.name}
+										{errors.nom}
 									</Form.Control.Feedback>
 								</Form.Group>
 							</Col>
@@ -78,15 +112,15 @@ const FormRegister = () => {
 									<Form.Control
 										type='text'
 										placeholder='Apellido'
-										name='lastName'
+										name='ape'
 										onChange={handleChange}
 										onBlur={handleBlur}
-										value={values.lastName}
-										isInvalid={!!errors.lastName && touched.lastName}
+										value={values.ape}
+										isInvalid={!!errors.ape && touched.ape}
 										aria-describedby='inputGroupPrepend'
 									/>
 									<Form.Control.Feedback type='invalid' tooltip>
-										{errors.lastName}
+										{errors.ape}
 									</Form.Control.Feedback>
 								</Form.Group>
 							</Col>
@@ -109,18 +143,26 @@ const FormRegister = () => {
 						</Form.Group>
 
 						<Form.Group className=' position-relative mb-4'>
-							<Form.Control
-								type='text'
-								placeholder='Unidad académica'
-								name='ua'
+							<FormSelect
+								aria-label='Default select example'
+								name='idUnidadAcademica'
+								isInvalid={!!errors.idUnidadAcademica && touched.idUnidadAcademica}
+								value={values.idUnidadAcademica}
 								onChange={handleChange}
-								onBlur={handleBlur}
-								value={values.ua}
-								isInvalid={!!errors.ua && touched.ua}
-								aria-describedby='inputGroupPrepend'
-							/>
+							>
+								<option>Seleccione una unidad academica</option>
+								{unidadesAcademicas.length &&
+									unidadesAcademicas?.map((unidadAcademica: any) => (
+										<option
+											key={unidadAcademica.idUnidadAcademica}
+											value={unidadAcademica.idUnidadAcademica}
+										>
+											{unidadAcademica.nom}
+										</option>
+									))}
+							</FormSelect>
 							<Form.Control.Feedback type='invalid' tooltip>
-								{errors.ua}
+								{errors.idUnidadAcademica}
 							</Form.Control.Feedback>
 						</Form.Group>
 
@@ -130,14 +172,14 @@ const FormRegister = () => {
 									<Form.Control
 										type='password'
 										placeholder='Contraseña'
-										name='password'
+										name='pass'
 										onChange={handleChange}
 										onBlur={handleBlur}
-										value={values.password}
-										isInvalid={!!errors.password && touched.password}
+										value={values.pass}
+										isInvalid={!!errors.pass && touched.pass}
 									/>
 									<Form.Control.Feedback type='invalid' tooltip className='   '>
-										{errors.password}
+										{errors.pass}
 									</Form.Control.Feedback>
 								</Form.Group>
 							</Col>
@@ -146,14 +188,14 @@ const FormRegister = () => {
 									<Form.Control
 										type='password'
 										placeholder='Confirmar contraseña'
-										name='confirmPassword'
+										name='confirmPass'
 										onChange={handleChange}
 										onBlur={handleBlur}
-										value={values.confirmPassword}
-										isInvalid={!!errors.confirmPassword && touched.confirmPassword}
+										value={values.confirmPass}
+										isInvalid={!!errors.confirmPass && touched.confirmPass}
 									/>
 									<Form.Control.Feedback type='invalid' tooltip>
-										{errors.confirmPassword}
+										{errors.confirmPass}
 									</Form.Control.Feedback>
 								</Form.Group>
 							</Col>

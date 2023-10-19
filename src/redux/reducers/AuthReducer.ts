@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { authAsync, loginAsync } from '../actions/authAction';
+import { authAsync, loginAsync, registerAsync } from '../actions/authAction';
 interface AuthState {
 	user: string;
 	token: string;
@@ -65,6 +65,21 @@ const authSlice = createSlice({
 			state.loading = false;
 			state.error = action.error.message;
 		});
+
+		// REGISTER
+		builder.addCase(registerAsync.pending, (state) => {
+			state.loading = true;
+		});
+		builder.addCase(registerAsync.fulfilled, (state, action) => {
+			state.loading = false;
+			state.token = action.payload.token;
+		});
+		builder.addCase(registerAsync.rejected, (state, action) => {
+			state.loading = false;
+			state.error = action.error.message;
+		});
+
+		
 	},
 });
 
