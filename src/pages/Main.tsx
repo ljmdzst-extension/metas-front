@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import CardYear from '../components/CardYear';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
-import { setUserData } from '../redux/reducers/AuthReducer';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../redux/store';
+import { logout, setUserData } from '../redux/reducers/AuthReducer';
 import { authAsync } from '../redux/actions/authAction';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
@@ -16,11 +16,14 @@ export default function Main() {
 
 		if (currentToken && user) {
 			const action = await dispatch(authAsync(currentToken));
+			console.log(action);
 			if (authAsync.rejected.match(action)) {
+				if (action.payload === undefined) return;
+
 				const { error } = action.payload as { error: string };
 				localStorage.removeItem('token');
 				localStorage.removeItem('user');
-				dispatch({ type: 'logout' });
+				dispatch(logout());
 				Swal.fire({
 					title: `Error`,
 					text: `${error}`,
