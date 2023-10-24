@@ -9,6 +9,11 @@ import { AppDispatch } from '../../redux/store';
 import { registerAsync } from '../../redux/actions/authAction';
 import Swal from 'sweetalert2';
 
+export interface UnidadesAcademicas {
+	idUnidadAcademica: number;
+	nom: string;
+}
+
 const FormRegister = () => {
 	const [unidadesAcademicas, setUnidadesAcademicas] = React.useState([]);
 
@@ -39,7 +44,6 @@ const FormRegister = () => {
 		})
 			.then((response) => response.json())
 			.then((data) => {
-				console.log(data.data.unidadesAcademicas);
 				setUnidadesAcademicas(data.data.unidadesAcademicas);
 			})
 			.catch((error) => console.log(error));
@@ -50,7 +54,6 @@ const FormRegister = () => {
 	}, []);
 
 	const handleRegister = async (values: RegisterProps) => {
-		console.log(values);
 		const action = await dispatch(registerAsync(values));
 		if (registerAsync.rejected.match(action)) {
 			const { error } = action.payload as { error: string };
@@ -175,7 +178,7 @@ const FormRegister = () => {
 							>
 								<option>Seleccione una unidad academica</option>
 								{unidadesAcademicas.length > 0 &&
-									unidadesAcademicas?.map((unidadAcademica: any) => (
+									unidadesAcademicas?.map((unidadAcademica: UnidadesAcademicas) => (
 										<option
 											key={unidadAcademica.idUnidadAcademica}
 											value={unidadAcademica.idUnidadAcademica}

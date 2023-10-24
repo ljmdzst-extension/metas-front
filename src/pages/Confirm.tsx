@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Spinner from 'react-bootstrap/Spinner';
@@ -34,7 +34,6 @@ const Confirm = () => {
 					navigate('/login');
 				} else {
 					const data = await response.json(); // Parsear la respuesta JSON
-					console.log(data);
 					throw new Error(data.error || 'No se pudo validar el usuario');
 				}
 			} catch (error: any) {
