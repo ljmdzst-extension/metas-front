@@ -42,11 +42,26 @@ const authSlice = createSlice({
 			state.loading = true;
 		});
 		builder.addCase(loginAsync.fulfilled, (state, action) => {
+			console.log(action.payload);
 			state.loading = false;
 			state.user = action.payload.nom + ' ' + action.payload.ape;
 			state.token = action.payload.token;
 		});
 		builder.addCase(loginAsync.rejected, (state, action) => {
+			console.log(action.payload);
+			state.loading = false;
+			state.error = (action.payload as { error: string }).error;
+		});
+
+		// AUTH
+		builder.addCase(authAsync.pending, (state) => {
+			state.loading = true;
+		});
+		builder.addCase(authAsync.fulfilled, (state, action) => {
+			state.loading = false;
+			state.token = action.payload.token;
+		});
+		builder.addCase(authAsync.rejected, (state, action) => {
 			state.loading = false;
 			state.error = (action.payload as { error: string }).error;
 		});

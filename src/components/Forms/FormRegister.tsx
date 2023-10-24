@@ -168,8 +168,7 @@ const FormRegister = () => {
 							</Form.Control.Feedback>
 						</Form.Group>
 
-						<Form.Group className=' position-relative mb-4'>
-							<FormSelect
+						<FormSelect
 								aria-label='Default select example'
 								name='idUnidadAcademica'
 								isInvalid={!!errors.idUnidadAcademica && touched.idUnidadAcademica}
@@ -187,10 +186,6 @@ const FormRegister = () => {
 										</option>
 									))}
 							</FormSelect>
-							<Form.Control.Feedback type='invalid' tooltip>
-								{errors.idUnidadAcademica}
-							</Form.Control.Feedback>
-						</Form.Group>
 
 						<Row>
 							<Col>
