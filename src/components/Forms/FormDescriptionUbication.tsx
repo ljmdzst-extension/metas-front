@@ -11,26 +11,37 @@ interface FormDescriptionUbicationProps {
 const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   onClose,
 }) => {
+
   const dispatch = useDispatch();
+
   const estadoActualizado = useSelector(
     (state: RootState) => state.actividadSlice
   );
+  const [editandoDescripcion, setEditandoDescripcion] = useState(false);
   const [descripcion, setDescripcion] = useState<string>(
     estadoActualizado.desc ?? ""
   );
+
   const [ubicacion, setUbicacion] = useState<string>("");
-  const [ubicaciones, setUbicaciones] = useState<{ idUbicacion: number | null; nom : string |null; idActividad: number | null; enlace: string | null; }[]>([]);
+  const [ubicaciones, setUbicaciones] = useState<{ 
+    idUbicacion: number | null; 
+    nom : string | null; 
+    idActividad: number | null; 
+    enlace: string | null; 
+  }[]>([]);
 
   useEffect(() => {
     if (estadoActualizado.listaUbicaciones) {
       setUbicaciones(estadoActualizado.listaUbicaciones);
     }
   }, []);
+
   const handleDescripcionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setDescripcion(event.target.value);
   };
+
   const handleUbicacionInputChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -50,6 +61,12 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
       setUbicacion("");
     }
   };
+
+  const handleClickEditarDescripcion = ( event : React.MouseEvent<HTMLButtonElement, MouseEvent> )=>{
+    event.preventDefault();
+    setEditandoDescripcion(!editandoDescripcion);
+  }
+
   const eliminarUbicacion = (index: number) => {
     const newUbicaciones = [...ubicaciones];
     newUbicaciones.splice(index, 1);
@@ -57,33 +74,32 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   };
   return (
     <div className="FormDescription">
-      <h2>Descripción y ubicaciones</h2>
+      <h2>Descripción y ubicación</h2>
       <div className="ConteinerGrande">
         <div className="ConteinerDescriptionMetas">
           <div className="ConteinerDescripcion">
             <div className="Descripcion">
-              <p>
-                Para modificar la descripción de la actividad, haga clic en
-                Editar Descripción.
-              </p>
-              <span className="SubtituloMetas">Descripcion:</span>
+              <p> Descripción: </p>
+              
               <InputGroup className="mb-3 gap-1">
                 <Form.Control
                   as="textarea"
                   rows={4}
                   style={{ resize: "none" }}
-                  placeholder={descripcion}
                   aria-label="Inserte descripción"
                   aria-describedby="basic-addon2"
                   onChange={handleDescripcionChange}
+                  disabled={ !editandoDescripcion }
+                  value={ descripcion }
                 />
                 <Button
                   variant="secondary"
                   id="button-addon2"
                   style={{ width: "50px", height: "50px" }}
+                  onClick={ handleClickEditarDescripcion }
                 >
                   <img
-                    src="../assets/img/boton-editar.png"
+                    src={`../assets/img/${ !editandoDescripcion ? 'boton-editar' : 'guardar'}.png`}
                     className="imgboton"
                     alt="editar"
                   />
@@ -92,9 +108,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
             </div>
           </div>
           <p>
-            Ubicación se refiere al punto del mapa en donde se encuentre el
-            lugar de la actividad. Utilice la herramienta de Google Maps para
-            insertar el enlace de dicha ubicación.
+          Utilice la herramienta de Google Maps para insertar el enlace de la ubicación de la actividad. Si necesita ayuda, consulte en este video.
           </p>
           <p>
             Si necesita ayuda para compartir el enlace, consulte{" "}

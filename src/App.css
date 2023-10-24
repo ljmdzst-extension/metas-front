@@ -642,7 +642,11 @@ input.form-check-input:checked {
 	align-items: flex-start;
 	gap: 5px;
 }
-
+.imgvolver {
+  width: 35px;
+  height: 35px;
+  
+}
 .imgboton {
 	width: 24px;
 	height: 24px;
