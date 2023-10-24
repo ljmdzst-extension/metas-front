@@ -125,10 +125,9 @@ export default function Activity() {
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>
-                Usted tiene una actividad en curso, ¿desea salir de la
-                actividad?
+                ¿Confirma que desea salir de la actividad?
               </Form.Label>
-              <Form.Label>Los cambios no guardados se perderan.</Form.Label>
+              <Form.Label>Los cambios no guardados se perderán. </Form.Label>
             </Form.Group>
             <Form.Group
               style={{ display: "flex", justifyContent: "space-between" }}
@@ -153,7 +152,7 @@ export default function Activity() {
       {isPlanificationOpen && (
         <div className="MenuOptionsAux">
           <div className="Options">Carga de Presupuesto</div>
-          <div className="Options">Ver Resumen y Graficos</div>
+          <div className="Options">Ver Resumen y Gráficos</div>
         </div>
       )}
       <div className="ConteinerActivity">
@@ -201,7 +200,7 @@ export default function Activity() {
         {!isPlanificationOpen && (
           <div className="MenuOptions">
             <div className="Options">Carga de Presupuesto</div>
-            <div className="Options">Ver Resumen y Graficos</div>
+            <div className="Options">Ver Resumen y Gráficos</div>
           </div>
         )}
         {isPlanificationOpen && <PlanificationPanel name={nameActivity} />}

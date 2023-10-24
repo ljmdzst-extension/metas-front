@@ -270,7 +270,7 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Descripción / Ubicación
+                  Descripción y ubicación
                 </Button>
               </div>
               <div className="rowForm">
@@ -282,7 +282,7 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  PIE
+                  Plan institucional estratégico
                 </Button>
               </div>
               <div className="rowForm">
@@ -294,7 +294,7 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Áreas, secretarías y UUAA UNL relacionadas
+                  UA , áreas internas y otras secretarías relacionadas.
                 </Button>
               </div>
               <div className="rowForm">
@@ -320,7 +320,7 @@ export default function PlanificationPanel({ name }: Props) {
                     setIsFormOpen(true);
                   }}
                 >
-                  Periodo
+                  Período / Fecha
                 </Button>
               </div>
               <div className="rowForm">
