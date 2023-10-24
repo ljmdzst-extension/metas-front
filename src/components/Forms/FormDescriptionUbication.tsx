@@ -63,10 +63,8 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   };
 
   const handleClickEditarDescripcion = ( event : React.MouseEvent<HTMLButtonElement, MouseEvent> )=>{
-      event.preventDefault();
-      setEditandoDescripcion(!editandoDescripcion);
-
-
+    event.preventDefault();
+    setEditandoDescripcion(!editandoDescripcion);
   }
 
   const eliminarUbicacion = (index: number) => {
@@ -76,16 +74,13 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
   };
   return (
     <div className="FormDescription">
-      <h2>Descripción y ubicaciones</h2>
+      <h2>Descripción y ubicación</h2>
       <div className="ConteinerGrande">
         <div className="ConteinerDescriptionMetas">
           <div className="ConteinerDescripcion">
             <div className="Descripcion">
-              <p>
-                Para modificar la descripción de la actividad, haga clic en
-                Editar Descripción.
-              </p>
-              <span className="SubtituloMetas">Descripcion:</span>
+              <p> Descripción: </p>
+              
               <InputGroup className="mb-3 gap-1">
                 <Form.Control
                   as="textarea"
@@ -113,9 +108,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
             </div>
           </div>
           <p>
-            Ubicación se refiere al punto del mapa en donde se encuentre el
-            lugar de la actividad. Utilice la herramienta de Google Maps para
-            insertar el enlace de dicha ubicación.
+          Utilice la herramienta de Google Maps para insertar el enlace de la ubicación de la actividad. Si necesita ayuda, consulte en este video.
           </p>
           <p>
             Si necesita ayuda para compartir el enlace, consulte{" "}

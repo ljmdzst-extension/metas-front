@@ -12,6 +12,7 @@ interface FormPIEProps {
 
 interface Objetivo {
   idObjetivo: number;
+  detalle : string;
   nom: string;
   tipoObjetivo: {
     idTipoObj: number;
@@ -51,10 +52,10 @@ export default function FormPIE({ onClose }: FormPIEProps) {
     }
   };
 
-  const objetivosDesde17a19 = objetivos?.slice(17, 20);
-  const objetivosDesde4a7 = objetivos?.slice(4, 7);
-  const objetivosDesde8a11 = objetivos?.slice(8, 11);
-  const objetivosDesde12a16 = objetivos?.slice(12, 16);
+  const objetivosDesde21a24 = objetivos?.slice(19, 22);
+  const objetivosDesde5a9 = objetivos?.slice(4, 9);
+  const objetivosDesde10a15 = objetivos?.slice(9, 14);
+  const objetivosDesde16a20 = objetivos?.slice(14, 19);
 
   const estadoActualizado = useSelector(
     (state: RootState) => state.actividadSlice
@@ -72,6 +73,12 @@ export default function FormPIE({ onClose }: FormPIEProps) {
   return (
     <>
       <div className="FormPie">
+        <div></div>
+        <p> Referencia: 
+          <a href="https://www.unl.edu.ar/pie/wp-content/uploads/sites/55/2021/02/Plan-Institucional-Estrat%C3%A9gico.pdf" 
+            target="_blank"
+            rel="noopener noreferrer" 
+          >Plan Institucional Estratégico</a> </p>
         <div className="ConteinerEje">
           <h2 className="TitlePie">Ejes Transversales</h2>
           <Form className="FormEje">
@@ -79,7 +86,7 @@ export default function FormPIE({ onClose }: FormPIEProps) {
               <span>Seleccione los ejes:</span>
             </p>
             <div className="Eje">
-              {objetivosDesde17a19.map((objetivo) => (
+              {objetivosDesde21a24.map((objetivo) => (
                 <Form.Check
                   id={objetivo.idObjetivo.toString()}
                   label={objetivo.nom}
@@ -99,14 +106,10 @@ export default function FormPIE({ onClose }: FormPIEProps) {
             </p>
             <div className="ConteinerChecksPlan">
               <div className="Lie">
-                {objetivosDesde4a7.map((objetivo) => (
+                {objetivosDesde5a9.map((objetivo) => (
                   <Form.Check
                     id={objetivo.idObjetivo.toString()}
-                    title={ objetivo.idObjetivo === 5 
-                      ?
-                      `Asegurar el pleno funcionamiento del co-gobierno, el ejercicio de la autonomía universitaria y la autarquía en la administración de sus recursos, profundizando la participación de toda la comunidad universitaria, con arreglo al régimen de cada claustro, en instancias deliberativas, participativas y democráticas, y con sus acciones articuladas en torno al proceso de planeamiento.`  
-                     : undefined
-                    }
+                    title={ objetivo.detalle }
                     label={objetivo.nom}
                     key={objetivo.idObjetivo}
                     onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
@@ -115,10 +118,11 @@ export default function FormPIE({ onClose }: FormPIEProps) {
                 ))}
               </div>
               <div className="Lie">
-                {objetivosDesde8a11.map((objetivo) => (
+                {objetivosDesde10a15.map((objetivo) => (
                   <Form.Check
                     id={objetivo.idObjetivo.toString()}
                     label={objetivo.nom}
+                    title={ objetivo.detalle }
                     key={objetivo.idObjetivo}
                     onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
                     checked={objetivosSeleccionados.includes(objetivo.idObjetivo)}
@@ -126,10 +130,11 @@ export default function FormPIE({ onClose }: FormPIEProps) {
                 ))}
               </div>
               <div className="Lie">
-                {objetivosDesde12a16.map((objetivo) => (
+                {objetivosDesde16a20.map((objetivo) => (
                   <Form.Check
                     id={objetivo.idObjetivo.toString()}
                     label={objetivo.nom}
+                    title={ objetivo.detalle }
                     key={objetivo.idObjetivo}
                     onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
                     checked={objetivosSeleccionados.includes(objetivo.idObjetivo)}
