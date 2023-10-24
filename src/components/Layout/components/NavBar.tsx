@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
-import { Container, Image, Navbar, Nav } from 'react-bootstrap';
-import LogoutIcon from '../../../assets/logout.svg';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../redux/store';
+
 import { logout, setUserData } from '../../../redux/reducers/AuthReducer';
+
+import { Container, Image, Navbar, Nav } from 'react-bootstrap';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
 
 export default function NavBar() {
 	const { user } = useSelector((state: RootState) => state.authSlice);
@@ -17,7 +19,7 @@ export default function NavBar() {
 		const user = localStorage.getItem('user') ?? '';
 		const token = localStorage.getItem('token') ?? '';
 		dispatch(setUserData({ user, token }));
-	}, []);
+	}, [dispatch]);
 
 	const handleLogout = () => {
 		localStorage.removeItem('token');
@@ -52,14 +54,9 @@ export default function NavBar() {
 					{user ? (
 						<>
 							<p className=' text-white m-auto bold me-2'>Usuario: {user}</p>
-							<LogoutIcon
-								width={30}
-								height={30}
-								fill='#fff'
-								stroke='#fff'
-								className='me-2 logout-icon'
-								onClick={handleLogout}
-							/>
+							<Nav.Link onClick={handleLogout}>
+								<LogoutIcon />
+							</Nav.Link>
 						</>
 					) : (
 						<>

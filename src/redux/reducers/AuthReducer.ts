@@ -66,19 +66,6 @@ const authSlice = createSlice({
 			state.error = (action.payload as { error: string }).error;
 		});
 
-		// AUTH
-		builder.addCase(authAsync.pending, (state) => {
-			state.loading = true;
-		});
-		builder.addCase(authAsync.fulfilled, (state, action) => {
-			state.loading = false;
-			state.token = action.payload.token;
-		});
-		builder.addCase(authAsync.rejected, (state, action) => {
-			state.loading = false;
-			state.error = action.error.message;
-		});
-
 		// REGISTER
 		builder.addCase(registerAsync.pending, (state) => {
 			state.loading = true;
