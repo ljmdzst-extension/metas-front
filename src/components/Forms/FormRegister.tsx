@@ -4,9 +4,15 @@ import * as Yup from 'yup';
 import { Button, Col, Form, FormSelect, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { RegisterProps } from '../../types/AuthProps';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import { registerAsync } from '../../redux/actions/authAction';
+import Swal from 'sweetalert2';
 
 const FormRegister = () => {
 	const [unidadesAcademicas, setUnidadesAcademicas] = React.useState([]);
+
+	const dispatch = useDispatch<AppDispatch>();
 
 	const validations = Yup.object().shape({
 		dni: Yup.string().required('Campo requerido'),
@@ -45,6 +51,23 @@ const FormRegister = () => {
 
 	const handleRegister = async (values: RegisterProps) => {
 		console.log(values);
+		const action = await dispatch(registerAsync(values));
+		if (registerAsync.rejected.match(action)) {
+			const { error } = action.payload as { error: string };
+			Swal.fire({
+				title: 'Error!',
+				text: `${error}`,
+				icon: 'error',
+				confirmButtonText: 'Ok',
+			});
+		} else {
+			Swal.fire({
+				title: 'Registro exitoso!',
+				text: `Se le ha enviado un mail para validar el registro`,
+				icon: 'success',
+				confirmButtonText: 'Ok',
+			});
+		}
 	};
 
 	return (
@@ -74,7 +97,7 @@ const FormRegister = () => {
 								<Form.Group className='position-relative mb-4'>
 									<Form.Control
 										type='text'
-										placeholder='dni'
+										placeholder='DNI'
 										name='dni'
 										onChange={handleChange}
 										onBlur={handleBlur}
@@ -129,7 +152,7 @@ const FormRegister = () => {
 						<Form.Group className=' position-relative mb-4'>
 							<Form.Control
 								type='email'
-								placeholder=' email'
+								placeholder='Email'
 								name='email'
 								onChange={handleChange}
 								onBlur={handleBlur}
@@ -151,7 +174,7 @@ const FormRegister = () => {
 								onChange={handleChange}
 							>
 								<option>Seleccione una unidad academica</option>
-								{unidadesAcademicas.length &&
+								{unidadesAcademicas.length > 0 &&
 									unidadesAcademicas?.map((unidadAcademica: any) => (
 										<option
 											key={unidadAcademica.idUnidadAcademica}
