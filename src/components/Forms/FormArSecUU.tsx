@@ -144,9 +144,9 @@ number[]
     <>
       <div className="FormArSecuu">
         <div className="Areas">
-          <h2>Areas Internas de la secretarias</h2>
+          <h2>Áreas internas de la secretaría</h2>
           <div className="SelectArea">
-            <p className="parrafo">Seleccione segun corresponda:</p>
+            <p className="parrafo">Seleccione según corresponda:</p>
             <Select
               closeMenuOnSelect={false}
               components={animatedComponents}
@@ -159,9 +159,9 @@ number[]
           </div>
         </div>
         <div className="Secretarias">
-          <h2>Secretarias</h2>
+          <h2>Secretarías</h2>
           <div className="SelectSec">
-            <p className="parrafo">Seleccione segun corresponda:</p>
+            <p className="parrafo">Seleccione según corresponda:</p>
             <Select
               closeMenuOnSelect={false}
               components={animatedComponents}
@@ -174,9 +174,9 @@ number[]
           </div>
         </div>
         <div className="UUAA">
-          <h2>Unidades Academicas involucradas</h2>
+          <h2>Unidades Académicas involucradas</h2>
           <div className="SelectUUAA">
-            <p className="parrafo">Seleccione segun corresponda:</p>
+            <p className="parrafo">Seleccione según corresponda:</p>
             <Select
               closeMenuOnSelect={false}
               components={animatedComponents}
@@ -189,9 +189,9 @@ number[]
           </div>
         </div>
         <div className="UUAA">
-          <h2>Programas de extensión</h2>
+          <h2>Programas de Extensión</h2>
           <div className="SelectUUAA">
-            <p className="parrafo">Seleccione segun corresponda:</p>
+            <p className="parrafo">Seleccione según corresponda:</p>
             <Select
               closeMenuOnSelect={false}
               components={animatedComponents}
