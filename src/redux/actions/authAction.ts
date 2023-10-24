@@ -33,7 +33,6 @@ export const authAsync = createAsyncThunk('auth/auth', async (token: string, thu
 
 	if (!response.ok) {
 		const errorData: LoginResponse = await response.json();
-		console.log(errorData);
 		return thunkAPI.rejectWithValue(errorData);
 	}
 

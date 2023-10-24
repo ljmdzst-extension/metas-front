@@ -1,13 +1,12 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { loginAsync } from '../../redux/actions/authAction';
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form } from 'react-bootstrap';
-import { AppDispatch, RootState } from '../../redux/store';
+import { AppDispatch } from '../../redux/store';
 import Swal from 'sweetalert2';
 
 interface FormLoginProps {
@@ -30,7 +29,7 @@ const FormLogin = () => {
 		password: Yup.string().required('Campo requerido'),
 	});
 
-	const handleLogin = async (values: any) => {
+	const handleLogin = async (values: FormLoginProps) => {
 		const action = await dispatch(loginAsync({ email: values.email, pass: values.password }));
 		if (loginAsync.rejected.match(action)) {
 			const { error } = action.payload as { error: string };
@@ -41,7 +40,7 @@ const FormLogin = () => {
 				confirmButtonText: 'Ok',
 			});
 		} else {
-			const { token, nom, ape } = action.payload as { token: string, nom: string, ape: string };
+			const { token, nom, ape } = action.payload as { token: string; nom: string; ape: string };
 			localStorage.setItem('token', token);
 			localStorage.setItem('user', `${nom} ${ape}`);
 			Swal.fire({

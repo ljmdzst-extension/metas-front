@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Image, Navbar, Nav } from 'react-bootstrap';
-import { ReactComponent as LogoutIcon } from '../../../assets/logout.svg';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../redux/store';
+
 import { logout, setUserData } from '../../../redux/reducers/AuthReducer';
+
+import { Container, Image, Navbar, Nav } from 'react-bootstrap';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
-import { useNavigate, useResolvedPath } from 'react-router-dom';
 
 export default function NavBar() {
-	const [currentUser, setCurrentUser] = useState<string | null>(null);
-
 	const { user } = useSelector((state: RootState) => state.authSlice);
 
 	const dispatch = useDispatch<AppDispatch>();
@@ -18,15 +18,13 @@ export default function NavBar() {
 	useEffect(() => {
 		const user = localStorage.getItem('user') ?? '';
 		const token = localStorage.getItem('token') ?? '';
-		setCurrentUser(user);
 		dispatch(setUserData({ user, token }));
-	}, []);
+	}, [dispatch]);
 
 	const handleLogout = () => {
 		localStorage.removeItem('token');
 		localStorage.removeItem('user');
 		dispatch(logout());
-		setCurrentUser(null);
 		Swal.fire({
 			title: 'Sesión cerrada',
 			text: 'La sesión se ha cerrado correctamente',
@@ -56,14 +54,9 @@ export default function NavBar() {
 					{user ? (
 						<>
 							<p className=' text-white m-auto bold me-2'>Usuario: {user}</p>
-							<LogoutIcon
-								width={30}
-								height={30}
-								fill='#fff'
-								stroke='#fff'
-								className='me-2 logout-icon'
-								onClick={handleLogout}
-							/>
+							<Nav.Link onClick={handleLogout}>
+								<LogoutIcon />
+							</Nav.Link>
 						</>
 					) : (
 						<>

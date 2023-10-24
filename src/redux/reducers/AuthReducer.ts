@@ -63,7 +63,7 @@ const authSlice = createSlice({
 		});
 		builder.addCase(authAsync.rejected, (state, action) => {
 			state.loading = false;
-			state.error = action.error.message;
+			state.error = (action.payload as { error: string }).error;
 		});
 
 		// REGISTER
