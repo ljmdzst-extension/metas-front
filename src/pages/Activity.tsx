@@ -46,7 +46,6 @@ export default function Activity() {
 	}
 
 	const dispatch: AppDispatch = useDispatch();
-  
 
 	useEffect(() => {
 		mostrarActividades();
@@ -75,7 +74,7 @@ export default function Activity() {
 		setTerm('');
 	};
 
-	let mostrarActividades = async function () {
+	const mostrarActividades = async function () {
 		axios
 			.get(`http://168.197.50.94:4005/metas/v2/areas/${idArea}/actividades`)
 			.then((response) => {
@@ -146,12 +145,7 @@ export default function Activity() {
 				</Modal.Body>
 			</Modal>
 			<h1>{area?.nom}</h1>
-			{isPlanificationOpen && (
-				<div className='MenuOptionsAux'>
-					<div className='Options'>Carga de Presupuesto</div>
-					<div className='Options'>Ver Resumen y Gráficos</div>
-				</div>
-			)}
+
 			<div className='ConteinerActivity'>
 				<div className='MenuActivity'>
 					<Button variant='outline-success' className='Options' onClick={handleShow}>
