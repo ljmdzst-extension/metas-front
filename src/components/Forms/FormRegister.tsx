@@ -168,7 +168,8 @@ const FormRegister = () => {
 							</Form.Control.Feedback>
 						</Form.Group>
 
-						<FormSelect
+						<Form.Group className=' position-relative mb-4'>
+							<FormSelect
 								aria-label='Default select example'
 								name='idUnidadAcademica'
 								isInvalid={!!errors.idUnidadAcademica && touched.idUnidadAcademica}
@@ -186,7 +187,7 @@ const FormRegister = () => {
 										</option>
 									))}
 							</FormSelect>
-
+						</Form.Group>
 						<Row>
 							<Col>
 								<Form.Group className=' position-relative mb-4'>
