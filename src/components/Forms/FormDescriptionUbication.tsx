@@ -73,7 +73,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
     setUbicaciones(newUbicaciones);
   };
   return (
-    <div className="FormDescription">
+    <div className="FormDescription d-flex">
       <h2>Descripción y ubicación</h2>
       <div className="ConteinerGrande">
         <div className="ConteinerDescriptionMetas">
@@ -170,7 +170,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
       </div>
       <Button
               variant="success"
-              className="Save"
+              className="Save m-2"
               onClick={() => {
                 guardarActividad({...estadoActualizado,desc:descripcion, listaUbicaciones: ubicaciones },dispatch);
                 onClose();

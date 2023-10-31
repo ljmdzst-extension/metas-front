@@ -515,18 +515,12 @@ input.form-check-input:checked {
 	padding: 20px;
 	border-radius: 5px;
 }
-.SelectArea {
+.SelectContainers {
 	width: 90%;
+	min-height: 150px;
 	margin-top: 10px;
 }
-.SelectSec {
-	width: 90%;
-	margin-top: 10px;
-}
-.SelectUUAA {
-	width: 90%;
-	margin-top: 10px;
-}
+
 .parrafo {
 	align-self: flex-start;
 	margin-bottom: 5px;

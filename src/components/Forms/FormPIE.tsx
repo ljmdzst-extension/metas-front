@@ -69,7 +69,7 @@ export default function FormPIE({ onClose }: FormPIEProps) {
 	}, [estadoActualizado.listaObjetivos]);
 
 	return (
-		<>
+		<div className=' d-flex flex-column'>
 			<div className='FormPie'>
 				<div></div>
 				<p>
@@ -151,7 +151,7 @@ export default function FormPIE({ onClose }: FormPIEProps) {
 			</div>
 			<Button
 				variant='success'
-				className='Save'
+				className='Save align-self-center my-2'
 				onClick={() => {
 					guardarActividad(
 						{
@@ -165,6 +165,6 @@ export default function FormPIE({ onClose }: FormPIEProps) {
 			>
 				Guardar Actividad
 			</Button>
-		</>
+		</div>
 	);
 }
