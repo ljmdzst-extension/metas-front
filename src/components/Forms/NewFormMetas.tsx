@@ -1,10 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import { RootState } from '../../redux/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import axios from 'axios';
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
-import { Form, Modal, Table } from 'react-bootstrap';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { guardarActividad } from '../../redux/actions/putActividad';
+
+interface FormMetasProps {
+	onClose: () => void;
+}
 
 interface Valoracion {
 	idValoracion: number;
@@ -26,12 +33,13 @@ const defaultNuevaMeta = {
 	valoracion: 0,
 };
 
-const FormMetas = () => {
+const FormMetas = ({ onClose }: FormMetasProps) => {
+	const dispatch = useDispatch();
 	const [listadoMetas, setListadoMetas] = useState<metas[]>([]);
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
 	const [showModal, setShowModal] = useState(false);
-	const indexCurrentMeta = useRef(0);
+	const indexCurrentMeta = useRef(-1);
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
 
@@ -61,6 +69,19 @@ const FormMetas = () => {
 		sincronizarMetas();
 	}, [estadoActualizado.listaMetas]);
 
+	useEffect(() => {
+		const actualizarRedux = () => {
+			dispatch({
+				type: 'UPDATE_ACTIVIDAD',
+				payload: {
+					...estadoActualizado,
+					listaMetas: listadoMetas,
+				},
+			});
+		};
+		actualizarRedux();
+	}, [dispatch, estadoActualizado, listadoMetas]);
+
 	const openModal = () => {
 		setShowModal(true);
 	};
@@ -69,15 +90,17 @@ const FormMetas = () => {
 	};
 
 	const botonAgregarMeta = () => {
+		console.log(indexCurrentMeta.current);
 		console.log('Agregar');
-		indexCurrentMeta.current = 0;
+		indexCurrentMeta.current = -1;
 		setNuevaMeta(defaultNuevaMeta);
 		openModal();
 	};
 
 	const guardarBotonModal = () => {
+		console.log(indexCurrentMeta.current);
 		console.log('Guardar');
-		if (indexCurrentMeta.current === 0) {
+		if (indexCurrentMeta.current === -1) {
 			// Agregar
 			const newListadoMetas = [...listadoMetas];
 			newListadoMetas.push(nuevaMeta);
@@ -95,45 +118,86 @@ const FormMetas = () => {
 	const editarMeta = (index: number) => {
 		console.log('Editar');
 		indexCurrentMeta.current = index;
+		console.log(indexCurrentMeta.current);
 		setNuevaMeta(listadoMetas[index]);
 		openModal();
 	};
 
+	const eliminarMeta = (index: number) => {
+		console.log('Eliminar');
+		const newListadoMetas = [...listadoMetas];
+		newListadoMetas.splice(index, 1);
+		setListadoMetas(newListadoMetas);
+	};
+
 	return (
-		<>
-			<AddBoxRoundedIcon onClick={botonAgregarMeta} />
-			<Table>
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Meta/resultado esperado</th>
-						<th>Resultado Alcanzado</th>
-						<th>Observaciones</th>
-						<th>Valoraciones</th>
-						<th>Acciones</th>
-					</tr>
-				</thead>
-				<tbody>
-					{listadoMetas.map((meta, index) => (
-						<tr key={`${meta.descripcion}-${meta.idMeta} `}>
-							<td>{index + 1}</td>
-							<td>{meta.descripcion}</td>
-							<td>{meta.resultado}</td>
-							<td>{meta.observaciones}</td>
-							<td>{meta.valoracion}</td>
-							<td>
-								<button className='btn btn-primary' onClick={() => editarMeta(index)}>
-									Editar
-								</button>
-								<button className='btn btn-danger'>Eliminar</button>
-							</td>
+		<div className=' d-flex flex-column mx-4 '>
+			<Button
+				onClick={() => {
+					botonAgregarMeta();
+				}}
+				className='my-4 ms-auto me'
+			>
+				Agregar
+				<AddBoxRoundedIcon className=' ms-2' />
+			</Button>
+			<div className='tabla-metas-contenedor'>
+				<Table>
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Meta/resultado esperado</th>
+							<th>Resultado Alcanzado</th>
+							<th>Observaciones</th>
+							<th>Valoraciones</th>
+							<th>Acciones</th>
 						</tr>
-					))}
-				</tbody>
-			</Table>
-			<Modal show={showModal} onHide={closeModal}>
+					</thead>
+					<tbody>
+						{listadoMetas.map((meta, index) => (
+							<tr key={`${meta.descripcion}-${meta.idMeta} `}>
+								<td>{index + 1}</td>
+								<td>{meta.descripcion}</td>
+								<td>{meta.resultado}</td>
+								<td>{meta.observaciones}</td>
+								<td>{meta.valoracion}</td>
+								<td>
+									<EditIcon
+										color='action'
+										className='cursor-pointer'
+										onClick={() => editarMeta(index)}
+									/>
+									<DeleteIcon
+										color='error'
+										className='cursor-pointer'
+										onClick={() => eliminarMeta(index)}
+									/>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</Table>
+			</div>
+			<Button
+				variant='success'
+				// center and bottom
+				className='mt-auto align-self-center'
+				onClick={() => {
+					guardarActividad(
+						{
+							...estadoActualizado,
+							listaMetas: listadoMetas,
+						},
+						dispatch,
+					);
+					onClose();
+				}}
+			>
+				Guardar
+			</Button>
+			<Modal show={showModal} onHide={closeModal} size='lg'>
 				<Modal.Header closeButton></Modal.Header>
-				<Modal.Body>
+				<Modal.Body className=' d-flex flex-column gap-4 '>
 					<Form.Control
 						as='textarea'
 						name='descripcion'
@@ -197,7 +261,7 @@ const FormMetas = () => {
 					</button>
 				</Modal.Footer>
 			</Modal>
-		</>
+		</div>
 	);
 };
 
