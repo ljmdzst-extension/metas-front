@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
 import { guardarActividad } from '../../redux/actions/putActividad';
@@ -39,6 +40,7 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
 	const [showModal, setShowModal] = useState(false);
+	const [idLabelVisible, setIdLabelVisible] = useState(-1);
 	const indexCurrentMeta = useRef(-1);
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
@@ -130,6 +132,14 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 		setListadoMetas(newListadoMetas);
 	};
 
+	const toggleLabel = (id: number) => {
+		if (idLabelVisible === id) {
+			setIdLabelVisible(-1);
+		} else {
+			setIdLabelVisible(id);
+		}
+	};
+
 	return (
 		<div className=' d-flex flex-column mx-4 '>
 			<Button
@@ -162,6 +172,19 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 								<td>{meta.observaciones}</td>
 								<td>{meta.valoracion}</td>
 								<td>
+									<VisibilityIcon
+										id={`metaLabel-${meta.idMeta}`}
+										onMouseEnter={() => toggleLabel(meta.idMeta ?? -1)}
+										onMouseLeave={() => toggleLabel(meta.idMeta ?? -1)}
+									/>
+									{meta.idMeta === idLabelVisible && (
+										<div className='meta-label'>
+											<div>Descripcion: {meta.descripcion}</div>
+											<div>Resultado: {meta.resultado}</div>
+											<div>Observaciones: {meta.observaciones}</div>
+											<div>Valoracion: {meta.valoracion}</div>
+										</div>
+									)}
 									<EditIcon
 										color='action'
 										className='cursor-pointer'

@@ -752,21 +752,37 @@ th {
 	min-height: 300px;
 }
 
-/* Form Periodo */
-.texto-fechas-seleccionadas{
-	background-color: #4CAF50;
-  color: #FFFFFF;
-  border: 2px solid #4CAF50;
-  padding: 5px;
-  border-radius: 4px;
-  margin: 10px 0;
+.detail-icon {
+	cursor: pointer;
 }
 
-.texto-fechas-no-seleccionadas{
+.meta-label {
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.7);
+	color: #ffffff;
+	padding: 5px;
+	border-radius: 4px;
+	font-size: 12px;
+	top: 50%;
+	left: 50%;
+	display: block;
+}
+
+/* Form Periodo */
+.texto-fechas-seleccionadas {
+	background-color: #4caf50;
+	color: #ffffff;
+	border: 2px solid #4caf50;
+	padding: 5px;
+	border-radius: 4px;
+	margin: 10px 0;
+}
+
+.texto-fechas-no-seleccionadas {
 	background-color: #808080;
-  color: #FFFFFF;
-  border: 2px solid #808080;
-  padding: 5px;
-  border-radius: 4px;
-  margin: 10px 0;
+	color: #ffffff;
+	border: 2px solid #808080;
+	padding: 5px;
+	border-radius: 4px;
+	margin: 10px 0;
 }
