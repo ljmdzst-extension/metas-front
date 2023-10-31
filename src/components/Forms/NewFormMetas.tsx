@@ -179,10 +179,27 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 									/>
 									{meta.idMeta === idLabelVisible && (
 										<div className='meta-label'>
-											<div>Descripcion: {meta.descripcion}</div>
-											<div>Resultado: {meta.resultado}</div>
-											<div>Observaciones: {meta.observaciones}</div>
-											<div>Valoracion: {meta.valoracion}</div>
+											<div>
+												<p>
+													Descripcion: {meta.descripcion}
+													<br />
+												</p>
+											</div>
+											<div>
+												<p>
+													Resultado: {meta.resultado}
+													<br />
+												</p>
+											</div>
+											<div>
+												<p>
+													Observaciones: {meta.observaciones}
+													<br />
+												</p>
+											</div>
+											<div>
+												<p>Valoracion: {meta.valoracion}</p>
+											</div>
 										</div>
 									)}
 									<EditIcon
