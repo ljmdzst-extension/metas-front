@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RootState } from '../../redux/store';
 import { useSelector } from 'react-redux';
 
@@ -31,6 +31,7 @@ const FormMetas = () => {
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
 	const [showModal, setShowModal] = useState(false);
+	const indexCurrentMeta = useRef(0);
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
 
@@ -68,34 +69,33 @@ const FormMetas = () => {
 	};
 
 	const botonAgregarMeta = () => {
+		console.log('Agregar');
+		indexCurrentMeta.current = 0;
 		setNuevaMeta(defaultNuevaMeta);
 		openModal();
 	};
 
 	const guardarBotonModal = () => {
 		console.log('Guardar');
-		if (nuevaMeta.idMeta === 0) {
-			// Crear nueva meta
-			const TempListMetas = [...listadoMetas];
-			TempListMetas.push(nuevaMeta);
-			// Next id
-			const nextId = Math.max(...TempListMetas.map((meta) => meta.idMeta)) + 1;
-			TempListMetas[TempListMetas.length - 1].idMeta = nextId;
-
-			setListadoMetas(TempListMetas);
-			closeModal();
+		if (indexCurrentMeta.current === 0) {
+			// Agregar
+			const newListadoMetas = [...listadoMetas];
+			newListadoMetas.push(nuevaMeta);
+			setListadoMetas(newListadoMetas);
 		} else {
-			// Actualizar meta
-			const TempListMetas = [...listadoMetas];
-			const index = TempListMetas.findIndex((meta) => meta.idMeta === nuevaMeta.idMeta);
-			TempListMetas[index] = nuevaMeta;
-			setListadoMetas(TempListMetas);
-			closeModal();
+			// Editar
+			const newListadoMetas = [...listadoMetas];
+			newListadoMetas[indexCurrentMeta.current] = nuevaMeta;
+			setListadoMetas(newListadoMetas);
 		}
+
+		closeModal();
 	};
 
-	const editarMeta = (meta: metas) => {
-		setNuevaMeta(meta);
+	const editarMeta = (index: number) => {
+		console.log('Editar');
+		indexCurrentMeta.current = index;
+		setNuevaMeta(listadoMetas[index]);
 		openModal();
 	};
 
@@ -115,14 +115,14 @@ const FormMetas = () => {
 				</thead>
 				<tbody>
 					{listadoMetas.map((meta, index) => (
-						<tr key={meta.idMeta}>
+						<tr key={`${meta.descripcion}-${meta.idMeta} `}>
 							<td>{index + 1}</td>
 							<td>{meta.descripcion}</td>
 							<td>{meta.resultado}</td>
 							<td>{meta.observaciones}</td>
 							<td>{meta.valoracion}</td>
 							<td>
-								<button className='btn btn-primary' onClick={() => editarMeta(meta)}>
+								<button className='btn btn-primary' onClick={() => editarMeta(index)}>
 									Editar
 								</button>
 								<button className='btn btn-danger'>Eliminar</button>
@@ -170,12 +170,19 @@ const FormMetas = () => {
 						name='valoracion'
 						className='ParrafoObservaciones'
 						placeholder={'Valoración'}
+						value={nuevaMeta.valoracion ?? ''}
+						onChange={(e) => {
+							setNuevaMeta({ ...nuevaMeta, valoracion: parseInt(e.target.value) });
+						}}
 					>
 						<option key={'nn'} value={''}>
 							Seleccione
 						</option>
-						{valoraciones?.map((valoracion, index) => (
-							<option key={index} value={valoracion.idValoracion}>
+						{valoraciones?.map((valoracion) => (
+							<option
+								key={`${valoracion.nom}-${valoracion.idValoracion}`}
+								value={valoracion.idValoracion}
+							>
 								{valoracion.nom}
 							</option>
 						))}
