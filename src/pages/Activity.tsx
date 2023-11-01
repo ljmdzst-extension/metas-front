@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -36,6 +36,8 @@ export default function Activity() {
 	const { idArea } = useParams<{ idArea?: string }>();
 	const [area, setArea] = useState<Area | null>(null);
 
+	const navigation = useNavigate();
+
 	interface Data {
 		idActividad: 0;
 		idArea: number;
@@ -59,6 +61,19 @@ export default function Activity() {
 			})
 			.catch((error) => console.log(error));
 	};
+
+	const getArea = () => {
+		const localArea = localStorage.getItem('currentArea');
+		if (localArea && JSON.parse(localArea).idArea === parseInt(idArea ?? '0', 10)) {
+			setArea(JSON.parse(localArea));
+		} else {
+			navigation('/');
+		}
+	};
+
+	useEffect(() => {
+		getArea();
+	}, []);
 
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -144,8 +159,11 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<h1>{area?.nom}</h1>
-
+			{!isPlanificationOpen ? (
+				<h2 className=' text-center'>{area?.nom}</h2>
+			) : (
+				<h2 className=' text-center'>{nameActivity}</h2>
+			)}
 			<div className='ConteinerActivity'>
 				<div className='MenuActivity'>
 					<Button variant='outline-success' className='Options' onClick={handleShow}>

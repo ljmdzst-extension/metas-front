@@ -84,7 +84,7 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
       </div>
       <Button
         variant="success"
-        className="Save"
+        className="Save mt-auto align-self-center my-auto'"
         onClick={() => {
           guardarActividad({
             ...estadoActualizado,

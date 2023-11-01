@@ -220,7 +220,6 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 			</div>
 			<Button
 				variant='success'
-				// center and bottom
 				className='mt-auto align-self-center'
 				onClick={() => {
 					guardarActividad(
