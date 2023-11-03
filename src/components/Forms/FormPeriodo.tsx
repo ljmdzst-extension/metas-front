@@ -7,6 +7,8 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { guardarActividad } from "../../redux/actions/putActividad";
+import { Col, Container, Row } from "react-bootstrap"
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 registerLocale("es", es);
 
@@ -89,143 +91,119 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
     setListaFechasPuntuales(filteredDates);
   };
 
-  return (
-    <>
-      <div className="FormDescription">
-        <h1>Periodo</h1>
-        <div className="ConteinerBigDate">
-          <div className="ConteinerDate">
-            <h3>Seleccionar Periodo</h3>
-            <p>
-              Período que abarca desde el inicio de la planificación hasta la
-              fecha de realización de la actividad.
-            </p>
-            <div className="ConteinerRange">
-              <div>
-                <p>Inicio:</p>
-                <DatePicker
-                  wrapperClassName="datePicker"
-                  locale="es"
-                  selectsStart
-                  dateFormat="dd/MM/yyyy"
-                  selected={rangeStart}
-                  minDate={new Date("2023/01/01")}
-                  maxDate={
-                    new Date(
-                      indexDates[0]?.fecha?.split("-").join("/") || "2080-01-01"
-                    )
-                  }
-                  startDate={rangeStart}
-                  endDate={rangeEnd}
-                  onChange={selectStartDate}
-                />
-              </div>
-              <div>
-                <p>Fin:</p>
-                <DatePicker
-                  selectsEnd
-                  locale="es"
-                  dateFormat="dd/MM/yyyy"
-                  selected={rangeEnd}
-                  startDate={rangeStart}
-                  endDate={rangeEnd}
-                  minDate={
-                    new Date(
-                      indexDates[indexDates.length - 1]?.fecha
-                        ?.split("-")
-                        .join("/") || "2023/01/02"
-                    )
-                  }
-                  onChange={selectEndDate}
-                />
-              </div>
-            </div>
-            <div>
-              <p style={{ border: "solid black 1px", padding: "2px" }}>
-                El rango seleccionado es desde{" "}
-                <span
-                  style={{
-                    fontSize: "15px",
-                    textDecoration: "underline black",
-                  }}
-                >
-                  {printDMA(fechaDesde || "")}
-                </span>{" "}
-                hasta{" "}
-                <span
-                  style={{
-                    fontSize: "15px",
-                    textDecoration: "underline black",
-                  }}
-                >
-                  {printDMA(fechaHasta || "")}
-                </span>
-              </p>
-            </div>
-          </div>
-          <div className="ConteinerDay">
-            <h3>Seleccionar Fechas Puntuales</h3>
-            <p>
-              Seleccione si la actividad se realiza en una fecha puntual
-              (recuerde que debe estar en el intervalo de meses seleccionado)
-            </p>
-            <div>
-              <p>Seleccione una Fecha:</p>
-              <DatePicker
-                dateFormat="dd/MM/yyyy"
-                locale="es"
-                minDate={rangeStart}
-                maxDate={rangeEnd}
-                selected={startDate}
-                onChange={selectDateHandler}
-              />
-            </div>
-            <div className="ConteinerDaysSelected">
-              <div className="ConteinerFechas">
-                <span>Fechas Seleccionadas:</span>
-                {indexDates.map((date, index) => (
-                  <ListGroup.Item
-                    key={index}
-                    variant="secondary"
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      padding: "3px",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      marginBottom: "5px",
-                      borderRadius: "7px",
-                    }}
-                  >
-                    {printDMA(date.fecha || "")}
-                    <Button
-                      variant="danger"
-                      onClick={() => eliminarFecha(date.fecha || "")}
-                    >
-                      Eliminar
-                    </Button>
-                  </ListGroup.Item>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <Button
-        variant="success"
-        className="Save"
-        onClick={() => {
-          guardarActividad({
-            ...estadoActualizado,
-            fechaDesde: fechaDesde,
-            fechaHasta: fechaHasta,
-            listaFechasPuntuales: listaFechasPuntuales,
-          },dispatch);
-          onClose();
-        }}
-      >
-        Guardar Actividad
-      </Button>
-    </>
-  );
+	return (
+		<div className=' contenedor-forms mx-3 '>
+			<Row className=' justify-content-around'>
+				<Col className=' border rounded border-black ' xs={7}>
+					<h4 className=' text-center mt-2'>Seleccionar Periodo</h4>
+					<p>
+						Período que abarca desde el inicio de la planificación hasta la fecha de realización de
+						la actividad.
+					</p>
+					<div className='ConteinerRange gap-2'>
+						<div>
+							<p>Inicio:</p>
+							<DatePicker
+								wrapperClassName='datePicker'
+								locale='es'
+								selectsStart
+								dateFormat='dd/MM/yyyy'
+								selected={rangeStart}
+								minDate={new Date('2023/01/01')}
+								maxDate={new Date(indexDates[0]?.fecha?.split('-').join('/') || '2080-01-01')}
+								startDate={rangeStart}
+								endDate={rangeEnd}
+								onChange={selectStartDate}
+							/>
+						</div>
+						<div>
+							<p>Fin:</p>
+							<DatePicker
+								selectsEnd
+								locale='es'
+								dateFormat='dd/MM/yyyy'
+								selected={rangeEnd}
+								startDate={rangeStart}
+								endDate={rangeEnd}
+								minDate={
+									new Date(
+										indexDates[indexDates.length - 1]?.fecha?.split('-').join('/') || '2023/01/02',
+									)
+								}
+								onChange={selectEndDate}
+							/>
+						</div>
+					</div>
+					<div>
+						<p
+							className={`text-center m-2 ${
+								fechaDesde && fechaHasta
+									? 'texto-fechas-seleccionadas'
+									: 'texto-fechas-no-seleccionadas'
+							}`}
+						>
+							{fechaDesde && fechaHasta
+								? `El rango seleccionado es desde ${printDMA(fechaDesde)} hasta ${printDMA(
+										fechaHasta,
+								  )}`
+								: 'Seleccione un rango de fechas'}
+						</p>
+					</div>
+				</Col>
+				<Col className=' border rounded border-black  ' xs={5}>
+					<h4 className=' text-center mt-2'>Seleccionar Fechas Puntuales</h4>
+					<p>
+						Seleccione si la actividad se realiza en una fecha puntual (recuerde que debe estar en
+						el intervalo de meses seleccionado)
+					</p>
+					<div>
+						<p>Seleccione una Fecha:</p>
+						<DatePicker
+							dateFormat='dd/MM/yyyy'
+							locale='es'
+							minDate={rangeStart}
+							maxDate={rangeEnd}
+							selected={startDate}
+							onChange={selectDateHandler}
+						/>
+					</div>
+					<div className='ConteinerDaysSelected'>
+						<div className='ConteinerFechas'>
+							<span>Fechas Seleccionadas:</span>
+							{indexDates.map((date, index) => (
+								<ListGroup.Item
+									key={index}
+									variant='Secondary'
+									className=' d-flex p-1 my-1 border rounded border-black align-items-center justify-content-between'
+								>
+									{printDMA(date.fecha ?? '')}
+									<HighlightOffIcon color='error' onClick={() => eliminarFecha(date.fecha ?? '')} />
+								</ListGroup.Item>
+							))}
+						</div>
+					</div>
+				</Col>
+			</Row>
+			<div className=' d-flex justify-content-center '>
+				<Button
+					variant='success'
+					className='mt-2 align-self-center'
+					onClick={() => {
+						guardarActividad(
+							{
+								...estadoActualizado,
+								fechaDesde: fechaDesde,
+								fechaHasta: fechaHasta,
+								listaFechasPuntuales: listaFechasPuntuales,
+							},
+							dispatch,
+						);
+						onClose();
+					}}
+				>
+					Guardar Actividad
+				</Button>
+			</div>
+		</div>
+	);
 }

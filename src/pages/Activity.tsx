@@ -4,11 +4,12 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
+import { Col, Container, Row } from 'react-bootstrap';
 
 interface Activity {
 	idActividad: number;
@@ -36,6 +37,8 @@ export default function Activity() {
 	const { idArea } = useParams<{ idArea?: string }>();
 	const [area, setArea] = useState<Area | null>(null);
 
+	const navigation = useNavigate();
+
 	interface Data {
 		idActividad: 0;
 		idArea: number;
@@ -46,7 +49,6 @@ export default function Activity() {
 	}
 
 	const dispatch: AppDispatch = useDispatch();
-  
 
 	useEffect(() => {
 		mostrarActividades();
@@ -60,6 +62,19 @@ export default function Activity() {
 			})
 			.catch((error) => console.log(error));
 	};
+
+	const getArea = () => {
+		const localArea = localStorage.getItem('currentArea');
+		if (localArea && JSON.parse(localArea).idArea === parseInt(idArea ?? '0', 10)) {
+			setArea(JSON.parse(localArea));
+		} else {
+			navigation('/');
+		}
+	};
+
+	useEffect(() => {
+		getArea();
+	}, []);
 
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -75,7 +90,7 @@ export default function Activity() {
 		setTerm('');
 	};
 
-	let mostrarActividades = async function () {
+	const mostrarActividades = async function () {
 		axios
 			.get(`http://168.197.50.94:4005/metas/v2/areas/${idArea}/actividades`)
 			.then((response) => {
@@ -89,6 +104,10 @@ export default function Activity() {
 
 	const handleButtonClick = (id: number) => {
 		dispatch(CargarDatosActividadAction(id));
+	};
+
+	const closePlanification = () => {
+		setIsPlanificationOpen(!isPlanificationOpen);
 	};
 
 	return (
@@ -145,63 +164,80 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<h1>{area?.nom}</h1>
-			{isPlanificationOpen && (
-				<div className='MenuOptionsAux'>
-					<div className='Options'>Carga de Presupuesto</div>
-					<div className='Options'>Ver Resumen y Gráficos</div>
-				</div>
-			)}
-			<div className='ConteinerActivity'>
-				<div className='MenuActivity'>
-					<Button variant='outline-success' className='Options' onClick={handleShow}>
-						Agregar Actividad
-					</Button>
-					{arrayActivity.map((item, index) => (
-						<ListGroup.Item
-							action
-							variant='secondary'
-							title={item.desc}
-							style={{
-								width: '300px',
-								height: '50px',
-								padding: '10px',
-								borderRadius: '10px',
-								display: 'flex',
-								justifyContent: 'center',
-							}}
-							key={index}
-							onClick={() => {
-								if (isPlanificationOpen === true) {
-									handleShow2();
-									setNameActivityAux(`${item.desc}`);
-								} else {
-									setIsPlanificationOpen(!isPlanificationOpen);
-									setNameActivity(`${item.desc}`);
-									handleButtonClick(item.idActividad);
-								}
-							}}
+
+			<h2 className=' text-center m-0 p-2 border-bottom border-2 '>{area?.nom}</h2>
+
+			<div className=' h-100  '>
+				<Row className=' d-flex' style={{ height: '80%' }}>
+					<Col sm={3} className=' position-relative h-100 d-flex flex-column border-end border-2 '>
+						<Button
+							variant='outline-success'
+							style={{ position: 'absolute', bottom: '10px', right: '10px' }}
+							onClick={handleShow}
 						>
-							<span
-								style={{
-									textOverflow: 'ellipsis',
-									overflow: 'hidden',
-									fontWeight: 'normal',
-									whiteSpace: 'nowrap',
-								}}
-							>
-								{item.desc}
-							</span>
-						</ListGroup.Item>
-					))}
-				</div>
-				{!isPlanificationOpen && (
-					<div className='MenuOptions'>
-						<div className='Options'>Carga de Presupuesto</div>
-						<div className='Options'>Ver Resumen y Gráficos</div>
-					</div>
-				)}
-				{isPlanificationOpen && <PlanificationPanel name={nameActivity} />}
+							Agregar Actividad
+						</Button>
+						<h4 className=' text-center m-2'>Listado de Actividades</h4>
+						<ListGroup>
+							{arrayActivity.map((item, index) => (
+								<ListGroup.Item
+									action
+									variant='secondary'
+									title={item.desc}
+									style={{
+										width: '100%',
+										borderRadius: '10px',
+										display: 'flex',
+										justifyContent: 'center',
+										alignItems: 'center',
+										margin: '5px',
+										cursor: 'pointer',
+									}}
+									key={index}
+									onClick={() => {
+										if (isPlanificationOpen === true) {
+											handleShow2();
+											setNameActivityAux(`${item.desc}`);
+										} else {
+											setIsPlanificationOpen(!isPlanificationOpen);
+											setNameActivity(`${item.desc}`);
+											handleButtonClick(item.idActividad);
+										}
+									}}
+								>
+									<span
+										style={{
+											textOverflow: 'ellipsis',
+											overflow: 'hidden',
+											fontWeight: 'normal',
+											whiteSpace: 'nowrap',
+										}}
+									>
+										{item.desc}
+									</span>
+								</ListGroup.Item>
+							))}
+						</ListGroup>
+					</Col>
+					{!isPlanificationOpen && (
+						<Col sm={9}>
+							<Row>
+								<Col className='MenuOptions'>
+									<div className='Options'>Carga de Presupuesto</div>
+								</Col>
+								<Col className='MenuOptions'>
+									<div className='Options'>Ver Resumen y Gráficos</div>
+								</Col>
+							</Row>
+						</Col>
+					)}
+
+					{isPlanificationOpen && (
+						<Col sm={9}>
+							<PlanificationPanel name={nameActivity} closePlanification={closePlanification} />
+						</Col>
+					)}
+				</Row>
 			</div>
 		</>
 	);
