@@ -58,14 +58,20 @@ export default function FormOrgInst({ onClose }: FormOrgInstProps) {
     }
   };
 
-  const eliminarDocumento = (id: number) => {
-    setArrayDocumentos(arrayDocumentos.filter((item) => item.idEnlace !== id));
+  const eliminarDocumento = (id: number, index: number) => {
+
+		console.log(id, index)
+		console.log(arrayDocumentos)
+		const documentosFiltrados = arrayDocumentos.filter(
+			(item, i) => i !== index || item.idEnlace !== id
+		);
+		console.log(documentosFiltrados)
+		setArrayDocumentos(documentosFiltrados);
   };
 
   return (
-		<>
-			<div className=' d-flex flex-column m-4'>
-				<h4 className=' text-center'>Carga de Documentación</h4>
+		<div className=" d-flex flex-column">
+			<div className=' d-flex flex-column  m-2'>
 				<p>Cargue sus enlaces:</p>
 				<Form className=' d-flex flex-column justify-content-center' onSubmit={submitForm}>
 					<div className=' d-flex gap-2 justify-content-center'>
@@ -89,7 +95,7 @@ export default function FormOrgInst({ onClose }: FormOrgInstProps) {
 						Agregar
 					</Button>
 				</Form>
-				<div className='ListaInstituciones'>
+				<div className='ListaInstituciones' style={{ maxHeight: '250px', overflowY: 'auto' }}>
 					<Table striped bordered hover>
 						<thead>
 							<tr>
@@ -110,7 +116,7 @@ export default function FormOrgInst({ onClose }: FormOrgInstProps) {
 										</a>
 									</td>
 									<td style={{ width: '15px' }}>
-                    <DeleteIcon color="error"  onClick={() => eliminarDocumento(item.idEnlace ?? 0)} />
+                    <DeleteIcon color="error" onClick={() => eliminarDocumento(item.idEnlace ?? 0, index)}/>
 									</td>
 								</tr>
 							))}
@@ -134,6 +140,6 @@ export default function FormOrgInst({ onClose }: FormOrgInstProps) {
 			>
 				Guardar Actividad
 			</Button>
-		</>
+		</div>
 	);
 }

@@ -91,10 +91,10 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
     setListaFechasPuntuales(filteredDates);
   };
 
-  return (
-		<Container>
-			<Row className=" justify-content-center">
-				<Col className=' border rounded border-black m-2' xs={7}>
+	return (
+		<div className=' contenedor-forms mx-3 '>
+			<Row className=' justify-content-around'>
+				<Col className=' border rounded border-black ' xs={7}>
 					<h4 className=' text-center mt-2'>Seleccionar Periodo</h4>
 					<p>
 						Período que abarca desde el inicio de la planificación hasta la fecha de realización de
@@ -150,7 +150,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 						</p>
 					</div>
 				</Col>
-				<Col className=' border rounded border-black m-2 ' xs={4}>
+				<Col className=' border rounded border-black  ' xs={5}>
 					<h4 className=' text-center mt-2'>Seleccionar Fechas Puntuales</h4>
 					<p>
 						Seleccione si la actividad se realiza en una fecha puntual (recuerde que debe estar en
@@ -174,36 +174,36 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 								<ListGroup.Item
 									key={index}
 									variant='Secondary'
-                  className=" d-flex p-1 my-1 border rounded border-black align-items-center justify-content-between"
+									className=' d-flex p-1 my-1 border rounded border-black align-items-center justify-content-between'
 								>
 									{printDMA(date.fecha ?? '')}
-                  <HighlightOffIcon color="error"  onClick={() => eliminarFecha(date.fecha ?? '')}/>
+									<HighlightOffIcon color='error' onClick={() => eliminarFecha(date.fecha ?? '')} />
 								</ListGroup.Item>
 							))}
 						</div>
 					</div>
 				</Col>
 			</Row>
-      <div className=" d-flex justify-content-center ">
-			<Button
-				variant='success'
-				className='mt-2 align-self-center'
-				onClick={() => {
-					guardarActividad(
-						{
-							...estadoActualizado,
-							fechaDesde: fechaDesde,
-							fechaHasta: fechaHasta,
-							listaFechasPuntuales: listaFechasPuntuales,
-						},
-						dispatch,
-					);
-					onClose();
-				}}
-			>
-				Guardar Actividad
-			</Button>
-        </div>
-		</Container>
+			<div className=' d-flex justify-content-center '>
+				<Button
+					variant='success'
+					className='mt-2 align-self-center'
+					onClick={() => {
+						guardarActividad(
+							{
+								...estadoActualizado,
+								fechaDesde: fechaDesde,
+								fechaHasta: fechaHasta,
+								listaFechasPuntuales: listaFechasPuntuales,
+							},
+							dispatch,
+						);
+						onClose();
+					}}
+				>
+					Guardar Actividad
+				</Button>
+			</div>
+		</div>
 	);
 }

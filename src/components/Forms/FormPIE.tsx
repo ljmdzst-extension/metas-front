@@ -71,20 +71,19 @@ export default function FormPIE({ onClose }: FormPIEProps) {
 	return (
 		<div className=' d-flex flex-column'>
 			<div className='FormPie'>
-				<div></div>
-				<p>
-					{' '}
+				<p className=' m-0'>
 					Referencia:
 					<a
 						href='https://www.unl.edu.ar/pie/wp-content/uploads/sites/55/2021/02/Plan-Institucional-Estrat%C3%A9gico.pdf'
 						target='_blank'
 						rel='noopener noreferrer'
+						className=' text-decoration-underline'
 					>
 						Plan Institucional Estratégico
-					</a>{' '}
+					</a>
 				</p>
 				<div className='ConteinerEje'>
-					<h2 className='TitlePie'>Ejes Transversales</h2>
+					<h4 className='TitlePie'>Ejes Transversales</h4>
 					<Form className='FormEje'>
 						<p className='SubtitlePie'>
 							<span>Seleccione los ejes:</span>
@@ -103,7 +102,7 @@ export default function FormPIE({ onClose }: FormPIEProps) {
 					</Form>
 				</div>
 				<div className='ConteinerPlan'>
-					<h2 className='TitlePie'>Plan Institucional</h2>
+					<h4 className='TitlePie'>Plan Institucional</h4>
 					<Form className='FormPlan'>
 						<p className='SubtitlePie'>
 							<span>Seleccione los planes:</span>

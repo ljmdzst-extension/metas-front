@@ -186,9 +186,9 @@ a {
 	background-color: rgb(233, 233, 233);
 }
 .MenuPlanification {
-	width: 90%;
+	width: 100%;
 	min-height: 80vh;
-	border-radius: 5px;
+	border-radius: 4px;
 	background-color: rgba(245, 245, 245, 1);
 	display: flex;
 	flex-direction: column;
@@ -250,8 +250,6 @@ a {
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	gap: 10px;
-	padding: 10px;
 }
 .FormOrgInst {
 	width: 100%;
@@ -266,10 +264,16 @@ a {
 }
 .ListaInstituciones {
 	width: 100%;
-	min-height: 300px;
+	min-height: 220px;
 	background-color: rgb(243, 243, 243);
 	padding: 10px;
 }
+
+.table-overflow {
+	height: 220px;
+	overflow-y: auto;
+}
+
 .ListaInstituciones,
 h3 {
 	font-weight: 100;
@@ -490,7 +494,7 @@ input.form-check-input:checked {
 	flex-direction: column;
 	align-items: center;
 	background-color: rgb(222, 222, 222);
-	padding: 20px;
+	padding-top: 10px;
 	border-radius: 5px;
 }
 .Secretarias {
@@ -500,7 +504,7 @@ input.form-check-input:checked {
 	flex-direction: column;
 	align-items: center;
 	background-color: rgb(222, 222, 222);
-	padding: 20px;
+	padding-top: 10px;
 	border-radius: 5px;
 }
 .UUAA {
@@ -510,13 +514,13 @@ input.form-check-input:checked {
 	flex-direction: column;
 	align-items: center;
 	background-color: rgb(222, 222, 222);
-	padding: 20px;
+	padding-top: 10px;
 	border-radius: 5px;
 }
+
 .SelectContainers {
 	width: 90%;
 	min-height: 150px;
-	margin-top: 10px;
 }
 
 .parrafo {
@@ -769,6 +773,13 @@ th {
 }
 
 /* Form Periodo */
+
+.contenedor-forms {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .texto-fechas-seleccionadas {
 	background-color: #4caf50;
 	color: #ffffff;

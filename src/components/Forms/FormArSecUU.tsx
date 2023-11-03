@@ -142,103 +142,100 @@ number[]
     setSippeSeleccionadas(selectedValues);
   };
   
-  return (
-		<>
-			<div className='FormArSecuu d-flex'>
-				<Row>
-					<Col>
-						<div className='Areas'>
-							<h5>Áreas internas de la secretaría</h5>
-							<div className='SelectContainers'>
-								<p className='parrafo'>Seleccione según corresponda:</p>
-								<Select
-									// Max height 150 with scroll
-									styles={{
-										valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
-									}}
-									closeMenuOnSelect={false}
-									components={animatedComponents}
-									isMulti
-									options={relacionesInternaExtension}
-									placeholder={'seleccionar'}
-									value={relacionesInternaExtension.filter((option) =>
-										relacionSeleccionadas1.includes(option.value),
-									)}
-									onChange={handleRelacionChange1}
-								/>
-							</div>
+	return (
+		<div className='FormArSecuu d-flex m-0  p-0 px-5 gap-0'>
+			<Row>
+				<Col>
+					<div className='Areas'>
+						<h5>Áreas internas de la secretaría</h5>
+						<div className='SelectContainers'>
+							<p className='parrafo'>Seleccione según corresponda:</p>
+							<Select
+								styles={{
+									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
+								}}
+								closeMenuOnSelect={false}
+								components={animatedComponents}
+								isMulti
+								options={relacionesInternaExtension}
+								placeholder={'seleccionar'}
+								value={relacionesInternaExtension.filter((option) =>
+									relacionSeleccionadas1.includes(option.value),
+								)}
+								onChange={handleRelacionChange1}
+							/>
 						</div>
-					</Col>
-					<Col>
-						<div className='Secretarias'>
-							<h5>Secretarías</h5>
-							<div className='SelectContainers'>
-								<p className='parrafo'>Seleccione según corresponda:</p>
-								<Select
-									closeMenuOnSelect={false}
-									components={animatedComponents}
-									isMulti
-									options={relacionesInternaUnl}
-									placeholder={'seleccionar'}
-									value={relacionesInternaUnl.filter((option) =>
-										relacionSeleccionadas2.includes(option.value),
-									)}
-									onChange={handleRelacionChange2}
-									styles={{
-										valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
-									}}
-								/>
-							</div>
+					</div>
+				</Col>
+				<Col>
+					<div className='Secretarias'>
+						<h5>Secretarías</h5>
+						<div className='SelectContainers'>
+							<p className='parrafo'>Seleccione según corresponda:</p>
+							<Select
+								closeMenuOnSelect={false}
+								components={animatedComponents}
+								isMulti
+								options={relacionesInternaUnl}
+								placeholder={'seleccionar'}
+								value={relacionesInternaUnl.filter((option) =>
+									relacionSeleccionadas2.includes(option.value),
+								)}
+								onChange={handleRelacionChange2}
+								styles={{
+									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
+								}}
+							/>
 						</div>
-					</Col>
-				</Row>
-				<Row>
-					<Col>
-						<div className='UUAA'>
-							<h5>Unidades Académicas involucradas</h5>
-							<div className='SelectContainers'>
-								<p className='parrafo'>Seleccione según corresponda:</p>
-								<Select
-									closeMenuOnSelect={false}
-									components={animatedComponents}
-									isMulti
-									options={relacionesUA}
-									placeholder={'seleccionar'}
-									value={relacionesUA.filter((option) =>
-										relacionSeleccionadas3.includes(option.value),
-									)}
-									onChange={handleRelacionChange3}
-									styles={{
-										valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
-									}}
-								/>
-							</div>
+					</div>
+				</Col>
+			</Row>
+			<Row>
+				<Col>
+					<div className='UUAA'>
+						<h5>Unidades Académicas involucradas</h5>
+						<div className='SelectContainers'>
+							<p className='parrafo'>Seleccione según corresponda:</p>
+							<Select
+								closeMenuOnSelect={false}
+								components={animatedComponents}
+								isMulti
+								options={relacionesUA}
+								placeholder={'seleccionar'}
+								value={relacionesUA.filter((option) =>
+									relacionSeleccionadas3.includes(option.value),
+								)}
+								onChange={handleRelacionChange3}
+								styles={{
+									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
+								}}
+							/>
 						</div>
-					</Col>
-					<Col>
-						<div className='UUAA'>
-							<h5>Programas de Extensión</h5>
-							<div className='SelectContainers'>
-								<p className='parrafo'>Seleccione según corresponda:</p>
-								<Select
-									closeMenuOnSelect={false}
-									components={animatedComponents}
-									isMulti
-									options={listaProgramasSIPPE}
-									placeholder={'seleccionar'}
-									value={listaProgramasSIPPE.filter((option) =>
-										sippeSeleccionadas.includes(option.value),
-									)}
-									onChange={handleSippeChange}
-									styles={{
-										valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
-									}}
-								/>
-							</div>
+					</div>
+				</Col>
+				<Col>
+					<div className='UUAA'>
+						<h5>Programas de Extensión</h5>
+						<div className='SelectContainers'>
+							<p className='parrafo'>Seleccione según corresponda:</p>
+							<Select
+								closeMenuOnSelect={false}
+								components={animatedComponents}
+								isMulti
+								options={listaProgramasSIPPE}
+								placeholder={'seleccionar'}
+								value={listaProgramasSIPPE.filter((option) =>
+									sippeSeleccionadas.includes(option.value),
+								)}
+								onChange={handleSippeChange}
+								styles={{
+									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
+								}}
+							/>
 						</div>
-					</Col>
-				</Row>
-			</div>
+					</div>
+				</Col>
+			</Row>
 			<Button
 				variant='success'
 				className='Save align-self-center my-2 '
@@ -262,6 +259,6 @@ number[]
 			>
 				Guardar Actividad
 			</Button>
-		</>
+		</div>
 	);
 }

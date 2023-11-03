@@ -72,114 +72,111 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
     newUbicaciones.splice(index, 1);
     setUbicaciones(newUbicaciones);
   };
-  return (
-    <div className="FormDescription d-flex">
-      <h2>Descripción y ubicación</h2>
-      <div className="ConteinerGrande">
-        <div className="ConteinerDescriptionMetas">
-          <div className="ConteinerDescripcion">
-            <div className="Descripcion">
-              <p> Descripción: </p>
-              
-              <InputGroup className="mb-3 gap-1">
-                <Form.Control
-                  as="textarea"
-                  rows={4}
-                  style={{ resize: "none" }}
-                  aria-label="Inserte descripción"
-                  aria-describedby="basic-addon2"
-                  onChange={handleDescripcionChange}
-                  disabled={ !editandoDescripcion }
-                  value={ descripcion }
-                />
-                <Button
-                  variant="secondary"
-                  id="button-addon2"
-                  style={{ width: "50px", height: "50px" }}
-                  onClick={ handleClickEditarDescripcion }
-                >
-                  <img
-                    src={`../assets/img/${ !editandoDescripcion ? 'boton-editar' : 'guardar'}.png`}
-                    className="imgboton"
-                    alt="editar"
-                  />
-                </Button>
-              </InputGroup>
-            </div>
-          </div>
-          <p>
-          Utilice la herramienta de Google Maps para insertar el enlace de la ubicación de la actividad. Si necesita ayuda, consulte en este video.
-          </p>
-          <p>
-            Si necesita ayuda para compartir el enlace, consulte{" "}
-            <a
-              href="https://www.youtube.com/watch?v=KoN9aRs6a4E"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              en este video.
-            </a>
-          </p>
-          <div className="ConteinerUbicacion">
-            <div className="Ubicacion">
-              <span className="SubtituloMetas">Ubicación:</span>
-              <InputGroup className="mb-3 gap-1">
-                <Form.Control
-                  placeholder="Inserte link de ubicación"
-                  aria-label="Inserte link de ubicación"
-                  aria-describedby="basic-addon2"
-                  onChange={handleUbicacionInputChange}
-                  value={ubicacion}
-                />
-                <Button
-                  variant="outline-success"
-                  id="button-addon2"
-                  onClick={agregarUbicacion}
-                >
-                  Agregar Ubicación
-                </Button>
-              </InputGroup>
-            </div>
-          </div>
-          {ubicaciones.map((ubicacion, index) => (
-            <div className="ConteinerUbicacion" key={index}>
-              <div className="Ubicacion">
-                <InputGroup className="mb-3 gap-1">
-                  <Form.Control
-                    placeholder={ubicacion.enlace ||''}
-                    aria-label="Inserte link de ubicación"
-                    aria-describedby="basic-addon2"
-                    readOnly
-                  />
-                  <Button
-                    variant="danger"
-                    id="button-addon2"
-                    onClick={() => eliminarUbicacion(index)}
-                  >
-                    <img
-                      src="../assets/img/eliminar.png"
-                      className="imgboton"
-                      alt="eliminar"
-                    />
-                  </Button>
-                </InputGroup>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <Button
-              variant="success"
-              className="Save m-2"
-              onClick={() => {
-                guardarActividad({...estadoActualizado,desc:descripcion, listaUbicaciones: ubicaciones },dispatch);
-                onClose();
-              }}
-            >
-              Guardar Actividad
-      </Button>
-    </div>
-  );
+	return (
+		<div className='FormDescription d-flex m-0 p-0 '>
+			<div className='ConteinerGrande'>
+				<div className='ConteinerDescriptionMetas'>
+					<div className='ConteinerDescripcion'>
+						<div className='Descripcion'>
+							<p> Descripción: </p>
+
+							<InputGroup className='mb-3 gap-1'>
+								<Form.Control
+									as='textarea'
+									rows={3}
+									style={{ resize: 'none' }}
+									aria-label='Inserte descripción'
+									aria-describedby='basic-addon2'
+									onChange={handleDescripcionChange}
+									disabled={!editandoDescripcion}
+									value={descripcion}
+								/>
+								<Button
+									variant='secondary'
+									id='button-addon2'
+									style={{ width: '50px', height: '50px' }}
+									onClick={handleClickEditarDescripcion}
+								>
+									<img
+										src={`../assets/img/${!editandoDescripcion ? 'boton-editar' : 'guardar'}.png`}
+										className='imgboton'
+										alt='editar'
+									/>
+								</Button>
+							</InputGroup>
+						</div>
+					</div>
+					<p>
+						Utilice la herramienta de Google Maps para insertar el enlace de la ubicación de la
+						actividad. Si necesita ayuda, consulte en este video.
+					</p>
+					<p>
+						Si necesita ayuda para compartir el enlace, consulte el siguiente{' '}
+						<a
+							href='https://www.youtube.com/watch?v=KoN9aRs6a4E'
+							target='_blank'
+							rel='noopener noreferrer'
+							className=' cursor-pointer text-decoration-underline'
+						>
+							video
+						</a>
+						.
+					</p>
+					<div className='ConteinerUbicacion'>
+						<div className='Ubicacion'>
+							<span className='SubtituloMetas'>Ubicación:</span>
+							<InputGroup className=' gap-1'>
+								<Form.Control
+									placeholder='Inserte link de ubicación'
+									aria-label='Inserte link de ubicación'
+									aria-describedby='basic-addon2'
+									onChange={handleUbicacionInputChange}
+									value={ubicacion}
+								/>
+								<Button variant='outline-success' id='button-addon2' onClick={agregarUbicacion}>
+									Agregar Ubicación
+								</Button>
+							</InputGroup>
+						</div>
+					</div>
+					{ubicaciones.map((ubicacion, index) => (
+						<div className='ConteinerUbicacion' key={index}>
+							<div className='Ubicacion'>
+								<InputGroup className='mb-3 gap-1'>
+									<Form.Control
+										placeholder={ubicacion.enlace ?? ''}
+										aria-label='Inserte link de ubicación'
+										aria-describedby='basic-addon2'
+										readOnly
+									/>
+									<Button
+										variant='danger'
+										id='button-addon2'
+										onClick={() => eliminarUbicacion(index)}
+									>
+										<img src='../assets/img/eliminar.png' className='imgboton' alt='eliminar' />
+									</Button>
+								</InputGroup>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
+			<Button
+				variant='success'
+				className='Save m-2'
+				onClick={() => {
+					guardarActividad(
+						{ ...estadoActualizado, desc: descripcion, listaUbicaciones: ubicaciones },
+						dispatch,
+					);
+					onClose();
+				}}
+			>
+				Guardar Actividad
+			</Button>
+		</div>
+	);
 };
 
 export default FormDescriptionUbication;

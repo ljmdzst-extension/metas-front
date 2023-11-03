@@ -62,9 +62,8 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
     }
   };
   return (
-    <>
-      <div className="FormObjetivo">
-        <h2 className="TitleObjetivo">Objetivo Estrategico</h2>
+    <div className=" d-flex flex-column w-100 ">
+      <div className="FormObjetivo  w-100 ">
         <Form className="FormObj">
           <p className="SubtitleObj">
             <span>Seleccione el/los objetivo/s estratégico/s vinculado/s a la actividad :</span>
@@ -84,7 +83,7 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
       </div>
       <Button
         variant="success"
-        className="Save mt-auto align-self-center my-auto'"
+        className="Save align-self-center m-4  '"
         onClick={() => {
           guardarActividad({
             ...estadoActualizado,
@@ -95,6 +94,6 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
       >
         Guardar Actividad
       </Button>
-    </>
+    </div>
   );
 }

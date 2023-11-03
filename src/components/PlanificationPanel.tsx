@@ -5,7 +5,7 @@ import FormArSecUU from './Forms/FormArSecUU';
 import FormPeriodo from './Forms/FormPeriodo';
 import FormObjetiveEst from './Forms/FormObjetiveEst';
 import FormOrgInst from './Forms/FormOrgInst';
-import FormMetas from "./Forms/FormMetas";
+import FormMetas from './Forms/FormMetas';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -13,10 +13,12 @@ import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
+import { useNavigate, useParams } from 'react-router-dom';
 type Props = {
 	name: string;
+	closePlanification: () => void;
 };
-export default function PlanificationPanel({ name }: Props) {
+export default function PlanificationPanel({ name, closePlanification }: Props) {
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState(String);
 	const [show2, setShow2] = useState(false);
@@ -24,9 +26,11 @@ export default function PlanificationPanel({ name }: Props) {
 	const [showCancel, setShowCancel] = useState(false);
 	const [showSuspensionCancel, setShowSuspensionCancel] = useState(false);
 	const [showEliminarActividad, setShowEliminarActividad] = useState(false);
+	const [currentFormTitle, setCurrentFormTitle] = useState('' as string);
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+
 	useEffect(() => {
 		setMotCancel(estadoActualizado?.motivoCancel);
 	}, [estadoActualizado?.motivoCancel]);
@@ -103,8 +107,9 @@ export default function PlanificationPanel({ name }: Props) {
 
 		setTerm('');
 	};
+
 	return (
-		<div className='MenuPlanification'>
+		<div className=' w-100 h-100'>
 			<Modal show={show2} onHide={handleClose2}>
 				<Modal.Header>
 					<Modal.Title>¿Quiere salir de la sección?</Modal.Title>
@@ -121,8 +126,14 @@ export default function PlanificationPanel({ name }: Props) {
 							<Button
 								variant='success'
 								onClick={() => {
-									handleClose2();
-									setIsFormOpen(false);
+									if (isFormOpen) {
+										handleClose2();
+										setIsFormOpen(false);
+										setCurrentFormTitle('');
+									} else {
+										closePlanification();
+										handleClose2();
+									}
 								}}
 							>
 								Salir
@@ -214,19 +225,21 @@ export default function PlanificationPanel({ name }: Props) {
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<div className='ConteinerTitle'>
-				<h1 style={{ wordWrap: 'break-word' }}>{name}</h1>
+			<div className='ConteinerTitle d-flex justify-content-between align-items-center mb-2 '>
+				<h4 className=' text-break m-2'>
+					{name + (currentFormTitle.length > 0 ? ' - ' + currentFormTitle : '')}
+				</h4>
 				{isFormOpen && (
-					<Button
-						variant='success'
-						className='buttonCloseForm'
-						style={{ width: '60px', height: '60px' }}
+					<ArrowBack
+						fontSize={'large'}
+						className='m-1'
 						onClick={() => {
 							handleShow2();
 						}}
-					>
-						<ArrowBack fontSize={'large'} />
-					</Button>
+					/>
+				)}
+				{!isFormOpen && (
+					<ArrowBack fontSize='large' className=' m-1' onClick={() => handleShow2()} />
 				)}
 			</div>
 			{motCancel !== null && (
@@ -251,6 +264,7 @@ export default function PlanificationPanel({ name }: Props) {
 									className='Form'
 									onClick={() => {
 										setIndexForm('descr');
+										setCurrentFormTitle('Descripción y ubicación');
 										setIsFormOpen(true);
 									}}
 								>
@@ -263,6 +277,7 @@ export default function PlanificationPanel({ name }: Props) {
 									className='Form'
 									onClick={() => {
 										setIndexForm('pie');
+										setCurrentFormTitle('Plan institucional estratégico');
 										setIsFormOpen(true);
 									}}
 								>
@@ -275,6 +290,7 @@ export default function PlanificationPanel({ name }: Props) {
 									className='Form'
 									onClick={() => {
 										setIndexForm('area');
+										setCurrentFormTitle('UA , áreas internas y otras secretarías relacionadas.');
 										setIsFormOpen(true);
 									}}
 								>
@@ -287,6 +303,7 @@ export default function PlanificationPanel({ name }: Props) {
 									className='Form'
 									onClick={() => {
 										setIndexForm('metas');
+										setCurrentFormTitle('Metas y Resultados');
 										setIsFormOpen(true);
 									}}
 								>
@@ -301,6 +318,7 @@ export default function PlanificationPanel({ name }: Props) {
 									className='Form'
 									onClick={() => {
 										setIndexForm('periodo');
+										setCurrentFormTitle('Período / Fecha');
 										setIsFormOpen(true);
 									}}
 								>
@@ -313,6 +331,7 @@ export default function PlanificationPanel({ name }: Props) {
 									className='Form'
 									onClick={() => {
 										setIndexForm('objetivo');
+										setCurrentFormTitle('Objetivo Estratégico');
 										setIsFormOpen(true);
 									}}
 								>
@@ -325,6 +344,7 @@ export default function PlanificationPanel({ name }: Props) {
 									className='Form'
 									onClick={() => {
 										setIndexForm('organi');
+										setCurrentFormTitle('Organizaciones e instituciones relacionadas');
 										setIsFormOpen(true);
 									}}
 								>
@@ -337,6 +357,7 @@ export default function PlanificationPanel({ name }: Props) {
 									className='Form'
 									onClick={() => {
 										setIndexForm('documentacion');
+										setCurrentFormTitle('Documentación');
 										setIsFormOpen(true);
 									}}
 								>
