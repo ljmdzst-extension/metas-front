@@ -13,6 +13,7 @@ import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
+import Swal from 'sweetalert2';
 
 type Props = {
 	name: string;
@@ -30,10 +31,6 @@ export default function PlanificationPanel({
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState(String);
 	const [show2, setShow2] = useState(false);
-	const [term, setTerm] = useState(String);
-	const [showCancel, setShowCancel] = useState(false);
-	const [showSuspensionCancel, setShowSuspensionCancel] = useState(false);
-	const [showEliminarActividad, setShowEliminarActividad] = useState(false);
 	const [currentFormTitle, setCurrentFormTitle] = useState('' as string);
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
@@ -42,28 +39,12 @@ export default function PlanificationPanel({
 	useEffect(() => {
 		setMotCancel(estadoActualizado?.motivoCancel);
 	}, [estadoActualizado?.motivoCancel]);
-	const handleCloseSuspensionCancel = () => {
-		setShowSuspensionCancel(false);
-	};
-	const handleCloseEliminarActividad = () => {
-		setShowEliminarActividad(false);
-	};
-	const handleShowEliminarActividad = () => {
-		setShowEliminarActividad(true);
-	};
+
 	const handleClose2 = () => {
 		setShow2(false);
 	};
 	const handleShow2 = () => {
 		setShow2(true);
-	};
-	const handleCloseCancel = () => {
-		setShowCancel(false);
-	};
-	const handleShowCancel = () => {
-		{
-			motCancel ? setShowSuspensionCancel(true) : setShowCancel(true);
-		}
 	};
 
 	const suspenderActividad = (data: any) => {
@@ -104,70 +85,111 @@ export default function PlanificationPanel({
 	const handleCloseForm = () => {
 		setIsFormOpen(false);
 	};
-	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		if (term.length > 0) {
-			suspenderActividad({
-				idActividad: estadoActualizado.idActividad,
-				motivo: term,
-			});
-			handleCloseCancel();
-		}
 
-		setTerm('');
-	};
-
-	const changeFromSideBar = () => {
-		switch (currentFormSelected) {
-			case 'descr':
-				setIndexForm('descr');
-				setCurrentFormTitle('Descripción y ubicación');
-				setIsFormOpen(true);
-				break;
-			case 'documentacion':
-				setIndexForm('documentacion');
-				setCurrentFormTitle('Documentación');
-				setIsFormOpen(true);
-				break;
-			case 'pie':
-				setIndexForm('pie');
-				setCurrentFormTitle('Plan institucional estratégico');
-				setIsFormOpen(true);
-				break;
-			case 'area':
-				setIndexForm('area');
-				setCurrentFormTitle('UA , áreas internas y otras secretarías relacionadas.');
-				setIsFormOpen(true);
-				break;
-			case 'periodo':
-				setIndexForm('periodo');
-				setCurrentFormTitle('Período / Fecha');
-				setIsFormOpen(true);
-				break;
-			case 'objetivo':
-				setIndexForm('objetivo');
-				setCurrentFormTitle('Objetivo Estratégico');
-				setIsFormOpen(true);
-				break;
-			case 'organi':
-				setIndexForm('organi');
-				setCurrentFormTitle('Organizaciones e instituciones relacionadas');
-				setIsFormOpen(true);
-				break;
-			case 'metas':
-				setIndexForm('metas');
-				setCurrentFormTitle('Metas y Resultados');
-				setIsFormOpen(true);
-				break;
-			default:
-				break;
-		}
-	};
 	useEffect(() => {
+		const changeFromSideBar = () => {
+			switch (currentFormSelected) {
+				case 'descr':
+					setIndexForm('descr');
+					setCurrentFormTitle('Descripción y ubicación');
+					setIsFormOpen(true);
+					break;
+				case 'documentacion':
+					setIndexForm('documentacion');
+					setCurrentFormTitle('Documentación');
+					setIsFormOpen(true);
+					break;
+				case 'pie':
+					setIndexForm('pie');
+					setCurrentFormTitle('Plan institucional estratégico');
+					setIsFormOpen(true);
+					break;
+				case 'area':
+					setIndexForm('area');
+					setCurrentFormTitle('UA , áreas internas y otras secretarías relacionadas.');
+					setIsFormOpen(true);
+					break;
+				case 'periodo':
+					setIndexForm('periodo');
+					setCurrentFormTitle('Período / Fecha');
+					setIsFormOpen(true);
+					break;
+				case 'objetivo':
+					setIndexForm('objetivo');
+					setCurrentFormTitle('Objetivo Estratégico');
+					setIsFormOpen(true);
+					break;
+				case 'organi':
+					setIndexForm('organi');
+					setCurrentFormTitle('Organizaciones e instituciones relacionadas');
+					setIsFormOpen(true);
+					break;
+				case 'metas':
+					setIndexForm('metas');
+					setCurrentFormTitle('Metas y Resultados');
+					setIsFormOpen(true);
+					break;
+				default:
+					break;
+			}
+		};
 		changeFromSideBar();
 	}, [currentFormSelected]);
 
-	const alertSuspenderActividad = () => {};
+	const handleSuspenderActividad = () => {
+		if (motCancel) {
+			Swal.fire({
+				title: '¿Desea anular la suspensión?',
+				showDenyButton: true,
+				confirmButtonText: `Anular Suspensión`,
+				denyButtonText: `Cancelar`,
+			}).then((result) => {
+				if (result.isConfirmed) {
+					suspenderActividad({
+						idActividad: estadoActualizado.idActividad,
+						motivo: null,
+					});
+				} else if (result.isDenied) {
+					Swal.fire('Changes are not saved', '', 'info');
+				}
+			});
+		} else {
+			Swal.fire({
+				title: '¿Desea suspender la actividad?',
+				showDenyButton: true,
+				denyButtonText: `Cancelar`,
+				confirmButtonText: `Suspender`,
+				input: 'textarea',
+				inputPlaceholder: 'Ingrese el motivo de la suspensión',
+				inputValidator: (value) => {
+					if (!value) {
+						return 'Debe ingresar un motivo';
+					}
+				},
+			}).then((result) => {
+				if (result.isConfirmed) {
+					suspenderActividad({
+						idActividad: estadoActualizado.idActividad,
+						motivo: result.value,
+					});
+				} else if (result.isDenied) {
+					Swal.fire('Changes are not saved', '', 'info');
+				}
+			});
+		}
+	};
+
+	const handleDeleteActividad = () => {
+		Swal.fire({
+			title: '¿Desea eliminar la actividad?',
+			showCancelButton: true,
+			confirmButtonText: `Eliminar`,
+		}).then((result) => {
+			if (result.isConfirmed) {
+				eliminarActividad();
+			}
+		});
+	};
 
 	return (
 		<div className=' w-100 h-100'>
@@ -205,89 +227,6 @@ export default function PlanificationPanel({
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<Modal show={showCancel} onHide={handleCloseCancel}>
-				<Modal.Header closeButton>
-					<Modal.Title>Suspender Actividad</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Form onSubmit={submitForm}>
-						<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
-							<Form.Label>Ingrese el motivo de suspensión</Form.Label>
-							<Form.Control
-								type='nombre'
-								placeholder='Motivo'
-								autoFocus
-								as='textarea'
-								rows={2}
-								style={{ resize: 'none' }}
-								value={term}
-								onChange={(e) => setTerm(e.target.value)}
-							/>
-						</Form.Group>
-						<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<Button variant='warning' className='Suspend' type='submit'>
-								Suspender
-							</Button>
-							<Button variant='danger' onClick={handleCloseCancel}>
-								Cancelar
-							</Button>
-						</Form.Group>
-					</Form>
-				</Modal.Body>
-			</Modal>
-			<Modal show={showSuspensionCancel} onHide={handleCloseSuspensionCancel}>
-				<Modal.Header>
-					<Modal.Title>¿Desea anular la Suspensión?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Form>
-						<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<Button variant='danger' onClick={handleCloseSuspensionCancel}>
-								Cancelar
-							</Button>
-							<Button
-								variant='success'
-								onClick={(event) => {
-									event.preventDefault();
-									handleCloseSuspensionCancel();
-									suspenderActividad({
-										idActividad: estadoActualizado.idActividad,
-										motivo: null,
-									});
-								}}
-							>
-								Anular Suspensión
-							</Button>
-						</Form.Group>
-					</Form>
-				</Modal.Body>
-			</Modal>
-			<Modal show={showEliminarActividad} onHide={handleCloseEliminarActividad}>
-				<Modal.Header>
-					<Modal.Title>¿Desea Eliminar la actividad?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Form>
-						<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
-							<Form.Label>La actividad desaparecerá completamente.</Form.Label>
-						</Form.Group>
-						<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<Button variant='danger' onClick={handleCloseEliminarActividad}>
-								Cancelar
-							</Button>
-							<Button
-								variant='success'
-								onClick={() => {
-									eliminarActividad();
-									handleCloseEliminarActividad();
-								}}
-							>
-								Eliminar Actividad
-							</Button>
-						</Form.Group>
-					</Form>
-				</Modal.Body>
-			</Modal>
 			<div className='ConteinerTitle d-flex justify-content-between align-items-center mb-2 '>
 				<h4 className=' text-break m-2'>
 					{name + (currentFormTitle.length > 0 ? ' - ' + currentFormTitle : '')}
@@ -320,26 +259,42 @@ export default function PlanificationPanel({
 			{!isFormOpen ? (
 				<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
 					Posible vista resumen en desarrollo
-					{motCancel === null && (
+					<div>
+						<h4>
+							<span>Fechas:</span>
+							<p>{`Inicio ${estadoActualizado.fechaDesde} / Fin ${estadoActualizado.fechaHasta}`}</p>
+						</h4>
+					</div>
+					{motCancel === null ? (
 						<div className=' d-flex justify-content-around w-100'>
 							<Button
 								variant='warning'
 								className='Suspend'
 								onClick={() => {
-									handleShowCancel();
+									handleSuspenderActividad();
 								}}
 							>
-								{motCancel ? 'Anular Suspensión' : 'Suspender Actividad'}
+								Suspender Actividad
 							</Button>
 							<Button
 								variant='danger'
 								onClick={() => {
-									handleShowEliminarActividad();
+									handleDeleteActividad();
 								}}
 							>
 								Eliminar Actividad
 							</Button>
 						</div>
+					) : (
+						<Button
+							variant='warning'
+							className='Suspend'
+							onClick={() => {
+								handleSuspenderActividad();
+							}}
+						>
+							Anular Suspensión
+						</Button>
 					)}
 				</div>
 			) : (
