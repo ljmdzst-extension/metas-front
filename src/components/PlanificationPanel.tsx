@@ -13,12 +13,20 @@ import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
-import { useNavigate, useParams } from 'react-router-dom';
+
 type Props = {
 	name: string;
+	currentFormSelected: string;
 	closePlanification: () => void;
+	cleanFormSelected: () => void;
 };
-export default function PlanificationPanel({ name, closePlanification }: Props) {
+
+export default function PlanificationPanel({
+	name,
+	closePlanification,
+	currentFormSelected,
+	cleanFormSelected,
+}: Props) {
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState(String);
 	const [show2, setShow2] = useState(false);
@@ -57,6 +65,7 @@ export default function PlanificationPanel({ name, closePlanification }: Props) 
 			motCancel ? setShowSuspensionCancel(true) : setShowCancel(true);
 		}
 	};
+
 	const suspenderActividad = (data: any) => {
 		fetch('http://168.197.50.94:4005/metas/v2/actividad/cancel', {
 			method: 'PUT',
@@ -108,6 +117,56 @@ export default function PlanificationPanel({ name, closePlanification }: Props) 
 		setTerm('');
 	};
 
+	const changeFromSideBar = () => {
+		switch (currentFormSelected) {
+			case 'descr':
+				setIndexForm('descr');
+				setCurrentFormTitle('Descripción y ubicación');
+				setIsFormOpen(true);
+				break;
+			case 'documentacion':
+				setIndexForm('documentacion');
+				setCurrentFormTitle('Documentación');
+				setIsFormOpen(true);
+				break;
+			case 'pie':
+				setIndexForm('pie');
+				setCurrentFormTitle('Plan institucional estratégico');
+				setIsFormOpen(true);
+				break;
+			case 'area':
+				setIndexForm('area');
+				setCurrentFormTitle('UA , áreas internas y otras secretarías relacionadas.');
+				setIsFormOpen(true);
+				break;
+			case 'periodo':
+				setIndexForm('periodo');
+				setCurrentFormTitle('Período / Fecha');
+				setIsFormOpen(true);
+				break;
+			case 'objetivo':
+				setIndexForm('objetivo');
+				setCurrentFormTitle('Objetivo Estratégico');
+				setIsFormOpen(true);
+				break;
+			case 'organi':
+				setIndexForm('organi');
+				setCurrentFormTitle('Organizaciones e instituciones relacionadas');
+				setIsFormOpen(true);
+				break;
+			case 'metas':
+				setIndexForm('metas');
+				setCurrentFormTitle('Metas y Resultados');
+				setIsFormOpen(true);
+				break;
+			default:
+				break;
+		}
+	};
+	useEffect(() => {
+		changeFromSideBar();
+	}, [currentFormSelected]);
+
 	return (
 		<div className=' w-100 h-100'>
 			<Modal show={show2} onHide={handleClose2}>
@@ -130,6 +189,8 @@ export default function PlanificationPanel({ name, closePlanification }: Props) 
 										handleClose2();
 										setIsFormOpen(false);
 										setCurrentFormTitle('');
+										setIndexForm('');
+										cleanFormSelected();
 									} else {
 										closePlanification();
 										handleClose2();
@@ -256,135 +317,8 @@ export default function PlanificationPanel({ name, closePlanification }: Props) 
 			)}
 			{!isFormOpen ? (
 				<>
-					<div className='ConteinerColumn'>
-						<div className='Column'>
-							<div className='rowForm'>
-								<Button
-									variant='outline-success'
-									className='Form'
-									onClick={() => {
-										setIndexForm('descr');
-										setCurrentFormTitle('Descripción y ubicación');
-										setIsFormOpen(true);
-									}}
-								>
-									Descripción y ubicación
-								</Button>
-							</div>
-							<div className='rowForm'>
-								<Button
-									variant='outline-success'
-									className='Form'
-									onClick={() => {
-										setIndexForm('pie');
-										setCurrentFormTitle('Plan institucional estratégico');
-										setIsFormOpen(true);
-									}}
-								>
-									Plan institucional estratégico
-								</Button>
-							</div>
-							<div className='rowForm'>
-								<Button
-									variant='outline-success'
-									className='Form'
-									onClick={() => {
-										setIndexForm('area');
-										setCurrentFormTitle('UA , áreas internas y otras secretarías relacionadas.');
-										setIsFormOpen(true);
-									}}
-								>
-									UA , áreas internas y otras secretarías relacionadas.
-								</Button>
-							</div>
-							<div className='rowForm'>
-								<Button
-									variant='outline-success'
-									className='Form'
-									onClick={() => {
-										setIndexForm('metas');
-										setCurrentFormTitle('Metas y Resultados');
-										setIsFormOpen(true);
-									}}
-								>
-									Metas y Resultados
-								</Button>
-							</div>
-						</div>
-						<div className='Column'>
-							<div className='rowForm'>
-								<Button
-									variant='outline-success'
-									className='Form'
-									onClick={() => {
-										setIndexForm('periodo');
-										setCurrentFormTitle('Período / Fecha');
-										setIsFormOpen(true);
-									}}
-								>
-									Período / Fecha
-								</Button>
-							</div>
-							<div className='rowForm'>
-								<Button
-									variant='outline-success'
-									className='Form'
-									onClick={() => {
-										setIndexForm('objetivo');
-										setCurrentFormTitle('Objetivo Estratégico');
-										setIsFormOpen(true);
-									}}
-								>
-									Objetivo Estratégico
-								</Button>
-							</div>
-							<div className='rowForm'>
-								<Button
-									variant='outline-success'
-									className='Form'
-									onClick={() => {
-										setIndexForm('organi');
-										setCurrentFormTitle('Organizaciones e instituciones relacionadas');
-										setIsFormOpen(true);
-									}}
-								>
-									Organizaciones e instituciones relacionadas
-								</Button>
-							</div>
-							<div className='rowForm'>
-								<Button
-									variant='outline-success'
-									className='Form'
-									onClick={() => {
-										setIndexForm('documentacion');
-										setCurrentFormTitle('Documentación');
-										setIsFormOpen(true);
-									}}
-								>
-									Documentación
-								</Button>
-							</div>
-						</div>
-					</div>
-					<div className='ButtonPlanification'>
-						<Button
-							variant='warning'
-							className='Suspend'
-							onClick={() => {
-								handleShowCancel();
-							}}
-						>
-							{motCancel ? 'Cancelar Suspension' : 'Suspender Actividad'}
-						</Button>
-						<Button
-							variant='danger'
-							className='Delete'
-							onClick={() => {
-								handleShowEliminarActividad();
-							}}
-						>
-							Eliminar Actividad
-						</Button>
+					<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
+						Posible vista resumen en desarrollo
 					</div>
 				</>
 			) : (
