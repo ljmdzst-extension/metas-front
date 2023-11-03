@@ -167,6 +167,8 @@ export default function PlanificationPanel({
 		changeFromSideBar();
 	}, [currentFormSelected]);
 
+	const alertSuspenderActividad = () => {};
+
 	return (
 		<div className=' w-100 h-100'>
 			<Modal show={show2} onHide={handleClose2}>
@@ -316,11 +318,30 @@ export default function PlanificationPanel({
 				</h2>
 			)}
 			{!isFormOpen ? (
-				<>
-					<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
-						Posible vista resumen en desarrollo
-					</div>
-				</>
+				<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
+					Posible vista resumen en desarrollo
+					{motCancel === null && (
+						<div className=' d-flex justify-content-around w-100'>
+							<Button
+								variant='warning'
+								className='Suspend'
+								onClick={() => {
+									handleShowCancel();
+								}}
+							>
+								{motCancel ? 'Anular Suspensión' : 'Suspender Actividad'}
+							</Button>
+							<Button
+								variant='danger'
+								onClick={() => {
+									handleShowEliminarActividad();
+								}}
+							>
+								Eliminar Actividad
+							</Button>
+						</div>
+					)}
+				</div>
 			) : (
 				<>
 					{(() => {
