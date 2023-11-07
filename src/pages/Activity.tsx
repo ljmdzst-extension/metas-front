@@ -13,6 +13,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
+import { ArrowBack } from '@mui/icons-material';
 
 interface Activity {
 	idActividad: number;
@@ -187,11 +188,21 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
+			
+				<div className=' d-flex w-100 justify-content-between border-bottom border-2 m-0 p-2 pb-0 '>
+					<h2>{area?.nom}</h2>
+					<ArrowBack
+						fontSize='large'
+						className={` m-1 ${isPlanificationOpen ? 'd-none' : ''}`}
+						onClick={() => {
+							navigation('/');
+						}}
+					/>
+				</div>
+			
 
-			<h2 className=' text-center m-0 p-2 border-bottom border-2 '>{area?.nom}</h2>
-
-			<div className=' h-100  '>
-				<Row className=' d-flex' style={{ height: '80%' }}>
+			<div className=' h-100   '>
+				<Row className=' d-flex ' style={{ height: '80%' }}>
 					{!isPlanificationOpen ? (
 						<Col
 							sm={3}
@@ -247,47 +258,45 @@ export default function Activity() {
 							</ListGroup>
 						</Col>
 					) : (
-						<>
-							<Col
-								sm={3}
-								className=' position-relative h-100 d-flex flex-column border-end border-2 '
-							>
-								<h4 className=' text-center m-2'>Formulario</h4>
-								<ListGroup>
-									{formData.map((item, index) => (
-										<ListGroup.Item
-											action
-											variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
-											title={item.Title}
+						<Col
+							sm={3}
+							className=' position-relative h-100 d-flex flex-column border-end border-2 '
+						>
+							<h4 className=' text-center m-2'>Formulario</h4>
+							<ListGroup>
+								{formData.map((item, index) => (
+									<ListGroup.Item
+										action
+										variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
+										title={item.Title}
+										style={{
+											width: '100%',
+											borderRadius: '10px',
+											display: 'flex',
+											justifyContent: 'center',
+											alignItems: 'center',
+											margin: '5px',
+											cursor: 'pointer',
+										}}
+										key={index}
+										onClick={() => {
+											selectCurrentForm(item.index);
+										}}
+									>
+										<span
 											style={{
-												width: '100%',
-												borderRadius: '10px',
-												display: 'flex',
-												justifyContent: 'center',
-												alignItems: 'center',
-												margin: '5px',
-												cursor: 'pointer',
-											}}
-											key={index}
-											onClick={() => {
-												selectCurrentForm(item.index);
+												textOverflow: 'ellipsis',
+												overflow: 'hidden',
+												fontWeight: 'normal',
+												whiteSpace: 'nowrap',
 											}}
 										>
-											<span
-												style={{
-													textOverflow: 'ellipsis',
-													overflow: 'hidden',
-													fontWeight: 'normal',
-													whiteSpace: 'nowrap',
-												}}
-											>
-												{item.Title}
-											</span>
-										</ListGroup.Item>
-									))}
-								</ListGroup>
-							</Col>
-						</>
+											{item.Title}
+										</span>
+									</ListGroup.Item>
+								))}
+							</ListGroup>
+						</Col>
 					)}
 					{!isPlanificationOpen && (
 						<Col sm={9}>
@@ -303,7 +312,7 @@ export default function Activity() {
 					)}
 
 					{isPlanificationOpen && (
-						<Col sm={9}>
+						<Col sm={9} className=' mt-2'>
 							<PlanificationPanel
 								name={nameActivity}
 								closePlanification={closePlanification}
