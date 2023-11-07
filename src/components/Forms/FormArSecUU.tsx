@@ -112,19 +112,6 @@ number[]
     value: sippe.idProgramaSIPPE,
     label: sippe.nom,
   }));
-  const handleCargarArSecUU = () => {
-    console.log(relacionSeleccionadas3);
-    dispatch(CARGAR_RELACION({
-      relacionesSeleccionadas : Array.from(new Set([
-      ...relacionSeleccionadas1,
-      ...relacionSeleccionadas2,
-      ...relacionSeleccionadas3
-      ])),
-      sippeSeleccionadas : Array.from(new Set([...sippeSeleccionadas]))
-      
-    }));
-    onClose();
-  };
   const handleRelacionChange1 = (selectedOptions: any) => {
     const selectedValues = selectedOptions.map((option: any) => option.value);
     setRelacionSeleccionadas1(selectedValues);
@@ -254,7 +241,7 @@ number[]
 						},
 						dispatch,
 					);
-					onClose();
+					
 				}}
 			>
 				Guardar Actividad

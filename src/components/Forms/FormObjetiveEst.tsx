@@ -89,7 +89,6 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
             ...estadoActualizado,
             listaObjetivos: objetivosSeleccionados,
           },dispatch);
-          onClose();
         }}
       >
         Guardar Actividad

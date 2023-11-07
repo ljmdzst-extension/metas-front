@@ -83,6 +83,8 @@ export default function PlanificationPanel({
 
 	const handleCloseForm = () => {
 		setIsFormOpen(false);
+		setIndexForm('');
+		cleanFormSelected();
 	};
 
 	useEffect(() => {

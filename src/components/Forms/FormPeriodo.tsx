@@ -9,6 +9,7 @@ import { RootState } from "../../redux/store";
 import { guardarActividad } from "../../redux/actions/putActividad";
 import { Col, Row } from "react-bootstrap"
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import Swal from "sweetalert2"
 
 registerLocale("es", es);
 
@@ -22,6 +23,8 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
     (state: RootState) => state.actividadSlice
   );
 
+	const [isSaving, setIsSaving] = useState<boolean>(false);
+
   const [fechaDesde, setFechaDesde] = useState<string | null>(
     estadoActualizado.fechaDesde ?? null
   );
@@ -33,7 +36,6 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
   const [listaFechasPuntuales, setListaFechasPuntuales] = useState<
     { idFecha: number | null; fecha: string | null }[]
   >(estadoActualizado.listaFechasPuntuales ?? []);
-  const [startDate, setDate] = useState<Date>(new Date());
   const [rangeStart, setRangeStart] = useState<Date>(
     new Date(estadoActualizado.fechaDesde?.split("-").join("/") ?? "2023/01/01")
   );
@@ -67,7 +69,6 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
     const dateString = dateToString(d);
 
     if (!indexDates.find((date) => date.fecha === dateString)) {
-      setDate(d);
       const nuevaFecha = {
         idFecha: 0,
         fecha: dateString,
@@ -132,6 +133,46 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 		}
 		validarRango();
 	}, [rangeStart, rangeEnd]);
+
+	const handlerSave = () => {
+		setIsSaving(true);
+		Swal.fire({
+			title:'Guardando cambios',
+			allowOutsideClick: false,
+			showConfirmButton: false,
+			didOpen: () => {
+				Swal.showLoading();
+			},
+		});
+		guardarActividad(
+			{
+				...estadoActualizado,
+				fechaDesde: fechaDesde,
+				fechaHasta: fechaHasta,
+				listaFechasPuntuales: listaFechasPuntuales,
+			},
+			dispatch,
+		).then((res) => {
+			if (res) {
+				Swal.fire({
+					title: 'Cambios guardados',
+					icon: 'success',
+					showConfirmButton: false,
+					timer: 1500,
+				});
+				setIsSaving(false);
+			} else {
+				Swal.fire({
+					title: 'Error al guardar los cambios',
+					icon: 'error',
+					showConfirmButton: false,
+					timer: 1500,
+				});
+				setIsSaving(false);
+			}
+		});
+
+	}
 
 	return (
 		<div className=' contenedor-forms mx-3 '>
@@ -241,7 +282,6 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 							},
 							dispatch,
 						);
-						onClose();
 					}}
 				>
 					Guardar Actividad

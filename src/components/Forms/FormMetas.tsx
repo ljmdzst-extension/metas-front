@@ -232,10 +232,9 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 						},
 						dispatch,
 					);
-					onClose();
 				}}
 			>
-				Guardar
+				Guardar Actividad
 			</Button>
 			<Modal show={showModal} onHide={closeModal} size='lg'>
 				<Modal.Header closeButton></Modal.Header>

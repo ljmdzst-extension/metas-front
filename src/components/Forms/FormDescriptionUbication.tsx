@@ -170,7 +170,6 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
 						{ ...estadoActualizado, desc: descripcion, listaUbicaciones: ubicaciones },
 						dispatch,
 					);
-					onClose();
 				}}
 			>
 				Guardar Actividad
