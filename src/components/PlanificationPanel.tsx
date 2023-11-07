@@ -31,7 +31,6 @@ export default function PlanificationPanel({
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState(String);
 	const [show2, setShow2] = useState(false);
-	const [currentFormTitle, setCurrentFormTitle] = useState('' as string);
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
@@ -91,42 +90,34 @@ export default function PlanificationPanel({
 			switch (currentFormSelected) {
 				case 'descr':
 					setIndexForm('descr');
-					setCurrentFormTitle('Descripción y ubicación');
 					setIsFormOpen(true);
 					break;
 				case 'documentacion':
 					setIndexForm('documentacion');
-					setCurrentFormTitle('Documentación');
 					setIsFormOpen(true);
 					break;
 				case 'pie':
 					setIndexForm('pie');
-					setCurrentFormTitle('Plan institucional estratégico');
 					setIsFormOpen(true);
 					break;
 				case 'area':
 					setIndexForm('area');
-					setCurrentFormTitle('UA , áreas internas y otras secretarías relacionadas.');
 					setIsFormOpen(true);
 					break;
 				case 'periodo':
 					setIndexForm('periodo');
-					setCurrentFormTitle('Período / Fecha');
 					setIsFormOpen(true);
 					break;
 				case 'objetivo':
 					setIndexForm('objetivo');
-					setCurrentFormTitle('Objetivo Estratégico');
 					setIsFormOpen(true);
 					break;
 				case 'organi':
 					setIndexForm('organi');
-					setCurrentFormTitle('Organizaciones e instituciones relacionadas');
 					setIsFormOpen(true);
 					break;
 				case 'metas':
 					setIndexForm('metas');
-					setCurrentFormTitle('Metas y Resultados');
 					setIsFormOpen(true);
 					break;
 				default:
@@ -212,7 +203,6 @@ export default function PlanificationPanel({
 									if (isFormOpen) {
 										handleClose2();
 										setIsFormOpen(false);
-										setCurrentFormTitle('');
 										setIndexForm('');
 										cleanFormSelected();
 									} else {
@@ -228,9 +218,7 @@ export default function PlanificationPanel({
 				</Modal.Body>
 			</Modal>
 			<div className='ConteinerTitle d-flex justify-content-between align-items-center mb-2 '>
-				<h4 className=' text-break m-2'>
-					{name + (currentFormTitle.length > 0 ? ' - ' + currentFormTitle : '')}
-				</h4>
+				<h4 className=' text-break m-2'>{name}</h4>
 				{isFormOpen && (
 					<ArrowBack
 						fontSize={'large'}
@@ -302,53 +290,21 @@ export default function PlanificationPanel({
 					{(() => {
 						switch (indexForm) {
 							case 'descr':
-								return (
-									<>
-										<FormDescriptionUbication onClose={handleCloseForm} />
-									</>
-								);
+								return <FormDescriptionUbication onClose={handleCloseForm} />;
 							case 'documentacion':
-								return (
-									<>
-										<FormDocuments onClose={handleCloseForm} />
-									</>
-								);
+								return <FormDocuments onClose={handleCloseForm} />;
 							case 'pie':
-								return (
-									<>
-										<FormPIE onClose={handleCloseForm} />
-									</>
-								);
+								return <FormPIE onClose={handleCloseForm} />;
 							case 'area':
-								return (
-									<>
-										<FormArSecUU onClose={handleCloseForm} />
-									</>
-								);
+								return <FormArSecUU onClose={handleCloseForm} />;
 							case 'periodo':
-								return (
-									<>
-										<FormPeriodo onClose={handleCloseForm} />
-									</>
-								);
+								return <FormPeriodo onClose={handleCloseForm} />;
 							case 'objetivo':
-								return (
-									<>
-										<FormObjetiveEst onClose={handleCloseForm} />
-									</>
-								);
+								return <FormObjetiveEst onClose={handleCloseForm} />;
 							case 'organi':
-								return (
-									<>
-										<FormOrgInst onClose={handleCloseForm} />
-									</>
-								);
+								return <FormOrgInst onClose={handleCloseForm} />;
 							case 'metas':
-								return (
-									<>
-										<FormMetas onClose={handleCloseForm} />
-									</>
-								);
+								return <FormMetas onClose={handleCloseForm} />;
 							default:
 								return null;
 						}
