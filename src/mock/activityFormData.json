@@ -1,0 +1,34 @@
+[
+	{
+		"Title": "Descripción y ubicación",
+		"index": "descr"
+	},
+	{
+		"Title": "Plan institucional estratégico",
+		"index": "pie"
+	},
+	{
+		"Title": "UA , áreas internas y otras secretarías relacionadaso",
+		"index": "area"
+	},
+	{
+		"Title": "Metas y Resultados",
+		"index": "metas"
+	},
+	{
+		"Title": "Período / Fecha",
+		"index": "periodo"
+	},
+	{
+		"Title": "Objetivo Estratégico",
+		"index": "objetivo"
+	},
+	{
+		"Title": "Organizaciones e instituciones relacionadas",
+		"index": "organi"
+	},
+	{
+		"Title": "Documentación",
+		"index": "documentacion"
+	}
+]

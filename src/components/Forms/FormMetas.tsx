@@ -7,8 +7,9 @@ import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { Badge, Button, Form, Modal, Table } from 'react-bootstrap';
 import { guardarActividad } from '../../redux/actions/putActividad';
+import Swal from 'sweetalert2';
 
 interface FormMetasProps {
 	onClose: () => void;
@@ -40,7 +41,6 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
 	const [showModal, setShowModal] = useState(false);
-	const [idLabelVisible, setIdLabelVisible] = useState(-1);
 	const indexCurrentMeta = useRef(-1);
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
@@ -132,12 +132,39 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 		setListadoMetas(newListadoMetas);
 	};
 
-	const toggleLabel = (id: number) => {
-		if (idLabelVisible === id) {
-			setIdLabelVisible(-1);
-		} else {
-			setIdLabelVisible(id);
-		}
+	const alertVistaDetalle = (thisMeta: metas) => {
+		Swal.fire({
+			html: `
+			<div style='text-align: start;'>
+				<p>Descripcion: ${thisMeta.descripcion}</p>
+				<p>Resultado: ${thisMeta.resultado}</p>
+				<p>Observaciones: ${thisMeta.observaciones}</p>
+				<p>Valoracion: ${thisMeta.valoracion}</p>
+			</div>`,
+			confirmButtonText: 'Aceptar',
+			width: '80%',
+		})
+			.then((result) => {
+				if (result.isConfirmed) {
+					console.log('Confirmado');
+				}
+			})
+			.catch((error) => {
+				console.error('Error al mostrar la alerta:', error);
+			});
+	};
+
+	const textLimitError = (text: string, limit: number) => {
+		return text.length > limit;
+	};
+
+	const limitTextString = (text: string, limit: number) => {
+		return text.substring(0, limit);
+	};
+
+	const valoracionesText = (idValoracion: number) => {
+		const valoracion = valoraciones?.find((valoracion) => valoracion.idValoracion === idValoracion);
+		return valoracion?.nom;
 	};
 
 	return (
@@ -151,7 +178,7 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 				Agregar
 				<AddBoxRoundedIcon className=' ms-2' />
 			</Button>
-			<div className='tabla-metas-contenedor'>
+			<div className='tabla-metas-contenedor' style={{ maxHeight: '200px', overflowY: 'auto' }}>
 				<Table>
 					<thead>
 						<tr>
@@ -167,41 +194,17 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 						{listadoMetas.map((meta, index) => (
 							<tr key={`${meta.descripcion}-${meta.idMeta} `}>
 								<td>{index + 1}</td>
-								<td>{meta.descripcion}</td>
-								<td>{meta.resultado}</td>
-								<td>{meta.observaciones}</td>
-								<td>{meta.valoracion}</td>
+								<td>{limitTextString(meta.descripcion ?? '', 10)}</td>
+								<td>{limitTextString(meta.resultado ?? '', 30)}</td>
+								<td>{limitTextString(meta.observaciones ?? '', 30)}</td>
+								<td>{valoracionesText(meta.valoracion ?? '')}</td>
 								<td>
 									<VisibilityIcon
 										id={`metaLabel-${meta.idMeta}`}
-										onMouseEnter={() => toggleLabel(meta.idMeta ?? -1)}
-										onMouseLeave={() => toggleLabel(meta.idMeta ?? -1)}
+										onClick={() => alertVistaDetalle(meta as metas)}
+										color='primary'
+										className='cursor-pointer'
 									/>
-									{meta.idMeta === idLabelVisible && (
-										<div className='meta-label'>
-											<div>
-												<p>
-													Descripcion: {meta.descripcion}
-													<br />
-												</p>
-											</div>
-											<div>
-												<p>
-													Resultado: {meta.resultado}
-													<br />
-												</p>
-											</div>
-											<div>
-												<p>
-													Observaciones: {meta.observaciones}
-													<br />
-												</p>
-											</div>
-											<div>
-												<p>Valoracion: {meta.valoracion}</p>
-											</div>
-										</div>
-									)}
 									<EditIcon
 										color='action'
 										className='cursor-pointer'
@@ -229,10 +232,9 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 						},
 						dispatch,
 					);
-					onClose();
 				}}
 			>
-				Guardar
+				Guardar Actividad
 			</Button>
 			<Modal show={showModal} onHide={closeModal} size='lg'>
 				<Modal.Header closeButton></Modal.Header>
@@ -247,28 +249,46 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 							setNuevaMeta({ ...nuevaMeta, descripcion: e.target.value });
 						}}
 					/>
-					<Form.Control
-						as='textarea'
-						rows={4}
-						name='editResultado'
-						className='ParrafoResultado'
-						placeholder={'Resultado'}
-						value={nuevaMeta.resultado ?? ''}
-						onChange={(e) => {
-							setNuevaMeta({ ...nuevaMeta, resultado: e.target.value });
-						}}
-					/>
-					<Form.Control
-						as='textarea'
-						rows={4}
-						name='editObservaciones'
-						className='ParrafoObservaciones'
-						placeholder={'Observaciones'}
-						value={nuevaMeta.observaciones ?? ''}
-						onChange={(e) => {
-							setNuevaMeta({ ...nuevaMeta, observaciones: e.target.value });
-						}}
-					/>
+					<Form.Group className=' d-flex flex-column align-items-center w-100'>
+						<Form.Control
+							as='textarea'
+							rows={4}
+							name='editResultado'
+							className='ParrafoResultado'
+							placeholder={'Resultado'}
+							value={nuevaMeta.resultado ?? ''}
+							onChange={(e) => {
+								setNuevaMeta({ ...nuevaMeta, resultado: e.target.value });
+							}}
+							isInvalid={textLimitError(nuevaMeta.resultado ?? '', 500)}
+						/>
+						<Badge
+							className=' mt-2 ms-auto'
+							bg={textLimitError(nuevaMeta.resultado ?? '', 500) ? 'danger' : 'primary'}
+						>
+							{nuevaMeta.resultado?.length}/{500}
+						</Badge>
+					</Form.Group>
+					<Form.Group className=' d-flex flex-column align-items-center w-100'>
+						<Form.Control
+							as='textarea'
+							rows={4}
+							name='editObservaciones'
+							className='ParrafoObservaciones'
+							placeholder={'Observaciones'}
+							value={nuevaMeta.observaciones ?? ''}
+							onChange={(e) => {
+								setNuevaMeta({ ...nuevaMeta, observaciones: e.target.value });
+							}}
+							isInvalid={textLimitError(nuevaMeta.observaciones ?? '', 500)}
+						/>
+						<Badge
+							className=' mt-2 ms-auto'
+							bg={textLimitError(nuevaMeta.observaciones ?? '', 500) ? 'danger' : 'primary'}
+						>
+							{nuevaMeta.observaciones?.length}/{500}
+						</Badge>
+					</Form.Group>
 					<Form.Select
 						name='valoracion'
 						className='ParrafoObservaciones'

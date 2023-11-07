@@ -797,3 +797,12 @@ th {
 	border-radius: 4px;
 	margin: 10px 0;
 }
+
+.texto-fechas-error {
+	background-color: #f44336;
+	color: #ffffff;
+	border: 2px solid #f44336;
+	padding: 5px;
+	border-radius: 4px;
+	margin: 10px 0;
+}

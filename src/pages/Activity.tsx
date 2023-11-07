@@ -11,6 +11,10 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { Col, Container, Row } from 'react-bootstrap';
 
+import formData from './../mock/activityFormData.json';
+import Swal from 'sweetalert2';
+import { ArrowBack } from '@mui/icons-material';
+
 interface Activity {
 	idActividad: number;
 	desc: string;
@@ -36,6 +40,7 @@ export default function Activity() {
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
 	const { idArea } = useParams<{ idArea?: string }>();
 	const [area, setArea] = useState<Area | null>(null);
+	const [currentFormSelected, setCurrentFormSelected] = useState('');
 
 	const navigation = useNavigate();
 
@@ -110,6 +115,25 @@ export default function Activity() {
 		setIsPlanificationOpen(!isPlanificationOpen);
 	};
 
+	const selectCurrentForm = (formName: string) => {
+		Swal.fire({
+			title: '¿Estás seguro?',
+			text: 'Se perderán los cambios no guardados',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Si, cambiar',
+			cancelButtonText: 'No, cancelar',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				setCurrentFormSelected(formName);
+			}
+		});
+	};
+
+	const cleanFormSelected = () => {
+		setCurrentFormSelected('');
+	};
+
 	return (
 		<>
 			<Modal show={show} onHide={handleClose}>
@@ -164,61 +188,116 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
+			
+				<div className=' d-flex w-100 justify-content-between border-bottom border-2 m-0 p-2 pb-0 '>
+					<h2>{area?.nom}</h2>
+					<ArrowBack
+						fontSize='large'
+						className={` m-1 ${isPlanificationOpen ? 'd-none' : ''}`}
+						onClick={() => {
+							navigation('/');
+						}}
+					/>
+				</div>
+			
 
-			<h2 className=' text-center m-0 p-2 border-bottom border-2 '>{area?.nom}</h2>
-
-			<div className=' h-100  '>
-				<Row className=' d-flex' style={{ height: '80%' }}>
-					<Col sm={3} className=' position-relative h-100 d-flex flex-column border-end border-2 '>
-						<Button
-							variant='outline-success'
-							style={{ position: 'absolute', bottom: '10px', right: '10px' }}
-							onClick={handleShow}
+			<div className=' h-100   '>
+				<Row className=' d-flex ' style={{ height: '80%' }}>
+					{!isPlanificationOpen ? (
+						<Col
+							sm={3}
+							className=' position-relative h-100 d-flex flex-column border-end border-2 '
 						>
-							Agregar Actividad
-						</Button>
-						<h4 className=' text-center m-2'>Listado de Actividades</h4>
-						<ListGroup>
-							{arrayActivity.map((item, index) => (
-								<ListGroup.Item
-									action
-									variant='secondary'
-									title={item.desc}
-									style={{
-										width: '100%',
-										borderRadius: '10px',
-										display: 'flex',
-										justifyContent: 'center',
-										alignItems: 'center',
-										margin: '5px',
-										cursor: 'pointer',
-									}}
-									key={index}
-									onClick={() => {
-										if (isPlanificationOpen === true) {
-											handleShow2();
-											setNameActivityAux(`${item.desc}`);
-										} else {
-											setIsPlanificationOpen(!isPlanificationOpen);
-											setNameActivity(`${item.desc}`);
-											handleButtonClick(item.idActividad);
-										}
-									}}
-								>
-									<span
+							<Button
+								variant='outline-success'
+								style={{ position: 'absolute', bottom: '10px', right: '10px' }}
+								onClick={handleShow}
+							>
+								Agregar Actividad
+							</Button>
+							<h4 className=' text-center m-2'>Listado de Actividades</h4>
+							<ListGroup>
+								{arrayActivity.map((item, index) => (
+									<ListGroup.Item
+										action
+										variant='secondary'
+										title={item.desc}
 										style={{
-											textOverflow: 'ellipsis',
-											overflow: 'hidden',
-											fontWeight: 'normal',
-											whiteSpace: 'nowrap',
+											width: '100%',
+											borderRadius: '10px',
+											display: 'flex',
+											justifyContent: 'center',
+											alignItems: 'center',
+											margin: '5px',
+											cursor: 'pointer',
+										}}
+										key={index}
+										onClick={() => {
+											if (isPlanificationOpen === true) {
+												handleShow2();
+												setNameActivityAux(`${item.desc}`);
+											} else {
+												setIsPlanificationOpen(!isPlanificationOpen);
+												setNameActivity(`${item.desc}`);
+												handleButtonClick(item.idActividad);
+											}
 										}}
 									>
-										{item.desc}
-									</span>
-								</ListGroup.Item>
-							))}
-						</ListGroup>
-					</Col>
+										<span
+											style={{
+												textOverflow: 'ellipsis',
+												overflow: 'hidden',
+												fontWeight: 'normal',
+												whiteSpace: 'nowrap',
+											}}
+										>
+											{item.desc}
+										</span>
+									</ListGroup.Item>
+								))}
+							</ListGroup>
+						</Col>
+					) : (
+						<Col
+							sm={3}
+							className=' position-relative h-100 d-flex flex-column border-end border-2 '
+						>
+							<h4 className=' text-center m-2'>Formulario</h4>
+							<ListGroup>
+								{formData.map((item, index) => (
+									<ListGroup.Item
+										action
+										variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
+										title={item.Title}
+										style={{
+											width: '100%',
+											borderRadius: '10px',
+											display: 'flex',
+											justifyContent: 'center',
+											alignItems: 'center',
+											margin: '5px',
+											cursor: 'pointer',
+										}}
+										key={index}
+										onClick={() => {
+											selectCurrentForm(item.index);
+										}}
+									>
+										<span
+											style={{
+												textOverflow: 'ellipsis',
+												overflow: 'hidden',
+												fontWeight: 'normal',
+												whiteSpace: 'nowrap',
+											}}
+										>
+											{item.Title}
+										</span>
+									</ListGroup.Item>
+								))}
+							</ListGroup>
+						</Col>
+					)}
 					{!isPlanificationOpen && (
 						<Col sm={9}>
 							<Row>
@@ -233,8 +312,13 @@ export default function Activity() {
 					)}
 
 					{isPlanificationOpen && (
-						<Col sm={9}>
-							<PlanificationPanel name={nameActivity} closePlanification={closePlanification} />
+						<Col sm={9} className=' mt-2'>
+							<PlanificationPanel
+								name={nameActivity}
+								closePlanification={closePlanification}
+								currentFormSelected={currentFormSelected}
+								cleanFormSelected={cleanFormSelected}
+							/>
 						</Col>
 					)}
 				</Row>

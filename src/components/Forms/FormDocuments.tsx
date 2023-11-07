@@ -18,9 +18,7 @@ interface FormOrgInstProps {
 }
 
 export default function FormOrgInst({ onClose }: FormOrgInstProps) {
-  const handleCargarOrgInst = () => {
-    onClose();
-  };
+
   const dispatch = useDispatch();
   const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>([]);
   const [descripcion, setDescripcion] = useState("");
@@ -135,7 +133,6 @@ export default function FormOrgInst({ onClose }: FormOrgInstProps) {
 						},
 						dispatch,
 					);
-					onClose();
 				}}
 			>
 				Guardar Actividad

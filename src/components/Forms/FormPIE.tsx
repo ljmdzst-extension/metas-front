@@ -159,7 +159,6 @@ export default function FormPIE({ onClose }: FormPIEProps) {
 						},
 						dispatch,
 					);
-					onClose();
 				}}
 			>
 				Guardar Actividad

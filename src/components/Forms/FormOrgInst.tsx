@@ -162,7 +162,6 @@ export default function FormOrgInst({ onClose }:FormOrgInst) {
 						},
 						dispatch,
 					);
-					onClose();
 				}}
 			>
 				Guardar Actividad
