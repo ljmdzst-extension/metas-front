@@ -9,7 +9,7 @@ import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col,  Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
@@ -233,7 +233,7 @@ export default function Activity() {
 										}}
 										key={index}
 										onClick={() => {
-											if (isPlanificationOpen === true) {
+											if (isPlanificationOpen) {
 												handleShow2();
 												setNameActivityAux(`${item.desc}`);
 											} else {

@@ -15,7 +15,7 @@ type Institucion = {
 interface FormOrgInst {
   onClose: () => void;
 }
-export default function FormOrgInst({ onClose }:FormOrgInst) {
+export default function FormOrgInst({  }:FormOrgInst) {
   const dispatch = useDispatch();
   const estadoActualizado = useSelector(
     (state: RootState) => state.actividadSlice
@@ -38,7 +38,7 @@ export default function FormOrgInst({ onClose }:FormOrgInst) {
   const eliminarInstitucion = (index:number | null) => {
     console.log(index);
     if(index !== null) {
-     setArrayInstitucion(arrayInstitucion.filter((item,i) => i !== index));
+     setArrayInstitucion(arrayInstitucion.filter((item,i) => item && i !== index));
     }
   };
 

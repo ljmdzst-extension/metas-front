@@ -16,7 +16,7 @@ interface Objetivo {
     nom: string;
   };
 }
-export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
+export default function FormObjetiveEst({  }: FormObjetiveEstProps) {
   const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
   const dispatch = useDispatch();
   useEffect(() => {
