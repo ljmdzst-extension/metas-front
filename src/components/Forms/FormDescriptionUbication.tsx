@@ -8,9 +8,7 @@ import { guardarActividad } from "../../redux/actions/putActividad";
 interface FormDescriptionUbicationProps {
   onClose: () => void;
 }
-const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
-  onClose,
-}) => {
+const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => {
 
   const dispatch = useDispatch();
 

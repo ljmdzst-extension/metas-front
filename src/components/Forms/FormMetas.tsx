@@ -35,7 +35,7 @@ const defaultNuevaMeta = {
 	valoracion: 0,
 };
 
-const FormMetas = ({ onClose }: FormMetasProps) => {
+const FormMetas = ({  }: FormMetasProps) => {
 	const dispatch = useDispatch();
 	const [listadoMetas, setListadoMetas] = useState<metas[]>([]);
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
@@ -197,7 +197,7 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 								<td>{limitTextString(meta.descripcion ?? '', 10)}</td>
 								<td>{limitTextString(meta.resultado ?? '', 30)}</td>
 								<td>{limitTextString(meta.observaciones ?? '', 30)}</td>
-								<td>{valoracionesText(meta.valoracion ?? '')}</td>
+								<td>{valoracionesText(meta.valoracion ?? 0)}</td>
 								<td>
 									<VisibilityIcon
 										id={`metaLabel-${meta.idMeta}`}

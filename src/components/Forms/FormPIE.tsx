@@ -20,7 +20,7 @@ interface Objetivo {
 	};
 }
 
-export default function FormPIE({ onClose }: FormPIEProps) {
+export default function FormPIE({  }: FormPIEProps) {
 	const dispatch = useDispatch();
 	const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
