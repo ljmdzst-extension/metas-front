@@ -16,7 +16,7 @@ interface Objetivo {
     nom: string;
   };
 }
-export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
+export default function FormObjetiveEst({  }: FormObjetiveEstProps) {
   const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -62,9 +62,8 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
     }
   };
   return (
-    <>
-      <div className="FormObjetivo">
-        <h2 className="TitleObjetivo">Objetivo Estrategico</h2>
+    <div className=" d-flex flex-column w-100 ">
+      <div className="FormObjetivo  w-100 ">
         <Form className="FormObj">
           <p className="SubtitleObj">
             <span>Seleccione el/los objetivo/s estratégico/s vinculado/s a la actividad :</span>
@@ -84,17 +83,16 @@ export default function FormObjetiveEst({ onClose }: FormObjetiveEstProps) {
       </div>
       <Button
         variant="success"
-        className="Save"
+        className="Save align-self-center m-4  '"
         onClick={() => {
           guardarActividad({
             ...estadoActualizado,
             listaObjetivos: objetivosSeleccionados,
           },dispatch);
-          onClose();
         }}
       >
         Guardar Actividad
       </Button>
-    </>
+    </div>
   );
 }
