@@ -9,7 +9,7 @@ import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
@@ -68,16 +68,15 @@ export default function Activity() {
 			.catch((error) => console.log(error));
 	};
 
-	const getArea = () => {
-		const localArea = localStorage.getItem('currentArea');
-		if (localArea && JSON.parse(localArea).idArea === parseInt(idArea ?? '0', 10)) {
-			setArea(JSON.parse(localArea));
-		} else {
-			navigation('/');
-		}
-	};
-
 	useEffect(() => {
+		const getArea = () => {
+			const localArea = localStorage.getItem('currentArea');
+			if (localArea && JSON.parse(localArea).idArea === parseInt(idArea ?? '0', 10)) {
+				setArea(JSON.parse(localArea));
+			} else {
+				navigation('/gestion/metas');
+			}
+		};
 		getArea();
 	}, []);
 
@@ -188,18 +187,17 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
-			
-				<div className=' d-flex w-100 justify-content-between border-bottom border-2 m-0 p-2 pb-0 '>
-					<h2>{area?.nom}</h2>
-					<ArrowBack
-						fontSize='large'
-						className={` m-1 ${isPlanificationOpen ? 'd-none' : ''}`}
-						onClick={() => {
-							navigation('/');
-						}}
-					/>
-				</div>
-			
+
+			<div className=' d-flex w-100 justify-content-between border-bottom border-2 m-0 p-2 pb-0 '>
+				<h2>{area?.nom}</h2>
+				<ArrowBack
+					fontSize='large'
+					className={` m-1 ${isPlanificationOpen ? 'd-none' : ''}`}
+					onClick={() => {
+						navigation('/gestion/metas');
+					}}
+				/>
+			</div>
 
 			<div className=' h-100   '>
 				<Row className=' d-flex ' style={{ height: '80%' }}>

@@ -50,7 +50,7 @@ const FormLogin = () => {
 				confirmButtonText: 'Ok',
 				timer: 2000,
 			});
-			navigate('/');
+			navigate('/gestion');
 		}
 	};
 
