@@ -16,9 +16,9 @@ const PrivateLayout = ({ children }: any) => {
 	}, [isLogged, navigation]);
 
 	return (
-		<div className=' vh-100'>
+		<div className=' vh-100' style={{ backgroundColor: '#efe6e6' }}>
 			<NavBar />
-			<div className=' h-100 '>
+			<div className=' h-100 ' style={{ backgroundColor: '#efe6e6' }} >
 				{children}
 				<Outlet />
 			</div>

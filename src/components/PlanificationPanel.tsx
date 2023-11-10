@@ -12,7 +12,7 @@ import Form from 'react-bootstrap/Form';
 import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, BorderColor } from '@mui/icons-material';
 import Swal from 'sweetalert2';
 
 type Props = {
@@ -219,19 +219,28 @@ export default function PlanificationPanel({
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<div className='ConteinerTitle d-flex justify-content-between align-items-center mb-2 '>
-				<h4 className=' text-break m-2'>{name}</h4>
+			<div className='d-flex justify-content-between align-items-center mb-2 mx-2 '>
+				<h4 className=' text-break m-2 border-3 ' style={{ borderBottom: '2px solid #0a5d52' }}>
+					{name}
+				</h4>
 				{isFormOpen && (
 					<ArrowBack
 						fontSize={'large'}
-						className='m-1'
+						className='m-1 rounded'
+						style={{ background: '#0a5d52', color: 'white' }}
+						color='primary'
 						onClick={() => {
 							handleShow2();
 						}}
 					/>
 				)}
 				{!isFormOpen && (
-					<ArrowBack fontSize='large' className=' m-1' onClick={() => handleShow2()} />
+					<ArrowBack
+						fontSize='large'
+						className='m-1 rounded'
+						style={{ background: '#0a5d52', color: 'white' }}
+						onClick={() => handleShow2()}
+					/>
 				)}
 			</div>
 			{motCancel !== null && (
