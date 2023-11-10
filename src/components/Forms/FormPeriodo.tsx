@@ -36,12 +36,12 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
   const [listaFechasPuntuales, setListaFechasPuntuales] = useState<
     { idFecha: number | null; fecha: string | null }[]
   >(estadoActualizado.listaFechasPuntuales ?? []);
-  const [rangeStart, setRangeStart] = useState<Date>(
-    new Date(estadoActualizado.fechaDesde?.split("-").join("/") ?? "2023/01/01")
+  const [rangeStart, setRangeStart] = useState<Date |null >(
+    estadoActualizado.fechaDesde ? new Date(estadoActualizado.fechaDesde?.split("-").join("/") ) : null
   );
 
-  const [rangeEnd, setRangeEnd] = useState<Date>(
-    new Date(estadoActualizado.fechaHasta?.split("-").join("/") ?? "2023/12/31")
+  const [rangeEnd, setRangeEnd] = useState<Date |null >(
+    estadoActualizado.fechaHasta ? new Date(estadoActualizado.fechaHasta?.split("-").join("/") ) : null
   );
 
 
@@ -191,7 +191,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 								locale='es'
 								selectsStart
 								dateFormat='dd/MM/yyyy'
-								selected={rangeStart}
+								selected={rangeStart ?? '' }
 								minDate={new Date('2023/01/01')}
 								maxDate={new Date(indexDates[0]?.fecha?.split('-').join('/') ?? '2080-01-01')}
 								startDate={rangeStart}
@@ -205,7 +205,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 								selectsEnd
 								locale='es'
 								dateFormat='dd/MM/yyyy'
-								selected={rangeEnd}
+								selected={rangeEnd ?? ''}
 								startDate={rangeStart}
 								endDate={rangeEnd}
 								minDate={
@@ -249,6 +249,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 							placeholderText='Seleccione una fecha'
 							onChange={selectDateHandler}
 							highlightDates={highlightSelectedDates()}
+							disabled={!rangeStart || !rangeEnd}
 						/>
 					</div>
 					<div className='ConteinerDaysSelected m-2 ms-0'>
