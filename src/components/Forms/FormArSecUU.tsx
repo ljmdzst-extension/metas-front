@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { CARGAR_RELACION } from "../../redux/reducers/ActivityReducer";
 import { guardarActividad } from "../../redux/actions/putActividad";
 import { Row, Col } from "react-bootstrap"
 const animatedComponents = makeAnimated();
@@ -25,7 +24,7 @@ interface listaProgramasSIPPE {
   nom: string;
   subProgramaDe: string | null;
 }
-export default function FormArSecUU({ onClose }: FormArSecUUrops) {
+export default function FormArSecUU({  }: FormArSecUUrops) {
   const dispatch = useDispatch();
   const [relaciones, setRelaciones] = useState<Relacion[]>([]);
   const [sippe, setSippe] = useState<listaProgramasSIPPE[]>([]);
@@ -38,9 +37,7 @@ number[]
 const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<
 number[]
 >([]);
-const [relacionesSeleccionadas, setRelacionesSeleccionadas] = useState<
-number[]
->([]);
+
 const [sippeSeleccionadas, setSippeSeleccionadas] = useState<
 number[]
 >([]);

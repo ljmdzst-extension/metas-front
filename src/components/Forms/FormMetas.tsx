@@ -35,7 +35,7 @@ const defaultNuevaMeta = {
 	valoracion: null,
 };
 
-const FormMetas = ({ onClose }: FormMetasProps) => {
+const FormMetas = ({  }: FormMetasProps) => {
 	const dispatch = useDispatch();
 	const [listadoMetas, setListadoMetas] = useState<metas[]>([]);
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);

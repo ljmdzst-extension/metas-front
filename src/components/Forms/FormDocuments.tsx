@@ -17,7 +17,7 @@ interface FormOrgInstProps {
   onClose: () => void;
 }
 
-export default function FormOrgInst({ onClose }: FormOrgInstProps) {
+export default function FormOrgInst({  }: FormOrgInstProps) {
 
   const dispatch = useDispatch();
   const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>([]);
