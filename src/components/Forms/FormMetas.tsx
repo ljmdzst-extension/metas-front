@@ -32,7 +32,7 @@ const defaultNuevaMeta = {
 	descripcion: '',
 	resultado: '',
 	observaciones: '',
-	valoracion: 0,
+	valoracion: null,
 };
 
 const FormMetas = ({ onClose }: FormMetasProps) => {
@@ -162,7 +162,7 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 		return text.substring(0, limit);
 	};
 
-	const valoracionesText = (idValoracion: number) => {
+	const valoracionesText = (idValoracion: number ) => {
 		const valoracion = valoraciones?.find((valoracion) => valoracion.idValoracion === idValoracion);
 		return valoracion?.nom;
 	};
@@ -197,7 +197,7 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 								<td>{limitTextString(meta.descripcion ?? '', 10)}</td>
 								<td>{limitTextString(meta.resultado ?? '', 30)}</td>
 								<td>{limitTextString(meta.observaciones ?? '', 30)}</td>
-								<td>{valoracionesText(meta.valoracion ?? '')}</td>
+								<td>{valoracionesText(meta.valoracion ?? 0)}</td>
 								<td>
 									<VisibilityIcon
 										id={`metaLabel-${meta.idMeta}`}
@@ -243,7 +243,7 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 						as='textarea'
 						name='descripcion'
 						className='ParrafoDescripcion'
-						placeholder={'Descripción'}
+						placeholder={'Meta/resultado esperado'}
 						value={nuevaMeta.descripcion ?? ''}
 						onChange={(e) => {
 							setNuevaMeta({ ...nuevaMeta, descripcion: e.target.value });
@@ -255,7 +255,7 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 							rows={4}
 							name='editResultado'
 							className='ParrafoResultado'
-							placeholder={'Resultado'}
+							placeholder={'Resultado alcanzado'}
 							value={nuevaMeta.resultado ?? ''}
 							onChange={(e) => {
 								setNuevaMeta({ ...nuevaMeta, resultado: e.target.value });
@@ -275,7 +275,9 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 							rows={4}
 							name='editObservaciones'
 							className='ParrafoObservaciones'
-							placeholder={'Observaciones'}
+							placeholder={
+								'Observaciones (puede incorporarse cualquier detalle o información adicional que complemente los resultados alcanzados. También pueden ingresarse links a documentos o recursos anexo).'
+							}
 							value={nuevaMeta.observaciones ?? ''}
 							onChange={(e) => {
 								setNuevaMeta({ ...nuevaMeta, observaciones: e.target.value });
@@ -291,15 +293,14 @@ const FormMetas = ({ onClose }: FormMetasProps) => {
 					</Form.Group>
 					<Form.Select
 						name='valoracion'
-						className='ParrafoObservaciones'
-						placeholder={'Valoración'}
-						value={nuevaMeta.valoracion ?? ''}
+						className={`ParrafoObservaciones ${ nuevaMeta.valoracion === -1 ? 'placeholder-option' : ''}}`}
+						value={nuevaMeta.valoracion ?? -1}
 						onChange={(e) => {
 							setNuevaMeta({ ...nuevaMeta, valoracion: parseInt(e.target.value) });
 						}}
 					>
-						<option key={'nn'} value={''}>
-							Seleccione
+						<option key={'nn'} value={-1} disabled  className=' placeholder-option '  >
+							Valoración general de la actividad y los resultados alcanzados
 						</option>
 						{valoraciones?.map((valoracion) => (
 							<option

@@ -175,9 +175,9 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 	}
 
 	return (
-		<div className=' contenedor-forms mx-3 '>
-			<Row className=' justify-content-around'>
-				<Col className=' border rounded border-black ' xs={7}>
+		<div className=' contenedor-forms mx-3 mb-0 pb-0'>
+			<Row className=" mb-2" >
+				<Col  style={{ borderRight: '2px solid #acafb3' }} xs={7}>
 					<h4 className=' text-center mt-2'>Seleccionar Periodo</h4>
 					<p>
 						Período que abarca desde el inicio de la planificación hasta la fecha de realización de
@@ -234,7 +234,7 @@ export default function FormPeriodo({ onClose }: FormPeriodoProps) {
 							))}
 					</div>
 				</Col>
-				<Col className=' border rounded border-black  ' xs={5}>
+				<Col className='  ' xs={5}>
 					<h4 className=' text-center mt-2'>Seleccionar Fechas Puntuales</h4>
 					<p>
 						Seleccione si la actividad se realiza en una fecha puntual (recuerde que debe estar en

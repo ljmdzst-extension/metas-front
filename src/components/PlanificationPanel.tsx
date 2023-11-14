@@ -191,6 +191,13 @@ export default function PlanificationPanel({
 		});
 	};
 
+	const acomodarStringFecha = (fecha: string) => {
+		// entra fecha formato aaaa-mm-dd y sale dd/mm/aaaa
+		const fechaSplit = fecha.split('-');
+		const fechaString = `${fechaSplit[2]}/${fechaSplit[1]}/${fechaSplit[0]}`;
+		return fechaString;
+	};
+
 	return (
 		<div className=' w-100 h-100'>
 			<Modal show={show2} onHide={handleClose2}>
@@ -264,7 +271,8 @@ export default function PlanificationPanel({
 			)}
 			{!isFormOpen ? (
 				<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
-					<div className=' h-50 '>
+					<div className=' h-50 w-75 '>
+						<h3>Informacion importante de la actividad</h3>
 						<h5>
 							{/* url ubicaciones */}
 							{estadoActualizado?.listaUbicaciones &&
@@ -299,7 +307,9 @@ export default function PlanificationPanel({
 							{estadoActualizado.fechaDesde && estadoActualizado.fechaHasta ? (
 								<p>
 									<span>Periodo:</span>{' '}
-									{`${estadoActualizado.fechaDesde} / ${estadoActualizado.fechaHasta}`}
+									{`${acomodarStringFecha(estadoActualizado.fechaHasta)} - ${acomodarStringFecha(
+										estadoActualizado.fechaDesde,
+									)}`}
 								</p>
 							) : (
 								<p>

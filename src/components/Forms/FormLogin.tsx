@@ -1,12 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginAsync } from '../../redux/actions/authAction';
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form } from 'react-bootstrap';
-import { AppDispatch } from '../../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import Swal from 'sweetalert2';
 
 interface FormLoginProps {
@@ -21,6 +21,7 @@ const initialValues: FormLoginProps = {
 
 const FormLogin = () => {
 	const dispatch = useDispatch<AppDispatch>();
+	const { loading } = useSelector((state: RootState) => state.authSlice);
 
 	const navigate = useNavigate();
 
@@ -99,8 +100,8 @@ const FormLogin = () => {
 						</Form.Group>
 
 						<div className='d-flex justify-content-center'>
-							<Button type='submit' className='btn btn-primary'>
-								Iniciar
+							<Button variant='primary' type='submit' className='btn btn-primary' disabled={loading}>
+								{loading ? 'Ingresando...' : 'Ingresar'}
 							</Button>
 						</div>
 
