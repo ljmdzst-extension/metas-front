@@ -9,7 +9,7 @@ import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
@@ -115,6 +115,11 @@ export default function Activity() {
 	};
 
 	const selectCurrentForm = (formName: string) => {
+		if (currentFormSelected === '') {
+			setCurrentFormSelected(formName);
+			return;
+		}
+
 		Swal.fire({
 			title: '¿Estás seguro?',
 			text: 'Se perderán los cambios no guardados',

@@ -12,8 +12,15 @@ import Form from 'react-bootstrap/Form';
 import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
-import { ArrowBack, BorderColor } from '@mui/icons-material';
+import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
+
+interface UbicacionProps {
+	idUbicacion: number | null;
+	idActividad: number | null;
+	nom: string;
+	enlace: string | null;
+}
 
 type Props = {
 	name: string;
@@ -219,7 +226,7 @@ export default function PlanificationPanel({
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<div className='d-flex justify-content-between align-items-center mb-2 mx-2 '>
+			<div className='d-flex justify-content-between align-items-center mb-2 border-bottom '>
 				<h4 className=' text-break m-2 border-3 ' style={{ borderBottom: '2px solid #0a5d52' }}>
 					{name}
 				</h4>
@@ -257,12 +264,49 @@ export default function PlanificationPanel({
 			)}
 			{!isFormOpen ? (
 				<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
-					Posible vista resumen en desarrollo
-					<div>
-						<h4>
-							<span>Fechas:</span>
-							<p>{`Inicio ${estadoActualizado.fechaDesde} / Fin ${estadoActualizado.fechaHasta}`}</p>
-						</h4>
+					<div className=' h-50 '>
+						<h5>
+							{/* url ubicaciones */}
+							{estadoActualizado?.listaUbicaciones &&
+							estadoActualizado?.listaUbicaciones.length > 0 ? (
+								<>
+									<span>Ubicaciones:</span>
+									<ul>
+										{estadoActualizado?.listaUbicaciones.map((item: UbicacionProps) => (
+											<li key={item.idUbicacion}>
+												{item.nom}{' '}
+												{item.enlace && (
+													<a
+														href={item.enlace}
+														target='_blank'
+														rel='noreferrer'
+														className='link text-secondary text-decoration-underline '
+													>
+														Ver en mapa
+													</a>
+												)}
+											</li>
+										))}
+									</ul>
+								</>
+							) : (
+								<p>
+									<span>Ubicación:</span> No definida
+								</p>
+							)}
+						</h5>
+						<h5>
+							{estadoActualizado.fechaDesde && estadoActualizado.fechaHasta ? (
+								<p>
+									<span>Periodo:</span>{' '}
+									{`${estadoActualizado.fechaDesde} / ${estadoActualizado.fechaHasta}`}
+								</p>
+							) : (
+								<p>
+									<span>Periodo:</span> No definido
+								</p>
+							)}
+						</h5>
 					</div>
 					{motCancel === null ? (
 						<div className=' d-flex justify-content-around w-100'>

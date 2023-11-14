@@ -80,20 +80,26 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
 		// Alerta con iframe y video de youtube
 		Swal.fire({
 			title: 'Ubicaciones',
-			html: `
+			html: ` 
 				<p>
 					Utilice la herramienta de Google Maps para insertar el enlace de la ubicación de la
 					actividad. Si necesita ayuda, consulte en este video.
 				</p>
 				<p>Si necesita ayuda para compartir el enlace, consulte el siguiente video.</p>
-			<iframe width="560" height="315" src="https://www.youtube.com/embed/KoN9aRs6a4E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`,
+			<iframe width="600" height="355" 
+				src="https://www.youtube.com/embed/KoN9aRs6a4E" 
+				title="YouTube video player" 
+				allow="fullscreen;" 
+				frameborder="0" 
+				allow="accelerometer; 
+				autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`,
 			confirmButtonText: 'Cerrar',
 			width: '80%',
 		});
 	};
 
 	return (
-		<div className=' d-flex flex-column border '>
+		<div className=' d-flex flex-column  '>
 			<div className=' m-2 mx-4 '>
 				<div className=' mt-2'>
 					<div className='Descripcion'>
@@ -125,8 +131,8 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = ({
 				<div className=' mt-2'>
 					<div className=' d-flex justify-content-between mb-2'>
 						<h5>Ubicación:</h5>
-						<Button variant='secondary' size='sm' onClick={AlertBuscarUbicaciones}>
-							¿Cómo buscar ubicaciones?
+						<Button variant='info' size='sm' onClick={AlertBuscarUbicaciones}>
+							¿Cómo buscar link de ubicación?
 						</Button>
 					</div>
 					<InputGroup className=' gap-1'>

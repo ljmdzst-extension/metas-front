@@ -41,7 +41,7 @@ export default function NavBar() {
 							className='me-2'
 						/>{' '}
 					</a>
-					<a href='/'>Secretaría de extensión y cultura</a>
+					<a href='/'>Secretaría de Extensión y Cultura</a>
 				</Navbar.Brand>
 				<Nav>
 					{isLogged ? (
