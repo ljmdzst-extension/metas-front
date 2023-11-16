@@ -48,7 +48,7 @@ const FormMetas = ({  }: FormMetasProps) => {
 	useEffect(() => {
 		const getValoraciones = async () => {
 			try {
-				const response = await axios.get('http://168.197.50.94:4005/metas/v2/bases/');
+				const response = await axios.get('http://168.197.50.94:4005/api/v2/metas/bases/');
 				if (response.data.ok) {
 					setValoraciones(response.data.data.listaValoraciones);
 				} else {
@@ -74,10 +74,9 @@ const FormMetas = ({  }: FormMetasProps) => {
 	useEffect(() => {
 		const actualizarRedux = () => {
 			dispatch({
-				type: 'UPDATE_ACTIVIDAD',
+				type: 'CARGAR_META',
 				payload: {
-					...estadoActualizado,
-					listaMetas: listadoMetas,
+					metas : listadoMetas
 				},
 			});
 		};

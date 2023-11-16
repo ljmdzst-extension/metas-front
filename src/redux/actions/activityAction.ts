@@ -94,6 +94,7 @@ export interface CargarDatosActividadAction {
           descripcion: string | null;
           resultado: string | null;
           observaciones: string | null;
+          valoracion : number | null;
         }[]
       | null;
     listaProgramasSIPPE: number[] | null;
@@ -112,6 +113,9 @@ export interface CargarDatosActividadAction {
     listaFechasPuntuales:
       | { idFecha: number | null; fecha: string | null }[]
       | null;
+    listaInstituciones:
+      | { idInstitucion : number |null, nom : string | null , ubicacion : string | null}[]
+      | null;
     idActividad: number;
   };
 }
@@ -122,7 +126,7 @@ export const CargarDatosActividadAction = createAsyncThunk(
   async (id: number) => {
     try {
       const response = await fetch(
-        `http://168.197.50.94:4005/metas/v2/actividad/${id}`
+        `http://168.197.50.94:4005/api/v2/metas/actividad/${id}`
       );
       if (!response.ok) {
         throw new Error("Error al cargar los datos de actividad");

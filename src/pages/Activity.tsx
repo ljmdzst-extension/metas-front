@@ -61,7 +61,7 @@ export default function Activity() {
 
 	const postActivity = async function (data: Data) {
 		axios
-			.post('http://168.197.50.94:4005/metas/v2/actividad', data)
+			.post('http://168.197.50.94:4005/api/v2/metas/actividad', data)
 			.then(() => {
 				mostrarActividades();
 			})
@@ -96,7 +96,7 @@ export default function Activity() {
 
 	const mostrarActividades = async function () {
 		axios
-			.get(`http://168.197.50.94:4005/metas/v2/areas/${idArea}/actividades`)
+			.get(`http://168.197.50.94:4005/api/v2/metas/areas/${idArea}/actividades`)
 			.then((response) => {
 				const actividades = response.data;
 				setArrayActivity(actividades.data);
@@ -240,7 +240,7 @@ export default function Activity() {
 									// }}
 									key={index}
 									onClick={() => {
-										if (isPlanificationOpen === true) {
+										if (isPlanificationOpen) {
 											handleShow2();
 											setNameActivityAux(`${item.desc}`);
 										} else {

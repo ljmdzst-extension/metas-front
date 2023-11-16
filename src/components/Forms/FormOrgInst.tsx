@@ -53,12 +53,12 @@ export default function FormOrgInst({  }:FormOrgInst) {
   useEffect(() => {
 		const debounce = setTimeout(() => {
 			if (name.length) {
-				fetch(`http://168.197.50.94:4005/metas/v2/bases/instituciones/${name}/0/10`)
+				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones/${name}/0/10`)
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(data.data))
 					.catch((error) => console.log(error));
 			} else if (arraySearchInstitucion.length === 0 && name.length === 0) {
-				fetch(`http://168.197.50.94:4005/metas/v2/bases/instituciones`)
+				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones`)
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(data.data))
 					.catch((error) => console.log(error));

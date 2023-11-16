@@ -120,7 +120,13 @@ const actividadSlice = createSlice({
     CARGAR_META: (
       state,
       action : PayloadAction<{
-        metas : { idMeta : number |null, descripcion : string | null , observaciones : string | null, resultado : string | null, valoracion : number | null}[]
+        metas : { 
+          idMeta : number |null, 
+          descripcion : string | null , 
+          observaciones : string | null, 
+          resultado : string | null, 
+          valoracion : number | null
+        }[]
       }>
     )=>{
       state.listaMetas = action.payload.metas
@@ -154,6 +160,7 @@ const actividadSlice = createSlice({
           listaUbicaciones: action.payload.listaUbicaciones,
           listaEnlaces: action.payload.listaEnlaces,
           listaFechasPuntuales: action.payload.listaFechasPuntuales,
+          listaInstituciones : action.payload.listaInstituciones
         };
       }
     );
