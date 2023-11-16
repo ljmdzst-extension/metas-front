@@ -5,13 +5,17 @@ interface AuthState {
 	token: string;
 	loading: boolean;
 	error: string | null | undefined;
+	isLogged: boolean;
 }
 
+const user = localStorage.getItem('user');
+const token = localStorage.getItem('token');
 const initialState: AuthState = {
-	user: '',
-	token: '',
+	user: user ?? '',
+	token: token ?? '',
 	loading: false,
 	error: null,
+	isLogged: !!token,
 };
 
 const authSlice = createSlice({
@@ -23,6 +27,7 @@ const authSlice = createSlice({
 			state.token = '';
 			state.loading = false;
 			state.error = null;
+			state.isLogged = false;
 			console.log('usuario deslogueado');
 		},
 		loginFailed(state, action: PayloadAction<string>) {
@@ -30,10 +35,6 @@ const authSlice = createSlice({
 			state.token = '';
 			state.loading = false;
 			state.error = action.payload;
-		},
-		setUserData(state, action: PayloadAction<{ user: string; token: string }>) {
-			state.user = action.payload.user;
-			state.token = action.payload.token;
 		},
 	},
 	extraReducers: (builder) => {
@@ -44,6 +45,7 @@ const authSlice = createSlice({
 		builder.addCase(loginAsync.fulfilled, (state, action) => {
 			console.log(action.payload);
 			state.loading = false;
+			state.isLogged = true;
 			state.user = action.payload.nom + ' ' + action.payload.ape;
 			state.token = action.payload.token;
 		});
@@ -81,6 +83,6 @@ const authSlice = createSlice({
 	},
 });
 
-export const { logout, loginFailed, setUserData } = authSlice.actions;
+export const { logout, loginFailed } = authSlice.actions;
 
 export default authSlice.reducer;

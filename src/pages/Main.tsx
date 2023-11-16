@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import CardYear from '../components/CardYear';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
-import { logout, setUserData } from '../redux/reducers/AuthReducer';
+import { logout } from '../redux/reducers/AuthReducer';
 import { authAsync } from '../redux/actions/authAction';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
@@ -35,22 +35,19 @@ export default function Main() {
 				if (authAsync.fulfilled.match(action)) {
 					const { token } = action.payload;
 					localStorage.setItem('token', token);
-					dispatch(setUserData({ user, token }));
 				}
 			}
 		};
-		
+
 		checkUser();
-	}, []);
+	}, [dispatch, navigate]);
 
 	return (
-		<>
-			<div className=''>
-				<div className='ConteinerCards '>
-					{/* <CardYear title={"2022"}></CardYear> */}
-					<CardYear title={'2023'}></CardYear>
-				</div>
+		<div className=''>
+			<div className='ConteinerCards '>
+				{/* <CardYear title={"2022"}></CardYear> */}
+				<CardYear title={'2023'}></CardYear>
 			</div>
-		</>
+		</div>
 	);
 }

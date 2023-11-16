@@ -9,7 +9,7 @@ import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
-import { Col,  Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
@@ -61,23 +61,22 @@ export default function Activity() {
 
 	const postActivity = async function (data: Data) {
 		axios
-			.post('http://168.197.50.94:4005/metas/v2/actividad', data)
+			.post('http://168.197.50.94:4005/api/v2/metas/actividad', data)
 			.then(() => {
 				mostrarActividades();
 			})
 			.catch((error) => console.log(error));
 	};
 
-	const getArea = () => {
-		const localArea = localStorage.getItem('currentArea');
-		if (localArea && JSON.parse(localArea).idArea === parseInt(idArea ?? '0', 10)) {
-			setArea(JSON.parse(localArea));
-		} else {
-			navigation('/');
-		}
-	};
-
 	useEffect(() => {
+		const getArea = () => {
+			const localArea = localStorage.getItem('currentArea');
+			if (localArea && JSON.parse(localArea).idArea === parseInt(idArea ?? '0', 10)) {
+				setArea(JSON.parse(localArea));
+			} else {
+				navigation('/gestion/metas');
+			}
+		};
 		getArea();
 	}, []);
 
@@ -97,7 +96,7 @@ export default function Activity() {
 
 	const mostrarActividades = async function () {
 		axios
-			.get(`http://168.197.50.94:4005/metas/v2/areas/${idArea}/actividades`)
+			.get(`http://168.197.50.94:4005/api/v2/metas/areas/${idArea}/actividades`)
 			.then((response) => {
 				const actividades = response.data;
 				setArrayActivity(actividades.data);
@@ -116,6 +115,11 @@ export default function Activity() {
 	};
 
 	const selectCurrentForm = (formName: string) => {
+		if (currentFormSelected === '') {
+			setCurrentFormSelected(formName);
+			return;
+		}
+
 		Swal.fire({
 			title: '¿Estás seguro?',
 			text: 'Se perderán los cambios no guardados',
@@ -188,140 +192,134 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
-			
-				<div className=' d-flex w-100 justify-content-between border-bottom border-2 m-0 p-2 pb-0 '>
-					<h2>{area?.nom}</h2>
-					<ArrowBack
-						fontSize='large'
-						className={` m-1 ${isPlanificationOpen ? 'd-none' : ''}`}
-						onClick={() => {
-							navigation('/');
-						}}
-					/>
-				</div>
-			
 
-			<div className=' h-100   '>
-				<Row className=' d-flex ' style={{ height: '80%' }}>
-					{!isPlanificationOpen ? (
-						<Col
-							sm={3}
-							className=' position-relative h-100 d-flex flex-column border-end border-2 '
+			<div className=' d-flex justify-content-between border border-2 rounded-3 m-0 p-2 pb-0 mx-2 my-1 bg-white '>
+				<h2 className=' fw-bold' style={{ color: '#0a5d52' }}>
+					{area?.nom}
+				</h2>
+				<ArrowBack
+					fontSize='large'
+					className={` m-1 rounded ${isPlanificationOpen ? 'd-none' : ''}`}
+					style={{ background: '#0a5d52', color: 'white' }}
+					onClick={() => {
+						navigation('/gestion/metas');
+					}}
+				/>
+			</div>
+
+			<div className=' d-flex justify-content-around gap-2  mx-3  ' style={{height: '80%'}}>
+				{!isPlanificationOpen ? (
+					<Col
+						sm={3}
+						className=' position-relative h-100 d-flex flex-column border-end border-2 bg-white rounded-3 '
+					>
+						<Button
+							variant='outline-success'
+							style={{ position: 'absolute', bottom: '10px', right: '10px' }}
+							onClick={handleShow}
 						>
-							<Button
-								variant='outline-success'
-								style={{ position: 'absolute', bottom: '10px', right: '10px' }}
-								onClick={handleShow}
-							>
-								Agregar Actividad
-							</Button>
-							<h4 className=' text-center m-2'>Listado de Actividades</h4>
-							<ListGroup>
-								{arrayActivity.map((item, index) => (
-									<ListGroup.Item
-										action
-										variant='secondary'
-										title={item.desc}
+							Agregar Actividad
+						</Button>
+						<h4 className=' text-center m-2'>Listado de Actividades</h4>
+						<ListGroup className=' mx-2'>
+							{arrayActivity.map((item, index) => (
+								<ListGroup.Item
+									action
+									variant='secondary'
+									title={item.desc}
+									className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
+									
+									// style={{
+									// 	width: '100%',
+									// 	borderRadius: '10px',
+									// 	display: 'flex',
+									// 	justifyContent: 'center',
+									// 	alignItems: 'center',
+									// 	margin: '5px',
+									// 	cursor: 'pointer',
+									// }}
+									key={index}
+									onClick={() => {
+										if (isPlanificationOpen) {
+											handleShow2();
+											setNameActivityAux(`${item.desc}`);
+										} else {
+											setIsPlanificationOpen(!isPlanificationOpen);
+											setNameActivity(`${item.desc}`);
+											handleButtonClick(item.idActividad);
+										}
+									}}
+								>
+									<span
 										style={{
-											width: '100%',
-											borderRadius: '10px',
-											display: 'flex',
-											justifyContent: 'center',
-											alignItems: 'center',
-											margin: '5px',
-											cursor: 'pointer',
-										}}
-										key={index}
-										onClick={() => {
-											if (isPlanificationOpen) {
-												handleShow2();
-												setNameActivityAux(`${item.desc}`);
-											} else {
-												setIsPlanificationOpen(!isPlanificationOpen);
-												setNameActivity(`${item.desc}`);
-												handleButtonClick(item.idActividad);
-											}
+											textOverflow: 'ellipsis',
+											overflow: 'hidden',
+											fontWeight: 'normal',
+											whiteSpace: 'nowrap',
 										}}
 									>
-										<span
-											style={{
-												textOverflow: 'ellipsis',
-												overflow: 'hidden',
-												fontWeight: 'normal',
-												whiteSpace: 'nowrap',
-											}}
-										>
-											{item.desc}
-										</span>
-									</ListGroup.Item>
-								))}
-							</ListGroup>
-						</Col>
-					) : (
-						<Col
-							sm={3}
-							className=' position-relative h-100 d-flex flex-column border-end border-2 '
-						>
-							<h4 className=' text-center m-2'>Formulario</h4>
-							<ListGroup>
-								{formData.map((item, index) => (
-									<ListGroup.Item
-										action
-										variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
-										title={item.Title}
+										{item.desc}
+									</span>
+								</ListGroup.Item>
+							))}
+						</ListGroup>
+					</Col>
+				) : (
+					<Col
+						sm={3}
+						className=' position-relative h-100 d-flex flex-column border-end border-2 rounded-3 bg-white  '
+					>
+						<h4 className=' text-center m-2'>Formulario</h4>
+						<ListGroup className=' mx-2 '>
+							{formData.map((item, index) => (
+								<ListGroup.Item
+									action
+									variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
+									title={item.Title}
+									className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
+									key={index}
+									onClick={() => {
+										selectCurrentForm(item.index);
+									}}
+								>
+									<span
 										style={{
-											width: '100%',
-											borderRadius: '10px',
-											display: 'flex',
-											justifyContent: 'center',
-											alignItems: 'center',
-											margin: '5px',
-											cursor: 'pointer',
-										}}
-										key={index}
-										onClick={() => {
-											selectCurrentForm(item.index);
+											textOverflow: 'ellipsis',
+											overflow: 'hidden',
+											fontWeight: 'normal',
+											whiteSpace: 'nowrap',
 										}}
 									>
-										<span
-											style={{
-												textOverflow: 'ellipsis',
-												overflow: 'hidden',
-												fontWeight: 'normal',
-												whiteSpace: 'nowrap',
-											}}
-										>
-											{item.Title}
-										</span>
-									</ListGroup.Item>
-								))}
-							</ListGroup>
-						</Col>
-					)}
-					{!isPlanificationOpen && (
-						<Col sm={9}>
-							<Row>
-								<Col className='MenuOptions'>
-									<div className='Options'>Carga de Presupuesto</div>
-								</Col>
-								<Col className='MenuOptions'>
-									<div className='Options'>Ver Resumen y Gráficos</div>
-								</Col>
-							</Row>
-						</Col>
-					)}
+										{item.Title}
+									</span>
+								</ListGroup.Item>
+							))}
+						</ListGroup>
+					</Col>
+				)}
+				{!isPlanificationOpen && (
+					<Col sm={9} className=' bg-white border-2 rounded-3 bg-white'>
+						<Row>
+							<Col className='MenuOptions'>
+								<div className='Options'>Carga de Presupuesto</div>
+							</Col>
+							<Col className='MenuOptions'>
+								<div className='Options'>Ver Resumen y Gráficos</div>
+							</Col>
+						</Row>
+					</Col>
+				)}
 
-					{isPlanificationOpen && (
-						<Col sm={9} className=' mt-2'>
-							<PlanificationPanel
-								name={nameActivity}
-								closePlanification={closePlanification}
-								currentFormSelected={currentFormSelected}
-								cleanFormSelected={cleanFormSelected}
-							/>
-						</Col>
-					)}
-				</Row>
+				{isPlanificationOpen && (
+					<Col sm={9} className='border-2 bg-white rounded-3'>
+						<PlanificationPanel
+							name={nameActivity}
+							closePlanification={closePlanification}
+							currentFormSelected={currentFormSelected}
+							cleanFormSelected={cleanFormSelected}
+						/>
+					</Col>
+				)}
 			</div>
 		</>
 	);

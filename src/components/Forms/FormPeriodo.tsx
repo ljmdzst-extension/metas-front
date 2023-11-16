@@ -36,12 +36,12 @@ export default function FormPeriodo({  }: FormPeriodoProps) {
   const [listaFechasPuntuales, setListaFechasPuntuales] = useState<
     { idFecha: number | null; fecha: string | null }[]
   >(estadoActualizado.listaFechasPuntuales ?? []);
-  const [rangeStart, setRangeStart] = useState<Date>(
-    new Date(estadoActualizado.fechaDesde?.split("-").join("/") ?? "2023/01/01")
+  const [rangeStart, setRangeStart] = useState<Date |null >(
+    estadoActualizado.fechaDesde ? new Date(estadoActualizado.fechaDesde?.split("-").join("/") ) : null
   );
 
-  const [rangeEnd, setRangeEnd] = useState<Date>(
-    new Date(estadoActualizado.fechaHasta?.split("-").join("/") ?? "2023/12/31")
+  const [rangeEnd, setRangeEnd] = useState<Date |null >(
+    estadoActualizado.fechaHasta ? new Date(estadoActualizado.fechaHasta?.split("-").join("/") ) : null
   );
 
 
@@ -175,9 +175,9 @@ export default function FormPeriodo({  }: FormPeriodoProps) {
 	// }
 
 	return (
-		<div className=' contenedor-forms mx-3 '>
-			<Row className=' justify-content-around'>
-				<Col className=' border rounded border-black ' xs={7}>
+		<div className=' contenedor-forms mx-3 mb-0 pb-0'>
+			<Row className=" mb-2" >
+				<Col  style={{ borderRight: '2px solid #acafb3' }} xs={7}>
 					<h4 className=' text-center mt-2'>Seleccionar Periodo</h4>
 					<p>
 						Período que abarca desde el inicio de la planificación hasta la fecha de realización de
@@ -191,7 +191,7 @@ export default function FormPeriodo({  }: FormPeriodoProps) {
 								locale='es'
 								selectsStart
 								dateFormat='dd/MM/yyyy'
-								selected={rangeStart}
+								selected={rangeStart ?? '' }
 								minDate={new Date('2023/01/01')}
 								maxDate={new Date(indexDates[0]?.fecha?.split('-').join('/') ?? '2080-01-01')}
 								startDate={rangeStart}
@@ -205,7 +205,7 @@ export default function FormPeriodo({  }: FormPeriodoProps) {
 								selectsEnd
 								locale='es'
 								dateFormat='dd/MM/yyyy'
-								selected={rangeEnd}
+								selected={rangeEnd ?? ''}
 								startDate={rangeStart}
 								endDate={rangeEnd}
 								minDate={
@@ -234,7 +234,7 @@ export default function FormPeriodo({  }: FormPeriodoProps) {
 							))}
 					</div>
 				</Col>
-				<Col className=' border rounded border-black  ' xs={5}>
+				<Col className='  ' xs={5}>
 					<h4 className=' text-center mt-2'>Seleccionar Fechas Puntuales</h4>
 					<p>
 						Seleccione si la actividad se realiza en una fecha puntual (recuerde que debe estar en
@@ -249,6 +249,7 @@ export default function FormPeriodo({  }: FormPeriodoProps) {
 							placeholderText='Seleccione una fecha'
 							onChange={selectDateHandler}
 							highlightDates={highlightSelectedDates()}
+							disabled={!rangeStart || !rangeEnd}
 						/>
 					</div>
 					<div className='ConteinerDaysSelected m-2 ms-0'>

@@ -5,6 +5,10 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { guardarActividad } from "../../redux/actions/putActividad";
+import Swal from "sweetalert2"
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { ListGroup } from "react-bootstrap"
 interface FormDescriptionUbicationProps {
   onClose: () => void;
 }
@@ -70,99 +74,103 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
     newUbicaciones.splice(index, 1);
     setUbicaciones(newUbicaciones);
   };
-	return (
-		<div className='FormDescription d-flex m-0 p-0 '>
-			<div className='ConteinerGrande'>
-				<div className='ConteinerDescriptionMetas'>
-					<div className='ConteinerDescripcion'>
-						<div className='Descripcion'>
-							<p> Descripción: </p>
+	const AlertBuscarUbicaciones = () => {
+		// Alerta con iframe y video de youtube
+		Swal.fire({
+			title: 'Ubicaciones',
+			html: ` 
+				<p>
+					Utilice la herramienta de Google Maps para insertar el enlace de la ubicación de la
+					actividad. Si necesita ayuda, consulte en este video.
+				</p>
+				<p>Si necesita ayuda para compartir el enlace, consulte el siguiente video.</p>
+			<iframe width="600" height="355" 
+				src="https://www.youtube.com/embed/KoN9aRs6a4E" 
+				title="YouTube video player" 
+				allow="fullscreen;" 
+				frameborder="0" 
+				allow="accelerometer; 
+				autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`,
+			confirmButtonText: 'Cerrar',
+			width: '80%',
+		});
+	};
 
-							<InputGroup className='mb-3 gap-1'>
-								<Form.Control
-									as='textarea'
-									rows={3}
-									style={{ resize: 'none' }}
-									aria-label='Inserte descripción'
-									aria-describedby='basic-addon2'
-									onChange={handleDescripcionChange}
-									disabled={!editandoDescripcion}
-									value={descripcion}
-								/>
-								<Button
-									variant='secondary'
-									id='button-addon2'
-									style={{ width: '50px', height: '50px' }}
-									onClick={handleClickEditarDescripcion}
-								>
-									<img
-										src={`../assets/img/${!editandoDescripcion ? 'boton-editar' : 'guardar'}.png`}
-										className='imgboton'
-										alt='editar'
-									/>
-								</Button>
-							</InputGroup>
-						</div>
+	return (
+		<div className=' d-flex flex-column  '>
+			<div className=' m-2 mx-4 '>
+				<div className=' mt-2'>
+					<div className='Descripcion'>
+						<h5> Descripción: </h5>
+
+						<InputGroup className='mb-3 gap-1'>
+							<Form.Control
+								as='textarea'
+								rows={3}
+								style={{ resize: 'none' }}
+								aria-label='Inserte descripción'
+								aria-describedby='basic-addon2'
+								onChange={handleDescripcionChange}
+								disabled={!editandoDescripcion}
+								value={descripcion}
+							/>
+							<Button
+								variant='secondary'
+								id='button-addon2'
+								style={{ width: '50px', height: '100px' }}
+								onClick={handleClickEditarDescripcion}
+							>
+								<EditIcon />
+							</Button>
+						</InputGroup>
 					</div>
-					<p>
-						Utilice la herramienta de Google Maps para insertar el enlace de la ubicación de la
-						actividad. Si necesita ayuda, consulte en este video.
-					</p>
-					<p>
-						Si necesita ayuda para compartir el enlace, consulte el siguiente{' '}
-						<a
-							href='https://www.youtube.com/watch?v=KoN9aRs6a4E'
-							target='_blank'
-							rel='noopener noreferrer'
-							className=' cursor-pointer text-decoration-underline'
-						>
-							video
-						</a>
-						.
-					</p>
-					<div className='ConteinerUbicacion'>
-						<div className='Ubicacion'>
-							<span className='SubtituloMetas'>Ubicación:</span>
-							<InputGroup className=' gap-1'>
-								<Form.Control
-									placeholder='Inserte link de ubicación'
-									aria-label='Inserte link de ubicación'
-									aria-describedby='basic-addon2'
-									onChange={handleUbicacionInputChange}
-									value={ubicacion}
-								/>
-								<Button variant='outline-success' id='button-addon2' onClick={agregarUbicacion}>
-									Agregar Ubicación
-								</Button>
-							</InputGroup>
-						</div>
-					</div>
-					{ubicaciones.map((ubicacion, index) => (
-						<div className='ConteinerUbicacion' key={index}>
-							<div className='Ubicacion'>
-								<InputGroup className='mb-3 gap-1'>
-									<Form.Control
-										placeholder={ubicacion.enlace ?? ''}
-										aria-label='Inserte link de ubicación'
-										aria-describedby='basic-addon2'
-										readOnly
-									/>
-									<Button
-										variant='danger'
-										id='button-addon2'
-										onClick={() => eliminarUbicacion(index)}
-									>
-										<img src='../assets/img/eliminar.png' className='imgboton' alt='eliminar' />
-									</Button>
-								</InputGroup>
-							</div>
-						</div>
-					))}
 				</div>
+
+				<div className=' mt-2'>
+					<div className=' d-flex justify-content-between mb-2'>
+						<h5>Ubicación:</h5>
+						<Button variant='info' size='sm' onClick={AlertBuscarUbicaciones}>
+							¿Cómo buscar link de ubicación?
+						</Button>
+					</div>
+					<InputGroup className=' gap-1'>
+						<Form.Control
+							placeholder='Inserte link de ubicación'
+							aria-label='Inserte link de ubicación'
+							aria-describedby='basic-addon2'
+							onChange={handleUbicacionInputChange}
+							value={ubicacion}
+						/>
+						<Button variant='outline-success' id='button-addon2' onClick={agregarUbicacion}>
+							Agregar Ubicación
+						</Button>
+					</InputGroup>
+				</div>
+				<ListGroup style={{ height: '150px', maxHeight: '150px', overflowY: 'auto' }}>
+					{ubicaciones.map((ubicacion, index) => (
+						<ListGroup.Item
+							key={index}
+							className=' d-flex justify-content-between w-75 align-self-center'
+							variant='secondary'
+						>
+							{ubicacion.enlace ?? ''}
+							<DeleteIcon
+								onClick={() => eliminarUbicacion(index)}
+								style={{
+									borderRadius: '20%',
+									backgroundColor: 'red',
+									color: 'white',
+									cursor: 'pointer',
+								}}
+							/>
+						</ListGroup.Item>
+					))}
+				</ListGroup>
 			</div>
+
 			<Button
 				variant='success'
-				className='Save m-2'
+				className='m-2 w-auto align-self-center '
 				onClick={() => {
 					guardarActividad(
 						{ ...estadoActualizado, desc: descripcion, listaUbicaciones: ubicaciones },

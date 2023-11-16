@@ -32,7 +32,7 @@ const defaultNuevaMeta = {
 	descripcion: '',
 	resultado: '',
 	observaciones: '',
-	valoracion: 0,
+	valoracion: null,
 };
 
 const FormMetas = ({  }: FormMetasProps) => {
@@ -48,7 +48,7 @@ const FormMetas = ({  }: FormMetasProps) => {
 	useEffect(() => {
 		const getValoraciones = async () => {
 			try {
-				const response = await axios.get('http://168.197.50.94:4005/metas/v2/bases/');
+				const response = await axios.get('http://168.197.50.94:4005/api/v2/metas/bases/');
 				if (response.data.ok) {
 					setValoraciones(response.data.data.listaValoraciones);
 				} else {
@@ -74,10 +74,9 @@ const FormMetas = ({  }: FormMetasProps) => {
 	useEffect(() => {
 		const actualizarRedux = () => {
 			dispatch({
-				type: 'UPDATE_ACTIVIDAD',
+				type: 'CARGAR_META',
 				payload: {
-					...estadoActualizado,
-					listaMetas: listadoMetas,
+					metas : listadoMetas
 				},
 			});
 		};
@@ -162,7 +161,7 @@ const FormMetas = ({  }: FormMetasProps) => {
 		return text.substring(0, limit);
 	};
 
-	const valoracionesText = (idValoracion: number) => {
+	const valoracionesText = (idValoracion: number ) => {
 		const valoracion = valoraciones?.find((valoracion) => valoracion.idValoracion === idValoracion);
 		return valoracion?.nom;
 	};
@@ -243,7 +242,7 @@ const FormMetas = ({  }: FormMetasProps) => {
 						as='textarea'
 						name='descripcion'
 						className='ParrafoDescripcion'
-						placeholder={'Descripción'}
+						placeholder={'Meta/resultado esperado'}
 						value={nuevaMeta.descripcion ?? ''}
 						onChange={(e) => {
 							setNuevaMeta({ ...nuevaMeta, descripcion: e.target.value });
@@ -255,7 +254,7 @@ const FormMetas = ({  }: FormMetasProps) => {
 							rows={4}
 							name='editResultado'
 							className='ParrafoResultado'
-							placeholder={'Resultado'}
+							placeholder={'Resultado alcanzado'}
 							value={nuevaMeta.resultado ?? ''}
 							onChange={(e) => {
 								setNuevaMeta({ ...nuevaMeta, resultado: e.target.value });
@@ -275,7 +274,9 @@ const FormMetas = ({  }: FormMetasProps) => {
 							rows={4}
 							name='editObservaciones'
 							className='ParrafoObservaciones'
-							placeholder={'Observaciones'}
+							placeholder={
+								'Observaciones (puede incorporarse cualquier detalle o información adicional que complemente los resultados alcanzados. También pueden ingresarse links a documentos o recursos anexo).'
+							}
 							value={nuevaMeta.observaciones ?? ''}
 							onChange={(e) => {
 								setNuevaMeta({ ...nuevaMeta, observaciones: e.target.value });
@@ -291,15 +292,14 @@ const FormMetas = ({  }: FormMetasProps) => {
 					</Form.Group>
 					<Form.Select
 						name='valoracion'
-						className='ParrafoObservaciones'
-						placeholder={'Valoración'}
-						value={nuevaMeta.valoracion ?? ''}
+						className={`ParrafoObservaciones ${ nuevaMeta.valoracion === -1 ? 'placeholder-option' : ''}}`}
+						value={nuevaMeta.valoracion ?? -1}
 						onChange={(e) => {
 							setNuevaMeta({ ...nuevaMeta, valoracion: parseInt(e.target.value) });
 						}}
 					>
-						<option key={'nn'} value={''}>
-							Seleccione
+						<option key={'nn'} value={-1} disabled  className=' placeholder-option '  >
+							Valoración general de la actividad y los resultados alcanzados
 						</option>
 						{valoraciones?.map((valoracion) => (
 							<option

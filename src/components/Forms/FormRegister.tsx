@@ -4,8 +4,8 @@ import * as Yup from 'yup';
 import { Button, Col, Form, FormSelect, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { RegisterProps } from '../../types/AuthProps';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
 import { registerAsync } from '../../redux/actions/authAction';
 import Swal from 'sweetalert2';
 
@@ -18,6 +18,7 @@ const FormRegister = () => {
 	const [unidadesAcademicas, setUnidadesAcademicas] = React.useState([]);
 
 	const dispatch = useDispatch<AppDispatch>();
+	const { loading } = useSelector((state: RootState) => state.authSlice);
 
 	const validations = Yup.object().shape({
 		dni: Yup.string().required('Campo requerido'),
@@ -224,8 +225,8 @@ const FormRegister = () => {
 						</Row>
 
 						<div className='d-flex justify-content-center'>
-							<Button type='submit' className='btn btn-primary'>
-								Registrarse
+							<Button variant='primary' type='submit' className='btn-primary' disabled={loading}>
+								{loading ? 'Registrando...' : 'Registrarse'}
 							</Button>
 						</div>
 

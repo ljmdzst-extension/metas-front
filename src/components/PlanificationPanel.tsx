@@ -15,6 +15,13 @@ import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
 
+interface UbicacionProps {
+	idUbicacion: number | null;
+	idActividad: number | null;
+	nom: string;
+	enlace: string | null;
+}
+
 type Props = {
 	name: string;
 	currentFormSelected: string;
@@ -47,7 +54,7 @@ export default function PlanificationPanel({
 	};
 
 	const suspenderActividad = (data: any) => {
-		fetch('http://168.197.50.94:4005/metas/v2/actividad/cancel', {
+		fetch('http://168.197.50.94:4005/api/v2/metas/actividad/cancel', {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
@@ -66,7 +73,7 @@ export default function PlanificationPanel({
 		console.log(data);
 	};
 	const eliminarActividad = () => {
-		fetch('http://168.197.50.94:4005/metas/v2/actividad', {
+		fetch('http://168.197.50.94:4005/api/v2/metas/actividad', {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -184,6 +191,13 @@ export default function PlanificationPanel({
 		});
 	};
 
+	const acomodarStringFecha = (fecha: string) => {
+		// entra fecha formato aaaa-mm-dd y sale dd/mm/aaaa
+		const fechaSplit = fecha.split('-');
+		const fechaString = `${fechaSplit[2]}/${fechaSplit[1]}/${fechaSplit[0]}`;
+		return fechaString;
+	};
+
 	return (
 		<div className=' w-100 h-100'>
 			<Modal show={show2} onHide={handleClose2}>
@@ -219,19 +233,28 @@ export default function PlanificationPanel({
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<div className='ConteinerTitle d-flex justify-content-between align-items-center mb-2 '>
-				<h4 className=' text-break m-2'>{name}</h4>
+			<div className='d-flex justify-content-between align-items-center mb-2 border-bottom '>
+				<h4 className=' text-break m-2 border-3 ' style={{ borderBottom: '2px solid #0a5d52' }}>
+					{name}
+				</h4>
 				{isFormOpen && (
 					<ArrowBack
 						fontSize={'large'}
-						className='m-1'
+						className='m-1 rounded'
+						style={{ background: '#0a5d52', color: 'white' }}
+						color='primary'
 						onClick={() => {
 							handleShow2();
 						}}
 					/>
 				)}
 				{!isFormOpen && (
-					<ArrowBack fontSize='large' className=' m-1' onClick={() => handleShow2()} />
+					<ArrowBack
+						fontSize='large'
+						className='m-1 rounded'
+						style={{ background: '#0a5d52', color: 'white' }}
+						onClick={() => handleShow2()}
+					/>
 				)}
 			</div>
 			{motCancel !== null && (
@@ -248,12 +271,52 @@ export default function PlanificationPanel({
 			)}
 			{!isFormOpen ? (
 				<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
-					Posible vista resumen en desarrollo
-					<div>
-						<h4>
-							<span>Fechas:</span>
-							<p>{`Inicio ${estadoActualizado.fechaDesde} / Fin ${estadoActualizado.fechaHasta}`}</p>
-						</h4>
+					<div className=' h-50 w-75 '>
+						<h3>Informacion importante de la actividad</h3>
+						<h5>
+							{/* url ubicaciones */}
+							{estadoActualizado?.listaUbicaciones &&
+							estadoActualizado?.listaUbicaciones.length > 0 ? (
+								<>
+									<span>Ubicaciones:</span>
+									<ul>
+										{estadoActualizado?.listaUbicaciones.map((item: UbicacionProps) => (
+											<li key={item.idUbicacion}>
+												{item.nom}{' '}
+												{item.enlace && (
+													<a
+														href={item.enlace}
+														target='_blank'
+														rel='noreferrer'
+														className='link text-secondary text-decoration-underline '
+													>
+														Ver en mapa
+													</a>
+												)}
+											</li>
+										))}
+									</ul>
+								</>
+							) : (
+								<p>
+									<span>Ubicación:</span> No definida
+								</p>
+							)}
+						</h5>
+						<h5>
+							{estadoActualizado.fechaDesde && estadoActualizado.fechaHasta ? (
+								<p>
+									<span>Periodo:</span>{' '}
+									{`${acomodarStringFecha(estadoActualizado.fechaHasta)} - ${acomodarStringFecha(
+										estadoActualizado.fechaDesde,
+									)}`}
+								</p>
+							) : (
+								<p>
+									<span>Periodo:</span> No definido
+								</p>
+							)}
+						</h5>
 					</div>
 					{motCancel === null ? (
 						<div className=' d-flex justify-content-around w-100'>

@@ -3,7 +3,7 @@ import { CargarDatosActividadAction } from './activityAction';
 import Swal from 'sweetalert2';
 
 export const guardarActividad = (dato: any, dispatch: AppDispatch) => {
-	fetch('http://168.197.50.94:4005/metas/v2/actividad', {
+	fetch('http://168.197.50.94:4005/api/v2/metas/actividad', {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
