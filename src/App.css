@@ -450,7 +450,6 @@ input.form-check-input:checked {
 .text-guide {
 	font-size: 0.8rem;
 	font-style: italic;
-	
 }
 
 /*Form ObjetivoEstrategico*/
@@ -818,7 +817,63 @@ th {
 	margin: 10px 0;
 }
 
-.placeholder-option{
+.placeholder-option {
 	color: green;
 }
 
+/* scrollbar custom */
+
+
+
+.custom-scrollbar::-webkit-scrollbar {
+	width: 10px;
+	border-radius: 5px;
+
+	/* 
+	El scrollbar es la barra de desplazamiento 
+	
+	*/
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+	background: white;
+	border-radius: 5px;
+	/* 
+	El track es la barra gris que se ve en el fondo 
+		de la barra de desplazamiento 
+	*/
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background: #888;
+	border-radius: 5px;
+	background-clip: padding-box;
+	border: 3px solid transparent;
+	margin-right: 3px;
+	/*
+	El thumb es la barra de desplazamiento
+	*/
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: #555;
+	background-clip: padding-box;
+
+}
+
+.complete-title-label {
+	color: white;
+	background-color: #08443c;
+	padding: 5px;
+	border-radius: 5px;
+	animation: fade-in .2s ease-in-out;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}

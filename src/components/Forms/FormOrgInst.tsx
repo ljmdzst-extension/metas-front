@@ -1,81 +1,90 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import { Form } from "react-bootstrap";
-import Table from "react-bootstrap/Table";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import { guardarActividad } from "../../redux/actions/putActividad";
+import React, { useEffect } from 'react';
+import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import { Form } from 'react-bootstrap';
+import Table from 'react-bootstrap/Table';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { guardarActividad } from '../../redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
 type Institucion = {
-  idInstitucion:number | null,
-  nom: string | null;
-  ubicacion: string | null;
+	idInstitucion: number | null;
+	nom: string | null;
+	ubicacion: string | null;
 };
 interface FormOrgInst {
-  onClose: () => void;
+	onClose: () => void;
 }
-export default function FormOrgInst({  }:FormOrgInst) {
-  const dispatch = useDispatch();
-  const estadoActualizado = useSelector(
-    (state: RootState) => state.actividadSlice
-  );
-  const [arrayInstitucion, setArrayInstitucion] = useState<Institucion[]>( estadoActualizado.listaInstituciones || [] );
-  const [arraySearchInstitucion, setArraySearchInstitucion] = useState<Institucion[]>( [] );
-  const [searchInstitucion, setSearchInstitucion] = useState<Institucion |undefined>( undefined );
-  
-  const [name, setName] = useState("");
-  const [ubicacion, setUbicacion] = useState("");
-  const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setArrayInstitucion([
-      ...arrayInstitucion,
-      {idInstitucion : 0, nom: name, ubicacion},
-    ]);
-    setName("");
-    setUbicacion("");
-  };
-  const eliminarInstitucion = (index:number | null) => {
-    console.log(index);
-    if(index !== null) {
-     setArrayInstitucion(arrayInstitucion.filter((item,i) => item && i !== index));
-    }
-  };
+export default function FormOrgInst({}: FormOrgInst) {
+	const dispatch = useDispatch();
+	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const [arrayInstitucion, setArrayInstitucion] = useState<Institucion[]>(
+		estadoActualizado.listaInstituciones || [],
+	);
+	const [arraySearchInstitucion, setArraySearchInstitucion] = useState<Institucion[]>([]);
+	const [searchInstitucion, setSearchInstitucion] = useState<Institucion | undefined>(undefined);
 
-  useEffect(() => {
-    if(searchInstitucion && arrayInstitucion.every( inst => inst.nom !== searchInstitucion.nom)){
-      
-      setArrayInstitucion([...arrayInstitucion,searchInstitucion]);
-    }
-  }, [searchInstitucion])
-  
+	const [name, setName] = useState('');
+	const [ubicacion, setUbicacion] = useState('');
+	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		setArrayInstitucion([...arrayInstitucion, { idInstitucion: 0, nom: name, ubicacion }]);
+		setName('');
+		setUbicacion('');
+	};
+	const eliminarInstitucion = (index: number | null) => {
+		console.log(index);
+		if (index !== null) {
+			setArrayInstitucion(arrayInstitucion.filter((item, i) => item && i !== index));
+		}
+	};
 
-  useEffect(() => {
-		const debounce = setTimeout(() => {
-			if (name.length) {
-				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones/${name}/0/10`)
-					.then((resp) => resp.json())
-					.then((data) => data.ok && setArraySearchInstitucion(data.data))
-					.catch((error) => console.log(error));
-			} else if (arraySearchInstitucion.length === 0 && name.length === 0) {
+	useEffect(() => {
+		if (searchInstitucion && arrayInstitucion.every((inst) => inst.nom !== searchInstitucion.nom)) {
+			setArrayInstitucion([...arrayInstitucion, searchInstitucion]);
+		}
+	}, [searchInstitucion]);
+
+	const filterInstitucion = (data: Institucion[]) => {
+		// Borrar los que no tienen ubicacion
+		const newData = data.filter((inst) => inst.ubicacion !== 'NULL');
+		console.log(newData);
+		return newData;
+	};
+
+	useEffect(() => {
+		let debounce: any;
+		if (name.length === 0) {
+			debounce = setTimeout(() => {
 				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones`)
 					.then((resp) => resp.json())
-					.then((data) => data.ok && setArraySearchInstitucion(data.data))
+					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
 					.catch((error) => console.log(error));
-			}
-		}, 500);
+			}, 1000);
+		} else {
+			debounce = setTimeout(() => {
+				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones/${name}/0/10`)
+					.then((resp) => resp.json())
+					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
+					.catch((error) => console.log(error));
+			}, 3000);
+		}
 		return () => clearTimeout(debounce);
-	}, [name , arraySearchInstitucion]);
+	}, [name]);
 
-  const handleInstChange = (e :React.ChangeEvent<any>)=>{
-    e.preventDefault();
-    setSearchInstitucion( arraySearchInstitucion.find( inst => inst.nom === e.currentTarget.value )  )
-    
-    if(!searchInstitucion) {
-      setName(e.currentTarget.value);
-    }
-    
-  }
+	const handleInstChange = (e: React.ChangeEvent<any>) => {
+		e.preventDefault();
+		setSearchInstitucion(arraySearchInstitucion.find((inst) => inst.nom === e.currentTarget.value));
+
+		if (!searchInstitucion) {
+			setName(e.currentTarget.value);
+		}
+	};
+
+	const isUrlValid = (url: string) => {
+		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+		return urlPattern.test(url);
+	};
 
 	return (
 		<div className=' d-flex flex-column m-2'>
@@ -103,6 +112,12 @@ export default function FormOrgInst({  }:FormOrgInst) {
 						placeholder='Nombre de la institucion'
 						onChange={(e) => handleInstChange(e)}
 						list='listSearchInstituciones'
+						onBlur={(e) => {
+							if (arraySearchInstitucion?.some((inst) => inst.nom === e.target.value)) {
+								e.target.value = '';
+								setName('');
+							}
+						}}
 					/>
 					<datalist id='listSearchInstituciones'>
 						{arraySearchInstitucion?.map((inst, i) => (
@@ -118,9 +133,15 @@ export default function FormOrgInst({  }:FormOrgInst) {
 						placeholder='Ubicacion'
 						value={ubicacion}
 						onChange={(e) => setUbicacion(e.target.value)}
+						isInvalid={ubicacion.length > 0 && !isUrlValid(ubicacion)}
 					/>
 				</div>
-				<Button variant='success' className='SaveChange mx-auto mt-2 ' type='submit'>
+				<Button
+					variant='success'
+					className='SaveChange mx-auto mt-2 '
+					type='submit'
+					disabled={name.length === 0 || ubicacion.length === 0 || !isUrlValid(ubicacion)}
+				>
 					Agregar
 				</Button>
 			</Form>
