@@ -1,79 +1,72 @@
-import React, { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import { guardarActividad } from "../../redux/actions/putActividad";
-import Swal from "sweetalert2"
+import React, { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { guardarActividad } from '../../redux/actions/putActividad';
+import Swal from 'sweetalert2';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { ListGroup } from "react-bootstrap"
+import { ListGroup } from 'react-bootstrap';
 interface FormDescriptionUbicationProps {
-  onClose: () => void;
+	onClose: () => void;
 }
 const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => {
+	const dispatch = useDispatch();
 
-  const dispatch = useDispatch();
+	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const [editandoDescripcion, setEditandoDescripcion] = useState(false);
+	const [descripcion, setDescripcion] = useState<string>(estadoActualizado.desc ?? '');
 
-  const estadoActualizado = useSelector(
-    (state: RootState) => state.actividadSlice
-  );
-  const [editandoDescripcion, setEditandoDescripcion] = useState(false);
-  const [descripcion, setDescripcion] = useState<string>(
-    estadoActualizado.desc ?? ""
-  );
+	const [ubicacion, setUbicacion] = useState<string>('');
+	const [ubicaciones, setUbicaciones] = useState<
+		{
+			idUbicacion: number | null;
+			nom: string | null;
+			idActividad: number | null;
+			enlace: string | null;
+		}[]
+	>([]);
 
-  const [ubicacion, setUbicacion] = useState<string>("");
-  const [ubicaciones, setUbicaciones] = useState<{ 
-    idUbicacion: number | null; 
-    nom : string | null; 
-    idActividad: number | null; 
-    enlace: string | null; 
-  }[]>([]);
+	useEffect(() => {
+		if (estadoActualizado.listaUbicaciones) {
+			setUbicaciones(estadoActualizado.listaUbicaciones);
+		}
+	}, []);
 
-  useEffect(() => {
-    if (estadoActualizado.listaUbicaciones) {
-      setUbicaciones(estadoActualizado.listaUbicaciones);
-    }
-  }, []);
+	const handleDescripcionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setDescripcion(event.target.value);
+	};
 
-  const handleDescripcionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setDescripcion(event.target.value);
-  };
+	const handleUbicacionInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setUbicacion(event.target.value);
+	};
 
-  const handleUbicacionInputChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setUbicacion(event.target.value);
-  };
+	const agregarUbicacion = () => {
+		if (ubicacion.trim() !== '') {
+			const nuevaUbicacion = {
+				idUbicacion: 0,
+				idActividad: null,
+				nom: '',
+				enlace: ubicacion,
+			};
 
-  const agregarUbicacion = () => {
-    if (ubicacion.trim() !== "") {
-      const nuevaUbicacion = {
-        idUbicacion: 0,
-        idActividad: null,
-        nom : '',
-        enlace: ubicacion,
-      };
-  
-      setUbicaciones([...ubicaciones, nuevaUbicacion]);
-      setUbicacion("");
-    }
-  };
+			setUbicaciones([...ubicaciones, nuevaUbicacion]);
+			setUbicacion('');
+		}
+	};
 
-  const handleClickEditarDescripcion = ( event : React.MouseEvent<HTMLButtonElement, MouseEvent> )=>{
-    event.preventDefault();
-    setEditandoDescripcion(!editandoDescripcion);
-  }
+	const handleClickEditarDescripcion = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		event.preventDefault();
+		setEditandoDescripcion(!editandoDescripcion);
+	};
 
-  const eliminarUbicacion = (index: number) => {
-    const newUbicaciones = [...ubicaciones];
-    newUbicaciones.splice(index, 1);
-    setUbicaciones(newUbicaciones);
-  };
+	const eliminarUbicacion = (index: number) => {
+		const newUbicaciones = [...ubicaciones];
+		newUbicaciones.splice(index, 1);
+		setUbicaciones(newUbicaciones);
+	};
 	const AlertBuscarUbicaciones = () => {
 		// Alerta con iframe y video de youtube
 		Swal.fire({
@@ -94,6 +87,11 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 			confirmButtonText: 'Cerrar',
 			width: '80%',
 		});
+	};
+
+	const isUrlValid = (url: string) => {
+		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+		return urlPattern.test(url);
 	};
 
 	return (
@@ -140,8 +138,15 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 							aria-describedby='basic-addon2'
 							onChange={handleUbicacionInputChange}
 							value={ubicacion}
+							isInvalid={ubicacion !== '' && !isUrlValid(ubicacion)}
 						/>
-						<Button variant='outline-success' id='button-addon2' onClick={agregarUbicacion}>
+						
+						<Button
+							variant='success'
+							id='button-addon2'
+							onClick={agregarUbicacion}
+							disabled={ubicacion === '' || !isUrlValid(ubicacion)}
+						>
 							Agregar Ubicación
 						</Button>
 					</InputGroup>

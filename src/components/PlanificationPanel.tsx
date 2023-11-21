@@ -204,6 +204,7 @@ export default function PlanificationPanel({
 		return fechaString;
 	};
 
+
 	return (
 		<div className=' w-100 h-100'>
 			<Modal show={show2} onHide={handleClose2}>
@@ -247,7 +248,9 @@ export default function PlanificationPanel({
 					onMouseLeave={toggleHover}
 				>
 					{name.length > 80 ? name.slice(0, 80) + '...' : name}
-					{isTittleHover && <div className='complete-title-label position-absolute top-0 mt-1 me-5'>{name}</div>}
+					{isTittleHover && (
+						<div className='complete-title-label position-absolute top-0 mt-1 me-5'>{name}</div>
+					)}
 				</h4>
 				{isFormOpen && (
 					<ArrowBack
