@@ -207,7 +207,7 @@ export default function Activity() {
 				/>
 			</div>
 
-			<div className=' d-flex justify-content-around gap-2  mx-3  ' style={{height: '80%'}}>
+			<div className=' d-flex justify-content-around gap-2  mx-3  ' style={{ height: '80%' }}>
 				{!isPlanificationOpen ? (
 					<Col
 						sm={3}
@@ -220,49 +220,50 @@ export default function Activity() {
 						>
 							Agregar Actividad
 						</Button>
-						<h4 className=' text-center m-2'>Listado de Actividades</h4>
-						<ListGroup className=' mx-2'>
-							{arrayActivity.map((item, index) => (
-								<ListGroup.Item
-									action
-									variant='secondary'
-									title={item.desc}
-									className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
-									
-									// style={{
-									// 	width: '100%',
-									// 	borderRadius: '10px',
-									// 	display: 'flex',
-									// 	justifyContent: 'center',
-									// 	alignItems: 'center',
-									// 	margin: '5px',
-									// 	cursor: 'pointer',
-									// }}
-									key={index}
-									onClick={() => {
-										if (isPlanificationOpen) {
-											handleShow2();
-											setNameActivityAux(`${item.desc}`);
-										} else {
-											setIsPlanificationOpen(!isPlanificationOpen);
-											setNameActivity(`${item.desc}`);
-											handleButtonClick(item.idActividad);
-										}
-									}}
-								>
-									<span
-										style={{
-											textOverflow: 'ellipsis',
-											overflow: 'hidden',
-											fontWeight: 'normal',
-											whiteSpace: 'nowrap',
+						<h4 className=' text-center m-2 '>Listado de Actividades</h4>
+						<div className='custom-scrollbar me-1' style={{ maxHeight: '80%', overflow: 'auto' }}>
+							<ListGroup className='mx-2 custom-scrollbar'>
+								{arrayActivity.map((item, index) => (
+									<ListGroup.Item
+										action
+										variant='secondary'
+										title={item.desc}
+										className='text-break mx-auto my-1   rounded d-flex justify-content-center align-items-center '
+										// style={{
+										// 	width: '100%',
+										// 	borderRadius: '10px',
+										// 	display: 'flex',
+										// 	justifyContent: 'center',
+										// 	alignItems: 'center',
+										// 	margin: '5px',
+										// 	cursor: 'pointer',
+										// }}
+										key={index}
+										onClick={() => {
+											if (isPlanificationOpen) {
+												handleShow2();
+												setNameActivityAux(`${item.desc}`);
+											} else {
+												setIsPlanificationOpen(!isPlanificationOpen);
+												setNameActivity(`${item.desc}`);
+												handleButtonClick(item.idActividad);
+											}
 										}}
 									>
-										{item.desc}
-									</span>
-								</ListGroup.Item>
-							))}
-						</ListGroup>
+										<span
+											style={{
+												textOverflow: 'ellipsis',
+												overflow: 'hidden',
+												fontWeight: 'normal',
+												whiteSpace: 'nowrap',
+											}}
+										>
+											{item.desc}
+										</span>
+									</ListGroup.Item>
+								))}
+							</ListGroup>
+						</div>
 					</Col>
 				) : (
 					<Col
