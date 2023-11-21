@@ -60,14 +60,14 @@ export default function FormOrgInst({}: FormOrgInst) {
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
 					.catch((error) => console.log(error));
-			}, 500);
+			}, 1000);
 		} else {
 			debounce = setTimeout(() => {
 				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones/${name}/0/10`)
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
 					.catch((error) => console.log(error));
-			}, 500);
+			}, 3000);
 		}
 		return () => clearTimeout(debounce);
 	}, [name]);
