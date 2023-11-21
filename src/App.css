@@ -860,3 +860,20 @@ th {
 	background-clip: padding-box;
 
 }
+
+.complete-title-label {
+	color: white;
+	background-color: #08443c;
+	padding: 5px;
+	border-radius: 5px;
+	animation: fade-in .2s ease-in-out;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
