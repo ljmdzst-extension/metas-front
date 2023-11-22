@@ -16,7 +16,7 @@ function App() {
 	return (
 		<Routes>
 			<Route path='/' element={<Layout />}>
-				<Route index element={<h2>Pagina principal</h2>} />
+				<Route index element={<Main />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/register/validation/:validationString' element={<Confirm />} />

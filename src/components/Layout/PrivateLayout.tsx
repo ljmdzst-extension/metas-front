@@ -10,9 +10,9 @@ const PrivateLayout = ({ children }: any) => {
 	const navigation = useNavigate();
 
 	useEffect(() => {
-		if (!isLogged) {
-			navigation('/login');
-		}
+		// if (!isLogged) {
+		// 	navigation('/login');
+		// }
 	}, [isLogged, navigation]);
 
 	return (
