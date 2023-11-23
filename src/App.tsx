@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import PrivateLayout from './components/Layout/PrivateLayout';
 import Management from './pages/Management';
+import Help from './pages/Help';
 
 function App() {
 	return (
@@ -20,6 +21,7 @@ function App() {
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/register/validation/:validationString' element={<Confirm />} />
+				<Route path='/ayuda' element={<Help />} />
 			</Route>
 			<Route path='/gestion' element={<PrivateLayout />}>
 				<Route index element={<Management />} />
