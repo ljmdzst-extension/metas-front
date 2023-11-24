@@ -1,11 +1,11 @@
 import useAvailableHeight from '../../hooks/useAvailableHeight';
 
-interface GeneralPanelProps {
-	childrenSidebar: React.ReactNode;
-	childrenContent: React.ReactNode;
-}
+import SideBarNav from './component/SideBarNav';
 
-const GeneralPanel = ({ childrenSidebar, childrenContent }: GeneralPanelProps) => {
+import formExampleA from '../../mock/formAExample.json';
+
+
+const GeneralPanel = () => {
 	const availableHeight = useAvailableHeight();
 
 	return (
@@ -16,10 +16,12 @@ const GeneralPanel = ({ childrenSidebar, childrenContent }: GeneralPanelProps) =
 			className='d-flex gap-2 p-2'
 		>
 			<div className=' bg-color-slate rounded ' style={{ width: 300 }}>
-				{childrenSidebar}
+				<SideBarNav data={formExampleA} />
 			</div>
 			<div className='bg-color-slate rounded' style={{ flexGrow: 1 }}>
-				{childrenContent}
+				<div className='bg-color-white rounded p-2'>
+					<h1>Formulario</h1>
+				</div>
 			</div>
 		</div>
 	);
