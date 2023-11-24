@@ -25,8 +25,7 @@ const Management = () => {
 						variant='outline-secondary'
 						className=' w-100'
 						style={{ height: '50px' }}
-						onClick={() => handlerClick('/gestion/programas')}
-						disabled
+						onClick={() => handlerClick('/gestion/proyectos')}
 					>
 						Proyectos
 					</Button>

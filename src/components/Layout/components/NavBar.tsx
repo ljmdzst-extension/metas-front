@@ -30,7 +30,7 @@ export default function NavBar() {
 	};
 
 	return (
-		<Navbar className='NavBar'>
+		<Navbar className='NavBar' id='header'>
 			<Container>
 				<Navbar.Brand>
 					<a href='https://www.unl.edu.ar/'>

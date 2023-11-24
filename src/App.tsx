@@ -12,6 +12,7 @@ import './App.css';
 import PrivateLayout from './components/Layout/PrivateLayout';
 import Management from './pages/Management';
 import Help from './pages/Help';
+import Proyectos from './pages/Proyectos';
 
 function App() {
 	return (
@@ -27,6 +28,7 @@ function App() {
 				<Route index element={<Management />} />
 				<Route path='metas' element={<Main />} />
 				<Route path='metas/:idPrograma/:idArea' element={<Activity />} />
+				<Route path='proyectos' element={<Proyectos />} />
 			</Route>
 		</Routes>
 	);
