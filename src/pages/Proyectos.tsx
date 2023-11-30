@@ -1,11 +1,11 @@
+import ProjectsList from '../components/List/ProjectsList';
 import GeneralPanel from '../components/Panel/GeneralPanel';
-import SideBarNav from '../components/Panel/component/SideBarNav';
+import SideBarNews from '../components/Panel/component/SideBarNews';
 
-import data from '../mock/formAExample.json';
 
 const Proyectos = () => {
 	// logica de login y roles de usuario?
-	return <GeneralPanel SideBarPanel={<SideBarNav data={data} />} ContentPanel={<div>Panel</div>} />;
+	return <GeneralPanel SideBarPanel={<SideBarNews />} ContentPanel={<ProjectsList />} />;
 };
 
 export default Proyectos;

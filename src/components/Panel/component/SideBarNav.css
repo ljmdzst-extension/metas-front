@@ -50,15 +50,12 @@
 }
 
 .sub-nav-item {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-	overflow-y: auto;
-	overflow-x: hidden;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: 220px;
 	margin: 0 0 0 0;
-	list-style: none;
 	font-size: 0.9rem;
-	line-height: 1.5;
 	color: #333;
 	padding: 2px 4px;
 }

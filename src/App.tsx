@@ -13,6 +13,7 @@ import PrivateLayout from './components/Layout/PrivateLayout';
 import Management from './pages/Management';
 import Help from './pages/Help';
 import Proyectos from './pages/Proyectos';
+import ProjectForm from './pages/ProjectForm';
 
 function App() {
 	return (
@@ -29,6 +30,7 @@ function App() {
 				<Route path='metas' element={<Main />} />
 				<Route path='metas/:idPrograma/:idArea' element={<Activity />} />
 				<Route path='proyectos' element={<Proyectos />} />
+				<Route path='proyectos/:id' element={<ProjectForm />} />
 			</Route>
 		</Routes>
 	);
