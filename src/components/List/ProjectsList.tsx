@@ -57,7 +57,7 @@ const ProjectsList = () => {
 					{currentProjects.map((project) => {
 						return (
 							<tr key={project.id}>
-								<td style={{ fontSize: '10px' }}>{project.codigo}</td>
+								<td style={{ whiteSpace: 'nowrap', fontSize: '10px' }}>{project.codigo}</td>
 								<td style={{ whiteSpace: 'nowrap' }}>{project.fechaCreacion}</td>
 								<td>
 									{project.titulo.length > 75

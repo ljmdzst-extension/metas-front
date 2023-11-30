@@ -20,8 +20,8 @@ const GeneralPanel = ({ ContentPanel, SideBarPanel }: GeneralPanelProps) => {
 			<div className=' bg-color-slate rounded p-2 h-100' style={{ width: 300 }}>
 				{SideBarPanel}
 			</div>
-			<div className=' rounded' style={{ flexGrow: 1 }}>
-				<div className='p-2 bg-color-slate rounded border-2 h-100'>{ContentPanel}</div>
+			<div className=' rounded p-2 bg-color-slate rounded border-2 ' style={{ width: '100%' }}>
+				{ContentPanel}
 			</div>
 		</div>
 	);
