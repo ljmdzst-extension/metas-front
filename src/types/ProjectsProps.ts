@@ -24,3 +24,10 @@ export enum Estado {
 	NoPert = 'NO_PERT',
 	Ok = 'OK',
 }
+
+export interface projectHistoryProps {
+	id: number;
+	desc: string;
+	tipoEstado: string;
+	fechaCreacion: Date;
+}
