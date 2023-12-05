@@ -31,3 +31,21 @@ export interface projectHistoryProps {
 	tipoEstado: string;
 	fechaCreacion: Date;
 }
+
+export interface IntegranteEquipoProps {
+	observ: null;
+	tieneTarjeta: number;
+	lrol: string[];
+	dni: string;
+	ape: string;
+	nom: string;
+	titulo: null | string;
+	email: null | string;
+	dom: null | string;
+	tel: null | string;
+	categoriaDocente: null;
+	categoriaDedicacion: null;
+	unidadAcademica: string;
+	periodoLectivo: null;
+	area: null;
+}
