@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Form, FormGroup, FormSelect, Modal, Row } from 'react-bootstrap';
+import { Col, Container, Form, FormGroup, FormSelect, Modal, Row } from 'react-bootstrap';
 import { IntegranteEquipoProps } from '../../../../types/ProjectsProps';
 
 interface ModalMemberProps {
@@ -36,12 +36,16 @@ export const ModalMember = ({ show, handleClose, editMember, submitMember }: Mod
 					</FormSelect>
 				</FormGroup>
 				{memberType && (
-					<>
-						<p>Formulario de {memberType}</p>
-						<Form className='mt-3'>
-							<Form.Group>
-								<Form.Control type='text' placeholder='DNI' />
-							</Form.Group>
+					<Form className='mt-2'>
+						<Container>
+							<Row>
+								<Col>
+									<Form.Group>
+										<Form.Control type='text' placeholder='DNI' />
+									</Form.Group>
+								</Col>
+								<Col />
+							</Row>
 							<Row>
 								<Col>
 									<Form.Group>
@@ -66,13 +70,85 @@ export const ModalMember = ({ show, handleClose, editMember, submitMember }: Mod
 									</Form.Group>
 								</Col>
 							</Row>
-							<Form.Group>
-								<Form.Control type='email' placeholder='Email' />
-							</Form.Group>
-							{/* Si el miembro es docente, graduado, no doc- no univ */}
-							{ memberType === 'doc' || memberType === 'grad' || memberType === 'noDoc' || memberType === 'noUni' && (<></>)}
-						</Form>
-					</>
+							<Row>
+								<Col>
+									<Form.Group>
+										<Form.Control type='email' placeholder='Email' />
+									</Form.Group>
+								</Col>
+								<Col></Col>
+							</Row>
+							{['doc', 'grad', 'noDoc', 'noUni'].includes(memberType) && (
+								<FormGroup>
+									<Form.Label>Posee tarjeta precargable?</Form.Label>
+									<Form.Check inline label='Si' type='radio' name='precargable' />
+									<Form.Check inline label='No' type='radio' name='precargable' />
+								</FormGroup>
+							)}
+							{['doc', 'est', 'grad'].includes(memberType) && (
+								<Row>
+									<Col>
+										<FormGroup>
+											<Form.Control type='text' placeholder='Titulo' />
+										</FormGroup>
+									</Col>
+									<Col>
+										<FormSelect aria-label='Default select example' name='unidadAcademica'>
+											<option>Unidad Academica</option>
+											<option value='1'>One</option>
+											<option value='2'>Two</option>
+											<option value='3'>Three</option>
+										</FormSelect>
+									</Col>
+								</Row>
+							)}
+							{['doc'].includes(memberType) && (
+								<Row>
+									<Col>
+										<FormSelect aria-label='Default select example' name='categoria'>
+											<option>Categoria</option>
+											<option value='1'>Adjunto</option>
+											<option value='2'>Asociado</option>
+											<option value='3'>Ayudante</option>
+											<option value='4'>JTP</option>
+											<option value='5'>Titular</option>
+										</FormSelect>
+									</Col>
+									<Col>
+										<FormSelect aria-label='Default select example' name='dedicacion'>
+											<option>Dedicacion</option>
+											<option value='1'>Exclusivo</option>
+											<option value='2'>Exclusivo B</option>
+											<option value='3'>Semiexclusivo</option>
+											<option value='4'>Simple</option>
+										</FormSelect>
+									</Col>
+								</Row>
+							)}
+
+							{['est'].includes(memberType) && (
+								<Row>
+									<Col>
+										<FormSelect aria-label='Default select example' name='periodo'>
+											<option>Periodo lectivo</option>
+											<option value='1'>Ciclo Inicial</option>
+											<option value='2'>Ciclo Superior</option>
+										</FormSelect>
+									</Col>
+								</Row>
+							)}
+							{['noDoc'].includes(memberType) && (
+								<Row>
+									<Col>
+										<FormGroup>
+											<Form.Check inline label='Áreas unl' type='radio' name='noDoc' />
+											<Form.Check inline label='Unidad Académica' type='radio' name='noDoc' />
+										</FormGroup>
+									</Col>
+								</Row>
+							)}
+						</Container>
+					</Form>
 				)}
 			</Modal.Body>
 			<Modal.Footer>
