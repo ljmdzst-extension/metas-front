@@ -1,62 +1,57 @@
-import { useEffect, useState } from 'react';
-import { Button, Form, FormSelect, Modal, Table } from 'react-bootstrap';
-import Swal from 'sweetalert2';
-import { IntegranteEquipoProps } from '../../../types/ProjectsProps';
-import { ModalMember } from './components/ModalMember';
+import { useState } from 'react';
 
-interface importanRolesProps {
-	director: string | null;
-	coDirector: string | null;
-	coordinador: string | null;
-	respFinanciero: string | null;
-	Especialista: string[] | null;
-}
+import { Button, Container, Form, FormSelect, Table, Row, Col, FormGroup } from 'react-bootstrap';
+
+import { IntegranteEquipoProps } from '../../../types/ProjectsProps';
+// import { ModalMember } from './components/ModalMember';
+
 const FormMembers = () => {
 	const [members, setMembers] = useState<IntegranteEquipoProps[]>([]);
-	const [show, setShow] = useState(false);
-	const [importanRoles, setImportanRoles] = useState<importanRolesProps>({
-		director: null,
-		coDirector: null,
-		coordinador: null,
-		respFinanciero: null,
-		Especialista: null,
-	});
+	const [memberType, setMemberType] = useState('');
 
-	const handleClose = () => setShow(false);
-	const addMember = (memberData: IntegranteEquipoProps) => {
-		setMembers([...members, memberData]);
+	// const [show, setShow] = useState(false);
+	// const handleClose = () => setShow(false);
+	// const addMember = (memberData: IntegranteEquipoProps) => {
+	// 	setMembers([...members, memberData]);
+	// };
+
+	const handleMemberType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setMemberType(e.target.value);
 	};
 
-	useEffect(() => {
-		const addRolesToMembers = () => {
-			if (members.length > 0) {
-				const updatedMembers = members.map((member) => {
-					if (importanRoles.director === member.dni) {
-						return { ...member, lrol: ['Director'] };
-					} else if (importanRoles.coDirector === member.dni) {
-						return { ...member, lrol: ['Co-Director'] };
-					} else if (importanRoles.coordinador === member.dni) {
-						return { ...member, lrol: ['Coordinador'] };
-					} else if (importanRoles.respFinanciero === member.dni) {
-						return { ...member, lrol: ['Responsable Financiero'] };
-					} else if (importanRoles.Especialista?.includes(member.dni)) {
-						return { ...member, lrol: ['Especialista'] };
-					} else {
-						return member;
-					}
-				});
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		console.log('submit');
+		e.preventDefault();
 
-				setMembers(updatedMembers);
-			}
+		const formData = new FormData(e.currentTarget);
+		const newMember: IntegranteEquipoProps = {
+			dni: formData.get('dni') as string,
+			nom: formData.get('nom') as string,
+			ape: formData.get('ape') as string,
+			dom: formData.get('dom') as string,
+			tel: formData.get('tel') as string,
+			email: formData.get('email') as string,
+			lrol: [],
+			idUnidadAcademica: parseInt(formData.get('unidadAcademica') as string, 10),
+			titulo: (formData.get('titulo') as string) || '',
+			periodoLectivo: (formData.get('periodo') as string) || null,
+			categoriaDocente: (formData.get('categoria') as string) || null,
+			categoriaDedicacion: (formData.get('dedicacion') as string) || null,
+			tieneTarjeta: parseInt(formData.get('precargable') as string, 10),
+			idArea: parseInt(formData.get('noDoc') as string, 10),
+			observ: '',
 		};
 
-		addRolesToMembers();
-	}, [importanRoles, members]);
+		setMembers([...members, newMember]);
+		console.log('usuario: ' + newMember.nom + ' ' + newMember.ape + ' agregado');
+
+		e.currentTarget.reset();
+	};
 
 	return (
-		<>
+		<div className=' d-flex flex-column h-100'>
 			<div className=' d-flex gap-2 h-100'>
-				<div className=' w-50 d-flex flex-column align-items-end'>
+				<div className=' w-50 p-1 d-flex flex-column align-items-end '>
 					<Table>
 						<thead>
 							<tr>
@@ -73,7 +68,7 @@ const FormMembers = () => {
 										<tr key={member.dni}>
 											<td>{member.nom}</td>
 											<td>{member.email}</td>
-											<td>{member.unidadAcademica}</td>
+											<td>{member.idUnidadAcademica}</td>
 											<td>
 												<button>Eliminar</button>
 											</td>
@@ -87,108 +82,155 @@ const FormMembers = () => {
 							)}
 						</tbody>
 					</Table>
-					<Button variant='primary' className=' mb-2 mt-auto ' onClick={() => setShow(true)}>
-						Agregar
+					<Button
+						variant='primary'
+						className=' mb-2 mt-auto '
+						// onClick={() => setShow(true)}
+						disabled={members.length === 0}
+					>
+						Asignar roles
 					</Button>
 				</div>
-				<div className=' w-50'>
-					<Form>
-						<Form.Group>
-							<Form.Label>Director</Form.Label>
-							<FormSelect
-								aria-label='Default select example'
-								name='director'
-								value={importanRoles.director ?? ''}
-								onChange={(e) => setImportanRoles({ ...importanRoles, director: e.target.value })}
-							>
-								<option>Seleccione un director</option>
-								{members.length > 0 &&
-									members?.map((member: IntegranteEquipoProps) => (
-										<option key={member.dni} value={member.dni}>
-											{member.nom}
-										</option>
-									))}
-							</FormSelect>
-						</Form.Group>
-						<Form.Group>
-							<Form.Label>Co-Director</Form.Label>
-							<FormSelect
-								aria-label='Default select example'
-								name='coDirector'
-								value={importanRoles.coDirector ?? ''}
-								onChange={(e) => setImportanRoles({ ...importanRoles, coDirector: e.target.value })}
-							>
-								<option>Seleccione un Co-Director</option>
-								{members.length > 0 &&
-									members?.map((member: IntegranteEquipoProps) => (
-										<option key={member.dni} value={member.dni}>
-											{member.nom}
-										</option>
-									))}
-							</FormSelect>
-						</Form.Group>
-						<Form.Group>
-							<Form.Label>Coordinador</Form.Label>
-							<FormSelect
-								aria-label='Default select example'
-								name='coordinador'
-								value={importanRoles.coordinador ?? ''}
-								onChange={(e) =>
-									setImportanRoles({ ...importanRoles, coordinador: e.target.value })
-								}
-							>
-								<option>Seleccione un Coordinador</option>
-								{members.length > 0 &&
-									members?.map((member: IntegranteEquipoProps) => (
-										<option key={member.dni} value={member.dni}>
-											{member.nom}
-										</option>
-									))}
-							</FormSelect>
-						</Form.Group>
-						<Form.Group>
-							<Form.Label>Responsable Financiero</Form.Label>
-							<FormSelect
-								aria-label='Default select example'
-								name='respFinanciero'
-								value={importanRoles.respFinanciero ?? ''}
-								onChange={(e) =>
-									setImportanRoles({ ...importanRoles, respFinanciero: e.target.value })
-								}
-							>
-								<option>Seleccione un Responsable Financiero</option>
-								{members.length > 0 &&
-									members?.map((member: IntegranteEquipoProps) => (
-										<option key={member.dni} value={member.dni}>
-											{member.nom}
-										</option>
-									))}
-							</FormSelect>
-						</Form.Group>
-						<Form.Group>
-							<Form.Label>Especialistas</Form.Label>
-							<FormSelect
-								aria-label='Default select example'
-								name='Especialista'
-								value={importanRoles.Especialista ?? ''}
-								onChange={(e) =>
-									setImportanRoles({ ...importanRoles, Especialista: [e.target.value] })
-								}
-							>
-								<option>Seleccione un Especialista</option>
-								{members.length > 0 &&
-									members?.map((member: IntegranteEquipoProps) => (
-										<option key={member.dni} value={member.dni}>
-											{member.nom}
-										</option>
-									))}
-							</FormSelect>
-						</Form.Group>
-					</Form>
+				<div className=' w-50 p-1 d-flex flex-column'>
+					<FormGroup>
+						<FormSelect
+							aria-label='Default select example'
+							name='memberType'
+							onChange={handleMemberType}
+						>
+							<option value=''>Seleccione un tipo de miembro</option>
+							<option value='doc'>Docente</option>
+							<option value='est'>Estudiante</option>
+							<option value='grad'>Graduado</option>
+							<option value='noDoc'>No Docente</option>
+							<option value='noUni'>No Universitario</option>
+						</FormSelect>
+					</FormGroup>
+					{memberType && (
+						<Form className='mt-2 ' onSubmit={(e) => handleSubmit(e)}>
+							<Container>
+								<Row>
+									<Col>
+										<Form.Group>
+											<Form.Control type='text' placeholder='DNI' name='dni' />
+										</Form.Group>
+									</Col>
+									<Col />
+								</Row>
+								<Row>
+									<Col>
+										<Form.Group>
+											<Form.Control type='text' placeholder='Nombre' name='nom' />
+										</Form.Group>
+									</Col>
+									<Col>
+										<Form.Group>
+											<Form.Control type='text' placeholder='Apellido' name='ape' />
+										</Form.Group>
+									</Col>
+								</Row>
+								<Row>
+									<Col>
+										<Form.Group>
+											<Form.Control type='text' placeholder='Domicilio' name='dom' />
+										</Form.Group>
+									</Col>
+									<Col>
+										<Form.Group>
+											<Form.Control type='text' placeholder='Telefono' name='tel' />
+										</Form.Group>
+									</Col>
+								</Row>
+								<Row>
+									<Col>
+										<Form.Group>
+											<Form.Control type='email' placeholder='Email' name='email' />
+										</Form.Group>
+									</Col>
+									<Col></Col>
+								</Row>
+								{['doc', 'grad', 'noDoc', 'noUni'].includes(memberType) && (
+									<FormGroup>
+										<Form.Label>Posee tarjeta precargable?</Form.Label>
+										<Form.Check inline label='Si' type='radio' name='precargable' value={0} />
+										<Form.Check inline label='No' type='radio' name='precargable' value={1} />
+									</FormGroup>
+								)}
+								{['doc', 'est', 'grad'].includes(memberType) && (
+									<Row>
+										<Col>
+											<FormGroup>
+												<Form.Control type='text' placeholder='Titulo' name='titulo' />
+											</FormGroup>
+										</Col>
+										<Col>
+											<FormSelect aria-label='Default select example' name='unidadAcademica'>
+												<option>Unidad Academica</option>
+												<option value='1'>One</option>
+												<option value='2'>Two</option>
+												<option value='3'>Three</option>
+											</FormSelect>
+										</Col>
+									</Row>
+								)}
+								{['doc'].includes(memberType) && (
+									<Row>
+										<Col>
+											<FormSelect aria-label='Default select example' name='categoria'>
+												<option>Categoria</option>
+												<option value='1'>Adjunto</option>
+												<option value='2'>Asociado</option>
+												<option value='3'>Ayudante</option>
+												<option value='4'>JTP</option>
+												<option value='5'>Titular</option>
+											</FormSelect>
+										</Col>
+										<Col>
+											<FormSelect aria-label='Default select example' name='dedicacion'>
+												<option>Dedicacion</option>
+												<option value='1'>Exclusivo</option>
+												<option value='2'>Exclusivo B</option>
+												<option value='3'>Semiexclusivo</option>
+												<option value='4'>Simple</option>
+											</FormSelect>
+										</Col>
+									</Row>
+								)}
+
+								{['est'].includes(memberType) && (
+									<Row>
+										<Col>
+											<FormSelect aria-label='Default select example' name='periodo'>
+												<option>Periodo lectivo</option>
+												<option value='1'>Ciclo Inicial</option>
+												<option value='2'>Ciclo Superior</option>
+											</FormSelect>
+										</Col>
+									</Row>
+								)}
+								{['noDoc'].includes(memberType) && (
+									<Row>
+										<Col>
+											<FormGroup>
+												<Form.Check inline label='Áreas unl' type='radio' name='noDoc' />
+												<Form.Check inline label='Unidad Académica' type='radio' name='noDoc' />
+											</FormGroup>
+										</Col>
+									</Row>
+								)}
+								<Button variant='success' className='  ' type='submit'>
+									Agregar
+								</Button>
+							</Container>
+						</Form>
+					)}
 				</div>
 			</div>
-			<ModalMember show={show} handleClose={handleClose} submitMember={addMember} />
-		</>
+			<Button variant='success' className=' mb-2 align-self-center '>
+				Guardar
+			</Button>
+			{/* <ModalMember show={show} handleClose={handleClose} submitMember={addMember} /> */}
+		</div>
 	);
 };
 

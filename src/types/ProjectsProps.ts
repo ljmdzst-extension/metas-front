@@ -33,7 +33,7 @@ export interface projectHistoryProps {
 }
 
 export interface IntegranteEquipoProps {
-	observ: null;
+	observ: null | string;
 	tieneTarjeta: number;
 	lrol: string[];
 	dni: string;
@@ -43,9 +43,9 @@ export interface IntegranteEquipoProps {
 	email: null | string;
 	dom: null | string;
 	tel: null | string;
-	categoriaDocente: null;
-	categoriaDedicacion: null;
-	unidadAcademica: string;
-	periodoLectivo: null;
-	area: null;
+	categoriaDocente: null | string;
+	categoriaDedicacion: null | string;
+	idUnidadAcademica: null | number;
+	periodoLectivo: null | string;
+	idArea: null | number;
 }

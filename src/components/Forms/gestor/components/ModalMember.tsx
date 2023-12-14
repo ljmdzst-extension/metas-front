@@ -1,155 +1,159 @@
 import React, { useState } from 'react';
-import { Col, Container, Form, FormGroup, FormSelect, Modal, Row } from 'react-bootstrap';
+import { Form, FormSelect, Modal } from 'react-bootstrap';
 import { IntegranteEquipoProps } from '../../../../types/ProjectsProps';
 
 interface ModalMemberProps {
 	show: boolean;
 	handleClose: () => void;
-	editMember?: IntegranteEquipoProps;
-	submitMember?: (memberData: IntegranteEquipoProps) => void;
+	memberList: IntegranteEquipoProps[];
+	updateMemberList: (memberList: IntegranteEquipoProps[]) => void;
 }
 
-export const ModalMember = ({ show, handleClose, editMember, submitMember }: ModalMemberProps) => {
-	const [memberType, setMemberType] = useState('');
+interface importanRolesProps {
+	director: string | null;
+	coDirector: string | null;
+	coordinador: string | null;
+	respFinanciero: string | null;
+	Especialista: string[] | null;
+}
 
-	const handleMemberType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setMemberType(e.target.value);
-	};
+export const ModalMember = ({
+	show,
+	handleClose,
+	memberList,
+	updateMemberList,
+}: ModalMemberProps) => {
+	const [importanRoles, setImportanRoles] = useState<importanRolesProps>({
+		director: null,
+		coDirector: null,
+		coordinador: null,
+		respFinanciero: null,
+		Especialista: null,
+	});
+
+	useEffect(() => {
+		const addRolesToMembers = () => {
+			if (members.length > 0) {
+				const updatedMembers = members.map((member) => {
+					if (importanRoles.director === member.dni) {
+						return { ...member, lrol: ['Director'] };
+					} else if (importanRoles.coDirector === member.dni) {
+						return { ...member, lrol: ['Co-Director'] };
+					} else if (importanRoles.coordinador === member.dni) {
+						return { ...member, lrol: ['Coordinador'] };
+					} else if (importanRoles.respFinanciero === member.dni) {
+						return { ...member, lrol: ['Responsable Financiero'] };
+					} else if (importanRoles.Especialista?.includes(member.dni)) {
+						return { ...member, lrol: ['Especialista'] };
+					} else {
+						return member;
+					}
+				});
+
+				setMembers(updatedMembers);
+			}
+		};
+
+		addRolesToMembers();
+	}, [importanRoles, members]);
+
 	return (
 		<Modal show={show} onHide={handleClose} size='lg' centered>
 			<Modal.Header closeButton>
 				<Modal.Title>Modal heading</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<FormGroup>
-					<FormSelect
-						aria-label='Default select example'
-						name='memberType'
-						onChange={handleMemberType}
-					>
-						<option>Seleccione un tipo de miembro</option>
-						<option value='doc'>Docente</option>
-						<option value='est'>Estudiante</option>
-						<option value='grad'>Graduado</option>
-						<option value='noDoc'>No Docente</option>
-						<option value='noUni'>No Universitario</option>
-					</FormSelect>
-				</FormGroup>
-				{memberType && (
-					<Form className='mt-2'>
-						<Container>
-							<Row>
-								<Col>
-									<Form.Group>
-										<Form.Control type='text' placeholder='DNI' />
-									</Form.Group>
-								</Col>
-								<Col />
-							</Row>
-							<Row>
-								<Col>
-									<Form.Group>
-										<Form.Control type='text' placeholder='Nombre' />
-									</Form.Group>
-								</Col>
-								<Col>
-									<Form.Group>
-										<Form.Control type='text' placeholder='Apellido' />
-									</Form.Group>
-								</Col>
-							</Row>
-							<Row>
-								<Col>
-									<Form.Group>
-										<Form.Control type='text' placeholder='Domicilio' />
-									</Form.Group>
-								</Col>
-								<Col>
-									<Form.Group>
-										<Form.Control type='text' placeholder='Telefono' />
-									</Form.Group>
-								</Col>
-							</Row>
-							<Row>
-								<Col>
-									<Form.Group>
-										<Form.Control type='email' placeholder='Email' />
-									</Form.Group>
-								</Col>
-								<Col></Col>
-							</Row>
-							{['doc', 'grad', 'noDoc', 'noUni'].includes(memberType) && (
-								<FormGroup>
-									<Form.Label>Posee tarjeta precargable?</Form.Label>
-									<Form.Check inline label='Si' type='radio' name='precargable' />
-									<Form.Check inline label='No' type='radio' name='precargable' />
-								</FormGroup>
-							)}
-							{['doc', 'est', 'grad'].includes(memberType) && (
-								<Row>
-									<Col>
-										<FormGroup>
-											<Form.Control type='text' placeholder='Titulo' />
-										</FormGroup>
-									</Col>
-									<Col>
-										<FormSelect aria-label='Default select example' name='unidadAcademica'>
-											<option>Unidad Academica</option>
-											<option value='1'>One</option>
-											<option value='2'>Two</option>
-											<option value='3'>Three</option>
-										</FormSelect>
-									</Col>
-								</Row>
-							)}
-							{['doc'].includes(memberType) && (
-								<Row>
-									<Col>
-										<FormSelect aria-label='Default select example' name='categoria'>
-											<option>Categoria</option>
-											<option value='1'>Adjunto</option>
-											<option value='2'>Asociado</option>
-											<option value='3'>Ayudante</option>
-											<option value='4'>JTP</option>
-											<option value='5'>Titular</option>
-										</FormSelect>
-									</Col>
-									<Col>
-										<FormSelect aria-label='Default select example' name='dedicacion'>
-											<option>Dedicacion</option>
-											<option value='1'>Exclusivo</option>
-											<option value='2'>Exclusivo B</option>
-											<option value='3'>Semiexclusivo</option>
-											<option value='4'>Simple</option>
-										</FormSelect>
-									</Col>
-								</Row>
-							)}
-
-							{['est'].includes(memberType) && (
-								<Row>
-									<Col>
-										<FormSelect aria-label='Default select example' name='periodo'>
-											<option>Periodo lectivo</option>
-											<option value='1'>Ciclo Inicial</option>
-											<option value='2'>Ciclo Superior</option>
-										</FormSelect>
-									</Col>
-								</Row>
-							)}
-							{['noDoc'].includes(memberType) && (
-								<Row>
-									<Col>
-										<FormGroup>
-											<Form.Check inline label='Áreas unl' type='radio' name='noDoc' />
-											<Form.Check inline label='Unidad Académica' type='radio' name='noDoc' />
-										</FormGroup>
-									</Col>
-								</Row>
-							)}
-						</Container>
-					</Form>
-				)}
+				<Form>
+					<Form.Group>
+						<Form.Label>Director</Form.Label>
+						<FormSelect
+							aria-label='Default select example'
+							name='director'
+							value={importanRoles.director ?? ''}
+							onChange={(e) => setImportanRoles({ ...importanRoles, director: e.target.value })}
+						>
+							<option>Seleccione un director</option>
+							{members.length > 0 &&
+								members?.map((member: IntegranteEquipoProps) => (
+									<option key={member.dni} value={member.dni}>
+										{member.nom}
+									</option>
+								))}
+						</FormSelect>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Co-Director</Form.Label>
+						<FormSelect
+							aria-label='Default select example'
+							name='coDirector'
+							value={importanRoles.coDirector ?? ''}
+							onChange={(e) => setImportanRoles({ ...importanRoles, coDirector: e.target.value })}
+						>
+							<option>Seleccione un Co-Director</option>
+							{members.length > 0 &&
+								members?.map((member: IntegranteEquipoProps) => (
+									<option key={member.dni} value={member.dni}>
+										{member.nom}
+									</option>
+								))}
+						</FormSelect>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Coordinador</Form.Label>
+						<FormSelect
+							aria-label='Default select example'
+							name='coordinador'
+							value={importanRoles.coordinador ?? ''}
+							onChange={(e) => setImportanRoles({ ...importanRoles, coordinador: e.target.value })}
+						>
+							<option>Seleccione un Coordinador</option>
+							{members.length > 0 &&
+								members?.map((member: IntegranteEquipoProps) => (
+									<option key={member.dni} value={member.dni}>
+										{member.nom}
+									</option>
+								))}
+						</FormSelect>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Responsable Financiero</Form.Label>
+						<FormSelect
+							aria-label='Default select example'
+							name='respFinanciero'
+							value={importanRoles.respFinanciero ?? ''}
+							onChange={(e) =>
+								setImportanRoles({ ...importanRoles, respFinanciero: e.target.value })
+							}
+						>
+							<option>Seleccione un Responsable Financiero</option>
+							{members.length > 0 &&
+								members?.map((member: IntegranteEquipoProps) => (
+									<option key={member.dni} value={member.dni}>
+										{member.nom}
+									</option>
+								))}
+						</FormSelect>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Especialistas</Form.Label>
+						<FormSelect
+							aria-label='Default select example'
+							name='Especialista'
+							value={importanRoles.Especialista ?? ''}
+							onChange={(e) =>
+								setImportanRoles({ ...importanRoles, Especialista: [e.target.value] })
+							}
+						>
+							<option>Seleccione un Especialista</option>
+							{members.length > 0 &&
+								members?.map((member: IntegranteEquipoProps) => (
+									<option key={member.dni} value={member.dni}>
+										{member.nom}
+									</option>
+								))}
+						</FormSelect>
+					</Form.Group>
+				</Form>
 			</Modal.Body>
 			<Modal.Footer>
 				<button className='btn btn-secondary' onClick={handleClose}>
