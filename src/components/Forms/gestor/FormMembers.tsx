@@ -60,13 +60,14 @@ const FormMembers = () => {
 	return (
 		<div className=' d-flex flex-column h-100'>
 			<div className=' d-flex gap-2 h-100'>
-				<div className=' w-50 p-1 d-flex flex-column align-items-end '>
+				<div className=' p-1 d-flex flex-column align-items-end ' style={{ width: '70%' }}>
 					<Table>
 						<thead>
 							<tr>
 								<th>Nombre</th>
 								<th>Correo</th>
 								<th>UA</th>
+								<th>Rol</th>
 								<th>Acciones</th>
 							</tr>
 						</thead>
@@ -77,7 +78,9 @@ const FormMembers = () => {
 										<tr key={member.dni}>
 											<td>{member.nom}</td>
 											<td>{member.email}</td>
+
 											<td>{member.idUnidadAcademica}</td>
+											<td>{member.lrol ? member.lrol : ' '}</td>
 											<td>
 												<Delete onClick={() => handleDelete(member.dni)} />
 											</td>
@@ -86,7 +89,7 @@ const FormMembers = () => {
 								})
 							) : (
 								<tr>
-									<td colSpan={4}>No hay miembros cargados</td>
+									<td colSpan={5}>No hay miembros cargados</td>
 								</tr>
 							)}
 						</tbody>
@@ -100,7 +103,7 @@ const FormMembers = () => {
 						Asignar roles
 					</Button>
 				</div>
-				<div className=' w-50 p-1 d-flex flex-column'>
+				<div className=' p-1 d-flex flex-column' style={{ width: '30%' }}>
 					<FormGroup>
 						<FormSelect
 							aria-label='Default select example'
@@ -118,46 +121,30 @@ const FormMembers = () => {
 					{memberType && (
 						<Form className='mt-2 ' onSubmit={(e) => handleSubmit(e)}>
 							<Container>
-								<Row>
-									<Col>
-										<Form.Group>
-											<Form.Control type='text' placeholder='DNI' name='dni' />
-										</Form.Group>
-									</Col>
-									<Col />
-								</Row>
-								<Row>
-									<Col>
-										<Form.Group>
-											<Form.Control type='text' placeholder='Nombre' name='nom' />
-										</Form.Group>
-									</Col>
-									<Col>
-										<Form.Group>
-											<Form.Control type='text' placeholder='Apellido' name='ape' />
-										</Form.Group>
-									</Col>
-								</Row>
-								<Row>
-									<Col>
-										<Form.Group>
-											<Form.Control type='text' placeholder='Domicilio' name='dom' />
-										</Form.Group>
-									</Col>
-									<Col>
-										<Form.Group>
-											<Form.Control type='text' placeholder='Telefono' name='tel' />
-										</Form.Group>
-									</Col>
-								</Row>
-								<Row>
-									<Col>
-										<Form.Group>
-											<Form.Control type='email' placeholder='Email' name='email' />
-										</Form.Group>
-									</Col>
-									<Col></Col>
-								</Row>
+								<Form.Group>
+									<Form.Control size='sm' type='text' placeholder='DNI' name='dni' />
+								</Form.Group>
+
+								<Form.Group>
+									<Form.Control size='sm' type='text' placeholder='Nombre' name='nom' />
+								</Form.Group>
+
+								<Form.Group>
+									<Form.Control size='sm' type='text' placeholder='Apellido' name='ape' />
+								</Form.Group>
+
+								<Form.Group>
+									<Form.Control size='sm' type='text' placeholder='Domicilio' name='dom' />
+								</Form.Group>
+
+								<Form.Group>
+									<Form.Control size='sm' type='text' placeholder='Telefono' name='tel' />
+								</Form.Group>
+
+								<Form.Group>
+									<Form.Control size='sm' type='email' placeholder='Email' name='email' />
+								</Form.Group>
+
 								{['doc', 'grad', 'noDoc', 'noUni'].includes(memberType) && (
 									<FormGroup>
 										<Form.Label>Posee tarjeta precargable?</Form.Label>
@@ -166,66 +153,56 @@ const FormMembers = () => {
 									</FormGroup>
 								)}
 								{['doc', 'est', 'grad'].includes(memberType) && (
-									<Row>
-										<Col>
-											<FormGroup>
-												<Form.Control type='text' placeholder='Titulo' name='titulo' />
-											</FormGroup>
-										</Col>
-										<Col>
-											<FormSelect aria-label='Default select example' name='unidadAcademica'>
-												<option>Unidad Academica</option>
-												<option value='1'>One</option>
-												<option value='2'>Two</option>
-												<option value='3'>Three</option>
-											</FormSelect>
-										</Col>
-									</Row>
+									<div>
+										<FormGroup>
+											<Form.Control size='sm' type='text' placeholder='Titulo' name='titulo' />
+										</FormGroup>
+
+										<FormSelect
+											size='sm'
+											aria-label='Default select example'
+											name='unidadAcademica'
+										>
+											<option>Unidad Academica</option>
+											<option value='1'>One</option>
+											<option value='2'>Two</option>
+											<option value='3'>Three</option>
+										</FormSelect>
+									</div>
 								)}
 								{['doc'].includes(memberType) && (
-									<Row>
-										<Col>
-											<FormSelect aria-label='Default select example' name='categoria'>
-												<option>Categoria</option>
-												<option value='1'>Adjunto</option>
-												<option value='2'>Asociado</option>
-												<option value='3'>Ayudante</option>
-												<option value='4'>JTP</option>
-												<option value='5'>Titular</option>
-											</FormSelect>
-										</Col>
-										<Col>
-											<FormSelect aria-label='Default select example' name='dedicacion'>
-												<option>Dedicacion</option>
-												<option value='1'>Exclusivo</option>
-												<option value='2'>Exclusivo B</option>
-												<option value='3'>Semiexclusivo</option>
-												<option value='4'>Simple</option>
-											</FormSelect>
-										</Col>
-									</Row>
+									<div>
+										<FormSelect size='sm' aria-label='Default select example' name='categoria'>
+											<option>Categoria</option>
+											<option value='1'>Adjunto</option>
+											<option value='2'>Asociado</option>
+											<option value='3'>Ayudante</option>
+											<option value='4'>JTP</option>
+											<option value='5'>Titular</option>
+										</FormSelect>
+
+										<FormSelect size='sm' aria-label='Default select example' name='dedicacion'>
+											<option>Dedicacion</option>
+											<option value='1'>Exclusivo</option>
+											<option value='2'>Exclusivo B</option>
+											<option value='3'>Semiexclusivo</option>
+											<option value='4'>Simple</option>
+										</FormSelect>
+									</div>
 								)}
 
 								{['est'].includes(memberType) && (
-									<Row>
-										<Col>
-											<FormSelect aria-label='Default select example' name='periodo'>
-												<option>Periodo lectivo</option>
-												<option value='1'>Ciclo Inicial</option>
-												<option value='2'>Ciclo Superior</option>
-											</FormSelect>
-										</Col>
-									</Row>
+									<FormSelect size='sm' aria-label='Default select example' name='periodo'>
+										<option>Periodo lectivo</option>
+										<option value='1'>Ciclo Inicial</option>
+										<option value='2'>Ciclo Superior</option>
+									</FormSelect>
 								)}
 								{['noDoc'].includes(memberType) && (
-									<Row>
-										<Col>
-											<FormGroup>
-												<Form.Check inline label='Áreas unl' type='radio' name='noDoc' />
-												<Form.Check inline label='Unidad Académica' type='radio' name='noDoc' />
-											</FormGroup>
-										</Col>
-									</Row>
+									<FormGroup>
+										<Form.Check inline label='Áreas unl' type='radio' name='noDoc' />
+										<Form.Check inline label='Unidad Académica' type='radio' name='noDoc' />
+									</FormGroup>
 								)}
 								<Button variant='success' className='  ' type='submit'>
 									Agregar

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, FormSelect, Modal } from 'react-bootstrap';
 import { IntegranteEquipoProps } from '../../../../types/ProjectsProps';
 
@@ -27,19 +27,32 @@ export const ModalMember = ({ show, handleClose, memberList, handleRoles }: Moda
 	});
 
 	useEffect(() => {
+		console.log(' memberList:  t');
 		const addRolesToMembers = () => {
 			if (memberList.length > 0) {
 				const updatedMembers = memberList.map((member) => {
-					if (importanRoles.director === member.dni) {
-						return { ...member, lrol: ['Director'] };
-					} else if (importanRoles.coDirector === member.dni) {
-						return { ...member, lrol: ['Co-Director'] };
-					} else if (importanRoles.coordinador === member.dni) {
-						return { ...member, lrol: ['Coordinador'] };
-					} else if (importanRoles.respFinanciero === member.dni) {
-						return { ...member, lrol: ['Responsable Financiero'] };
-					} else if (importanRoles.Especialista?.includes(member.dni)) {
-						return { ...member, lrol: ['Especialista'] };
+					if (importanRoles.director === member.dni && !member.lrol.includes('Director')) {
+						return { ...member, lrol: [...member.lrol, 'Director'] };
+					} else if (
+						importanRoles.coDirector === member.dni &&
+						!member.lrol.includes('Co-Director')
+					) {
+						return { ...member, lrol: [...member.lrol, 'Co-Director'] };
+					} else if (
+						importanRoles.coordinador === member.dni &&
+						!member.lrol.includes('Coordinador')
+					) {
+						return { ...member, lrol: [...member.lrol, 'Coordinador'] };
+					} else if (
+						importanRoles.respFinanciero === member.dni &&
+						!member.lrol.includes('Responsable Financiero')
+					) {
+						return { ...member, lrol: [...member.lrol, 'Responsable Financiero'] };
+					} else if (
+						importanRoles.Especialista?.includes(member.dni) &&
+						!member.lrol.includes('Especialista')
+					) {
+						return { ...member, lrol: [...member.lrol, 'Especialista'] };
 					} else {
 						return member;
 					}
@@ -50,6 +63,7 @@ export const ModalMember = ({ show, handleClose, memberList, handleRoles }: Moda
 		};
 
 		addRolesToMembers();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [importanRoles]);
 
 	return (
