@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, FormSelect, Modal } from 'react-bootstrap';
 import { IntegranteEquipoProps } from '../../../../types/ProjectsProps';
 
@@ -6,7 +6,7 @@ interface ModalMemberProps {
 	show: boolean;
 	handleClose: () => void;
 	memberList: IntegranteEquipoProps[];
-	updateMemberList: (memberList: IntegranteEquipoProps[]) => void;
+	handleRoles: (memberList: IntegranteEquipoProps[]) => void;
 }
 
 interface importanRolesProps {
@@ -17,12 +17,7 @@ interface importanRolesProps {
 	Especialista: string[] | null;
 }
 
-export const ModalMember = ({
-	show,
-	handleClose,
-	memberList,
-	updateMemberList,
-}: ModalMemberProps) => {
+export const ModalMember = ({ show, handleClose, memberList, handleRoles }: ModalMemberProps) => {
 	const [importanRoles, setImportanRoles] = useState<importanRolesProps>({
 		director: null,
 		coDirector: null,
@@ -33,8 +28,8 @@ export const ModalMember = ({
 
 	useEffect(() => {
 		const addRolesToMembers = () => {
-			if (members.length > 0) {
-				const updatedMembers = members.map((member) => {
+			if (memberList.length > 0) {
+				const updatedMembers = memberList.map((member) => {
 					if (importanRoles.director === member.dni) {
 						return { ...member, lrol: ['Director'] };
 					} else if (importanRoles.coDirector === member.dni) {
@@ -50,12 +45,12 @@ export const ModalMember = ({
 					}
 				});
 
-				setMembers(updatedMembers);
+				handleRoles(updatedMembers);
 			}
 		};
 
 		addRolesToMembers();
-	}, [importanRoles, members]);
+	}, [importanRoles]);
 
 	return (
 		<Modal show={show} onHide={handleClose} size='lg' centered>
@@ -73,8 +68,8 @@ export const ModalMember = ({
 							onChange={(e) => setImportanRoles({ ...importanRoles, director: e.target.value })}
 						>
 							<option>Seleccione un director</option>
-							{members.length > 0 &&
-								members?.map((member: IntegranteEquipoProps) => (
+							{memberList.length > 0 &&
+								memberList?.map((member: IntegranteEquipoProps) => (
 									<option key={member.dni} value={member.dni}>
 										{member.nom}
 									</option>
@@ -90,8 +85,8 @@ export const ModalMember = ({
 							onChange={(e) => setImportanRoles({ ...importanRoles, coDirector: e.target.value })}
 						>
 							<option>Seleccione un Co-Director</option>
-							{members.length > 0 &&
-								members?.map((member: IntegranteEquipoProps) => (
+							{memberList.length > 0 &&
+								memberList?.map((member: IntegranteEquipoProps) => (
 									<option key={member.dni} value={member.dni}>
 										{member.nom}
 									</option>
@@ -107,8 +102,8 @@ export const ModalMember = ({
 							onChange={(e) => setImportanRoles({ ...importanRoles, coordinador: e.target.value })}
 						>
 							<option>Seleccione un Coordinador</option>
-							{members.length > 0 &&
-								members?.map((member: IntegranteEquipoProps) => (
+							{memberList.length > 0 &&
+								memberList?.map((member: IntegranteEquipoProps) => (
 									<option key={member.dni} value={member.dni}>
 										{member.nom}
 									</option>
@@ -126,8 +121,8 @@ export const ModalMember = ({
 							}
 						>
 							<option>Seleccione un Responsable Financiero</option>
-							{members.length > 0 &&
-								members?.map((member: IntegranteEquipoProps) => (
+							{memberList.length > 0 &&
+								memberList?.map((member: IntegranteEquipoProps) => (
 									<option key={member.dni} value={member.dni}>
 										{member.nom}
 									</option>
@@ -145,8 +140,8 @@ export const ModalMember = ({
 							}
 						>
 							<option>Seleccione un Especialista</option>
-							{members.length > 0 &&
-								members?.map((member: IntegranteEquipoProps) => (
+							{memberList.length > 0 &&
+								memberList?.map((member: IntegranteEquipoProps) => (
 									<option key={member.dni} value={member.dni}>
 										{member.nom}
 									</option>

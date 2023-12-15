@@ -3,14 +3,15 @@ import { useState } from 'react';
 import { Button, Container, Form, FormSelect, Table, Row, Col, FormGroup } from 'react-bootstrap';
 
 import { IntegranteEquipoProps } from '../../../types/ProjectsProps';
-// import { ModalMember } from './components/ModalMember';
+import { ModalMember } from './components/ModalMember';
+import { Delete } from '@mui/icons-material';
 
 const FormMembers = () => {
 	const [members, setMembers] = useState<IntegranteEquipoProps[]>([]);
 	const [memberType, setMemberType] = useState('');
 
-	// const [show, setShow] = useState(false);
-	// const handleClose = () => setShow(false);
+	const [show, setShow] = useState(false);
+	const handleClose = () => setShow(false);
 	// const addMember = (memberData: IntegranteEquipoProps) => {
 	// 	setMembers([...members, memberData]);
 	// };
@@ -18,7 +19,6 @@ const FormMembers = () => {
 	const handleMemberType = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		setMemberType(e.target.value);
 	};
-
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		console.log('submit');
 		e.preventDefault();
@@ -48,6 +48,15 @@ const FormMembers = () => {
 		e.currentTarget.reset();
 	};
 
+	const handleDelete = (dni: string) => {
+		const updatedMembers = members.filter((member) => member.dni !== dni);
+		setMembers(updatedMembers);
+	};
+
+	const handleRoles = (listMember: IntegranteEquipoProps[]) => {
+		setMembers(listMember);
+	};
+
 	return (
 		<div className=' d-flex flex-column h-100'>
 			<div className=' d-flex gap-2 h-100'>
@@ -70,7 +79,7 @@ const FormMembers = () => {
 											<td>{member.email}</td>
 											<td>{member.idUnidadAcademica}</td>
 											<td>
-												<button>Eliminar</button>
+												<Delete onClick={() => handleDelete(member.dni)} />
 											</td>
 										</tr>
 									);
@@ -85,7 +94,7 @@ const FormMembers = () => {
 					<Button
 						variant='primary'
 						className=' mb-2 mt-auto '
-						// onClick={() => setShow(true)}
+						onClick={() => setShow(true)}
 						disabled={members.length === 0}
 					>
 						Asignar roles
@@ -229,7 +238,12 @@ const FormMembers = () => {
 			<Button variant='success' className=' mb-2 align-self-center '>
 				Guardar
 			</Button>
-			{/* <ModalMember show={show} handleClose={handleClose} submitMember={addMember} /> */}
+			<ModalMember
+				show={show}
+				handleClose={handleClose}
+				memberList={members}
+				handleRoles={handleRoles}
+			/>
 		</div>
 	);
 };
