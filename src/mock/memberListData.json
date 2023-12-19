@@ -1,0 +1,19 @@
+[
+	{
+		"dni": "159123456",
+		"tieneTarjeta": 1,
+		"lrol": ["Director", "Coordinador"],
+		"ape": "",
+		"nom": "",
+		"titulo": "",
+		"email": "",
+		"dom": "",
+		"tel": "",
+		"categoriaDocente": "",
+		"categoriaDedicacion": "",
+		"idUnidadAcademica": "",
+		"periodoLectivo": "",
+		"idArea": "",
+		"observ": ""
+	}
+]
