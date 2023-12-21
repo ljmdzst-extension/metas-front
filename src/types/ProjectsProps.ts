@@ -33,19 +33,21 @@ export interface projectHistoryProps {
 }
 
 export interface IntegranteEquipoProps {
-	observ: null | string;
-	tieneTarjeta: number;
-	lrol: string[];
+	tipoMiembro: string;
+	tipoDni: string;
 	dni: string;
 	ape: string;
 	nom: string;
-	titulo: null | string;
-	email: null | string;
-	dom: null | string;
-	tel: null | string;
-	categoriaDocente: null | string;
-	categoriaDedicacion: null | string;
-	idUnidadAcademica: null | number;
-	periodoLectivo: null | string;
-	idArea: null | number;
+	dom: string;
+	tel: string;
+	email: string;
+	lrol?: string[];
+	idUnidadAcademica?: number;
+	idArea?: number;
+	tieneTarjeta?: number;
+	titulo?: string;
+	categoriaDocente?: string;
+	categoriaDedicacion?: string;
+	periodoLectivo?: number;
+	observ?: string;
 }

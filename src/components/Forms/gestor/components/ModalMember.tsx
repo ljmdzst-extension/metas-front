@@ -63,7 +63,7 @@ export const ModalMember = ({ show, handleClose, memberList, handleRoles }: Moda
 		};
 
 		addRolesToMembers();
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [importanRoles]);
 
 	return (

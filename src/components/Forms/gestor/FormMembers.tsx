@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import mockMembers from '../../../mock/memberListData.json';
 
 import {
 	Button,
@@ -15,47 +16,40 @@ import {
 import { IntegranteEquipoProps } from '../../../types/ProjectsProps';
 import { ModalMember } from './components/ModalMember';
 import { Delete, Search } from '@mui/icons-material';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+const initialValues: IntegranteEquipoProps = {
+	tipoMiembro: '',
+	tipoDni: '',
+	dni: '',
+	nom: '',
+	ape: '',
+	dom: '',
+	tel: '',
+	email: '',
+	lrol: [],
+	idUnidadAcademica: 0,
+	titulo: '',
+	periodoLectivo: undefined,
+	categoriaDocente: undefined,
+	categoriaDedicacion: undefined,
+	tieneTarjeta: 0,
+	idArea: 0,
+	observ: '',
+};
 
 const FormMembers = () => {
 	const [members, setMembers] = useState<IntegranteEquipoProps[]>([]);
-	const [memberType, setMemberType] = useState('');
+
+	const [initialFormValues, setInitialFormValues] = useState<IntegranteEquipoProps>(initialValues);
 
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
-	// const addMember = (memberData: IntegranteEquipoProps) => {
-	// 	setMembers([...members, memberData]);
-	// };
 
-	const handleMemberType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setMemberType(e.target.value);
-	};
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		console.log('submit');
-		e.preventDefault();
-
-		const formData = new FormData(e.currentTarget);
-		const newMember: IntegranteEquipoProps = {
-			dni: formData.get('dni') as string,
-			nom: formData.get('nom') as string,
-			ape: formData.get('ape') as string,
-			dom: formData.get('dom') as string,
-			tel: formData.get('tel') as string,
-			email: formData.get('email') as string,
-			lrol: [],
-			idUnidadAcademica: parseInt(formData.get('unidadAcademica') as string, 10),
-			titulo: (formData.get('titulo') as string) || '',
-			periodoLectivo: (formData.get('periodo') as string) || null,
-			categoriaDocente: (formData.get('categoria') as string) || null,
-			categoriaDedicacion: (formData.get('dedicacion') as string) || null,
-			tieneTarjeta: parseInt(formData.get('precargable') as string, 10),
-			idArea: parseInt(formData.get('noDoc') as string, 10),
-			observ: '',
-		};
-
-		setMembers([...members, newMember]);
-		console.log('usuario: ' + newMember.nom + ' ' + newMember.ape + ' agregado');
-
-		e.currentTarget.reset();
+	const handleSubmit = (values: IntegranteEquipoProps) => {
+		const updatedMembers = [...members, values];
+		setMembers(updatedMembers);
 	};
 
 	const handleDelete = (dni: string) => {
@@ -65,6 +59,28 @@ const FormMembers = () => {
 
 	const handleRoles = (listMember: IntegranteEquipoProps[]) => {
 		setMembers(listMember);
+	};
+
+	const handleSearch = (type: string, dni: string) => {
+		console.log(type, dni);
+		const currentMemberFound = mockMembers.find(
+			(member) => member.tipoDni === type && member.dni === dni,
+		);
+		console.log(currentMemberFound);
+		if (currentMemberFound) {
+			setInitialFormValues(currentMemberFound);
+		} else {
+			setInitialFormValues(initialValues);
+		}
+	};
+
+	const validations = {
+		dni: Yup.string().required('Campo requerido'),
+		nom: Yup.string().required('Campo requerido'),
+		ape: Yup.string().required('Campo requerido'),
+		dom: Yup.string().required('Campo requerido'),
+		tel: Yup.string().required('Campo requerido'),
+		email: Yup.string().required('Campo requerido'),
 	};
 
 	return (
@@ -114,7 +130,7 @@ const FormMembers = () => {
 					</Button>
 				</div>
 				<div
-					className=' p-1 d-flex flex-column'
+					className=' '
 					style={{
 						width: '40%',
 						border: '1px solid #c2c2c2',
@@ -122,157 +138,322 @@ const FormMembers = () => {
 						background: '#e8e8e8',
 					}}
 				>
-					<Form className='mt-2 h-100 ' onSubmit={(e) => handleSubmit(e)}>
-						<Container className=' d-flex flex-column justify-content-start h-100 gap-1'>
-							<Row>
-								<Col>
-									<InputGroup size='sm'>
-										<Form.Control size='sm' type='text' placeholder='DNI' name='dni' />
-										<Button variant='outline-secondary' size='sm'>
-											<Search />
-										</Button>
-									</InputGroup>
-								</Col>
-								<Col> </Col>
-							</Row>
-							<Row>
-								<Col>
-									<FormGroup>
-										<FormSelect
-											aria-label='Default select example'
-											name='memberType'
-											size='sm'
-											onChange={handleMemberType}
-										>
-											<option value=''>Tipo de miembro</option>
-											<option value='doc'>Docente</option>
-											<option value='est'>Estudiante</option>
-											<option value='grad'>Graduado</option>
-											<option value='noDoc'>No Docente</option>
-											<option value='noUni'>No Universitario</option>
-										</FormSelect>
-									</FormGroup>
-								</Col>
-								<Col></Col>
-							</Row>
-							<Row>
-								<Col>
-									<Form.Group>
-										<Form.Control size='sm' type='text' placeholder='Nombre' name='nom' />
-									</Form.Group>
-								</Col>
-								<Col>
-									<Form.Group>
-										<Form.Control size='sm' type='text' placeholder='Apellido' name='ape' />
-									</Form.Group>
-								</Col>
-							</Row>
-
-							<Form.Group>
-								<Form.Control size='sm' type='text' placeholder='Domicilio' name='dom' />
-							</Form.Group>
-
-							<Form.Group>
-								<Form.Control size='sm' type='text' placeholder='Telefono' name='tel' />
-							</Form.Group>
-
-							<Form.Group>
-								<Form.Control size='sm' type='email' placeholder='Email' name='email' />
-							</Form.Group>
-							{memberType && (
-								<>
-									{['doc', 'grad', 'noDoc', 'noUni'].includes(memberType) && (
-										<FormGroup className=' ms-1'>
-											<Form.Label style={{ fontSize: '14px' }} className=' mb-0'>
-												Posee tarjeta precargable?
-											</Form.Label>
-											<div>
-												<Form.Check
-													inline
-													label='Si'
-													style={{ fontSize: '14px' }}
-													type='radio'
-													name='precargable'
-													value={1}
-												/>
-												<Form.Check
-													inline
-													label='No'
-													style={{ fontSize: '14px' }}
-													type='radio'
-													name='precargable'
-													value={0}
-												/>
-											</div>
-										</FormGroup>
-									)}
-									{['doc', 'est', 'grad'].includes(memberType) && (
-										<div className=' d-flex gap-1'>
-											<FormGroup className=' w-50'>
-												<Form.Control size='sm' type='text' placeholder='Titulo' name='titulo' />
-											</FormGroup>
-
-											<FormSelect
-												size='sm'
-												aria-label='Default select example'
-												name='unidadAcademica'
-												className=' text-wrap w-50'
-											>
-												<option
-													style={{
-														whiteSpace: 'nowrap',
-														overflow: 'hidden',
-														textOverflow: 'ellipsis',
-													}}
+					<Formik
+						initialValues={initialFormValues}
+						onSubmit={(values) => {
+							handleSubmit(values);
+						}}
+						validationSchema={validations}
+						enableReinitialize
+					>
+						{({ errors, touched, values, handleBlur, handleChange, handleSubmit }) => {
+							return (
+								<Form className='h-100 ' onSubmit={(e) => handleSubmit(e)}>
+									<Container className=' d-flex flex-column justify-content-start gap-1 h-100'>
+										<h4 className=' text-center my-2'>Agregar Miembros</h4>
+										<Row>
+											<Col className=' d-flex'>
+												<FormSelect
+													name='tipoDni'
+													value={values.tipoDni}
+													onChange={handleChange}
+													onBlur={handleBlur}
+													className=' w-25'
+													isInvalid={!!errors.tipoDni && touched.tipoDni}
+													size='sm'
 												>
-													Unidad Academica
-												</option>
-												<option value='1'>One</option>
-												<option value='2'>Two</option>
-												<option value='3'>Three</option>
-											</FormSelect>
-										</div>
-									)}
-									{['doc'].includes(memberType) && (
-										<div className=' d-flex gap-1'>
-											<FormSelect size='sm' aria-label='Default select example' name='categoria'>
-												<option>Categoria</option>
-												<option value='1'>Adjunto</option>
-												<option value='2'>Asociado</option>
-												<option value='3'>Ayudante</option>
-												<option value='4'>JTP</option>
-												<option value='5'>Titular</option>
-											</FormSelect>
+													<option value=''>Tipo</option>
+													<option value='DNI'>DNI</option>
+													<option value='PASAP'>Pasaporte</option>
+													<option value='LC'>Libreta Civica</option>
+													<option value='LE'>Libreta de Enrolamiento</option>
+												</FormSelect>
+												<InputGroup className=' w-50'>
+													<Form.Control
+														type='text'
+														placeholder='DNI'
+														name='dni'
+														value={values.dni}
+														onChange={handleChange}
+														onBlur={handleBlur}
+														isInvalid={!!errors.dni && touched.dni}
+														size='sm'
+													/>
+													<Button
+														variant='outline-secondary'
+														onClick={() => handleSearch(values.tipoDni, values.dni)}
+														size='sm'
+													>
+														<Search />
+													</Button>
+												</InputGroup>
+											</Col>
+										</Row>
+										<Row>
+											<Col>
+												<FormGroup>
+													<FormSelect
+														name='tipoMiembro'
+														value={values.tipoMiembro}
+														onChange={handleChange}
+														onBlur={handleBlur}
+														isInvalid={!!errors.tipoMiembro && touched.tipoMiembro}
+														size='sm'
+													>
+														<option value=''>Tipo de miembro</option>
+														<option value='DOCENTE'>Docente</option>
+														<option value='ESTUDIANTE'>Estudiante</option>
+														<option value='GRADUADO'>Graduado</option>
+														<option value='NO_DOC'>No Docente</option>
+														<option value='NO_UNIV'>No Universitario</option>
+													</FormSelect>
+												</FormGroup>
+											</Col>
+											<Col></Col>
+										</Row>
+										<Row>
+											<Col>
+												<Form.Group>
+													<Form.Control
+														size='sm'
+														type='text'
+														placeholder='Nombre'
+														name='nom'
+														value={values.nom}
+														onChange={handleChange}
+														onBlur={handleBlur}
+														isInvalid={!!errors.nom && touched.nom}
+													/>
+												</Form.Group>
+											</Col>
+											<Col>
+												<Form.Group>
+													<Form.Control
+														size='sm'
+														type='text'
+														placeholder='Apellido'
+														name='ape'
+														value={values.ape}
+														onChange={handleChange}
+														onBlur={handleBlur}
+														isInvalid={!!errors.ape && touched.ape}
+													/>
+												</Form.Group>
+											</Col>
+										</Row>
+										<Row>
+											<Col>
+												<Form.Group>
+													<Form.Control
+														size='sm'
+														type='text'
+														placeholder='Domicilio'
+														name='dom'
+														value={values.dom}
+														onChange={handleChange}
+														onBlur={handleBlur}
+													/>
+												</Form.Group>
+											</Col>
+											<Col>
+												<Form.Group>
+													<Form.Control
+														size='sm'
+														type='text'
+														placeholder='Telefono'
+														name='tel'
+														value={values.tel}
+														onChange={handleChange}
+														onBlur={handleBlur}
+														isInvalid={!!errors.tel && touched.tel}
+													/>
+												</Form.Group>
+											</Col>
+										</Row>
 
-											<FormSelect size='sm' aria-label='Default select example' name='dedicacion'>
-												<option>Dedicacion</option>
-												<option value='1'>Exclusivo</option>
-												<option value='2'>Exclusivo B</option>
-												<option value='3'>Semiexclusivo</option>
-												<option value='4'>Simple</option>
-											</FormSelect>
-										</div>
-									)}
-									{['est'].includes(memberType) && (
-										<FormSelect size='sm' aria-label='Default select example' name='periodo'>
-											<option>Periodo lectivo</option>
-											<option value='1'>Ciclo Inicial</option>
-											<option value='2'>Ciclo Superior</option>
-										</FormSelect>
-									)}
-									{['noDoc'].includes(memberType) && (
-										<FormGroup>
-											<Form.Check inline label='Áreas unl' type='radio' name='noDoc' />
-											<Form.Check inline label='Unidad Académica' type='radio' name='noDoc' />
-										</FormGroup>
-									)}
-								</>
-							)}
-							<Button variant='primary' size='sm' className=' ms-auto mt-auto mb-1 ' type='submit'>
-								Agregar
-							</Button>
-						</Container>
-					</Form>
+										<Form.Group>
+											<Form.Control
+												size='sm'
+												type='email'
+												placeholder='Email'
+												name='email'
+												value={values.email}
+												onChange={handleChange}
+												onBlur={handleBlur}
+												isInvalid={!!errors.email && touched.email}
+											/>
+										</Form.Group>
+										{values.tipoMiembro && (
+											<>
+												{['DOCENTE', 'GRADUADO', 'NO_DOC', 'NO_UNIV'].includes(
+													values.tipoMiembro,
+												) && (
+													<FormGroup className=' ms-1'>
+														<Form.Label style={{ fontSize: '14px' }} className=' mb-0'>
+															Posee tarjeta precargable?
+														</Form.Label>
+														<div>
+															<Form.Check
+																inline
+																label='Si'
+																style={{ fontSize: '14px' }}
+																type='radio'
+																name='precargable'
+																value={1}
+																checked={values.tieneTarjeta === 1}
+																onChange={handleChange}
+															/>
+															<Form.Check
+																inline
+																label='No'
+																style={{ fontSize: '14px' }}
+																type='radio'
+																name='precargable'
+																value={0}
+																checked={values.tieneTarjeta === 0}
+																onChange={handleChange}
+															/>
+														</div>
+													</FormGroup>
+												)}
+												{['DOCENTE', 'ESTUDIANTE', 'GRADUADO'].includes(values.tipoMiembro) && (
+													<div className=' d-flex gap-1'>
+														<FormGroup className=' w-50'>
+															<Form.Control
+																size='sm'
+																type='text'
+																placeholder='Titulo'
+																name='titulo'
+																value={values.titulo}
+																onChange={handleChange}
+																onBlur={handleBlur}
+															/>
+														</FormGroup>
+
+														<FormSelect
+															size='sm'
+															aria-label='Default select example'
+															name='unidadAcademica'
+															className=' text-wrap w-50'
+															value={values.idUnidadAcademica}
+															onChange={handleChange}
+															onBlur={handleBlur}
+														>
+															<option
+																style={{
+																	whiteSpace: 'nowrap',
+																	overflow: 'hidden',
+																	textOverflow: 'ellipsis',
+																}}
+															>
+																Unidad Academica
+															</option>
+															<option value='1'>One</option>
+															<option value='2'>Two</option>
+															<option value='3'>Three</option>
+														</FormSelect>
+													</div>
+												)}
+												{['DOCENTE'].includes(values.tipoMiembro) && (
+													<div className=' d-flex gap-1'>
+														<FormSelect
+															size='sm'
+															aria-label='Default select example'
+															name='categoria'
+															value={values.categoriaDocente}
+															onChange={handleChange}
+															onBlur={handleBlur}
+														>
+															<option>Categoria</option>
+															<option value='ADJUNTO'>Adjunto</option>
+															<option value='ASOCIADO'>Asociado</option>
+															<option value='AYUDANTE'>Ayudante</option>
+															<option value='JTP'>JTP</option>
+															<option value='TITULAR'>Titular</option>
+														</FormSelect>
+
+														<FormSelect
+															size='sm'
+															aria-label='Default select example'
+															name='dedicacion'
+															value={values.categoriaDedicacion}
+															onChange={handleChange}
+															onBlur={handleBlur}
+														>
+															<option>Dedicacion</option>
+															<option value='EXCLUSIVA'>Exclusiva</option>
+															<option value='EXCLUSIVA_B'>Exclusiva B</option>
+															<option value='SEMI_EXCLUSIVA'>Semiexclusiva</option>
+															<option value='SIMPLE'>Simple</option>
+														</FormSelect>
+													</div>
+												)}
+												{['ESTUDIANTE'].includes(values.tipoMiembro) && (
+													<FormSelect
+														size='sm'
+														aria-label='Default select example'
+														name='periodo'
+														value={values.periodoLectivo}
+														onChange={handleChange}
+														onBlur={handleBlur}
+													>
+														<option>Periodo lectivo</option>
+														<option value='INICIAL'>Ciclo Inicial</option>
+														<option value='SUPERIOR'>Ciclo Superior</option>
+													</FormSelect>
+												)}
+												{['NO_DOC'].includes(values.tipoMiembro) && (
+													// TODO: Agregar valores de areas y unidades academicas y los select de c/u
+													<FormGroup className=' ms-1'>
+														<Form.Check
+															inline
+															label='Áreas unl'
+															type='radio'
+															name='noDoc'
+															style={{ fontSize: '14px' }}
+															values={1}
+															checked={values.idArea === 1}
+															onChange={handleChange}
+														/>
+														<Form.Check
+															inline
+															label='Unidad Académica'
+															type='radio'
+															name='noDoc'
+															values={2}
+															checked={values.idArea === 2}
+															onChange={handleChange}
+															style={{ fontSize: '14px' }}
+														/>
+													</FormGroup>
+												)}
+												<Form.Group>
+													<Form.Control
+														size='sm'
+														as='textarea'
+														placeholder='Observaciones'
+														name='observ'
+														value={values.observ}
+														onChange={handleChange}
+														onBlur={handleBlur}
+														rows={3}
+													/>
+												</Form.Group>
+											</>
+										)}
+										<Button
+											variant='primary'
+											size='sm'
+											className=' ms-auto mt-auto mb-2 '
+											type='submit'
+										>
+											Agregar
+										</Button>
+									</Container>
+								</Form>
+							);
+						}}
+					</Formik>
 				</div>
 				<ModalMember
 					show={show}
