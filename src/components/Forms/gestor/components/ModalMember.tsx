@@ -26,38 +26,36 @@ export const ModalMember = ({ show, handleClose, memberList, handleRoles }: Moda
 		Especialista: null,
 	});
 
+	const assignRoles = (member: IntegranteEquipoProps, role: string, dniRole: string | null) => {
+		// Si el dni del rol coincide con el dni del miembro y el miembro no tiene ese rol, lo agregamos
+		if (member.dni === dniRole && !member.lrol?.includes(role)) {
+			return { ...member, lrol: [...(member.lrol ?? []), role] };
+		}
+		// Si el miembro no tiene la propiedad lrol, la creamos
+		if (!member.lrol) {
+			return { ...member, lrol: [] };
+		}
+		return member;
+	};
+
 	useEffect(() => {
 		console.log(' memberList:  t');
 		const addRolesToMembers = () => {
 			if (memberList.length > 0) {
 				const updatedMembers = memberList.map((member) => {
-					if (importanRoles.director === member.dni && !member.lrol.includes('Director')) {
-						return { ...member, lrol: [...member.lrol, 'Director'] };
-					} else if (
-						importanRoles.coDirector === member.dni &&
-						!member.lrol.includes('Co-Director')
-					) {
-						return { ...member, lrol: [...member.lrol, 'Co-Director'] };
-					} else if (
-						importanRoles.coordinador === member.dni &&
-						!member.lrol.includes('Coordinador')
-					) {
-						return { ...member, lrol: [...member.lrol, 'Coordinador'] };
-					} else if (
-						importanRoles.respFinanciero === member.dni &&
-						!member.lrol.includes('Responsable Financiero')
-					) {
-						return { ...member, lrol: [...member.lrol, 'Responsable Financiero'] };
-					} else if (
+					member = assignRoles(member, 'Director', importanRoles.director);
+					member = assignRoles(member, 'Co-Director', importanRoles.coDirector);
+					member = assignRoles(member, 'Coordinador', importanRoles.coordinador);
+					member = assignRoles(member, 'Responsable Financiero', importanRoles.respFinanciero);
+					if (
 						importanRoles.Especialista?.includes(member.dni) &&
-						!member.lrol.includes('Especialista')
+						!member.lrol?.includes('Especialista')
 					) {
-						return { ...member, lrol: [...member.lrol, 'Especialista'] };
-					} else {
-						return member;
+						member = { ...member, lrol: [...(member.lrol ?? []), 'Especialista'] };
 					}
+					console.log(' memberList: ', member);
+					return member;
 				});
-
 				handleRoles(updatedMembers);
 			}
 		};

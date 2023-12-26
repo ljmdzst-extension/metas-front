@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import mockMembers from '../../../mock/memberListData.json';
+import mockAreas from '../../../mock/areasData.json';
 
 import {
 	Button,
@@ -15,7 +16,7 @@ import {
 
 import { IntegranteEquipoProps } from '../../../types/ProjectsProps';
 import { ModalMember } from './components/ModalMember';
-import { Delete, Search } from '@mui/icons-material';
+import { Delete, Search, Visibility } from '@mui/icons-material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -41,16 +42,13 @@ const initialValues: IntegranteEquipoProps = {
 
 const FormMembers = () => {
 	const [members, setMembers] = useState<IntegranteEquipoProps[]>([]);
+	const [mode, setMode] = useState<'add' | 'edit' | 'view'>('add');
 
 	const [initialFormValues, setInitialFormValues] = useState<IntegranteEquipoProps>(initialValues);
 
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 
-	const handleSubmit = (values: IntegranteEquipoProps) => {
-		const updatedMembers = [...members, values];
-		setMembers(updatedMembers);
-	};
 
 	const handleDelete = (dni: string) => {
 		const updatedMembers = members.filter((member) => member.dni !== dni);
@@ -68,19 +66,54 @@ const FormMembers = () => {
 		);
 		console.log(currentMemberFound);
 		if (currentMemberFound) {
+			console.log('encontrado');
 			setInitialFormValues(currentMemberFound);
 		} else {
 			setInitialFormValues(initialValues);
 		}
 	};
 
-	const validations = {
-		dni: Yup.string().required('Campo requerido'),
+	const checkDniUniqueness = (dni: string) => {
+		const existMember = members.find((member) => member.dni === dni);
+		return !!existMember;
+	};
+
+	const validations = Yup.object().shape({
+		tipoDni: Yup.string().required('Campo requerido'),
+		dni: Yup.string()
+			.required('Campo requerido')
+			.test('dniUnique', 'Ya existe un usuario con ese DNI', async (value) => {
+				if (mode === 'edit') return true;
+				const exist = await checkDniUniqueness(value);
+				return !exist;
+			}),
 		nom: Yup.string().required('Campo requerido'),
 		ape: Yup.string().required('Campo requerido'),
 		dom: Yup.string().required('Campo requerido'),
 		tel: Yup.string().required('Campo requerido'),
-		email: Yup.string().required('Campo requerido'),
+		email: Yup.string().email().required('Campo requerido'),
+	});
+
+	const handleCreate = () => {
+		setInitialFormValues(initialValues);
+		setMode('add');
+	};
+
+	const handleEdit = (dni: string) => {
+		const currentMember = members.find((member) => member.dni === dni);
+		if (currentMember) {
+			setInitialFormValues(currentMember);
+			setMode('edit');
+		}
+	};
+
+	const handleVisibility = (dni: string) => {
+		console.log('modod visible');
+		const currentMember = members.find((member) => member.dni === dni);
+		if (currentMember) {
+			setInitialFormValues(currentMember);
+			setMode('view');
+		}
 	};
 
 	return (
@@ -108,6 +141,7 @@ const FormMembers = () => {
 											<td>{member.idUnidadAcademica}</td>
 											<td>{member.lrol ? member.lrol : ' '}</td>
 											<td>
+												<Visibility onClick={() => handleVisibility(member.dni)} />
 												<Delete onClick={() => handleDelete(member.dni)} />
 											</td>
 										</tr>
@@ -140,8 +174,24 @@ const FormMembers = () => {
 				>
 					<Formik
 						initialValues={initialFormValues}
-						onSubmit={(values) => {
-							handleSubmit(values);
+						onSubmit={(values, { resetForm }) => {
+							if (mode === 'add') {
+								setMembers([...members, values]);
+								resetForm({ values: initialValues });
+								setInitialFormValues(initialValues);
+								console.log(' limpia');
+							} else if (mode === 'edit') {
+								const updatedMembers = members.map((member) => {
+									if (member.dni === values.dni) {
+										return values;
+									}
+									return member;
+								});
+								setMembers(updatedMembers);
+								resetForm({ values: initialValues });
+								setInitialFormValues(initialValues);
+								setMode('add');
+							}
 						}}
 						validationSchema={validations}
 						enableReinitialize
@@ -160,6 +210,7 @@ const FormMembers = () => {
 													onBlur={handleBlur}
 													className=' w-25'
 													isInvalid={!!errors.tipoDni && touched.tipoDni}
+													disabled={mode === 'view'}
 													size='sm'
 												>
 													<option value=''>Tipo</option>
@@ -177,11 +228,13 @@ const FormMembers = () => {
 														onChange={handleChange}
 														onBlur={handleBlur}
 														isInvalid={!!errors.dni && touched.dni}
+														disabled={mode === 'view'}
 														size='sm'
 													/>
 													<Button
 														variant='outline-secondary'
 														onClick={() => handleSearch(values.tipoDni, values.dni)}
+														disabled={mode === 'view'}
 														size='sm'
 													>
 														<Search />
@@ -198,6 +251,7 @@ const FormMembers = () => {
 														onChange={handleChange}
 														onBlur={handleBlur}
 														isInvalid={!!errors.tipoMiembro && touched.tipoMiembro}
+														disabled={mode === 'view'}
 														size='sm'
 													>
 														<option value=''>Tipo de miembro</option>
@@ -215,6 +269,7 @@ const FormMembers = () => {
 											<Col>
 												<Form.Group>
 													<Form.Control
+														disabled={mode === 'view'}
 														size='sm'
 														type='text'
 														placeholder='Nombre'
@@ -229,6 +284,7 @@ const FormMembers = () => {
 											<Col>
 												<Form.Group>
 													<Form.Control
+														disabled={mode === 'view'}
 														size='sm'
 														type='text'
 														placeholder='Apellido'
@@ -245,6 +301,7 @@ const FormMembers = () => {
 											<Col>
 												<Form.Group>
 													<Form.Control
+														disabled={mode === 'view'}
 														size='sm'
 														type='text'
 														placeholder='Domicilio'
@@ -258,6 +315,7 @@ const FormMembers = () => {
 											<Col>
 												<Form.Group>
 													<Form.Control
+														disabled={mode === 'view'}
 														size='sm'
 														type='text'
 														placeholder='Telefono'
@@ -273,6 +331,7 @@ const FormMembers = () => {
 
 										<Form.Group>
 											<Form.Control
+												disabled={mode === 'view'}
 												size='sm'
 												type='email'
 												placeholder='Email'
@@ -320,6 +379,7 @@ const FormMembers = () => {
 													<div className=' d-flex gap-1'>
 														<FormGroup className=' w-50'>
 															<Form.Control
+																disabled={mode === 'view'}
 																size='sm'
 																type='text'
 																placeholder='Titulo'
@@ -331,6 +391,7 @@ const FormMembers = () => {
 														</FormGroup>
 
 														<FormSelect
+															disabled={mode === 'view'}
 															size='sm'
 															aria-label='Default select example'
 															name='unidadAcademica'
@@ -357,6 +418,7 @@ const FormMembers = () => {
 												{['DOCENTE'].includes(values.tipoMiembro) && (
 													<div className=' d-flex gap-1'>
 														<FormSelect
+															disabled={mode === 'view'}
 															size='sm'
 															aria-label='Default select example'
 															name='categoria'
@@ -373,6 +435,7 @@ const FormMembers = () => {
 														</FormSelect>
 
 														<FormSelect
+															disabled={mode === 'view'}
 															size='sm'
 															aria-label='Default select example'
 															name='dedicacion'
@@ -390,6 +453,7 @@ const FormMembers = () => {
 												)}
 												{['ESTUDIANTE'].includes(values.tipoMiembro) && (
 													<FormSelect
+														disabled={mode === 'view'}
 														size='sm'
 														aria-label='Default select example'
 														name='periodo'
@@ -404,31 +468,32 @@ const FormMembers = () => {
 												)}
 												{['NO_DOC'].includes(values.tipoMiembro) && (
 													// TODO: Agregar valores de areas y unidades academicas y los select de c/u
-													<FormGroup className=' ms-1'>
-														<Form.Check
-															inline
-															label='Áreas unl'
-															type='radio'
-															name='noDoc'
-															style={{ fontSize: '14px' }}
-															values={1}
-															checked={values.idArea === 1}
-															onChange={handleChange}
-														/>
-														<Form.Check
-															inline
-															label='Unidad Académica'
-															type='radio'
-															name='noDoc'
-															values={2}
-															checked={values.idArea === 2}
-															onChange={handleChange}
-															style={{ fontSize: '14px' }}
-														/>
-													</FormGroup>
+													<FormSelect
+														disabled={mode === 'view'}
+														size='sm'
+														name='idArea'
+														value={values.idArea}
+														onChange={handleChange}
+														isInvalid={!!errors.idArea && touched.idArea}
+													>
+														<option>Seleccione el área académica al que pertenece</option>
+														{mockAreas.length ? (
+															mockAreas.map((area) => (
+																<option
+																	key={`${area.nom}-${area.idRelacion}`}
+																	value={area.idRelacion}
+																>
+																	{area.nom}
+																</option>
+															))
+														) : (
+															<option value=''>Error en la conexion con la base de datos</option>
+														)}
+													</FormSelect>
 												)}
 												<Form.Group>
 													<Form.Control
+														disabled={mode === 'view'}
 														size='sm'
 														as='textarea'
 														placeholder='Observaciones'
@@ -444,11 +509,24 @@ const FormMembers = () => {
 										<Button
 											variant='primary'
 											size='sm'
-											className=' ms-auto mt-auto mb-2 '
+											className={' ms-auto mt-auto mb-2 ' + (mode === 'view' ? 'd-none' : '')}
 											type='submit'
 										>
-											Agregar
+											{mode === 'add' ? 'Agregar' : 'Guardar'}
 										</Button>
+										<div
+											className={
+												'd-flex justify-content-end gap-2 mb-2 mt-auto ' +
+												(mode === 'view' ? '' : 'd-none')
+											}
+										>
+											<Button variant='primary' size='sm' onClick={() => handleEdit(values.dni)}>
+												Editar
+											</Button>
+											<Button variant='primary' size='sm' onClick={handleCreate}>
+												Cerrar
+											</Button>
+										</div>
 									</Container>
 								</Form>
 							);
