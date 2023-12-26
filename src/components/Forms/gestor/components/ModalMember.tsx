@@ -1,12 +1,21 @@
 import { useEffect, useState } from 'react';
 import { Form, FormSelect, Modal } from 'react-bootstrap';
 import { IntegranteEquipoProps } from '../../../../types/ProjectsProps';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+
+const animatedComponents = makeAnimated();
 
 interface ModalMemberProps {
 	show: boolean;
 	handleClose: () => void;
 	memberList: IntegranteEquipoProps[];
 	handleRoles: (memberList: IntegranteEquipoProps[]) => void;
+}
+
+interface selectOptions {
+	label: string;
+	value: string;
 }
 
 interface importanRolesProps {
@@ -143,22 +152,28 @@ export const ModalMember = ({ show, handleClose, memberList, handleRoles }: Moda
 					</Form.Group>
 					<Form.Group>
 						<Form.Label>Especialistas</Form.Label>
-						<FormSelect
-							aria-label='Default select example'
-							name='Especialista'
-							value={importanRoles.Especialista ?? ''}
-							onChange={(e) =>
-								setImportanRoles({ ...importanRoles, Especialista: [e.target.value] })
+						<Select
+							isMulti
+							closeMenuOnSelect={false}
+							components={animatedComponents}
+							onChange={(selectedOptions) => {
+								const selectedValues = selectedOptions.map((option: selectOptions) => option.value);
+								setImportanRoles({ ...importanRoles, Especialista: selectedValues });
+							}}
+							options={memberList.map((member) => ({
+								label: `${member.nom} ${member.ape}`,
+								value: member.dni,
+							}))}
+							placeholder='Seleccione un Especialista'
+							value={
+								importanRoles.Especialista?.map((dni) => ({
+									label: `${memberList.find((member) => member.dni === dni)?.nom} ${
+										memberList.find((member) => member.dni === dni)?.ape
+									}`,
+									value: dni,
+								})) ?? []
 							}
-						>
-							<option>Seleccione un Especialista</option>
-							{memberList.length > 0 &&
-								memberList?.map((member: IntegranteEquipoProps) => (
-									<option key={member.dni} value={member.dni}>
-										{member.nom}
-									</option>
-								))}
-						</FormSelect>
+						/>
 					</Form.Group>
 				</Form>
 			</Modal.Body>
