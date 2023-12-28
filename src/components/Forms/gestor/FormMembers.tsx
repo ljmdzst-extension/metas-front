@@ -49,7 +49,6 @@ const FormMembers = () => {
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 
-
 	const handleDelete = (dni: string) => {
 		const updatedMembers = members.filter((member) => member.dni !== dni);
 		setMembers(updatedMembers);
@@ -159,6 +158,7 @@ const FormMembers = () => {
 						className=' mb-2 mt-auto '
 						onClick={() => setShow(true)}
 						disabled={members.length === 0}
+						size='sm'
 					>
 						Asignar roles
 					</Button>
