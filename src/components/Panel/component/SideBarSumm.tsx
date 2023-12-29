@@ -9,12 +9,12 @@ const SideBarSumm = ({ id }: SideBarSummProps) => {
 	const navigation = useNavigate();
 
 	return (
-		<div>
+		<div className=' d-flex flex-column gap-1'>
 			<Button variant='primary'>Ver</Button>
 			<Button variant='primary' onClick={() => navigation(`/gestion/proyectos/form/${id}`)}>
 				Editar
 			</Button>
-			<Button variant='primary'>Eliminar</Button>
+			<Button variant='danger'>Eliminar</Button>
 		</div>
 	);
 };
