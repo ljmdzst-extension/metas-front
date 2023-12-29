@@ -27,7 +27,17 @@ const ProjectHistory = ({ data }: dataProps) => {
 							<tr key={item.id}>
 								<td>{date.toLocaleDateString('es-ES')}</td>
 								<td>{item.tipoEstado}</td>
-								<td>{item.desc}</td>
+								<td
+									style={{
+										maxWidth: '400px',
+										overflow: 'hidden',
+										textOverflow: 'ellipsis',
+										whiteSpace: 'nowrap',
+									}}
+									title={item.desc}
+								>
+									{item.desc}
+								</td>
 								<td>Accion</td>
 							</tr>
 						);
