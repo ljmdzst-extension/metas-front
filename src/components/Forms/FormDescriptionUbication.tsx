@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ListGroup } from 'react-bootstrap';
+import { ContentCopy } from '@mui/icons-material';
 interface FormDescriptionUbicationProps {
 	onClose: () => void;
 }
@@ -94,6 +95,11 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 		return urlPattern.test(url);
 	};
 
+	const copyToClipboard = (text: string) => {
+		navigator.clipboard.writeText(text);
+		setShowToast(true);
+	};
+
 	return (
 		<div className=' d-flex flex-column  '>
 			<div className=' m-2 mx-4 '>
@@ -140,7 +146,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 							value={ubicacion}
 							isInvalid={ubicacion !== '' && !isUrlValid(ubicacion)}
 						/>
-						
+
 						<Button
 							variant='success'
 							id='button-addon2'
@@ -155,10 +161,19 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 					{ubicaciones.map((ubicacion, index) => (
 						<ListGroup.Item
 							key={index}
-							className=' d-flex justify-content-between w-75 align-self-center'
+							className=' d-flex flex-row  w-75 align-self-center'
 							variant='secondary'
 						>
-							{ubicacion.enlace ?? ''}
+							<div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+								{ubicacion.enlace ?? ''}
+							</div>
+							<ContentCopy
+								className=' cursor-pointer mx-1'
+								onClick={(event) => {
+									event.stopPropagation();
+									copyToClipboard(ubicacion.enlace ?? '');
+								}}
+							/>
 							<DeleteIcon
 								onClick={() => eliminarUbicacion(index)}
 								style={{

@@ -91,16 +91,16 @@ const FormMetas = ({}: FormMetasProps) => {
 	};
 
 	const botonAgregarMeta = () => {
-		console.log(indexCurrentMeta.current);
-		console.log('Agregar');
+		// console.log(indexCurrentMeta.current);
+		// console.log('Agregar');
 		indexCurrentMeta.current = -1;
 		setNuevaMeta(defaultNuevaMeta);
 		openModal();
 	};
 
 	const guardarBotonModal = () => {
-		console.log(indexCurrentMeta.current);
-		console.log('Guardar');
+		// console.log(indexCurrentMeta.current);
+		// console.log('Guardar');
 		if (indexCurrentMeta.current === -1) {
 			// Agregar
 			const newListadoMetas = [...listadoMetas];
@@ -117,15 +117,15 @@ const FormMetas = ({}: FormMetasProps) => {
 	};
 
 	const editarMeta = (index: number) => {
-		console.log('Editar');
+		// console.log('Editar');
+		// console.log(indexCurrentMeta.current);
 		indexCurrentMeta.current = index;
-		console.log(indexCurrentMeta.current);
 		setNuevaMeta(listadoMetas[index]);
 		openModal();
 	};
 
 	const eliminarMeta = (index: number) => {
-		console.log('Eliminar');
+		// console.log('Eliminar');
 		const newListadoMetas = [...listadoMetas];
 		newListadoMetas.splice(index, 1);
 		setListadoMetas(newListadoMetas);
