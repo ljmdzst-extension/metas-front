@@ -35,7 +35,7 @@ const defaultNuevaMeta = {
 	valoracion: null,
 };
 
-const FormMetas = ({  }: FormMetasProps) => {
+const FormMetas = ({}: FormMetasProps) => {
 	const dispatch = useDispatch();
 	const [listadoMetas, setListadoMetas] = useState<metas[]>([]);
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
@@ -76,7 +76,7 @@ const FormMetas = ({  }: FormMetasProps) => {
 			dispatch({
 				type: 'CARGAR_META',
 				payload: {
-					metas : listadoMetas
+					metas: listadoMetas,
 				},
 			});
 		};
@@ -161,7 +161,7 @@ const FormMetas = ({  }: FormMetasProps) => {
 		return text.substring(0, limit);
 	};
 
-	const valoracionesText = (idValoracion: number ) => {
+	const valoracionesText = (idValoracion: number) => {
 		const valoracion = valoraciones?.find((valoracion) => valoracion.idValoracion === idValoracion);
 		return valoracion?.nom;
 	};
@@ -235,19 +235,28 @@ const FormMetas = ({  }: FormMetasProps) => {
 			>
 				Guardar Actividad
 			</Button>
-			<Modal show={showModal} onHide={closeModal} size='lg'>
+			<Modal show={showModal} onHide={closeModal} size='xl' centered>
 				<Modal.Header closeButton></Modal.Header>
 				<Modal.Body className=' d-flex flex-column gap-4 '>
-					<Form.Control
-						as='textarea'
-						name='descripcion'
-						className='ParrafoDescripcion'
-						placeholder={'Meta/resultado esperado'}
-						value={nuevaMeta.descripcion ?? ''}
-						onChange={(e) => {
-							setNuevaMeta({ ...nuevaMeta, descripcion: e.target.value });
-						}}
-					/>
+					<Form.Group className=' d-flex flex-column align-items-center w-100'>
+						<Form.Control
+							as='textarea'
+							name='descripcion'
+							className='ParrafoDescripcion'
+							placeholder={'Meta/resultado esperado'}
+							value={nuevaMeta.descripcion ?? ''}
+							onChange={(e) => {
+								setNuevaMeta({ ...nuevaMeta, descripcion: e.target.value });
+							}}
+							isInvalid={textLimitError(nuevaMeta.descripcion ?? '', 5000)}
+						/>
+						<Badge
+							className=' mt-2 ms-auto'
+							bg={textLimitError(nuevaMeta.descripcion ?? '', 5000) ? 'danger' : 'primary'}
+						>
+							{nuevaMeta.descripcion?.length}/{5000}
+						</Badge>
+					</Form.Group>
 					<Form.Group className=' d-flex flex-column align-items-center w-100'>
 						<Form.Control
 							as='textarea'
@@ -259,13 +268,13 @@ const FormMetas = ({  }: FormMetasProps) => {
 							onChange={(e) => {
 								setNuevaMeta({ ...nuevaMeta, resultado: e.target.value });
 							}}
-							isInvalid={textLimitError(nuevaMeta.resultado ?? '', 500)}
+							isInvalid={textLimitError(nuevaMeta.resultado ?? '', 5000)}
 						/>
 						<Badge
 							className=' mt-2 ms-auto'
-							bg={textLimitError(nuevaMeta.resultado ?? '', 500) ? 'danger' : 'primary'}
+							bg={textLimitError(nuevaMeta.resultado ?? '', 5000) ? 'danger' : 'primary'}
 						>
-							{nuevaMeta.resultado?.length}/{500}
+							{nuevaMeta.resultado?.length}/{5000}
 						</Badge>
 					</Form.Group>
 					<Form.Group className=' d-flex flex-column align-items-center w-100'>
@@ -281,24 +290,26 @@ const FormMetas = ({  }: FormMetasProps) => {
 							onChange={(e) => {
 								setNuevaMeta({ ...nuevaMeta, observaciones: e.target.value });
 							}}
-							isInvalid={textLimitError(nuevaMeta.observaciones ?? '', 500)}
+							isInvalid={textLimitError(nuevaMeta.observaciones ?? '', 5000)}
 						/>
 						<Badge
 							className=' mt-2 ms-auto'
-							bg={textLimitError(nuevaMeta.observaciones ?? '', 500) ? 'danger' : 'primary'}
+							bg={textLimitError(nuevaMeta.observaciones ?? '', 5000) ? 'danger' : 'primary'}
 						>
-							{nuevaMeta.observaciones?.length}/{500}
+							{nuevaMeta.observaciones?.length}/{5000}
 						</Badge>
 					</Form.Group>
 					<Form.Select
 						name='valoracion'
-						className={`ParrafoObservaciones ${ nuevaMeta.valoracion === -1 ? 'placeholder-option' : ''}}`}
+						className={`ParrafoObservaciones ${
+							nuevaMeta.valoracion === -1 ? 'placeholder-option' : ''
+						}}`}
 						value={nuevaMeta.valoracion ?? -1}
 						onChange={(e) => {
 							setNuevaMeta({ ...nuevaMeta, valoracion: parseInt(e.target.value) });
 						}}
 					>
-						<option key={'nn'} value={-1} disabled  className=' placeholder-option '  >
+						<option key={'nn'} value={-1} disabled className=' placeholder-option '>
 							Valoración general de la actividad y los resultados alcanzados
 						</option>
 						{valoraciones?.map((valoracion) => (
