@@ -171,30 +171,30 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 					className=' custom-scrollbar'
 				>
 					{ubicaciones.map((ubicacion, index) => (
-						<ListGroup.Item
-							key={index}
-							className=' d-flex flex-row  w-75 align-self-center'
-							variant='secondary'
-						>
-							<div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-								{ubicacion.enlace ?? ''}
+						<ListGroup.Item key={index} className=' w-75 align-self-center' variant='secondary'>
+							<div className=' d-flex justify-content-between '>
+								<div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+									{ubicacion.enlace ?? ''}
+								</div>
+								<div className=' d-flex'>
+									<ContentCopy
+										className=' cursor-pointer mx-1'
+										onClick={(event) => {
+											event.stopPropagation();
+											copyToClipboard(ubicacion.enlace ?? '');
+										}}
+									/>
+									<DeleteIcon
+										onClick={() => eliminarUbicacion(index)}
+										style={{
+											borderRadius: '20%',
+											backgroundColor: 'red',
+											color: 'white',
+											cursor: 'pointer',
+										}}
+									/>
+								</div>
 							</div>
-							<ContentCopy
-								className=' cursor-pointer mx-1'
-								onClick={(event) => {
-									event.stopPropagation();
-									copyToClipboard(ubicacion.enlace ?? '');
-								}}
-							/>
-							<DeleteIcon
-								onClick={() => eliminarUbicacion(index)}
-								style={{
-									borderRadius: '20%',
-									backgroundColor: 'red',
-									color: 'white',
-									cursor: 'pointer',
-								}}
-							/>
 						</ListGroup.Item>
 					))}
 				</ListGroup>
