@@ -10,6 +10,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ListGroup } from 'react-bootstrap';
 import { ContentCopy } from '@mui/icons-material';
+
+import { limitTextString, textLimitError } from '../../utils/validacionesForms';
 interface FormDescriptionUbicationProps {
 	onClose: () => void;
 }
@@ -58,9 +60,14 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 		}
 	};
 
-	const handleClickEditarDescripcion = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const handleClickEditarDescripcion = (
+		event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+		description: string,
+	) => {
 		event.preventDefault();
-		setEditandoDescripcion(!editandoDescripcion);
+		if (editandoDescripcion === true && !textLimitError(description, 5000))
+			setEditandoDescripcion(!editandoDescripcion);
+		if (editandoDescripcion === false) setEditandoDescripcion(!editandoDescripcion);
 	};
 
 	const eliminarUbicacion = (index: number) => {
@@ -97,32 +104,34 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 
 	const copyToClipboard = (text: string) => {
 		navigator.clipboard.writeText(text);
-		setShowToast(true);
 	};
 
 	return (
 		<div className=' d-flex flex-column  '>
-			<div className=' m-2 mx-4 '>
-				<div className=' mt-2'>
+			<div className='  mx-4 my-2 '>
+				<div className=''>
 					<div className='Descripcion'>
 						<h5> Descripción: </h5>
 
-						<InputGroup className='mb-3 gap-1'>
+						<InputGroup className='mb-4 gap-1'>
 							<Form.Control
 								as='textarea'
 								rows={3}
 								style={{ resize: 'none' }}
+								className=' custom-scrollbar'
 								aria-label='Inserte descripción'
 								aria-describedby='basic-addon2'
 								onChange={handleDescripcionChange}
 								disabled={!editandoDescripcion}
 								value={descripcion}
+								isInvalid={textLimitError(descripcion ?? '', 5000)}
 							/>
+
 							<Button
 								variant='secondary'
 								id='button-addon2'
 								style={{ width: '50px', height: '100px' }}
-								onClick={handleClickEditarDescripcion}
+								onClick={(event) => handleClickEditarDescripcion(event, descripcion)}
 							>
 								<EditIcon />
 							</Button>
@@ -130,7 +139,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 					</div>
 				</div>
 
-				<div className=' mt-2'>
+				<div className=''>
 					<div className=' d-flex justify-content-between mb-2'>
 						<h5>Ubicación:</h5>
 						<Button variant='info' size='sm' onClick={AlertBuscarUbicaciones}>
@@ -157,7 +166,10 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 						</Button>
 					</InputGroup>
 				</div>
-				<ListGroup style={{ height: '150px', maxHeight: '150px', overflowY: 'auto' }}>
+				<ListGroup
+					style={{ height: '150px', maxHeight: '150px', overflowY: 'auto' }}
+					className=' custom-scrollbar'
+				>
 					{ubicaciones.map((ubicacion, index) => (
 						<ListGroup.Item
 							key={index}
@@ -190,7 +202,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 
 			<Button
 				variant='success'
-				className='m-2 w-auto align-self-center '
+				className=' w-auto align-self-center '
 				onClick={() => {
 					guardarActividad(
 						{ ...estadoActualizado, desc: descripcion, listaUbicaciones: ubicaciones },

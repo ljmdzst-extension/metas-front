@@ -100,9 +100,9 @@ export default function FormOrgInst({}: FormOrgInstProps) {
 						Agregar
 					</Button>
 				</Form>
-				<div className='ListaInstituciones' style={{ maxHeight: '250px', overflowY: 'auto' }}>
-					<Table striped bordered hover>
-						<thead>
+				<div className=' custom-scrollbar' style={{ maxHeight: '250px', overflowY: 'auto' }}>
+					<Table>
+						<thead style={{ position: 'sticky', top: '0' }}>
 							<tr>
 								<th>#</th>
 								<th>Descripción</th>

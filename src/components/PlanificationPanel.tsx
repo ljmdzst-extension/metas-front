@@ -42,7 +42,7 @@ export default function PlanificationPanel({
 	const [motCancel, setMotCancel] = useState<string | null>(null);
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
 
-	const [isTittleHover, setIsTittleHover] = useState(false);
+	// const [isTittleHover, setIsTittleHover] = useState(false);
 
 	useEffect(() => {
 		setMotCancel(estadoActualizado?.motivoCancel);
@@ -96,9 +96,9 @@ export default function PlanificationPanel({
 		cleanFormSelected();
 	};
 
-	const toggleHover = () => {
-		setIsTittleHover(!isTittleHover);
-	};
+	// const toggleHover = () => {
+	// 	setIsTittleHover(!isTittleHover);
+	// };
 
 	useEffect(() => {
 		const changeFromSideBar = () => {
@@ -204,7 +204,6 @@ export default function PlanificationPanel({
 		return fechaString;
 	};
 
-
 	return (
 		<div className=' w-100 h-100'>
 			<Modal show={show2} onHide={handleClose2}>
@@ -241,16 +240,11 @@ export default function PlanificationPanel({
 				</Modal.Body>
 			</Modal>
 			<div className='d-flex justify-content-between align-items-center mb-2 border-bottom position-relative '>
-				<h4
-					className=' text-break m-2 border-3 '
-					style={{ borderBottom: '2px solid #0a5d52' }}
-					onMouseEnter={toggleHover}
-					onMouseLeave={toggleHover}
-				>
+				<h4 className=' text-break m-2 border-3 ' style={{ borderBottom: '2px solid #0a5d52' }}>
 					{name.length > 80 ? name.slice(0, 80) + '...' : name}
-					{isTittleHover && (
+					{/* {isTittleHover && (
 						<div className='complete-title-label position-absolute top-0 mt-1 me-5'>{name}</div>
-					)}
+					)} */}
 				</h4>
 				{isFormOpen && (
 					<ArrowBack

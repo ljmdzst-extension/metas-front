@@ -177,9 +177,12 @@ const FormMetas = ({}: FormMetasProps) => {
 				Agregar
 				<AddBoxRoundedIcon className=' ms-2' />
 			</Button>
-			<div className='tabla-metas-contenedor' style={{ maxHeight: '200px', overflowY: 'auto' }}>
+			<div
+				className='tabla-metas-contenedor custom-scrollbar'
+				style={{ maxHeight: '200px', overflowY: 'auto' }}
+			>
 				<Table>
-					<thead>
+					<thead style={{ position: 'sticky', top: '0' }}>
 						<tr>
 							<th>#</th>
 							<th>Meta/resultado esperado</th>
