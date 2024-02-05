@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { ListGroup } from 'react-bootstrap';
 import { ContentCopy } from '@mui/icons-material';
 
-import { limitTextString, textLimitError } from '../../utils/validacionesForms';
+import { textLimitError } from '../../utils/validacionesForms';
 interface FormDescriptionUbicationProps {
 	onClose: () => void;
 }
@@ -124,8 +124,11 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 								onChange={handleDescripcionChange}
 								disabled={!editandoDescripcion}
 								value={descripcion}
-								isInvalid={textLimitError(descripcion ?? '', 5000)}
+								isInvalid={textLimitError(descripcion ?? '', 2000)}
 							/>
+							<Form.Control.Feedback type='invalid' tooltip>
+								Maximo 2000 caracteres
+							</Form.Control.Feedback>
 
 							<Button
 								variant='secondary'
@@ -173,9 +176,14 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 					{ubicaciones.map((ubicacion, index) => (
 						<ListGroup.Item key={index} className=' w-75 align-self-center' variant='secondary'>
 							<div className=' d-flex justify-content-between '>
-								<div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+								<a
+									href={ubicacion.enlace ?? ''}
+									target='_blank'
+									rel='noopener noreferrer'
+									style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+								>
 									{ubicacion.enlace ?? ''}
-								</div>
+								</a>
 								<div className=' d-flex'>
 									<ContentCopy
 										className=' cursor-pointer mx-1'

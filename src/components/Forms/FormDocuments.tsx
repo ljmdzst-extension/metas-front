@@ -100,11 +100,10 @@ export default function FormOrgInst({}: FormOrgInstProps) {
 						Agregar
 					</Button>
 				</Form>
-				<div className=' custom-scrollbar' style={{ maxHeight: '250px', overflowY: 'auto' }}>
+				<div className=' custom-scrollbar ' style={{ maxHeight: '250px', overflowY: 'auto' }}>
 					<Table>
 						<thead style={{ position: 'sticky', top: '0' }}>
 							<tr>
-								<th>#</th>
 								<th>Descripción</th>
 								<th>Enlace</th>
 								<th></th>
@@ -113,14 +112,20 @@ export default function FormOrgInst({}: FormOrgInstProps) {
 						<tbody>
 							{arrayDocumentos.map((item, index) => (
 								<tr key={index}>
-									<td style={{ width: '30px' }}>{index + 1}</td>
-									<td style={{ width: '20%' }}>{item.desc}</td>
-									<td>
+									<td style={{ width: '15%' }}>{item.desc}</td>
+									<td
+										style={{
+											overflow: 'hidden',
+											textOverflow: 'ellipsis',
+											whiteSpace: 'nowrap',
+											maxWidth: '200px',
+										}}
+									>
 										<a href={item.link ?? ''} target='_blank' rel='noopener noreferrer'>
 											{item.link}
 										</a>
 									</td>
-									<td style={{ width: '15px' }}>
+									<td style={{ width: '5%' }}>
 										<DeleteIcon
 											color='error'
 											onClick={() => eliminarDocumento(item.idEnlace ?? 0, index)}
