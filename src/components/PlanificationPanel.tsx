@@ -239,6 +239,7 @@ export default function PlanificationPanel({
 					</Form>
 				</Modal.Body>
 			</Modal>
+			{/* NOTE: Vista detalle form */}
 			<div className='d-flex justify-content-between align-items-center mb-2 border-bottom position-relative '>
 				<h4 className=' text-break m-2 border-3 ' style={{ borderBottom: '2px solid #0a5d52' }}>
 					{name.length > 80 ? name.slice(0, 80) + '...' : name}
@@ -266,6 +267,7 @@ export default function PlanificationPanel({
 					/>
 				)}
 			</div>
+			{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
 			{motCancel !== null && (
 				<h2
 					style={{
@@ -278,6 +280,7 @@ export default function PlanificationPanel({
 					ACTIVIDAD SUSPENDIDA
 				</h2>
 			)}
+			{/* NOTE: VISTA PRINCIPAL - Información */}
 			{!isFormOpen ? (
 				<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
 					<div className=' h-50 w-75 '>
@@ -327,6 +330,7 @@ export default function PlanificationPanel({
 							)}
 						</h5>
 					</div>
+					{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
 					{motCancel === null ? (
 						<div className=' d-flex justify-content-around w-100'>
 							<Button
@@ -361,6 +365,7 @@ export default function PlanificationPanel({
 				</div>
 			) : (
 				<>
+					{/* NOTE: FORMULARIOS */}
 					{(() => {
 						switch (indexForm) {
 							case 'descr':

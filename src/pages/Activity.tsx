@@ -13,7 +13,8 @@ import { Col, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Visibility } from '@mui/icons-material';
+import ActivityDetail from '../components/metas/ActivityDetail';
 
 interface Activity {
 	idActividad: number;
@@ -41,6 +42,8 @@ export default function Activity() {
 	const { idArea } = useParams<{ idArea?: string }>();
 	const [area, setArea] = useState<Area | null>(null);
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
+
+	const [currentActivitySelected, setCurrentActivitySelected] = useState<null | number>();
 
 	const navigation = useNavigate();
 
@@ -138,6 +141,8 @@ export default function Activity() {
 		setCurrentFormSelected('');
 	};
 
+	const handleDetailSelected = () => {};
+
 	return (
 		<>
 			<Modal show={show} onHide={handleClose}>
@@ -208,6 +213,7 @@ export default function Activity() {
 			</div>
 
 			<div className=' d-flex justify-content-around gap-2  mx-3  ' style={{ height: '80%' }}>
+				{/* NOTE: SIDEBAR - LISTADO ACTIVIDADES - NAVEGACIÓN FORMS */}
 				{!isPlanificationOpen ? (
 					<Col
 						sm={3}
@@ -228,7 +234,7 @@ export default function Activity() {
 										action
 										variant='secondary'
 										title={item.desc}
-										className='text-break mx-auto my-1   rounded d-flex justify-content-center align-items-center '
+										className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
 										// style={{
 										// 	width: '100%',
 										// 	borderRadius: '10px',
@@ -247,6 +253,7 @@ export default function Activity() {
 												setIsPlanificationOpen(!isPlanificationOpen);
 												setNameActivity(`${item.desc}`);
 												handleButtonClick(item.idActividad);
+												setCurrentActivitySelected(null);
 											}
 										}}
 									>
@@ -260,6 +267,15 @@ export default function Activity() {
 										>
 											{item.desc}
 										</span>
+										<Visibility
+											className=' ms-auto cursor-pointer visibility-icon'
+											onClick={(event) => {
+												event.stopPropagation();
+												console.log(item.idActividad);
+												setCurrentActivitySelected(item.idActividad);
+												handleButtonClick(item.idActividad);
+											}}
+										/>
 									</ListGroup.Item>
 								))}
 							</ListGroup>
@@ -270,6 +286,7 @@ export default function Activity() {
 						sm={3}
 						className=' position-relative h-100 d-flex flex-column border-end border-2 rounded-3 bg-white  '
 					>
+						{/* NOTE: NAVEGACION FORMULARIOS */}
 						<h4 className=' text-center m-2'>Formulario</h4>
 						<ListGroup className=' mx-2 '>
 							{formData.map((item, index) => (
@@ -298,7 +315,8 @@ export default function Activity() {
 						</ListGroup>
 					</Col>
 				)}
-				{!isPlanificationOpen && (
+				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
+				{!isPlanificationOpen && !currentActivitySelected && (
 					<Col sm={9} className=' bg-white border-2 rounded-3 bg-white'>
 						<Row>
 							<Col className='MenuOptions'>
@@ -308,6 +326,12 @@ export default function Activity() {
 								<div className='Options'>Ver Resumen y Gráficos</div>
 							</Col>
 						</Row>
+					</Col>
+				)}
+
+				{currentActivitySelected && (
+					<Col sm={9} className='border-2 bg-white rounded-3'>
+						<ActivityDetail idActivity={currentActivitySelected} />
 					</Col>
 				)}
 
