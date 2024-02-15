@@ -129,6 +129,12 @@ const DataRender = ({ objectData }: Props) => {
 						</ul>
 					</div>
 				);
+			case 'listaRelaciones':
+				return null;
+			case 'listaObjetivos':
+				return null;
+			case 'listaFechasPuntuales':
+				return null;
 			default:
 				return (
 					<div key={nameData}>
