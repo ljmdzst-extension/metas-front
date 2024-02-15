@@ -2,17 +2,49 @@ import { Accordion } from 'react-bootstrap';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import es from 'date-fns/locale/es';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 interface Props {
 	objectData: any;
 }
 
+interface Valoracion {
+	idValoracion: number;
+	nom: string;
+}
+
 const DataRender = ({ objectData }: Props) => {
+	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
+
 	const camelCaseToHuman = (str: string) => {
 		return str
 			.replace(/([A-Z])/g, ' $1') // inserta espacio antes de cada mayúscula
 			.replace(/^./, (s) => s.toUpperCase()); // capitaliza la primera letra
 	};
+
+	const stringValoracion = (val: number) => {
+		const valoracion = valoraciones?.find((valoracion) => valoracion.idValoracion === val);
+		return valoracion?.nom;
+	};
+
+	useEffect(() => {
+		const fetchValoraciones = async () => {
+			try {
+				const response = await axios.get('http://168.197.50.94:4005/api/v2/metas/bases/');
+				if (response.data.ok) {
+					setValoraciones(response.data.data.listaValoraciones);
+					console.log(response.data.data.listaValoraciones);
+				} else {
+					console.error('Error en la respuesta de la API');
+				}
+			} catch (error) {
+				console.error('Error al obtener la lista de objetivos:', error);
+			}
+		};
+
+		fetchValoraciones();
+	}, []);
 
 	const renderValue = (value: any, nameData: string) => {
 		const propertyName = camelCaseToHuman(nameData);
@@ -56,12 +88,15 @@ const DataRender = ({ objectData }: Props) => {
 								<Accordion.Item eventKey={`${meta.idMeta}`} key={`meta-${meta.idMeta}`}>
 									<Accordion.Header>Mostrar meta {meta.idMeta}</Accordion.Header>
 									<Accordion.Body>
-										<h5>Descripción:</h5>
+										<span>Descripción:</span>
 										<p>{meta.descripcion}</p>
-										<h5>Resultado:</h5>
+										<span>Resultado:</span>
 										<p>{meta.resultado}</p>
-										<h5>Observaciones:</h5>
+										<span>Observaciones:</span>
 										<p>{meta.observaciones}</p>
+										<p>
+											<span>Valoracion:</span> {stringValoracion(meta.valoracion)}
+										</p>
 									</Accordion.Body>
 								</Accordion.Item>
 							))}
