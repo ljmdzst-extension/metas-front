@@ -4,7 +4,7 @@ import { LoginResponse, RegisterProps } from '../../types/AuthProps';
 export const loginAsync = createAsyncThunk(
 	'auth/login',
 	async (credentials: { email: string; pass: string }, thunkAPI) => {
-		const response = await fetch(`http://168.197.50.94:4006/api/v2/usr/login`, {
+		const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_AUTH}/login`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const loginAsync = createAsyncThunk(
 );
 
 export const authAsync = createAsyncThunk('auth/auth', async (token: string, thunkAPI) => {
-	const response = await fetch(`http://168.197.50.94:4006/api/v2/usr/auth`, {
+	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_AUTH}/auth`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const authAsync = createAsyncThunk('auth/auth', async (token: string, thu
 export const registerAsync = createAsyncThunk(
 	'auth/register',
 	async (values: RegisterProps, thunkAPI) => {
-		const response = await fetch(`http://168.197.50.94:4006/api/v2/usr/register`, {
+		const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_AUTH}/register`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

@@ -15,7 +15,7 @@ const Confirm = () => {
 		const emailConfirm = async () => {
 			try {
 				const response = await fetch(
-					`http://168.197.50.94:4006/api/v2/usr/validar/${validationString}`,
+					`${import.meta.env.VITE_API_BASE_URL_AUTH}/validar/${validationString}`,
 					{
 						method: 'PUT',
 						headers: {

@@ -56,7 +56,7 @@ export default function PlanificationPanel({
 	};
 
 	const suspenderActividad = (data: any) => {
-		fetch('http://168.197.50.94:4005/api/v2/metas/actividad/cancel', {
+		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/cancel`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ export default function PlanificationPanel({
 		console.log(data);
 	};
 	const eliminarActividad = () => {
-		fetch('http://168.197.50.94:4005/api/v2/metas/actividad', {
+		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',

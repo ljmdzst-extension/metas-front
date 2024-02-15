@@ -31,7 +31,7 @@ const DataRender = ({ objectData }: Props) => {
 	useEffect(() => {
 		const fetchValoraciones = async () => {
 			try {
-				const response = await axios.get('http://168.197.50.94:4005/api/v2/metas/bases/');
+				const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
 				if (response.data.ok) {
 					setValoraciones(response.data.data.listaValoraciones);
 					console.log(response.data.data.listaValoraciones);

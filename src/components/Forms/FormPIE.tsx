@@ -20,7 +20,7 @@ interface Objetivo {
 	};
 }
 
-export default function FormPIE({  }: FormPIEProps) {
+export default function FormPIE({}: FormPIEProps) {
 	const dispatch = useDispatch();
 	const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
@@ -28,7 +28,7 @@ export default function FormPIE({  }: FormPIEProps) {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get('http://168.197.50.94:4005/api/v2/metas/bases/');
+				const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
 				if (response.data.ok) {
 					const listaObjetivos = response.data.data.listaObjetivos;
 					setObjetivos(listaObjetivos);

@@ -56,14 +56,14 @@ export default function FormOrgInst({}: FormOrgInst) {
 		let debounce: any;
 		if (name.length === 0) {
 			debounce = setTimeout(() => {
-				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones`)
+				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones`)
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
 					.catch((error) => console.log(error));
 			}, 1000);
 		} else {
 			debounce = setTimeout(() => {
-				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones/${name}/0/10`)
+				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones/${name}/0/10`)
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
 					.catch((error) => console.log(error));

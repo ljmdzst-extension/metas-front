@@ -48,7 +48,7 @@ const FormMetas = ({}: FormMetasProps) => {
 	useEffect(() => {
 		const getValoraciones = async () => {
 			try {
-				const response = await axios.get('http://168.197.50.94:4005/api/v2/metas/bases/');
+				const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
 				if (response.data.ok) {
 					setValoraciones(response.data.data.listaValoraciones);
 				} else {

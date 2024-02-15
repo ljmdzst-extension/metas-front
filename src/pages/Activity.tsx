@@ -64,7 +64,7 @@ export default function Activity() {
 
 	const postActivity = async function (data: Data) {
 		axios
-			.post('http://168.197.50.94:4005/api/v2/metas/actividad', data)
+			.post(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, data)
 			.then(() => {
 				mostrarActividades();
 			})
@@ -99,7 +99,7 @@ export default function Activity() {
 
 	const mostrarActividades = async function () {
 		axios
-			.get(`http://168.197.50.94:4005/api/v2/metas/areas/${idArea}/actividades`)
+			.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${idArea}/actividades`)
 			.then((response) => {
 				const actividades = response.data;
 				setArrayActivity(actividades.data);
