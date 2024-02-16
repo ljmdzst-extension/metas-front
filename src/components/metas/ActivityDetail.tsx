@@ -1,8 +1,10 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import DataRender from '../DataRender/DataRender';
 import { FormSelect } from 'react-bootstrap';
+import spanishTitles from '../../mock/MetasSpanishTitles.json';
 
 interface Props {
 	idActivity: number;
@@ -13,30 +15,23 @@ const ActivityDetail = ({ idActivity }: Props) => {
 	const [filteredData, setFilteredData] = useState({});
 	const [dataValue, setDataValue] = useState(1);
 
-	const getSimplifiedData = (object) => {
-		return {
-			desc: object.desc,
-			listaMetas: object.listaMetas,
-		};
-	};
-
-	const getCompleteCleanData = (object) => {
-		return {
-			descripcion: object.desc,
-			fechaDesde: object.fechaDesde,
-			fechaHasta: object.fechaHasta,
-			listaMetas: object.listaMetas,
-			listaInstituciones: object.listaInstituciones,
-			listaEnlaces: object.listaEnlaces,
-		};
-	};
-
 	useEffect(() => {
 		if (estadoActualizado) {
 			const filteredData =
 				dataValue === 1
-					? getCompleteCleanData(estadoActualizado)
-					: getSimplifiedData(estadoActualizado);
+					? {
+							descripcion: estadoActualizado.desc,
+							fechaDesde: estadoActualizado.fechaDesde,
+							fechaHasta: estadoActualizado.fechaHasta,
+							listaMetas: estadoActualizado.listaMetas,
+							listaInstituciones: estadoActualizado.listaInstituciones,
+							listaEnlaces: estadoActualizado.listaEnlaces,
+							listaRelaciones: estadoActualizado.listaRelaciones,
+					  }
+					: {
+							descripcion: estadoActualizado.desc,
+							listaMetas: estadoActualizado.listaMetas,
+					  };
 			setFilteredData(filteredData);
 		}
 	}, [dataValue, estadoActualizado]);
@@ -56,7 +51,7 @@ const ActivityDetail = ({ idActivity }: Props) => {
 					<option value='2'>Simplificado</option>
 				</FormSelect>
 			</div>
-			<DataRender objectData={filteredData} />
+			<DataRender objectData={filteredData} spanishTitles={spanishTitles} />
 		</div>
 	);
 };

@@ -234,16 +234,7 @@ export default function Activity() {
 										action
 										variant='secondary'
 										title={item.desc}
-										className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
-										// style={{
-										// 	width: '100%',
-										// 	borderRadius: '10px',
-										// 	display: 'flex',
-										// 	justifyContent: 'center',
-										// 	alignItems: 'center',
-										// 	margin: '5px',
-										// 	cursor: 'pointer',
-										// }}
+										className='mx-auto my-1 rounded d-flex align-items-center '
 										key={index}
 										onClick={() => {
 											if (isPlanificationOpen) {
@@ -267,6 +258,7 @@ export default function Activity() {
 										>
 											{item.desc}
 										</span>
+
 										<Visibility
 											className=' ms-auto cursor-pointer visibility-icon'
 											onClick={(event) => {

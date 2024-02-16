@@ -1,12 +1,10 @@
 import { Accordion } from 'react-bootstrap';
-import DatePicker, { registerLocale } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import es from 'date-fns/locale/es';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 interface Props {
 	objectData: any;
+	spanishTitles: any;
 }
 
 interface Valoracion {
@@ -14,8 +12,18 @@ interface Valoracion {
 	nom: string;
 }
 
-const DataRender = ({ objectData }: Props) => {
+interface Relacion {
+	idRelacion: number;
+	nom: string;
+	tipoRelacion: {
+		idTipoRelacion: number;
+		nom: string;
+	};
+}
+
+const DataRender = ({ objectData, spanishTitles }: Props) => {
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
+	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
 
 	const camelCaseToHuman = (str: string) => {
 		return str
@@ -29,12 +37,13 @@ const DataRender = ({ objectData }: Props) => {
 	};
 
 	useEffect(() => {
-		const fetchValoraciones = async () => {
+		const fetchBases = async () => {
 			try {
 				const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
 				if (response.data.ok) {
 					setValoraciones(response.data.data.listaValoraciones);
-					console.log(response.data.data.listaValoraciones);
+					setRelaciones(response.data.data.listaRelaciones);
+					console.log(response.data.data.listaRelaciones);
 				} else {
 					console.error('Error en la respuesta de la API');
 				}
@@ -43,11 +52,11 @@ const DataRender = ({ objectData }: Props) => {
 			}
 		};
 
-		fetchValoraciones();
+		fetchBases();
 	}, []);
 
 	const renderValue = (value: any, nameData: string) => {
-		const propertyName = camelCaseToHuman(nameData);
+		const propertyName = spanishTitles[nameData] || camelCaseToHuman(nameData); // Busca el título en español o utiliza el camel case como alternativa
 
 		if (value === null) {
 			return null;
@@ -57,13 +66,13 @@ const DataRender = ({ objectData }: Props) => {
 			case 'string':
 				return (
 					<p key={nameData}>
-						{propertyName}: {value}
+						<span>{propertyName}:</span> {value}
 					</p>
 				);
 			case 'number':
 				return (
 					<p key={nameData}>
-						{propertyName}: {value}
+						<span>{propertyName}:</span> {value}
 					</p>
 				);
 			case 'object':
@@ -82,7 +91,9 @@ const DataRender = ({ objectData }: Props) => {
 			case 'listaMetas':
 				return (
 					<div key={nameData}>
-						<h2>Listado de Metas</h2>
+						<p>
+							<span>Listado de Metas</span>
+						</p>
 						<Accordion defaultActiveKey='0' alwaysOpen>
 							{array.map((meta) => (
 								<Accordion.Item eventKey={`${meta.idMeta}`} key={`meta-${meta.idMeta}`}>
@@ -106,7 +117,9 @@ const DataRender = ({ objectData }: Props) => {
 			case 'listaInstituciones':
 				return (
 					<div key={nameData}>
-						<h2>Listado de Instituciones</h2>
+						<p>
+							<span>Listado de Instituciones</span>
+						</p>
 						<ul>
 							{array.map((institucion) => (
 								<li key={`institucion-${institucion.idInstitucion}`}>
@@ -119,7 +132,9 @@ const DataRender = ({ objectData }: Props) => {
 			case 'listaEnlaces':
 				return (
 					<div key={nameData}>
-						<h2>Listado de Instituciones</h2>
+						<p>
+							<span>Listado de Institucione</span>s
+						</p>
 						<ul>
 							{array.map((enlace) => (
 								<li key={`enlace-${enlace.idEnlace}`}>
@@ -151,8 +166,6 @@ const DataRender = ({ objectData }: Props) => {
 				);
 		}
 	};
-
-	const renderDate = () => {};
 
 	const properties = Object.keys(objectData);
 
