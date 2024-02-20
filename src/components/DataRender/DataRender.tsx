@@ -31,10 +31,18 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		return valoracion?.nom;
 	};
 
+	const areasMap = useMemo(() => {
+		const map = {};
+		areas.forEach((area) => {
+			const key = `${area.idRelacion}-${area.idTipoRelacion}`;
+			map[key] = area;
+		});
+		return map;
+	}, [areas]);
+
 	const extraerRelacionCompleta = (idRelacion: number, idTipoRelacion: number) => {
-		return areas.find(
-			(area) => area.idRelacion === idRelacion && area.idTipoRelacion === idTipoRelacion,
-		);
+		const key = `${idRelacion}-${idTipoRelacion}`;
+		return areasMap[key];
 	};
 
 	const fetchBases = async () => {
