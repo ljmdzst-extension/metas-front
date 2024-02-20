@@ -1,5 +1,5 @@
 import { Accordion } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 
 interface Props {
@@ -26,9 +26,7 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
 
 	const camelCaseToHuman = (str: string) => {
-		return str
-			.replace(/([A-Z])/g, ' $1') // inserta espacio antes de cada mayúscula
-			.replace(/^./, (s) => s.toUpperCase()); // capitaliza la primera letra
+		return str.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
 	};
 
 	const stringValoracion = (val: number) => {
@@ -36,140 +34,100 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		return valoracion?.nom;
 	};
 
-	useEffect(() => {
-		const fetchBases = async () => {
-			try {
-				const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
-				if (response.data.ok) {
-					setValoraciones(response.data.data.listaValoraciones);
-					setRelaciones(response.data.data.listaRelaciones);
-					console.log(response.data.data.listaRelaciones);
-				} else {
-					console.error('Error en la respuesta de la API');
-				}
-			} catch (error) {
-				console.error('Error al obtener la lista de objetivos:', error);
+	const fetchBases = async () => {
+		try {
+			const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
+			if (response.data.ok) {
+				setValoraciones(response.data.data.listaValoraciones);
+				setRelaciones(response.data.data.listaRelaciones);
+			} else {
+				console.error('Error en la respuesta de la API');
 			}
-		};
+		} catch (error) {
+			console.error('Error al obtener la lista de objetivos:', error);
+		}
+	};
 
+	useEffect(() => {
 		fetchBases();
 	}, []);
 
+	const renderData = (data: any[], dataType: string) => {
+		const renderers: any = {
+			listaMetas: () => (
+				<div key={dataType}>
+					<p>
+						<span>Listado de Metas</span>
+					</p>
+					<Accordion defaultActiveKey='0' alwaysOpen>
+						{data.map((meta) => (
+							<Accordion.Item eventKey={`${meta.idMeta}`} key={`meta-${meta.idMeta}`}>
+								<Accordion.Header>Mostrar meta {meta.idMeta}</Accordion.Header>
+								<Accordion.Body>
+									<p>
+										<span>Descripción:</span> {meta.descripcion}
+									</p>
+									<p>
+										<span>Resultado:</span> {meta.resultado}
+									</p>
+									<p>
+										<span>Observaciones:</span> {meta.observaciones}
+									</p>
+									<p>
+										<span>Valoracion:</span> {stringValoracion(meta.valoracion)}
+									</p>
+								</Accordion.Body>
+							</Accordion.Item>
+						))}
+					</Accordion>
+				</div>
+			),
+			listaInstituciones: () => (
+				<div key={dataType}>
+					<p>
+						<span>Listado de Instituciones</span>
+					</p>
+					<ul>
+						{data.map(({ idInstitucion, nom, ubicacion }: any) => (
+							<li key={`institucion-${idInstitucion}`}>
+								<a href={ubicacion}>{nom}</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			),
+			// Otros casos para renderizar diferentes tipos de listas...
+		};
+
+		const renderer = renderers[dataType];
+		return renderer ? renderer() : null;
+	};
+
 	const renderValue = (value: any, nameData: string) => {
-		const propertyName = spanishTitles[nameData] || camelCaseToHuman(nameData); // Busca el título en español o utiliza el camel case como alternativa
+		const propertyName = spanishTitles[nameData] || camelCaseToHuman(nameData);
 
 		if (value === null) {
 			return null;
 		}
 
-		switch (typeof value) {
-			case 'string':
-				return (
-					<p key={nameData}>
-						<span>{propertyName}:</span> {value}
-					</p>
-				);
-			case 'number':
-				return (
-					<p key={nameData}>
-						<span>{propertyName}:</span> {value}
-					</p>
-				);
-			case 'object':
-				return Array.isArray(value) ? (
-					renderArray(value, nameData)
-				) : (
-					<p key={nameData}>{JSON.stringify(value, null, 2)}</p>
-				);
-			default:
-				return null;
-		}
+		return (
+			<p key={nameData}>
+				<span>{propertyName}:</span> {value}
+			</p>
+		);
 	};
 
-	const renderArray = (array: any[], nameData: string) => {
-		switch (nameData) {
-			case 'listaMetas':
-				return (
-					<div key={nameData}>
-						<p>
-							<span>Listado de Metas</span>
-						</p>
-						<Accordion defaultActiveKey='0' alwaysOpen>
-							{array.map((meta) => (
-								<Accordion.Item eventKey={`${meta.idMeta}`} key={`meta-${meta.idMeta}`}>
-									<Accordion.Header>Mostrar meta {meta.idMeta}</Accordion.Header>
-									<Accordion.Body>
-										<span>Descripción:</span>
-										<p>{meta.descripcion}</p>
-										<span>Resultado:</span>
-										<p>{meta.resultado}</p>
-										<span>Observaciones:</span>
-										<p>{meta.observaciones}</p>
-										<p>
-											<span>Valoracion:</span> {stringValoracion(meta.valoracion)}
-										</p>
-									</Accordion.Body>
-								</Accordion.Item>
-							))}
-						</Accordion>
-					</div>
-				);
-			case 'listaInstituciones':
-				return (
-					<div key={nameData}>
-						<p>
-							<span>Listado de Instituciones</span>
-						</p>
-						<ul>
-							{array.map((institucion) => (
-								<li key={`institucion-${institucion.idInstitucion}`}>
-									<a href={institucion.ubicacion}>{institucion.nom}</a>
-								</li>
-							))}
-						</ul>
-					</div>
-				);
-			case 'listaEnlaces':
-				return (
-					<div key={nameData}>
-						<p>
-							<span>Listado de Institucione</span>s
-						</p>
-						<ul>
-							{array.map((enlace) => (
-								<li key={`enlace-${enlace.idEnlace}`}>
-									<a href={enlace.link}>{enlace.desc}</a>
-								</li>
-							))}
-						</ul>
-					</div>
-				);
-			case 'listaRelaciones':
-				return null;
-			case 'listaObjetivos':
-				return null;
-			case 'listaFechasPuntuales':
-				return null;
-			default:
-				return (
-					<div key={nameData}>
-						{array.map((item, index) => (
-							<li key={`${nameData}-${index}`}>
-								{typeof item === 'object' ? (
-									<pre>{item.type + JSON.stringify(item, null, 2)}</pre>
-								) : (
-									item
-								)}
-							</li>
-						))}
-					</div>
-				);
-		}
-	};
+	const memoizedRenderData = useMemo(() => {
+		return Object.entries(objectData).map(([nameData, value]) => {
+			if (Array.isArray(value)) {
+				return renderData(value, nameData);
+			} else {
+				return renderValue(value, nameData);
+			}
+		});
+	}, [objectData, spanishTitles]);
 
-	const properties = Object.keys(objectData);
-
-	return <div>{properties.map((nameData) => renderValue(objectData[nameData], nameData))}</div>;
+	return <div>{memoizedRenderData}</div>;
 };
 
 export default DataRender;
