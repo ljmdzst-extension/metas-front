@@ -1,5 +1,5 @@
-import { Accordion } from 'react-bootstrap';
 import { useEffect, useMemo, useState } from 'react';
+import { Accordion } from 'react-bootstrap';
 import axios from 'axios';
 
 interface Props {
@@ -12,18 +12,15 @@ interface Valoracion {
 	nom: string;
 }
 
-interface Relacion {
+interface Area {
 	idRelacion: number;
 	nom: string;
-	tipoRelacion: {
-		idTipoRelacion: number;
-		nom: string;
-	};
+	idTipoRelacion: number;
 }
 
 const DataRender = ({ objectData, spanishTitles }: Props) => {
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
-	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
+	const [areas, setAreas] = useState<Area[]>([]);
 
 	const camelCaseToHuman = (str: string) => {
 		return str.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
@@ -34,12 +31,18 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		return valoracion?.nom;
 	};
 
+	const extraerRelacionCompleta = (idRelacion: number, idTipoRelacion: number) => {
+		return areas.find(
+			(area) => area.idRelacion === idRelacion && area.idTipoRelacion === idTipoRelacion,
+		);
+	};
+
 	const fetchBases = async () => {
 		try {
 			const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
 			if (response.data.ok) {
 				setValoraciones(response.data.data.listaValoraciones);
-				setRelaciones(response.data.data.listaRelaciones);
+				setAreas(response.data.data.lAreas);
 			} else {
 				console.error('Error en la respuesta de la API');
 			}
@@ -51,6 +54,15 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 	useEffect(() => {
 		fetchBases();
 	}, []);
+
+	const renderAreas = (data: any[], idTipoRelacion: number) => (
+		<ul>
+			{data.map((idRelacion) => {
+				const thisArea = extraerRelacionCompleta(idRelacion, idTipoRelacion);
+				return <li key={idRelacion}>{JSON.stringify(thisArea)}</li>;
+			})}
+		</ul>
+	);
 
 	const renderData = (data: any[], dataType: string) => {
 		const renderers: any = {
@@ -83,17 +95,50 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 				</div>
 			),
 			listaInstituciones: () => (
-				<div key={dataType}>
+				<div key={dataType} className=' mt-2'>
 					<p>
-						<span>Listado de Instituciones</span>
+						<span>Instituciones</span>
 					</p>
 					<ul>
 						{data.map(({ idInstitucion, nom, ubicacion }: any) => (
 							<li key={`institucion-${idInstitucion}`}>
-								<a href={ubicacion}>{nom}</a>
+								<a href={ubicacion} target='_blank' rel='noopener noreferrer'>
+									{nom}
+								</a>
 							</li>
 						))}
 					</ul>
+				</div>
+			),
+			listaEnlaces: () => (
+				<div key={dataType} className=' mt-2'>
+					<p>
+						<span>Enlaces</span>
+					</p>
+					<ul>
+						{data.map(({ idEnlace, link, desc }: any) => (
+							<li key={`institucion-${idEnlace}`}>
+								<a href={link} target='_blank' rel='noopener noreferrer'>
+									{desc}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			),
+			listaRelaciones: () => (
+				<div>
+					<p>
+						<span>Areas</span>
+						<ol>
+							<li>Areas internas secretaria</li>
+							{renderAreas(data, 1)}
+							<li>Areas internas UNL</li>
+							{renderAreas(data, 2)}
+							<li>Unidades Academicas </li>
+							{renderAreas(data, 3)}
+						</ol>
+					</p>
 				</div>
 			),
 			// Otros casos para renderizar diferentes tipos de listas...

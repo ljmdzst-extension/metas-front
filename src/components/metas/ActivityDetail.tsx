@@ -41,12 +41,12 @@ const ActivityDetail = ({ idActivity }: Props) => {
 	};
 
 	return (
-		<div className=' h-100 overflow-y-scroll m-3 custom-scrollbar '>
+		<div className=' h-100 overflow-y-scroll m-3  custom-scrollbar '>
 			<div
-				className=' p-2 '
+				className='  p-2 '
 				style={{ position: 'sticky', top: '0', backgroundColor: 'white', zIndex: '10' }}
 			>
-				<FormSelect className=' w-25' size='sm' onChange={handleChange}>
+				<FormSelect className=' w-25 ' size='sm' onChange={handleChange}>
 					<option value='1'>Completo</option>
 					<option value='2'>Simplificado</option>
 				</FormSelect>
