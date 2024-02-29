@@ -17,20 +17,32 @@ const ActivityDetail = ({ idActivity }: Props) => {
 
 	useEffect(() => {
 		if (estadoActualizado) {
+			const {
+				desc,
+				fechaDesde,
+				fechaHasta,
+				listaMetas,
+				listaInstituciones,
+				listaEnlaces,
+				listaRelaciones,
+				listaProgramasSIPPE,
+			} = estadoActualizado;
+
 			const filteredData =
 				dataValue === 1
 					? {
-							descripcion: estadoActualizado.desc,
-							fechaDesde: estadoActualizado.fechaDesde,
-							fechaHasta: estadoActualizado.fechaHasta,
-							listaMetas: estadoActualizado.listaMetas,
-							listaInstituciones: estadoActualizado.listaInstituciones,
-							listaEnlaces: estadoActualizado.listaEnlaces,
-							listaRelaciones: estadoActualizado.listaRelaciones,
+							descripcion: desc,
+							fechaDesde: fechaDesde,
+							fechaHasta: fechaHasta,
+							listaMetas: listaMetas,
+							listaInstituciones: listaInstituciones,
+							listaEnlaces: listaEnlaces,
+							listaRelaciones: listaRelaciones,
+							listaProgramasSIPPE: listaProgramasSIPPE,
 					  }
 					: {
-							descripcion: estadoActualizado.desc,
-							listaMetas: estadoActualizado.listaMetas,
+							descripcion: desc,
+							listaMetas: listaMetas,
 					  };
 			setFilteredData(filteredData);
 		}
