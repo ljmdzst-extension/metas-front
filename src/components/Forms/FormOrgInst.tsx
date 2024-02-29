@@ -33,7 +33,7 @@ export default function FormOrgInst({}: FormOrgInst) {
 		setUbicacion('');
 	};
 	const eliminarInstitucion = (index: number | null) => {
-		console.log(index);
+		// console.log(index);
 		if (index !== null) {
 			setArrayInstitucion(arrayInstitucion.filter((item, i) => item && i !== index));
 		}
@@ -48,7 +48,7 @@ export default function FormOrgInst({}: FormOrgInst) {
 	const filterInstitucion = (data: Institucion[]) => {
 		// Borrar los que no tienen ubicacion
 		const newData = data.filter((inst) => inst.ubicacion !== 'NULL');
-		console.log(newData);
+		// console.log(newData);
 		return newData;
 	};
 

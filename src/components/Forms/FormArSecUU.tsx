@@ -31,8 +31,8 @@ export default function FormArSecUU({}: FormArSecUUrops) {
 	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<number[]>([]);
 	const [relacionSeleccionadas2, setRelacionSeleccionadas2] = useState<number[]>([]);
 	const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<number[]>([]);
-
 	const [sippeSeleccionadas, setSippeSeleccionadas] = useState<number[]>([]);
+
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
 	const sincronizarSelectsRelacion = () => {
 		if (estadoActualizado.listaRelaciones) {
@@ -93,7 +93,7 @@ export default function FormArSecUU({}: FormArSecUUrops) {
 			label: relacion.nom,
 		}));
 	const listaProgramasSIPPE: Option[] = sippe.map((sippe) => ({
-		value: sippe.idProgramaSIPPE,
+		value: sippe.idProgramaSippe,
 		label: sippe.nom,
 	}));
 	const handleRelacionChange1 = (selectedOptions: any) => {
@@ -105,11 +105,15 @@ export default function FormArSecUU({}: FormArSecUUrops) {
 		setRelacionSeleccionadas2(selectedValues);
 	};
 	const handleRelacionChange3 = (selectedOptions: any) => {
+		console.log(selectedOptions);
 		const selectedValues = selectedOptions.map((option: any) => option.value);
+		console.log(selectedValues);
 		setRelacionSeleccionadas3(selectedValues);
 	};
 	const handleSippeChange = (selectedOptions: any) => {
+		console.log(selectedOptions);
 		const selectedValues = selectedOptions.map((option: any) => option.value);
+		console.log(selectedValues);
 		setSippeSeleccionadas(selectedValues);
 	};
 
