@@ -22,6 +22,13 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
 	const [areas, setAreas] = useState<Area[]>([]);
 
+	// Record en TypeScript es una utilidad de tipo que representa un objeto JavaScript con
+	// claves de tipo string y valores de un tipo específico. En otras palabras, Record<K, T>
+	// es una forma de definir un tipo para un objeto que tiene claves de tipo K y valores
+	// de tipo T.
+	const [areasMap, setAreasMap] = useState<Record<string, Area>>({});
+	const [loading, setLoading] = useState<boolean>(true);
+
 	const camelCaseToHuman = (str: string) => {
 		return str.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
 	};
@@ -31,26 +38,13 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		return valoracion?.nom;
 	};
 
-	const areasMap = useMemo(() => {
-		const map = {};
-		areas.forEach((area) => {
-			const key = `${area.idRelacion}-${area.idTipoRelacion}`;
-			map[key] = area;
-		});
-		return map;
-	}, [areas]);
-
-	const extraerRelacionCompleta = (idRelacion: number, idTipoRelacion: number) => {
-		const key = `${idRelacion}-${idTipoRelacion}`;
-		return areasMap[key];
-	};
-
 	const fetchBases = async () => {
 		try {
 			const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
 			if (response.data.ok) {
 				setValoraciones(response.data.data.listaValoraciones);
 				setAreas(response.data.data.lAreas);
+				setLoading(false);
 			} else {
 				console.error('Error en la respuesta de la API');
 			}
@@ -63,14 +57,44 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		fetchBases();
 	}, []);
 
-	const renderAreas = (data: any[], idTipoRelacion: number) => (
-		<ul>
-			{data.map((idRelacion) => {
-				const thisArea = extraerRelacionCompleta(idRelacion, idTipoRelacion);
-				return <li key={idRelacion}>{JSON.stringify(thisArea)}</li>;
-			})}
-		</ul>
-	);
+	useEffect(() => {
+		const map: Record<string, Area> = {};
+		areas.forEach((area) => {
+			const key = `${area.idRelacion}-${area.idTipoRelacion}`;
+			map[key] = area;
+		});
+		setAreasMap(map);
+	}, [areas]);
+
+	const extraerRelacionCompleta = (idRelacion: number, idTipoRelacion: number) => {
+		const key = `${idRelacion}-${idTipoRelacion}`;
+		return areasMap[key];
+	};
+
+	const renderArea = (data: any[], idTipoRelacion: number, nombreArea: string) => {
+		if (!data || data.length === 0) {
+			return null; // O cualquier otro componente o mensaje de aviso
+		}
+
+		const elementosArea = data
+			.map((idRelacion) => extraerRelacionCompleta(idRelacion, idTipoRelacion))
+			.filter(Boolean); //elimina los valores null, undefined, etc
+
+		if (elementosArea.length === 0) {
+			return null; // No hay elementos para renderizar
+		}
+
+		return (
+			<li>
+				{nombreArea}
+				<ul>
+					{elementosArea.map((thisArea, index) => (
+						<li key={`${index}-${idTipoRelacion}`}>{thisArea.nom}</li>
+					))}
+				</ul>
+			</li>
+		);
+	};
 
 	const renderData = (data: any[], dataType: string) => {
 		const renderers: any = {
@@ -134,21 +158,24 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 					</ul>
 				</div>
 			),
-			listaRelaciones: () => (
-				<div>
-					<p>
-						<span>Areas</span>
-						<ol>
-							<li>Areas internas secretaria</li>
-							{renderAreas(data, 1)}
-							<li>Areas internas UNL</li>
-							{renderAreas(data, 2)}
-							<li>Unidades Academicas </li>
-							{renderAreas(data, 3)}
-						</ol>
-					</p>
-				</div>
-			),
+			listaRelaciones: () => {
+				return (
+					<div key={dataType}>
+						<p>
+							<span>Areas</span>
+						</p>
+						{data.length > 0 && (
+							<ol>
+								{renderArea(data, 1, 'Internas Secretaria')}
+								{renderArea(data, 2, 'Internas UNL')}
+								{renderArea(data, 3, 'Unidades Académicas involucradas')}
+								{renderArea(data, 4, 'Programas de Extensión')}
+							</ol>
+						)}
+					</div>
+				);
+			},
+
 			// Otros casos para renderizar diferentes tipos de listas...
 		};
 
@@ -171,6 +198,10 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 	};
 
 	const memoizedRenderData = useMemo(() => {
+		if (loading) {
+			return <p>Cargando...</p>;
+		}
+
 		return Object.entries(objectData).map(([nameData, value]) => {
 			if (Array.isArray(value)) {
 				return renderData(value, nameData);
@@ -178,9 +209,9 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 				return renderValue(value, nameData);
 			}
 		});
-	}, [objectData, spanishTitles]);
+	}, [objectData, spanishTitles, areasMap, loading]);
 
-	return <div>{memoizedRenderData}</div>;
+	return <div className=' overflow-y-scroll custom-scrollbar  '>{memoizedRenderData}</div>;
 };
 
 export default DataRender;

@@ -19,7 +19,6 @@ const useAvailableHeight = () => {
 
 		handleResize();
 		window.addEventListener('resize', handleResize);
-		console.log('useAvailableHeight');
 
 		return () => {
 			window.removeEventListener('resize', handleResize);

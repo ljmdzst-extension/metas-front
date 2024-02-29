@@ -72,7 +72,6 @@ export default function PlanificationPanel({
 				window.location.replace('');
 			})
 			.catch((error) => alert(JSON.stringify(error)));
-		console.log(data);
 	};
 	const eliminarActividad = () => {
 		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {

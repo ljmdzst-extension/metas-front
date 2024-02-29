@@ -54,12 +54,9 @@ export default function FormOrgInst({}: FormOrgInstProps) {
 	};
 
 	const eliminarDocumento = (id: number, index: number) => {
-		console.log(id, index);
-		console.log(arrayDocumentos);
 		const documentosFiltrados = arrayDocumentos.filter(
 			(item, i) => i !== index || item.idEnlace !== id,
 		);
-		console.log(documentosFiltrados);
 		setArrayDocumentos(documentosFiltrados);
 	};
 

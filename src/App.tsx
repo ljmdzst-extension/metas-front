@@ -1,17 +1,18 @@
 import { Route, Routes } from 'react-router-dom';
 
-import Activity from './pages/Activity';
-import Confirm from './pages/Confirm';
-import Layout from './components/Layout/Layout';
-import Login from './pages/Login';
-import Main from './pages/Main';
-import Register from './pages/Register';
-
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
-import PrivateLayout from './components/Layout/PrivateLayout';
-import Management from './pages/Management';
+
+import Confirm from './pages/Confirm';
 import Help from './pages/Help';
+import Login from './pages/Login';
+import Register from './pages/Register';
+
+import Activity from './pages/Activity';
+import Layout from './components/Layout/Layout';
+import Main from './pages/Main';
+import Management from './pages/Management';
+import PrivateLayout from './components/Layout/PrivateLayout';
 import Proyectos from './pages/Proyectos';
 import ProjectForm from './pages/ProjectForm';
 import ProjectSum from './pages/ProjectSum';

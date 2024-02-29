@@ -41,16 +41,11 @@ const ActivityDetail = ({ idActivity }: Props) => {
 	};
 
 	return (
-		<div className=' h-100 overflow-y-scroll m-3  custom-scrollbar '>
-			<div
-				className='  p-2 '
-				style={{ position: 'sticky', top: '0', backgroundColor: 'white', zIndex: '10' }}
-			>
-				<FormSelect className=' w-25 ' size='sm' onChange={handleChange}>
-					<option value='1'>Completo</option>
-					<option value='2'>Simplificado</option>
-				</FormSelect>
-			</div>
+		<div className=' h-100 d-flex flex-column p-3  '>
+			<FormSelect className=' w-25 mb-3 ' size='sm' onChange={handleChange}>
+				<option value='1'>Completo</option>
+				<option value='2'>Simplificado</option>
+			</FormSelect>
 			<DataRender objectData={filteredData} spanishTitles={spanishTitles} />
 		</div>
 	);

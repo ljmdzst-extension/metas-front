@@ -99,14 +99,6 @@
 	border-radius: 10px;
 	padding: 7px;
 }
-li {
-	list-style: none;
-	margin-bottom: 5px;
-}
-a {
-	text-decoration-line: none;
-	color: black;
-}
 
 /*Main*/
 .ConteinerCards {

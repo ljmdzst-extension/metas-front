@@ -72,7 +72,7 @@ export default function FormPeriodo({}: FormPeriodoProps) {
 				if (a.fecha && b.fecha) {
 					const dateA = new Date(a.fecha);
 					const dateB = new Date(b.fecha);
-					console.log(dateA.getTime() - dateB.getTime());
+					// console.log(dateA.getTime() - dateB.getTime());
 					return dateA.getTime() - dateB.getTime();
 				}
 				return 0;
@@ -98,7 +98,6 @@ export default function FormPeriodo({}: FormPeriodoProps) {
 	};
 
 	const highlightSelectedDates = () => {
-		console.log('highlightSelectedDates');
 		const highlightDates: Date[] = [];
 		indexDates.forEach((date) => {
 			if (date.fecha) {
@@ -107,8 +106,6 @@ export default function FormPeriodo({}: FormPeriodoProps) {
 				highlightDates.push(dateToHighlight);
 			}
 		});
-		console.log(indexDates);
-		console.log(highlightDates);
 		return highlightDates;
 	};
 
