@@ -258,16 +258,18 @@ export default function Activity() {
 										>
 											{item.desc}
 										</span>
-
-										<Visibility
-											className=' ms-auto cursor-pointer visibility-icon'
+										<div
+											className=' ms-auto mt-0 h-100 cursor-pointer visibility-icon'
 											onClick={(event) => {
 												event.stopPropagation();
 												console.log(item.idActividad);
 												setCurrentActivitySelected(item.idActividad);
 												handleButtonClick(item.idActividad);
 											}}
-										/>
+											title='Ver Detalle'
+										>
+											<Visibility />
+										</div>
 									</ListGroup.Item>
 								))}
 							</ListGroup>

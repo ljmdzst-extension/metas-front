@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Accordion } from 'react-bootstrap';
 import axios from 'axios';
+import { RestaurantMenu } from '@mui/icons-material';
 
 interface Props {
 	objectData: any;
@@ -21,6 +22,7 @@ interface Area {
 const DataRender = ({ objectData, spanishTitles }: Props) => {
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
 	const [areas, setAreas] = useState<Area[]>([]);
+	const [listaSIPPE, setlistaSIPPE] = useState<[]>();
 
 	// Record en TypeScript es una utilidad de tipo que representa un objeto JavaScript con
 	// claves de tipo string y valores de un tipo específico. En otras palabras, Record<K, T>
@@ -44,6 +46,7 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 			if (response.data.ok) {
 				setValoraciones(response.data.data.listaValoraciones);
 				setAreas(response.data.data.lAreas);
+				setlistaSIPPE(response.data.data.listaProgramasSIPPE);
 				setLoading(false);
 			} else {
 				console.error('Error en la respuesta de la API');
@@ -95,70 +98,80 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 			</li>
 		);
 	};
-
+	// Render general de listados de objetos
 	const renderData = (data: any[], dataType: string) => {
 		const renderers: any = {
-			listaMetas: () => (
-				<div key={dataType}>
-					<p>
-						<span>Listado de Metas</span>
-					</p>
-					<Accordion defaultActiveKey='0' alwaysOpen>
-						{data.map((meta) => (
-							<Accordion.Item eventKey={`${meta.idMeta}`} key={`meta-${meta.idMeta}`}>
-								<Accordion.Header>Mostrar meta {meta.idMeta}</Accordion.Header>
-								<Accordion.Body>
-									<p>
-										<span>Descripción:</span> {meta.descripcion}
-									</p>
-									<p>
-										<span>Resultado:</span> {meta.resultado}
-									</p>
-									<p>
-										<span>Observaciones:</span> {meta.observaciones}
-									</p>
-									<p>
-										<span>Valoracion:</span> {stringValoracion(meta.valoracion)}
-									</p>
-								</Accordion.Body>
-							</Accordion.Item>
-						))}
-					</Accordion>
-				</div>
-			),
-			listaInstituciones: () => (
-				<div key={dataType} className=' mt-2'>
-					<p>
-						<span>Instituciones</span>
-					</p>
-					<ul>
-						{data.map(({ idInstitucion, nom, ubicacion }: any) => (
-							<li key={`institucion-${idInstitucion}`}>
-								<a href={ubicacion} target='_blank' rel='noopener noreferrer'>
-									{nom}
-								</a>
-							</li>
-						))}
-					</ul>
-				</div>
-			),
-			listaEnlaces: () => (
-				<div key={dataType} className=' mt-2'>
-					<p>
-						<span>Enlaces</span>
-					</p>
-					<ul>
-						{data.map(({ idEnlace, link, desc }: any) => (
-							<li key={`institucion-${idEnlace}`}>
-								<a href={link} target='_blank' rel='noopener noreferrer'>
-									{desc}
-								</a>
-							</li>
-						))}
-					</ul>
-				</div>
-			),
+			listaMetas: () => {
+				if (!data || data.length === 0) return null;
+				return (
+					<div key={dataType}>
+						<p>
+							<span>Listado de Metas</span>
+						</p>
+						<Accordion defaultActiveKey='0' alwaysOpen>
+							{data.map((meta, index) => (
+								<Accordion.Item eventKey={`${meta.idMeta}`} key={`meta-${meta.idMeta}`}>
+									<Accordion.Header>Mostrar meta {index + 1}</Accordion.Header>
+									<Accordion.Body>
+										<p>
+											<span>Descripción:</span> {meta.descripcion}
+										</p>
+										<p>
+											<span>Resultado:</span> {meta.resultado}
+										</p>
+										<p>
+											<span>Observaciones:</span> {meta.observaciones}
+										</p>
+										<p>
+											<span>Valoracion:</span> {stringValoracion(meta.valoracion)}
+										</p>
+									</Accordion.Body>
+								</Accordion.Item>
+							))}
+						</Accordion>
+					</div>
+				);
+			},
+			listaInstituciones: () => {
+				if (!data || data.length === 0) return null;
+				return (
+					<div key={dataType} className=' mt-2'>
+						<p>
+							<span>Instituciones</span>
+						</p>
+						<ul>
+							{data.map(({ idInstitucion, nom, ubicacion }: any) => (
+								<li key={`institucion-${idInstitucion}`}>
+									<a href={ubicacion} target='_blank' rel='noopener noreferrer'>
+										{nom}
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				);
+			},
+			listaEnlaces: () => {
+				if (!data || data.length === 0) return null;
+				return (
+					<div key={dataType} className=' mt-2'>
+						<p>
+							<span>Enlaces</span>
+						</p>
+						<ul>
+							{data.map(({ idEnlace, link, desc }: any) => (
+								<li key={`institucion-${idEnlace}`}>
+									<a href={link} target='_blank' rel='noopener noreferrer'>
+										{desc}
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				);
+			},
 			listaRelaciones: () => {
+				if (!data || data.length === 0) return null;
 				return (
 					<div key={dataType}>
 						<p>
@@ -175,6 +188,26 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 					</div>
 				);
 			},
+			listaProgramasSIPPE: () => {
+				if (!data || data.length === 0) return null;
+
+				const thisSIPPE = listaSIPPE?.filter((programa) => data.includes(programa.idProgramaSippe));
+				console.log('LISTA SIPPE', listaSIPPE);
+				console.log('LISTA SIPPE', thisSIPPE);
+
+				return (
+					<div key={dataType}>
+						<p>
+							<span>SIPPE</span>
+						</p>
+						<ul>
+							{thisSIPPE?.map((el) => (
+								<li>{el.nom}</li>
+							))}
+						</ul>
+					</div>
+				);
+			},
 
 			// Otros casos para renderizar diferentes tipos de listas...
 		};
@@ -182,7 +215,7 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		const renderer = renderers[dataType];
 		return renderer ? renderer() : null;
 	};
-
+	// Render de variables simples
 	const renderValue = (value: any, nameData: string) => {
 		const propertyName = spanishTitles[nameData] || camelCaseToHuman(nameData);
 

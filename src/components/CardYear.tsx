@@ -63,8 +63,8 @@ export default function CardYear({ title }: YearProps) {
 	};
 
 	return (
-		<div className='ConteinerCardMenu'>
-			<Card style={{ width: '18rem' }}>
+		<div className='ConteinerCardMenu d-flex flex-column'>
+			{/* <Card style={{ width: '18rem' }}>
 				<div className='imgCard'>
 					<h1>
 						<span className='fontYear'>{title}</span>
@@ -82,7 +82,8 @@ export default function CardYear({ title }: YearProps) {
 					</Card.Text>
 					<Button variant='success'>Ver Resumen</Button>
 				</Card.Body>
-			</Card>
+			</Card> */}
+			<h2>Titulo del Sistema</h2>
 			{/* Antes validaba con is open */}
 			<div className='menu'>
 				<Tab.Container id='list-group-tabs-example' defaultActiveKey='#link1'>
