@@ -7,6 +7,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 type YearProps = {
 	title: string;
@@ -32,10 +34,16 @@ export default function CardYear({ title }: YearProps) {
 	const [indexPrgrama, setIndexPrograma] = useState<number>();
 	const navigation = useNavigate();
 
+	const { token } = useSelector((state: RootState) => state.authSlice);
+
 	useEffect(() => {
 		// Realizar la solicitud GET en el efecto
 		axios
-			.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/programas/2023`)
+			.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/programas/2023`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
 			.then((response) => {
 				const data = response.data;
 
