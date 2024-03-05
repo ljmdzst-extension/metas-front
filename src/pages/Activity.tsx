@@ -7,8 +7,8 @@ import Modal from 'react-bootstrap/Modal';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/store';
 import { Col, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
@@ -45,6 +45,7 @@ export default function Activity() {
 
 	const [currentActivitySelected, setCurrentActivitySelected] = useState<null | number>();
 
+	const { token } = useSelector((state: RootState) => state.authSlice);
 	const navigation = useNavigate();
 
 	interface Data {
@@ -99,7 +100,11 @@ export default function Activity() {
 
 	const mostrarActividades = async function () {
 		axios
-			.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${idArea}/actividades`)
+			.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${idArea}/actividades`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
 			.then((response) => {
 				const actividades = response.data;
 				setArrayActivity(actividades.data);

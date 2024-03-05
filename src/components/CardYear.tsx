@@ -29,6 +29,7 @@ interface Area {
 export default function CardYear({ title }: YearProps) {
 	const [programasTransformados, setProgramasTransformados] = useState<Programa[]>([]);
 	const [indexActivity, setIndexActivity] = useState<Area[]>([]);
+	const [indexPrgrama, setIndexPrograma] = useState<number>();
 	const navigation = useNavigate();
 
 	useEffect(() => {
@@ -42,6 +43,7 @@ export default function CardYear({ title }: YearProps) {
 				if (data && data.ok && data.data) {
 					const programas: Programa[] = data.data;
 					setProgramasTransformados(programas);
+					console.log(programas);
 				} else {
 					console.error('La respuesta no tiene la estructura esperada.');
 				}
@@ -52,14 +54,13 @@ export default function CardYear({ title }: YearProps) {
 	}, []); // Ejecutar una sola vez al montar el componente
 
 	const openArea = (area: Area) => {
-		console.log(area);
 		const areaSinLista = {
 			idArea: area.idArea,
 			nom: area.nom,
-			idPrograma: area.idPrograma,
+			idPrograma: indexPrgrama,
 		};
 		localStorage.setItem('currentArea', JSON.stringify(areaSinLista));
-		navigation(`/gestion/metas/${area.idPrograma}/${area.idArea}`);
+		navigation(`/gestion/metas/${areaSinLista.idPrograma}/${areaSinLista.idArea}`);
 	};
 
 	return (
@@ -104,6 +105,7 @@ export default function CardYear({ title }: YearProps) {
 										variant='secondary'
 										onClick={() => {
 											setIndexActivity(item.listaAreas);
+											setIndexPrograma(item.idPrograma);
 										}}
 										key={index}
 									>
@@ -127,15 +129,6 @@ export default function CardYear({ title }: YearProps) {
 							>
 								{indexActivity.map((elemento, index) => (
 									<ListGroup.Item key={index} action variant='light'>
-										{/* <Link
-                          to={`${elemento.idPrograma}/${elemento.idArea}`}
-                          style={{
-                            textDecoration: "none",
-                            color: "black",
-                          }}
-                        >
-                          {elemento.nom}
-                        </Link> */}
 										<div onClick={() => openArea(elemento)}>{elemento.nom}</div>
 									</ListGroup.Item>
 								))}
