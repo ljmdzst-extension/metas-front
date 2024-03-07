@@ -26,7 +26,6 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 	const [ubicaciones, setUbicaciones] = useState<
 		{
 			idUbicacion: number | null;
-			nom: string | null;
 			idActividad: number | null;
 			enlace: string | null;
 		}[]
@@ -50,8 +49,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 		if (ubicacion.trim() !== '') {
 			const nuevaUbicacion = {
 				idUbicacion: 0,
-				idActividad: null,
-				nom: '',
+				idActividad: estadoActualizado.idActividad,
 				enlace: ubicacion,
 			};
 
@@ -212,6 +210,12 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 				variant='success'
 				className=' w-auto align-self-center '
 				onClick={() => {
+					const nuevoestado = {
+						...estadoActualizado,
+						desc: descripcion,
+						listaUbicaciones: ubicaciones,
+					};
+					console.log(nuevoestado);
 					guardarActividad(
 						{ ...estadoActualizado, desc: descripcion, listaUbicaciones: ubicaciones },
 						dispatch,

@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { RootState } from '../redux/store';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
@@ -41,7 +41,7 @@ export default function PlanificationPanel({
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
-	// const [isTittleHover, setIsTittleHover] = useState(false);
+	const { token } = useSelector((state: RootState) => state.authSlice);
 
 	useEffect(() => {
 		setMotCancel(estadoActualizado?.motivoCancel);
@@ -59,10 +59,11 @@ export default function PlanificationPanel({
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				idActividad: data.idActividad,
-				motivoCancel: data.motivo,
+				motivoCancel: data.motivo ? data.motivo : 'Porque puedo',
 			}),
 		})
 			.then((resp) => resp.json())
@@ -77,6 +78,7 @@ export default function PlanificationPanel({
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ idActividad: estadoActualizado.idActividad }),
 		})

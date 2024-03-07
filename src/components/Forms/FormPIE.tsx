@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
-import { ListaObjetivo } from '../../types/AppProps';
+import { ListaObjetivo } from '../../types/BasesProps';
 
 interface FormPIEProps {
 	onClose: () => void;
