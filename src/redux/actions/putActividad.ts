@@ -3,10 +3,12 @@ import { CargarDatosActividadAction } from './activityAction';
 import Swal from 'sweetalert2';
 
 export const guardarActividad = (dato: any, dispatch: AppDispatch) => {
+	const token = localStorage.getItem('token');
 	fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
+			Authorization: `Bearer ${token}`,
 		},
 		body: JSON.stringify(dato),
 	})

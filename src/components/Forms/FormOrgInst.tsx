@@ -26,6 +26,10 @@ export default function FormOrgInst({}: FormOrgInst) {
 
 	const [name, setName] = useState('');
 	const [ubicacion, setUbicacion] = useState('');
+
+	const { token } = useSelector((state: RootState) => state.authSlice);
+	const tokenHeader = { Authorization: `Bearer ${token}` };
+
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setArrayInstitucion([...arrayInstitucion, { idInstitucion: 0, nom: name, ubicacion }]);
@@ -56,14 +60,18 @@ export default function FormOrgInst({}: FormOrgInst) {
 		let debounce: any;
 		if (name.length === 0) {
 			debounce = setTimeout(() => {
-				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones`)
+				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones`, {
+					headers: tokenHeader,
+				})
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
 					.catch((error) => console.log(error));
 			}, 1000);
 		} else {
 			debounce = setTimeout(() => {
-				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones/${name}/0/10`)
+				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones/${name}/0/10`, {
+					headers: tokenHeader,
+				})
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
 					.catch((error) => console.log(error));

@@ -34,6 +34,7 @@ export default function FormArSecUU({}: FormArSecUUrops) {
 	const [sippeSeleccionadas, setSippeSeleccionadas] = useState<number[]>([]);
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 	const sincronizarSelectsRelacion = () => {
 		if (estadoActualizado.listaRelaciones) {
 			setRelacionSeleccionadas1(estadoActualizado.listaRelaciones);
@@ -52,24 +53,15 @@ export default function FormArSecUU({}: FormArSecUUrops) {
 	useEffect(() => {
 		sincronizarSelectsSIPPE();
 	}, [estadoActualizado.listaProgramasSIPPE]);
+	
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
-				if (response.data.ok) {
-					const listaRelaciones = response.data.data.listaRelaciones;
-					setRelaciones(listaRelaciones);
-					const listaSIPPE = response.data.data.listaProgramasSIPPE;
-					setSippe(listaSIPPE);
-				} else {
-					console.error('Error en la respuesta de la API');
-				}
-			} catch (error) {
-				console.error('Error al obtener la lista de relaciones:', error);
-			}
-		};
-		fetchData();
-	}, []);
+		if (!error && bases) {
+			setRelaciones(bases.listaRelaciones);
+			setSippe(bases.listaProgramasSIPPE);
+		} else {
+			// TODO: Alerta de error global
+		}
+	}, [bases, error]);
 	interface Option {
 		value: number;
 		label: string;

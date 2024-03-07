@@ -15,6 +15,7 @@ import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
 import { ArrowBack, Visibility } from '@mui/icons-material';
 import ActivityDetail from '../components/metas/ActivityDetail';
+import { getBases } from '../redux/actions/metasActions';
 
 interface Activity {
 	idActividad: number;
@@ -45,8 +46,26 @@ export default function Activity() {
 
 	const [currentActivitySelected, setCurrentActivitySelected] = useState<null | number>();
 
-	const { token } = useSelector((state: RootState) => state.authSlice);
 	const navigation = useNavigate();
+
+	const dispatch = useDispatch<AppDispatch>();
+	const { token } = useSelector((state: RootState) => state.authSlice);
+
+	useEffect(() => {
+		const dispachBases = async () => {
+			const action = await dispatch(getBases(token));
+			if (getBases.rejected.match(action)) {
+				const { error } = action.payload as { error: string };
+				Swal.fire({
+					title: 'Error!',
+					text: `${error}`,
+					icon: 'error',
+					confirmButtonText: 'Ok',
+				});
+			}
+		};
+		dispachBases();
+	}, [dispatch, token]);
 
 	interface Data {
 		idActividad: 0;
@@ -57,7 +76,7 @@ export default function Activity() {
 		fechaHasta: string | null;
 	}
 
-	const dispatch: AppDispatch = useDispatch();
+	// const dispatch: AppDispatch = useDispatch();
 
 	useEffect(() => {
 		mostrarActividades();

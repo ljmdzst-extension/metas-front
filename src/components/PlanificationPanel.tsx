@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { RootState } from '../redux/store';
-import { useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
@@ -41,7 +41,6 @@ export default function PlanificationPanel({
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
-
 	// const [isTittleHover, setIsTittleHover] = useState(false);
 
 	useEffect(() => {

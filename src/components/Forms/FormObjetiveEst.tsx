@@ -19,25 +19,19 @@ interface Objetivo {
 export default function FormObjetiveEst({}: FormObjetiveEstProps) {
 	const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
 	const dispatch = useDispatch();
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
-				if (response.data.ok) {
-					const listaObjetivos = response.data.data.listaObjetivos;
-					setObjetivos(listaObjetivos);
-				} else {
-					console.error('Error en la respuesta de la API');
-				}
-			} catch (error) {
-				console.error('Error al obtener la lista de objetivos:', error);
-			}
-		};
-		fetchData();
-	}, []);
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
 	const objetivosDesde0a4 = objetivos?.slice(0, 4);
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+
+	useEffect(() => {
+		if (!error && bases) {
+			setObjetivos(bases.listaObjetivos);
+		} else {
+			// TODO: Alerta de error global
+		}
+	}, [bases, error]);
+
 	const sincronizarCheckboxes = () => {
 		if (estadoActualizado.listaObjetivos) {
 			setObjetivosSeleccionados(estadoActualizado.listaObjetivos);

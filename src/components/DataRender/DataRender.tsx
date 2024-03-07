@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Accordion } from 'react-bootstrap';
 import axios from 'axios';
 import { RestaurantMenu } from '@mui/icons-material';
+import metasSlice from '../../redux/reducers/MetasReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 interface Props {
 	objectData: any;
@@ -29,7 +32,9 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 	// es una forma de definir un tipo para un objeto que tiene claves de tipo K y valores
 	// de tipo T.
 	const [areasMap, setAreasMap] = useState<Record<string, Area>>({});
-	const [loading, setLoading] = useState<boolean>(true);
+	// const [loading, setLoading] = useState<boolean>(true);
+
+	const { bases, error, loading } = useSelector((state: RootState) => state.metasSlice);
 
 	const camelCaseToHuman = (str: string) => {
 		return str.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
@@ -40,24 +45,14 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		return valoracion?.nom;
 	};
 
-	const fetchBases = async () => {
-		try {
-			const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
-			if (response.data.ok) {
-				setValoraciones(response.data.data.listaValoraciones);
-				setAreas(response.data.data.lAreas);
-				setlistaSIPPE(response.data.data.listaProgramasSIPPE);
-				setLoading(false);
-			} else {
-				console.error('Error en la respuesta de la API');
-			}
-		} catch (error) {
-			console.error('Error al obtener la lista de objetivos:', error);
-		}
-	};
-
 	useEffect(() => {
-		fetchBases();
+		if (!error && bases) {
+			setValoraciones(bases.listaValoraciones);
+			setAreas(bases.lAreas);
+			setlistaSIPPE(bases.listaProgramasSIPPE);
+		} else {
+			// TODO: ALERTA
+		}
 	}, []);
 
 	useEffect(() => {

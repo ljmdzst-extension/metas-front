@@ -1,46 +1,28 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
+import { ListaObjetivo } from '../../types/AppProps';
 
 interface FormPIEProps {
 	onClose: () => void;
 }
 
-interface Objetivo {
-	idObjetivo: number;
-	detalle: string;
-	nom: string;
-	tipoObjetivo: {
-		idTipoObj: number;
-		nom: string;
-	};
-}
-
 export default function FormPIE({}: FormPIEProps) {
 	const dispatch = useDispatch();
-	const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
+	const [objetivos, setObjetivos] = useState<ListaObjetivo[]>([]);
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
+	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
-				if (response.data.ok) {
-					const listaObjetivos = response.data.data.listaObjetivos;
-					setObjetivos(listaObjetivos);
-				} else {
-					console.error('Error en la respuesta de la API');
-				}
-			} catch (error) {
-				console.error('Error al obtener la lista de objetivos:', error);
-			}
-		};
-		fetchData();
-	}, []);
+		if (!error && bases) {
+			setObjetivos(bases.listaObjetivos);
+		} else {
+			// TODO: Alerta de error global
+		}
+	}, [bases, error]);
 
 	const handleSeleccionarObjetivo = (idObjetivo: number) => {
 		const objetivoIndex = objetivosSeleccionados.indexOf(idObjetivo);

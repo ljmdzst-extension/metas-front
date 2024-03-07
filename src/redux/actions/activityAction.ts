@@ -115,8 +115,13 @@ export interface CargarDatosActividadAction {
 export const CargarDatosActividadAction = createAsyncThunk(
 	'CargarDatosActividadAction',
 	async (id: number) => {
+		const token = localStorage.getItem('token');
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/${id}`);
+			const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/${id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
 			if (!response.ok) {
 				throw new Error('Error al cargar los datos de actividad');
 			}

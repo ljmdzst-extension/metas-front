@@ -44,23 +44,15 @@ const FormMetas = ({}: FormMetasProps) => {
 	const indexCurrentMeta = useRef(-1);
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
-		const getValoraciones = async () => {
-			try {
-				const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/`);
-				if (response.data.ok) {
-					setValoraciones(response.data.data.listaValoraciones);
-				} else {
-					console.error('Error en la respuesta de la API');
-				}
-			} catch (error) {
-				console.error('Error al obtener la lista de objetivos:', error);
-			}
-		};
-
-		getValoraciones();
-	}, []);
+		if (!error && bases) {
+			setValoraciones(bases.listaValoraciones);
+		} else {
+			// TODO: Alerta de error global
+		}
+	}, [bases, error]);
 
 	useEffect(() => {
 		const sincronizarMetas = () => {
