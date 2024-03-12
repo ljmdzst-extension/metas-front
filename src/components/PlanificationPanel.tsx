@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
+import { errorAlert, successAlert } from '../utils/Alerts';
 
 interface UbicacionProps {
 	idUbicacion: number | null;
@@ -68,10 +69,10 @@ export default function PlanificationPanel({
 		})
 			.then((resp) => resp.json())
 			.then((data) => {
-				data.ok ? alert('Actividad Guardada !') : alert(data.error);
+				data.ok ? successAlert('Actividad Guardada !') : errorAlert(data.error);
 				window.location.replace('');
 			})
-			.catch((error) => alert(JSON.stringify(error)));
+			.catch((error) => errorAlert(JSON.stringify(error)));
 	};
 	const eliminarActividad = () => {
 		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {
@@ -84,10 +85,10 @@ export default function PlanificationPanel({
 		})
 			.then((resp) => resp.json())
 			.then((data) => {
-				data.ok ? alert('Actividad Eliminada !') : alert(data.error);
-				window.location.replace('');
+				data.ok ? successAlert('Actividad Eliminada !') : errorAlert(data.error);
+				setTimeout(() => window.location.replace(''), 1000);
 			})
-			.catch((error) => alert(JSON.stringify(error)));
+			.catch((error) => errorAlert(JSON.stringify(error)));
 	};
 
 	const handleCloseForm = () => {
