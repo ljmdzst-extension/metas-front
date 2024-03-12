@@ -6,11 +6,7 @@ import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import { ListaObjetivo } from '../../types/BasesProps';
 
-interface FormPIEProps {
-	onClose: () => void;
-}
-
-export default function FormPIE({}: FormPIEProps) {
+export default function FormPIE() {
 	const dispatch = useDispatch();
 	const [objetivos, setObjetivos] = useState<ListaObjetivo[]>([]);
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
@@ -40,13 +36,11 @@ export default function FormPIE({}: FormPIEProps) {
 	const objetivosDesde16a20 = objetivos?.slice(14, 19);
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
-	const sincronizarCheckboxes = () => {
-		if (estadoActualizado.listaObjetivos) {
-			setObjetivosSeleccionados(estadoActualizado.listaObjetivos);
-		}
-	};
 
 	useEffect(() => {
+		const sincronizarCheckboxes = () => {
+			setObjetivosSeleccionados(estadoActualizado?.listaObjetivos ?? []);
+		};
 		sincronizarCheckboxes();
 	}, [estadoActualizado.listaObjetivos]);
 
@@ -54,7 +48,7 @@ export default function FormPIE({}: FormPIEProps) {
 		<div className=' d-flex flex-column'>
 			<div className='FormPie'>
 				<p className=' px-2 text-end w-100 fst-italic'>
-					Referencia:
+					Referencia:{' '}
 					<a
 						href='https://www.unl.edu.ar/pie/wp-content/uploads/sites/55/2021/02/Plan-Institucional-Estrat%C3%A9gico.pdf'
 						target='_blank'
@@ -94,7 +88,7 @@ export default function FormPIE({}: FormPIEProps) {
 								{objetivosDesde5a9.map((objetivo) => (
 									<Form.Check
 										id={objetivo.idObjetivo.toString()}
-										title={objetivo.detalle}
+										title={objetivo.detalle ?? undefined}
 										label={objetivo.nom}
 										key={objetivo.idObjetivo}
 										onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
@@ -107,7 +101,7 @@ export default function FormPIE({}: FormPIEProps) {
 									<Form.Check
 										id={objetivo.idObjetivo.toString()}
 										label={objetivo.nom}
-										title={objetivo.detalle}
+										title={objetivo.detalle ?? undefined}
 										key={objetivo.idObjetivo}
 										onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
 										checked={objetivosSeleccionados.includes(objetivo.idObjetivo)}
@@ -119,7 +113,7 @@ export default function FormPIE({}: FormPIEProps) {
 									<Form.Check
 										id={objetivo.idObjetivo.toString()}
 										label={objetivo.nom}
-										title={objetivo.detalle}
+										title={objetivo.detalle ?? undefined}
 										key={objetivo.idObjetivo}
 										onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
 										checked={objetivosSeleccionados.includes(objetivo.idObjetivo)}

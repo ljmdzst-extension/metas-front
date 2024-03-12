@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import { Card } from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
@@ -9,29 +7,12 @@ import Tab from 'react-bootstrap/Tab';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import { AreaProps, ProgramaProps } from '../types/AppProps';
 
-type YearProps = {
-	title: string;
-};
-
-interface Programa {
-	idPrograma: number;
-	nom: string;
-	anio: number;
-	listaAreas: Area[];
-}
-
-interface Area {
-	idArea: number;
-	nom: string;
-	idPrograma: number;
-	listaActividades: any[];
-}
-
-export default function CardYear({ title }: YearProps) {
-	const [programasTransformados, setProgramasTransformados] = useState<Programa[]>([]);
-	const [indexActivity, setIndexActivity] = useState<Area[]>([]);
-	const [indexPrgrama, setIndexPrograma] = useState<number>();
+export default function CardYear() {
+	const [programasTransformados, setProgramasTransformados] = useState<ProgramaProps[]>([]);
+	const [indexActivity, setIndexActivity] = useState<AreaProps[]>([]);
+	const [indexPrograma, setIndexPrograma] = useState<number>();
 	const navigation = useNavigate();
 
 	const { token } = useSelector((state: RootState) => state.authSlice);
@@ -48,8 +29,8 @@ export default function CardYear({ title }: YearProps) {
 				const data = response.data;
 
 				// Verifica si la respuesta tiene la estructura esperada
-				if (data && data.ok && data.data) {
-					const programas: Programa[] = data.data;
+				if (data?.ok && data?.data) {
+					const programas: ProgramaProps[] = data.data;
 					setProgramasTransformados(programas);
 					console.log(programas);
 				} else {
@@ -59,13 +40,13 @@ export default function CardYear({ title }: YearProps) {
 			.catch((error) => {
 				console.error('Error al realizar la solicitud GET:', error);
 			});
-	}, []); // Ejecutar una sola vez al montar el componente
+	}, [token]); // Ejecutar una sola vez al montar el componente
 
-	const openArea = (area: Area) => {
+	const openArea = (area: AreaProps) => {
 		const areaSinLista = {
 			idArea: area.idArea,
 			nom: area.nom,
-			idPrograma: indexPrgrama,
+			idPrograma: indexPrograma,
 		};
 		localStorage.setItem('currentArea', JSON.stringify(areaSinLista));
 		navigation(`/gestion/metas/${areaSinLista.idPrograma}/${areaSinLista.idArea}`);
@@ -73,25 +54,6 @@ export default function CardYear({ title }: YearProps) {
 
 	return (
 		<div className='ConteinerCardMenu d-flex flex-column'>
-			{/* <Card style={{ width: '18rem' }}>
-				<div className='imgCard'>
-					<h1>
-						<span className='fontYear'>{title}</span>
-					</h1>
-				</div>
-				<Card.Body
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-					}}
-				>
-					<Card.Text style={{ textAlign: 'center' }}>
-						Para obtener un análisis de datos generales, presione en "Ver resumen"
-					</Card.Text>
-					<Button variant='success'>Ver Resumen</Button>
-				</Card.Body>
-			</Card> */}
 			<h2>Titulo del Sistema</h2>
 			{/* Antes validaba con is open */}
 			<div className='menu'>
@@ -136,8 +98,13 @@ export default function CardYear({ title }: YearProps) {
 								}}
 							>
 								{indexActivity.map((elemento, index) => (
-									<ListGroup.Item key={index} action variant='light'>
-										<div onClick={() => openArea(elemento)}>{elemento.nom}</div>
+									<ListGroup.Item
+										key={index}
+										action
+										variant='light'
+										onClick={() => openArea(elemento)}
+									>
+										{elemento.nom}
 									</ListGroup.Item>
 								))}
 							</ListGroup>

@@ -35,7 +35,7 @@ export default function PlanificationPanel({
 	closePlanification,
 	currentFormSelected,
 	cleanFormSelected,
-}: Props) {
+}: Readonly<Props>) {
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState(String);
 	const [show2, setShow2] = useState(false);
@@ -55,7 +55,7 @@ export default function PlanificationPanel({
 		setShow2(true);
 	};
 
-	const suspenderActividad = (data: any) => {
+	const suspenderActividad = (data: { idActividad: number; motivo: string }) => {
 		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/cancel`, {
 			method: 'PUT',
 			headers: {
@@ -64,16 +64,38 @@ export default function PlanificationPanel({
 			},
 			body: JSON.stringify({
 				idActividad: data.idActividad,
-				motivoCancel: data.motivo ? data.motivo : 'Porque puedo',
+				motivoCancel: data.motivo,
 			}),
 		})
 			.then((resp) => resp.json())
 			.then((data) => {
-				data.ok ? successAlert('Actividad Guardada !') : errorAlert(data.error);
+				data.ok ? successAlert('Actividad Anulada') : errorAlert(data.error);
 				window.location.replace('');
 			})
 			.catch((error) => errorAlert(JSON.stringify(error)));
 	};
+
+	const activarActividad = async () => {
+		try {
+			const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/restore`, {
+				method: 'PUT',
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ idActividad: estadoActualizado.idActividad }),
+			});
+
+			const data = await response.json();
+			if (data.ok) {
+				successAlert('Actividad restaurada');
+			} else {
+				errorAlert(data.error);
+			}
+		} catch (error) {
+			errorAlert(JSON.stringify(error));
+		}
+	};
+
 	const eliminarActividad = () => {
 		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {
 			method: 'DELETE',
@@ -144,46 +166,28 @@ export default function PlanificationPanel({
 	}, [currentFormSelected]);
 
 	const handleSuspenderActividad = () => {
-		if (motCancel) {
-			Swal.fire({
-				title: '¿Desea anular la suspensión?',
-				showDenyButton: true,
-				confirmButtonText: `Anular Suspensión`,
-				denyButtonText: `Cancelar`,
-			}).then((result) => {
-				if (result.isConfirmed) {
-					suspenderActividad({
-						idActividad: estadoActualizado.idActividad,
-						motivo: null,
-					});
-				} else if (result.isDenied) {
-					Swal.fire('Changes are not saved', '', 'info');
+		Swal.fire({
+			title: '¿Desea suspender la actividad?',
+			showDenyButton: true,
+			denyButtonText: `Cancelar`,
+			confirmButtonText: `Suspender`,
+			input: 'textarea',
+			inputPlaceholder: 'Ingrese el motivo de la suspensión',
+			inputValidator: (value) => {
+				if (!value) {
+					return 'Debe ingresar un motivo';
 				}
-			});
-		} else {
-			Swal.fire({
-				title: '¿Desea suspender la actividad?',
-				showDenyButton: true,
-				denyButtonText: `Cancelar`,
-				confirmButtonText: `Suspender`,
-				input: 'textarea',
-				inputPlaceholder: 'Ingrese el motivo de la suspensión',
-				inputValidator: (value) => {
-					if (!value) {
-						return 'Debe ingresar un motivo';
-					}
-				},
-			}).then((result) => {
-				if (result.isConfirmed) {
-					suspenderActividad({
-						idActividad: estadoActualizado.idActividad,
-						motivo: result.value,
-					});
-				} else if (result.isDenied) {
-					Swal.fire('Changes are not saved', '', 'info');
-				}
-			});
-		}
+			},
+		}).then((result) => {
+			if (result.isConfirmed) {
+				suspenderActividad({
+					idActividad: estadoActualizado.idActividad,
+					motivo: result.value,
+				});
+			} else if (result.isDenied) {
+				Swal.fire('Changes are not saved', '', 'info');
+			}
+		});
 	};
 
 	const handleDeleteActividad = () => {
@@ -357,7 +361,7 @@ export default function PlanificationPanel({
 							variant='warning'
 							className='Suspend'
 							onClick={() => {
-								handleSuspenderActividad();
+								activarActividad();
 							}}
 						>
 							Anular Suspensión
@@ -370,11 +374,11 @@ export default function PlanificationPanel({
 					{(() => {
 						switch (indexForm) {
 							case 'descr':
-								return <FormDescriptionUbication onClose={handleCloseForm} />;
+								return <FormDescriptionUbication />;
 							case 'documentacion':
 								return <FormDocuments onClose={handleCloseForm} />;
 							case 'pie':
-								return <FormPIE onClose={handleCloseForm} />;
+								return <FormPIE />;
 							case 'area':
 								return <FormArSecUU onClose={handleCloseForm} />;
 							case 'periodo':

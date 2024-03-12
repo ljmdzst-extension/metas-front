@@ -12,10 +12,8 @@ import { ListGroup } from 'react-bootstrap';
 import { ContentCopy } from '@mui/icons-material';
 
 import { textLimitError } from '../../utils/validacionesForms';
-interface FormDescriptionUbicationProps {
-	onClose: () => void;
-}
-const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => {
+
+const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
