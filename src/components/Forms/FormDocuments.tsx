@@ -13,8 +13,6 @@ type Documento = {
 	desc: string | null;
 };
 
-
-
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
 	const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>([]);
@@ -96,7 +94,7 @@ export default function FormOrgInst() {
 					</Button>
 				</Form>
 				<div className=' custom-scrollbar ' style={{ maxHeight: '250px', overflowY: 'auto' }}>
-					<Table>
+					<Table style={{ minHeight: '400px' }}>
 						<thead style={{ position: 'sticky', top: '0' }}>
 							<tr>
 								<th>Descripción</th>
