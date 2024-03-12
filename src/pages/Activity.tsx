@@ -84,7 +84,11 @@ export default function Activity() {
 
 	const postActivity = async function (data: Data) {
 		axios
-			.post(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, data)
+			.post(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, data, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
 			.then(() => {
 				mostrarActividades();
 			})

@@ -10,10 +10,11 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { RootState } from '../redux/store';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
+import { errorAlert, successAlert } from '../utils/Alerts';
 
 interface UbicacionProps {
 	idUbicacion: number | null;
@@ -41,6 +42,7 @@ export default function PlanificationPanel({
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { token } = useSelector((state: RootState) => state.authSlice);
 	// const [isTittleHover, setIsTittleHover] = useState(false);
 
 	useEffect(() => {
@@ -67,25 +69,26 @@ export default function PlanificationPanel({
 		})
 			.then((resp) => resp.json())
 			.then((data) => {
-				data.ok ? alert('Actividad Guardada !') : alert(data.error);
+				data.ok ? successAlert('Actividad Guardada !') : errorAlert(data.error);
 				window.location.replace('');
 			})
-			.catch((error) => alert(JSON.stringify(error)));
+			.catch((error) => errorAlert(JSON.stringify(error)));
 	};
 	const eliminarActividad = () => {
 		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ idActividad: estadoActualizado.idActividad }),
 		})
 			.then((resp) => resp.json())
 			.then((data) => {
-				data.ok ? alert('Actividad Eliminada !') : alert(data.error);
-				window.location.replace('');
+				data.ok ? successAlert('Actividad Eliminada !') : errorAlert(data.error);
+				setTimeout(() => window.location.replace(''), 1000);
 			})
-			.catch((error) => alert(JSON.stringify(error)));
+			.catch((error) => errorAlert(JSON.stringify(error)));
 	};
 
 	const handleCloseForm = () => {

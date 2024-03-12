@@ -178,21 +178,26 @@ const FormMetas = ({}: FormMetasProps) => {
 						<tr>
 							<th>#</th>
 							<th>Meta/resultado esperado</th>
-							<th>Resultado Alcanzado</th>
-							<th>Observaciones</th>
 							<th>Valoraciones</th>
-							<th>Acciones</th>
+							<th style={{ textAlign: 'right' }}>Acciones</th>
 						</tr>
 					</thead>
 					<tbody>
 						{listadoMetas.map((meta, index) => (
 							<tr key={`${meta.descripcion}-${meta.idMeta} `}>
 								<td>{index + 1}</td>
-								<td>{limitTextString(meta.descripcion ?? '', 10)}</td>
-								<td>{limitTextString(meta.resultado ?? '', 30)}</td>
-								<td>{limitTextString(meta.observaciones ?? '', 30)}</td>
+								<td
+									style={{
+										whiteSpace: 'nowrap',
+										overflow: 'hidden',
+										textOverflow: 'ellipsis',
+										maxWidth: '600px',
+									}}
+								>
+									{meta.descripcion}
+								</td>
 								<td>{valoracionesText(meta.valoracion ?? 0)}</td>
-								<td>
+								<td style={{ textAlign: 'right' }}>
 									<VisibilityIcon
 										id={`metaLabel-${meta.idMeta}`}
 										onClick={() => alertVistaDetalle(meta as metas)}
