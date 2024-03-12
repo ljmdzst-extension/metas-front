@@ -208,12 +208,12 @@ const FormDescriptionUbication = () => {
 				variant='success'
 				className=' w-auto align-self-center '
 				onClick={() => {
-					const nuevoestado = {
-						...estadoActualizado,
-						desc: descripcion,
-						listaUbicaciones: ubicaciones,
-					};
-					console.log(nuevoestado);
+					// const nuevoestado = {
+					// 	...estadoActualizado,
+					// 	desc: descripcion,
+					// 	listaUbicaciones: ubicaciones,
+					// };
+					// console.log(nuevoestado);
 					guardarActividad(
 						{ ...estadoActualizado, desc: descripcion, listaUbicaciones: ubicaciones },
 						dispatch,

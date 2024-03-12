@@ -2,15 +2,12 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import { Row, Col } from 'react-bootstrap';
 const animatedComponents = makeAnimated();
-interface FormArSecUUrops {
-	onClose: () => void;
-}
+
 interface Relacion {
 	idRelacion: number;
 	nom: string;
@@ -24,7 +21,7 @@ interface listaProgramasSIPPE {
 	nom: string;
 	subProgramaDe: string | null;
 }
-export default function FormArSecUU({}: FormArSecUUrops) {
+export default function FormArSecUU() {
 	const dispatch = useDispatch();
 	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
 	const [sippe, setSippe] = useState<listaProgramasSIPPE[]>([]);
@@ -35,25 +32,25 @@ export default function FormArSecUU({}: FormArSecUUrops) {
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
-	const sincronizarSelectsRelacion = () => {
-		if (estadoActualizado.listaRelaciones) {
-			setRelacionSeleccionadas1(estadoActualizado.listaRelaciones);
-			setRelacionSeleccionadas2(estadoActualizado.listaRelaciones);
-			setRelacionSeleccionadas3(estadoActualizado.listaRelaciones);
-		}
-	};
-	const sincronizarSelectsSIPPE = () => {
-		if (estadoActualizado.listaProgramasSIPPE) {
-			setSippeSeleccionadas(estadoActualizado.listaProgramasSIPPE);
-		}
-	};
 	useEffect(() => {
+		const sincronizarSelectsRelacion = () => {
+			if (estadoActualizado.listaRelaciones) {
+				setRelacionSeleccionadas1(estadoActualizado.listaRelaciones);
+				setRelacionSeleccionadas2(estadoActualizado.listaRelaciones);
+				setRelacionSeleccionadas3(estadoActualizado.listaRelaciones);
+			}
+		};
 		sincronizarSelectsRelacion();
 	}, [estadoActualizado.listaRelaciones]);
 	useEffect(() => {
+		const sincronizarSelectsSIPPE = () => {
+			if (estadoActualizado.listaProgramasSIPPE) {
+				setSippeSeleccionadas(estadoActualizado.listaProgramasSIPPE);
+			}
+		};
 		sincronizarSelectsSIPPE();
 	}, [estadoActualizado.listaProgramasSIPPE]);
-	
+
 	useEffect(() => {
 		if (!error && bases) {
 			setRelaciones(bases.listaRelaciones);
@@ -97,15 +94,11 @@ export default function FormArSecUU({}: FormArSecUUrops) {
 		setRelacionSeleccionadas2(selectedValues);
 	};
 	const handleRelacionChange3 = (selectedOptions: any) => {
-		console.log(selectedOptions);
 		const selectedValues = selectedOptions.map((option: any) => option.value);
-		console.log(selectedValues);
 		setRelacionSeleccionadas3(selectedValues);
 	};
 	const handleSippeChange = (selectedOptions: any) => {
-		console.log(selectedOptions);
 		const selectedValues = selectedOptions.map((option: any) => option.value);
-		console.log(selectedValues);
 		setSippeSeleccionadas(selectedValues);
 	};
 

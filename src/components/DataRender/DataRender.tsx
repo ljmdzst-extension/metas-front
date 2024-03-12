@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Accordion } from 'react-bootstrap';
-import axios from 'axios';
-import { RestaurantMenu } from '@mui/icons-material';
-import metasSlice from '../../redux/reducers/MetasReducer';
+
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { LArea, ListaProgramasSIPPE } from '../../types/BasesProps';
 
 interface Props {
 	objectData: any;
@@ -24,8 +23,8 @@ interface Area {
 
 const DataRender = ({ objectData, spanishTitles }: Props) => {
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
-	const [areas, setAreas] = useState<Area[]>([]);
-	const [listaSIPPE, setlistaSIPPE] = useState<[]>();
+	const [areas, setAreas] = useState<LArea[]>([]);
+	const [listaSIPPE, setListaSIPPE] = useState<ListaProgramasSIPPE[]>();
 
 	// Record en TypeScript es una utilidad de tipo que representa un objeto JavaScript con
 	// claves de tipo string y valores de un tipo específico. En otras palabras, Record<K, T>
@@ -49,14 +48,14 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		if (!error && bases) {
 			setValoraciones(bases.listaValoraciones);
 			setAreas(bases.lAreas);
-			setlistaSIPPE(bases.listaProgramasSIPPE);
+			setListaSIPPE(bases.listaProgramasSIPPE);
 		} else {
 			// TODO: ALERTA
 		}
-	}, []);
+	}, [bases, error]);
 
 	useEffect(() => {
-		const map: Record<string, Area> = {};
+		const map: Record<string, LArea> = {};
 		areas.forEach((area) => {
 			const key = `${area.idRelacion}-${area.idTipoRelacion}`;
 			map[key] = area;
@@ -175,7 +174,7 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 						{data.length > 0 && (
 							<ol>
 								{renderArea(data, 1, 'Internas Secretaria')}
-								{renderArea(data, 2, 'Internas UNL')}
+								{renderArea(data, 2, 'Otras áreas centrales')}
 								{renderArea(data, 3, 'Unidades Académicas involucradas')}
 								{renderArea(data, 4, 'Programas de Extensión')}
 							</ol>
@@ -187,17 +186,15 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 				if (!data || data.length === 0) return null;
 
 				const thisSIPPE = listaSIPPE?.filter((programa) => data.includes(programa.idProgramaSippe));
-				console.log('LISTA SIPPE', listaSIPPE);
-				console.log('LISTA SIPPE', thisSIPPE);
 
 				return (
 					<div key={dataType}>
 						<p>
-							<span>SIPPE</span>
+							<span>Programas de Extensión</span>
 						</p>
 						<ul>
 							{thisSIPPE?.map((el) => (
-								<li>{el.nom}</li>
+								<li key={'Sippe' + el.idProgramaSippe}>{el.nom}</li>
 							))}
 						</ul>
 					</div>

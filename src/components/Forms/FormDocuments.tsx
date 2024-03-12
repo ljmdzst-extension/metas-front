@@ -13,11 +13,9 @@ type Documento = {
 	desc: string | null;
 };
 
-interface FormOrgInstProps {
-	onClose: () => void;
-}
 
-export default function FormOrgInst({}: FormOrgInstProps) {
+
+export default function FormOrgInst() {
 	const dispatch = useDispatch();
 	const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>([]);
 	const [descripcion, setDescripcion] = useState('');

@@ -12,10 +12,8 @@ type Institucion = {
 	nom: string | null;
 	ubicacion: string | null;
 };
-interface FormOrgInst {
-	onClose: () => void;
-}
-export default function FormOrgInst({}: FormOrgInst) {
+
+export default function FormOrgInst() {
 	const dispatch = useDispatch();
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
 	const [arrayInstitucion, setArrayInstitucion] = useState<Institucion[]>(

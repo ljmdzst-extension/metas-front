@@ -12,11 +12,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 registerLocale('es', es);
 
-interface FormPeriodoProps {
-	onClose: () => void;
-}
-
-export default function FormPeriodo({}: FormPeriodoProps) {
+export default function FormPeriodo() {
 	const dispatch = useDispatch();
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
 

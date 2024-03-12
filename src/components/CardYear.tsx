@@ -32,7 +32,6 @@ export default function CardYear() {
 				if (data?.ok && data?.data) {
 					const programas: ProgramaProps[] = data.data;
 					setProgramasTransformados(programas);
-					console.log(programas);
 				} else {
 					console.error('La respuesta no tiene la estructura esperada.');
 				}

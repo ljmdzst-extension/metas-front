@@ -5,9 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
-interface FormObjetiveEstProps {
-	onClose: () => void;
-}
+
 interface Objetivo {
 	idObjetivo: number;
 	nom: string;
@@ -16,7 +14,7 @@ interface Objetivo {
 		nom: string;
 	};
 }
-export default function FormObjetiveEst({}: FormObjetiveEstProps) {
+export default function FormObjetiveEst() {
 	const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
 	const dispatch = useDispatch();
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);

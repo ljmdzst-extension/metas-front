@@ -11,10 +11,6 @@ import { Badge, Button, Form, Modal, Table } from 'react-bootstrap';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import Swal from 'sweetalert2';
 
-interface FormMetasProps {
-	onClose: () => void;
-}
-
 interface Valoracion {
 	idValoracion: number;
 	nom: string;
@@ -35,7 +31,7 @@ const defaultNuevaMeta = {
 	valoracion: null,
 };
 
-const FormMetas = ({}: FormMetasProps) => {
+const FormMetas = () => {
 	const dispatch = useDispatch();
 	const [listadoMetas, setListadoMetas] = useState<metas[]>([]);
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);

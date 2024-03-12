@@ -5,11 +5,7 @@ import { RootState } from '../../redux/store';
 import DataRender from '../DataRender/DataRender';
 import spanishTitles from '../../mock/MetasSpanishTitles.json';
 
-interface Props {
-	idActivity: number;
-}
-
-const ActivityDetail = ({ idActivity }: Props) => {
+const ActivityDetail = () => {
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
 	const [filteredData, setFilteredData] = useState({});
 	const [showFullView, setShowFullView] = useState<boolean>(true);
@@ -22,9 +18,9 @@ const ActivityDetail = ({ idActivity }: Props) => {
 				fechaHasta,
 				listaMetas,
 				listaInstituciones,
-				listaEnlaces,
 				listaRelaciones,
 				listaProgramasSIPPE,
+				listaEnlaces,
 			} = estadoActualizado;
 
 			const filteredData = showFullView
@@ -33,10 +29,10 @@ const ActivityDetail = ({ idActivity }: Props) => {
 						fechaDesde: fechaDesde,
 						fechaHasta: fechaHasta,
 						listaMetas: listaMetas,
-						listaInstituciones: listaInstituciones,
-						listaEnlaces: listaEnlaces,
 						listaRelaciones: listaRelaciones,
 						listaProgramasSIPPE: listaProgramasSIPPE,
+						listaInstituciones: listaInstituciones,
+						listaEnlaces: listaEnlaces,
 				  }
 				: {
 						descripcion: desc,

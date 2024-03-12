@@ -113,16 +113,6 @@ export default function PlanificationPanel({
 			.catch((error) => errorAlert(JSON.stringify(error)));
 	};
 
-	const handleCloseForm = () => {
-		setIsFormOpen(false);
-		setIndexForm('');
-		cleanFormSelected();
-	};
-
-	// const toggleHover = () => {
-	// 	setIsTittleHover(!isTittleHover);
-	// };
-
 	useEffect(() => {
 		const changeFromSideBar = () => {
 			switch (currentFormSelected) {
@@ -246,11 +236,16 @@ export default function PlanificationPanel({
 			</Modal>
 			{/* NOTE: Vista detalle form */}
 			<div className='d-flex justify-content-between align-items-center mb-2 border-bottom position-relative '>
-				<h4 className=' text-break m-2 border-3 ' style={{ borderBottom: '2px solid #0a5d52' }}>
-					{name.length > 80 ? name.slice(0, 80) + '...' : name}
-					{/* {isTittleHover && (
-						<div className='complete-title-label position-absolute top-0 mt-1 me-5'>{name}</div>
-					)} */}
+				<h4
+					className=' text-break m-2 border-3 '
+					style={{
+						borderBottom: '2px solid #0a5d52',
+						textOverflow: 'ellipsis',
+						overflow: 'hidden',
+						whiteSpace: 'nowrap',
+					}}
+				>
+					{name}
 				</h4>
 				{isFormOpen && (
 					<ArrowBack
@@ -376,19 +371,19 @@ export default function PlanificationPanel({
 							case 'descr':
 								return <FormDescriptionUbication />;
 							case 'documentacion':
-								return <FormDocuments onClose={handleCloseForm} />;
+								return <FormDocuments />;
 							case 'pie':
 								return <FormPIE />;
 							case 'area':
-								return <FormArSecUU onClose={handleCloseForm} />;
+								return <FormArSecUU />;
 							case 'periodo':
-								return <FormPeriodo onClose={handleCloseForm} />;
+								return <FormPeriodo />;
 							case 'objetivo':
-								return <FormObjetiveEst onClose={handleCloseForm} />;
+								return <FormObjetiveEst />;
 							case 'organi':
-								return <FormOrgInst onClose={handleCloseForm} />;
+								return <FormOrgInst />;
 							case 'metas':
-								return <FormMetas onClose={handleCloseForm} />;
+								return <FormMetas />;
 							default:
 								return null;
 						}
