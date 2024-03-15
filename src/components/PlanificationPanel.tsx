@@ -80,6 +80,7 @@ export default function PlanificationPanel({
 			const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/restore`, {
 				method: 'PUT',
 				headers: {
+					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`,
 				},
 				body: JSON.stringify({ idActividad: estadoActualizado.idActividad }),
