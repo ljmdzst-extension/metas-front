@@ -57,12 +57,14 @@
 	color: white;
 	font-weight: bolder;
 }
-.ConteinerCardMenu {
+.ContainerCardMenu {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	min-width: 400px;
 	min-height: 400px;
+	max-width: 1200px;
+	width: 1200px;
 	gap: 20px;
 	padding: 20px;
 	margin: 10px;
@@ -815,7 +817,7 @@ th {
 
 .custom-scrollbar {
 	scrollbar-width: thin; /* Ancho del scrollbar */
-	scrollbar-color: #888 white; /* Color del scrollbar thumb y track */
+	scrollbar-color: #888 rgba(255, 255, 255, 0); /* Color del scrollbar thumb y track */
 
 	/* Para WebKit (Chrome, Safari, etc.) */
 	&::-webkit-scrollbar {
@@ -840,7 +842,7 @@ th {
 	/* Para Firefox */
 	@-moz-document url-prefix() {
 		scrollbar-width: thin;
-		scrollbar-color: #888 white;
+		scrollbar-color: #888 rgba(255, 255, 255, 0);
 	}
 }
 

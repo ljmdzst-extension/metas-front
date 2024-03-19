@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import CardYear from '../components/CardYear';
+import PanelProgramas from '../components/PanelProgramas';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { logout } from '../redux/reducers/AuthReducer';
@@ -45,8 +45,8 @@ export default function Main() {
 	return (
 		<div className=''>
 			<div className='ConteinerCards '>
-				{/* <CardYear title={"2022"}></CardYear> */}
-				<CardYear title={'2023'}></CardYear>
+				{/* <PanelProgramas title={"2022"}></PanelProgramas> */}
+				<PanelProgramas title={'2023'}></PanelProgramas>
 			</div>
 		</div>
 	);
