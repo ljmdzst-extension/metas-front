@@ -16,6 +16,7 @@ import PrivateLayout from './components/Layout/PrivateLayout';
 import Proyectos from './pages/Proyectos';
 import ProjectForm from './pages/ProjectForm';
 import ProjectSum from './pages/ProjectSum';
+import ResumenArea from './pages/ResumenArea'
 
 function App() {
 	return (
@@ -31,6 +32,7 @@ function App() {
 				<Route index element={<Management />} />
 				<Route path='metas' element={<Main />} />
 				<Route path='metas/:idPrograma/:idArea' element={<Activity />} />
+				<Route path='metas/:idPrograma/:idArea/resumen' element={<ResumenArea />} />
 				<Route path='proyectos' element={<Proyectos />} />
 				<Route path='proyectos/summ/:id' element={<ProjectSum />} />
 				<Route path='proyectos/form/:id' element={<ProjectForm />} />

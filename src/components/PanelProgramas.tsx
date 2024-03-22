@@ -52,6 +52,7 @@ export default function PanelProgramas() {
 			idArea: area.idArea,
 			nom: area.nom,
 			idPrograma: indexPrograma,
+			anio: year,
 		};
 		localStorage.setItem('currentArea', JSON.stringify(areaSinLista));
 		navigation(`/gestion/metas/${areaSinLista.idPrograma}/${areaSinLista.idArea}`);

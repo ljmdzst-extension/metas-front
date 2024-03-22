@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +26,12 @@ interface Area {
 	idArea: number;
 	nom: string;
 	listaActividades: any[]; // Reemplaza esto con el tipo correcto si es necesario
+	anio: string;
 }
+
+const initialAreaValue: Area = localStorage.getItem('currentArea')
+	? (JSON.parse(localStorage.getItem('currentArea')) as Area)
+	: {};
 
 export default function Activity() {
 	const [show, setShow] = useState(false);
@@ -40,16 +45,27 @@ export default function Activity() {
 	const handleShow2 = () => setShow2(true);
 	const [arrayActivity, setArrayActivity] = useState<Activity[]>([]);
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
-	const { idArea } = useParams<{ idArea?: string }>();
-	const [area, setArea] = useState<Area | null>(null);
+	const [area, setArea] = useState<Area>(initialAreaValue);
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
 
 	const [currentActivitySelected, setCurrentActivitySelected] = useState<null | number>();
 
 	const navigation = useNavigate();
+	const location = useLocation();
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { token } = useSelector((state: RootState) => state.authSlice);
+
+	useEffect(() => {
+		try {
+			const areaString = localStorage.getItem('currentArea');
+			if (areaString) {
+				setArea(JSON.parse(areaString));
+			}
+		} catch (error) {
+			console.error('Error parsing area from localStorage:', error);
+		}
+	}, []);
 
 	useEffect(() => {
 		const dispachBases = async () => {
@@ -78,6 +94,27 @@ export default function Activity() {
 
 	// const dispatch: AppDispatch = useDispatch();
 
+	const mostrarActividades = async function () {
+		axios
+			.get(
+				`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${area.idArea}/actividades/${
+					area.anio
+				}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			)
+			.then((response) => {
+				const actividades = response.data;
+				setArrayActivity(actividades.data);
+			})
+			.catch((error) => {
+				console.error('Error al realizar la solicitud GET:', error);
+			});
+	};
+
 	useEffect(() => {
 		mostrarActividades();
 	}, []);
@@ -93,23 +130,11 @@ export default function Activity() {
 			.catch((error) => console.log(error));
 	};
 
-	useEffect(() => {
-		const getArea = () => {
-			const localArea = localStorage.getItem('currentArea');
-			if (localArea && JSON.parse(localArea).idArea === parseInt(idArea ?? '0', 10)) {
-				setArea(JSON.parse(localArea));
-			} else {
-				navigation('/gestion/metas');
-			}
-		};
-		getArea();
-	}, []);
-
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		postActivity({
 			idActividad: 0,
-			idArea: parseInt(idArea ?? '0', 10),
+			idArea: area.idArea,
 			nro: arrayActivity.length + 1,
 			desc: term,
 			fechaDesde: null,
@@ -117,22 +142,6 @@ export default function Activity() {
 		});
 		handleClose();
 		setTerm('');
-	};
-
-	const mostrarActividades = async function () {
-		axios
-			.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${idArea}/actividades`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
-			.then((response) => {
-				const actividades = response.data;
-				setArrayActivity(actividades.data);
-			})
-			.catch((error) => {
-				console.error('Error al realizar la solicitud GET:', error);
-			});
 	};
 
 	const handleButtonClick = (id: number) => {
@@ -166,8 +175,6 @@ export default function Activity() {
 	const cleanFormSelected = () => {
 		setCurrentFormSelected('');
 	};
-
-	const handleDetailSelected = () => {};
 
 	return (
 		<>
@@ -337,13 +344,15 @@ export default function Activity() {
 				)}
 				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
 				{!isPlanificationOpen && !currentActivitySelected && (
-					<Col sm={9} className=' bg-white border-2 rounded-3 bg-white'>
+					<Col sm={9} className=' bg-white border-2 rounded-3'>
 						<Row>
 							<Col className='MenuOptions'>
 								<div className='Options'>Carga de Presupuesto</div>
 							</Col>
 							<Col className='MenuOptions'>
-								<div className='Options'>Ver Resumen y Gráficos</div>
+								<Link to={`${location.pathname}/resumen`}>
+									<div className='Options'>Ver Resumen</div>
+								</Link>
 							</Col>
 						</Row>
 					</Col>
@@ -351,7 +360,7 @@ export default function Activity() {
 
 				{currentActivitySelected && (
 					<Col sm={9} className='border-2 bg-white rounded-3'>
-						<ActivityDetail idActivity={currentActivitySelected} />
+						<ActivityDetail />
 					</Col>
 				)}
 
