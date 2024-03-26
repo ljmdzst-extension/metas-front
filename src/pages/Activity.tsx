@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PlanificationPanel from '../components/PlanificationPanel';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -29,11 +29,11 @@ interface Area {
 	anio: string;
 }
 
-const initialAreaValue: Area = localStorage.getItem('currentArea')
-	? (JSON.parse(localStorage.getItem('currentArea')) as Area)
-	: {};
-
 export default function Activity() {
+	const initialAreaValue: Area = localStorage.getItem('currentArea')
+		? (JSON.parse(localStorage.getItem('currentArea')!) as Area) // Usamos ! para decirle a TypeScript que estamos seguros de que localStorage.getItem('currentArea') no será null
+		: { idArea: '', nom: '', listaActividades: [], anio: '' }; // O proporciona un valor predeterminado adecuado para el tipo Area
+
 	const [show, setShow] = useState(false);
 	const [show2, setShow2] = useState(false);
 	const [term, setTerm] = useState('');
@@ -61,6 +61,7 @@ export default function Activity() {
 			const areaString = localStorage.getItem('currentArea');
 			if (areaString) {
 				setArea(JSON.parse(areaString));
+				console.log('Actualizando area' + areaString);
 			}
 		} catch (error) {
 			console.error('Error parsing area from localStorage:', error);
@@ -94,41 +95,40 @@ export default function Activity() {
 
 	// const dispatch: AppDispatch = useDispatch();
 
-	const mostrarActividades = async function () {
-		axios
-			.get(
-				`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${area.idArea}/actividades/${
-					area.anio
-				}`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			)
-			.then((response) => {
-				const actividades = response.data;
-				setArrayActivity(actividades.data);
-			})
-			.catch((error) => {
-				console.error('Error al realizar la solicitud GET:', error);
-			});
-	};
+	const postActivity = useCallback(
+		async (data: Data) => {
+			axios
+				.post(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, data, {
+					headers: { Authorization: `Bearer ${token}` },
+				})
+				.catch((error) => console.log(error));
+		},
+		[token],
+	);
 
 	useEffect(() => {
+		const mostrarActividades = async () => {
+			axios
+				.get(
+					`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${area.idArea}/actividades/${
+						area.anio
+					}`,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				)
+				.then((response) => {
+					const actividades = response.data;
+					setArrayActivity(actividades.data);
+				})
+				.catch((error) => {
+					console.error('Error al realizar la solicitud GET:', error);
+				});
+		};
 		mostrarActividades();
-	}, []);
-
-	const postActivity = async function (data: Data) {
-		axios
-			.post(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, data, {
-				headers: { Authorization: `Bearer ${token}` },
-			})
-			.then(() => {
-				mostrarActividades();
-			})
-			.catch((error) => console.log(error));
-	};
+	}, [area.anio, area.idArea, postActivity, token]);
 
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();

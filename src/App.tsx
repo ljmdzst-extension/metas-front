@@ -16,9 +16,13 @@ import PrivateLayout from './components/Layout/PrivateLayout';
 import Proyectos from './pages/Proyectos';
 import ProjectForm from './pages/ProjectForm';
 import ProjectSum from './pages/ProjectSum';
-import ResumenArea from './pages/ResumenArea'
+import ResumenArea from './pages/ResumenArea';
+import { useEffect } from 'react';
 
 function App() {
+	useEffect(() => {
+		console.log('probacion');
+	}, []);
 	return (
 		<Routes>
 			<Route path='/' element={<Layout />}>
