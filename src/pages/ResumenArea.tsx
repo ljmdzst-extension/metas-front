@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState } from '../redux/store';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import ElementoResumen from '../components/DataRender/ElementoResumen';
 
 interface Area {
 	idArea: number;
@@ -11,76 +11,74 @@ interface Area {
 	anio: string;
 }
 
-const ScrollableDataComponent: React.FC = () => {
-	const [data, setData] = useState<any[]>([]);
-	const [loading, setLoading] = useState(false);
-	const [hasMoreData, setHasMoreData] = useState(true);
-	const containerRef = useRef<HTMLDivElement>(null);
-
+const ResumenArea = () => {
+	const [data, setData] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+	const [offset, setOffset] = useState(0);
 	const { idArea } = useParams<{ idArea: string }>();
 	const { token } = useSelector((state: RootState) => state.authSlice);
 
-	const [currentPage, setCurrentPage] = useState(1);
+	const elementRef = useRef(null);
 
-	const fetchNextPage = async () => {
-		if (!hasMoreData || loading) {
-			return;
-		}
+	useEffect(() => {
+		const observer = new IntersectionObserver(OnIntersection);
+		if (observer && elementRef.current) observer.observe(elementRef.current);
+		return () => {
+			if (observer) observer.disconnect();
+		};
+	}, [data]);
 
-		setLoading(true);
+	const OnIntersection = async (entries) => {
+		const firstEntry = entries[0];
+		if (firstEntry.isIntersecting && hasMore) await getData(offset);
+	};
 
+	const getData = async (offset) => {
 		const stringAreaData = localStorage.getItem('currentArea');
 		const areaData = JSON.parse(stringAreaData!) as Area;
 
-		const response = await fetch(
-			`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/resumen/${idArea}/${
-				areaData.anio
-			}/${currentPage}/2`,
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
+		try {
+			const res = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/resumen/${idArea}/${
+					areaData.anio
+				}/${offset}/2`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
 				},
-			},
-		);
-
-		const { data } = await response.json();
-		console.log(data);
-		if (Array.isArray(data) && data.length === 0) {
-			setHasMoreData(false);
-		} else {
-			setData((prevData) => [...prevData, ...data]);
-			setCurrentPage((prevPage) => prevPage + 1);
+			);
+			const resJson = await res.json();
+			console.log(resJson);
+			if (resJson.data.length === 0) setHasMore(false);
+			else {
+				setTimeout(() => {
+					setData((data) => [...data, ...resJson.data]);
+					setOffset((offset) => offset + 2);
+				}, 2000);
+			}
+		} catch (err) {
+			console.log(err);
 		}
-
-		setLoading(false);
 	};
-
-	useEffect(() => {
-		fetchNextPage();
-	}, [idArea, token]);
-
 	return (
-		<div>
-			<h1>Scrollable Data</h1>
-			<InfiniteScroll
-				dataLength={data.length}
-				next={fetchNextPage}
-				hasMore={hasMoreData}
-				loader={<h4>Cargando...</h4>}
-				endMessage={<h4>¡Fin de los datos!</h4>}
-				containerTagName='div'
-				style={{ overflowY: 'auto', height: '300px', border: '1px solid #ccc' }}
-				ref={containerRef}
+		<div className=' container'>
+			<h3 className=' text-primary text-uppercase'>Lista de datos</h3>
+			<div
+				className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-2'
+				style={{ maxHeight: '500px' }}
 			>
-				{data.map((item, index) => (
-					<div key={'Actividad' + index}>
-						<h2>{item.desc}</h2>
-						<h3>Contenido de la actividad {item.desc}</h3>
-					</div>
+				{data.map((el, index) => (
+					<ElementoResumen element={el} key={el.desc + '-' + index} />
 				))}
-			</InfiniteScroll>
+				{hasMore && (
+					<p className=' text-secondary text-uppercase p-2' ref={elementRef}>
+						Cargando datos
+					</p>
+				)}
+			</div>
 		</div>
 	);
 };
 
-export default ScrollableDataComponent;
+export default ResumenArea;
