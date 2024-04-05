@@ -41,7 +41,7 @@ const ResumenArea = () => {
 			const res = await fetch(
 				`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/resumen/${idArea}/${
 					areaData.anio
-				}/${offset}/2`,
+				}/${offset}/5`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const ResumenArea = () => {
 			else {
 				setTimeout(() => {
 					setData((data) => [...data, ...resJson.data]);
-					setOffset((offset) => offset + 2);
+					setOffset((offset) => offset + 5);
 				}, 2000);
 			}
 		} catch (err) {
@@ -63,7 +63,7 @@ const ResumenArea = () => {
 	};
 	return (
 		<div className=' container'>
-			<h3 className=' text-primary text-uppercase'>Lista de datos</h3>
+			<h3 className=' text-uppercase text-center m-2'>Lista de Actividades</h3>
 			<div
 				className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-2'
 				style={{ maxHeight: '500px' }}

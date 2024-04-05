@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { LArea, ListaProgramasSIPPE } from '../../types/BasesProps';
 import { Actividad } from '../../types/ActivityProps';
-import React from 'react';
+import { getBases } from '../../redux/actions/metasActions';
+import Swal from 'sweetalert2';
 
 interface Props {
 	element: Actividad;
@@ -16,19 +17,36 @@ interface Area {
 }
 
 const ElementoResumen = ({ element }: Props) => {
-	const { desc, listaRelaciones, listaMetas } = element;
+	const { desc, listaRelaciones, listaMetas, listaObjetivos } = element;
 
 	const [areas, setAreas] = useState<LArea[]>([]);
 	const [listaSIPPE, setListaSIPPE] = useState<ListaProgramasSIPPE[]>();
 
 	const [areasMap, setAreasMap] = useState<Record<string, Area>>({});
 
+	const dispatch = useDispatch();
 	const { bases, error, loading } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
 		if (!error && bases) {
 			setAreas(bases.lAreas);
 			setListaSIPPE(bases.listaProgramasSIPPE);
+		}
+
+		if (!bases) {
+			const dispachBases = async () => {
+				const action = await dispatch(getBases(token));
+				if (getBases.rejected.match(action)) {
+					const { error } = action.payload as { error: string };
+					Swal.fire({
+						title: 'Error!',
+						text: `${error}`,
+						icon: 'error',
+						confirmButtonText: 'Ok',
+					});
+				}
+			};
+			dispachBases();
 		}
 	}, [bases, error]);
 
@@ -71,50 +89,120 @@ const ElementoResumen = ({ element }: Props) => {
 		);
 	};
 
-	return (
-		<div className=' d-flex flex-column gap-2 border border-2 border-dark-subtle '>
-			<div>
-				<div style={{ ...styles.titleContainer }}>
-					<h5>Descripcion</h5>
+	const renderObjetivos = () => {
+		if (!listaObjetivos || listaObjetivos.length === 0) {
+			return <div>No hay objetivos cargados</div>;
+		}
+
+		// Filtrar los objetivos de bases.listaObjetivos que coincidan con los IDs de listaObjetivos
+		const objetivosFiltrados = bases?.listaObjetivos.filter((objetivo) =>
+			listaObjetivos.includes(objetivo.idObjetivo),
+		);
+
+		// Verificar si objetivosFiltrados es undefined
+		if (!objetivosFiltrados) {
+			return <div>No hay objetivos filtrados</div>;
+		}
+
+		return (
+			<div className=' m-1'>
+				<div>
+					<h2>Objetivos estratégicos</h2>
+					<ul>
+						{objetivosFiltrados.map(
+							(objetivo, index) =>
+								objetivo.idObjetivo <= 4 && (
+									<li key={index}>
+										<p>{objetivo.nom}</p>
+									</li>
+								),
+						)}
+					</ul>
 				</div>
 				<div>
-					<p>{desc}</p>
+					<h2>Plan institucional</h2>
+					<ul>
+						{objetivosFiltrados.map(
+							(objetivo, index) =>
+								objetivo.idObjetivo >= 5 && (
+									<li key={index}>
+										<p> {objetivo.nom}</p>
+									</li>
+								),
+						)}
+					</ul>
 				</div>
+				<p className=' px-2 text-end w-100 fst-italic'>
+					Referencia:{' '}
+					<a
+						href='https://www.unl.edu.ar/pie/wp-content/uploads/sites/55/2021/02/Plan-Institucional-Estrat%C3%A9gico.pdf'
+						target='_blank'
+						rel='noopener noreferrer'
+						className=' text-decoration-underline'
+					>
+						Plan Institucional Estratégico
+					</a>
+				</p>
 			</div>
+		);
+	};
 
-			<div>
-				<div style={styles.titleContainer}>Metas</div>
-				<div style={styles.gridContainer}>
-					<div style={styles.gridTitle}>Meta/Resultado esperado</div>
-					<div style={styles.gridTitle}>Resultado alcanzado</div>
-					<div style={styles.gridTitle}>Observaciones</div>
-					<div style={styles.gridTitle}>Valoracion</div>
+	return (
+		<div className=' pt-2 border-top border-dark-subtle border-2'>
+			<div className=' d-flex flex-column gap-2 border border-2 border-dark-subtle '>
+				<div>
+					<div style={{ ...styles.titleContainer, backgroundColor: ' green' }}>
+						<h5>Descripción</h5>
+					</div>
+					<div className=' m-1'>
+						<p>{desc}</p>
+					</div>
 				</div>
-				{listaMetas.length ? (
-					listaMetas.map((meta, index) => (
-						<div style={styles.gridContainer} key={index}>
-							<div style={styles.gridItem}>{meta.descripcion}</div>
-							<div style={styles.gridItem}>{meta.resultado}</div>
-							<div style={styles.gridItem}>{meta.observaciones}</div>
-							<div style={styles.gridItem}>{meta.idMeta}</div>
-						</div>
-					))
-				) : (
-					<div>No hay metas cargadas</div>
-				)}
-			</div>
 
-			<div>
-				<div style={{ ...styles.titleContainer }}>Areas</div>
-				{listaRelaciones.length > 0 && (
-					<ol>
-						{renderArea(listaRelaciones, 1, 'Internas Secretaria')}
-						{renderArea(listaRelaciones, 2, 'Otras áreas centrales')}
-						{renderArea(listaRelaciones, 3, 'Unidades Académicas involucradas')}
-						{renderArea(listaRelaciones, 4, 'Programas de Extensión')}
-					</ol>
-				)}
-				{listaRelaciones.length === 0 && <p>No hay Areas Cargadas</p>}
+				<div>
+					<div style={styles.titleContainer}>Lista Objetivos</div>
+					<div>{renderObjetivos()}</div>
+				</div>
+
+				<div>
+					<div style={styles.titleContainer}>Metas</div>
+					<div style={styles.gridContainer}>
+						<div style={styles.gridTitle}>Meta/Resultado esperado</div>
+						<div style={styles.gridTitle}>Resultado alcanzado</div>
+						<div style={styles.gridTitle}>Observaciones</div>
+						<div style={styles.gridTitle}>Valoracion</div>
+					</div>
+
+					{listaMetas.length ? (
+						listaMetas.map((meta, index) => (
+							<div style={styles.gridContainer} key={index}>
+								<div style={styles.gridItem}>{meta.descripcion}</div>
+								<div style={styles.gridItem}>{meta.resultado}</div>
+								<div style={styles.gridItem}>{meta.observaciones}</div>
+								<div style={styles.gridItem}>
+									{meta.valoraciones || 'No hay valoración cargada'}
+								</div>
+							</div>
+						))
+					) : (
+						<div className=' m-1'>No hay metas cargadas</div>
+					)}
+				</div>
+
+				<div>
+					<div style={{ ...styles.titleContainer }}>Áreas</div>
+					<div className=' m-1'>
+						{listaRelaciones.length > 0 && (
+							<ol>
+								{renderArea(listaRelaciones, 1, 'Internas Secretaria')}
+								{renderArea(listaRelaciones, 2, 'Otras áreas centrales')}
+								{renderArea(listaRelaciones, 3, 'Unidades Académicas involucradas')}
+								{renderArea(listaRelaciones, 4, 'Programas de Extensión')}
+							</ol>
+						)}
+						{listaRelaciones.length === 0 && <p>No hay Areas Cargadas</p>}
+					</div>
+				</div>
 			</div>
 		</div>
 	);
@@ -122,7 +210,7 @@ const ElementoResumen = ({ element }: Props) => {
 
 const styles = {
 	titleContainer: {
-		backgroundColor: 'green',
+		backgroundColor: '#198754',
 		border: 'none',
 		color: 'white',
 		textAlign: 'center' as const,
