@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import ElementoResumen from '../components/DataRender/ElementoResumen';
+import { ArrowBack } from '@mui/icons-material';
 
 interface Area {
 	idArea: number;
@@ -17,6 +18,7 @@ const ResumenArea = () => {
 	const [offset, setOffset] = useState(0);
 	const { idArea } = useParams<{ idArea: string }>();
 	const { token } = useSelector((state: RootState) => state.authSlice);
+	const navigate = useNavigate();
 
 	const elementRef = useRef(null);
 
@@ -63,7 +65,11 @@ const ResumenArea = () => {
 	};
 	return (
 		<div className=' container'>
-			<h3 className=' text-uppercase text-center m-2'>Lista de Actividades</h3>
+			<div className=' d-flex justify-content-between align-items-center'>
+				<h3 className=' text-uppercase text-center m-2'>Lista de Actividades</h3>
+
+				<ArrowBack className=' cursor-pointer' onClick={() => navigate(-1)} />
+			</div>
 			<div
 				className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-2'
 				style={{ maxHeight: '500px' }}

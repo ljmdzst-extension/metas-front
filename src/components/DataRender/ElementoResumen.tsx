@@ -17,7 +17,7 @@ interface Area {
 }
 
 const ElementoResumen = ({ element }: Props) => {
-	const { desc, listaRelaciones, listaMetas, listaObjetivos } = element;
+	const { idActividad, desc, listaRelaciones, listaMetas, listaObjetivos } = element;
 
 	const [areas, setAreas] = useState<LArea[]>([]);
 	const [listaSIPPE, setListaSIPPE] = useState<ListaProgramasSIPPE[]>();
@@ -152,7 +152,7 @@ const ElementoResumen = ({ element }: Props) => {
 			<div className=' d-flex flex-column gap-2 border border-2 border-dark-subtle '>
 				<div>
 					<div style={{ ...styles.titleContainer, backgroundColor: ' green' }}>
-						<h5>Descripción</h5>
+						<h5>Actividad: {idActividad}</h5>
 					</div>
 					<div className=' m-1'>
 						<p>{desc}</p>
