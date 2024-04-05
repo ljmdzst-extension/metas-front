@@ -20,9 +20,6 @@ import ResumenArea from './pages/ResumenArea';
 import { useEffect } from 'react';
 
 function App() {
-	useEffect(() => {
-		console.log('probacion');
-	}, []);
 	return (
 		<Routes>
 			<Route path='/' element={<Layout />}>

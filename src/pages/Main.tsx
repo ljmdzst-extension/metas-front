@@ -39,7 +39,6 @@ export default function Main() {
 				}
 			}
 		};
-		console.log('hola');
 		checkUser();
 	}, []);
 
