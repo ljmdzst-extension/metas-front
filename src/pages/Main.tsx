@@ -6,6 +6,7 @@ import { logout } from '../redux/reducers/AuthReducer';
 import { authAsync } from '../redux/actions/authAction';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 export default function Main() {
 	const dispatch = useDispatch<AppDispatch>();
@@ -19,7 +20,8 @@ export default function Main() {
 				const action = await dispatch(authAsync(currentToken));
 
 				if (authAsync.rejected.match(action)) {
-					const { error } = action.payload;
+					const result = unwrapResult(action);
+					const { error } = result; // Aquí obtenemos la propiedad 'error' de la carga útil de la acción
 					localStorage.removeItem('token');
 					localStorage.removeItem('user');
 					dispatch(logout());
@@ -34,7 +36,7 @@ export default function Main() {
 				}
 
 				if (authAsync.fulfilled.match(action)) {
-					const { token } = action.payload;
+					const { token } = action.payload.data;
 					localStorage.setItem('token', token);
 				}
 			}

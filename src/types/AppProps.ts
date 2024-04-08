@@ -1,4 +1,3 @@
-import { AreaProps } from './AppProps';
 export interface navLinkProps {
 	title: string;
 	index: string;

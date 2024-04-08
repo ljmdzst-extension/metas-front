@@ -46,4 +46,5 @@ export interface ListaMeta {
 	descripcion: string;
 	resultado: string;
 	observaciones: string;
+	valoraciones: number;
 }

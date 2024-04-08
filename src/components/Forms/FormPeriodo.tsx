@@ -107,9 +107,11 @@ export default function FormPeriodo() {
 
 	useEffect(() => {
 		const validarRango = () => {
-			if (rangeStart?.getTime() > rangeEnd?.getTime()) {
-				setErroresRango('La fecha de inicio no puede ser mayor a la fecha de fin');
-				return false;
+			if (rangeStart && rangeEnd) {
+				if (rangeStart.getTime() > rangeEnd.getTime()) {
+					setErroresRango('La fecha de inicio no puede ser mayor a la fecha de fin');
+					return false;
+				}
 			}
 			setErroresRango('');
 			return true;
@@ -174,7 +176,7 @@ export default function FormPeriodo() {
 								locale='es'
 								selectsStart
 								dateFormat='dd/MM/yyyy'
-								selected={rangeStart ?? ''}
+								selected={rangeStart || null}
 								minDate={new Date('2023/01/01')}
 								maxDate={new Date(indexDates[0]?.fecha?.split('-').join('/') ?? '2080-01-01')}
 								startDate={rangeStart}
@@ -188,7 +190,7 @@ export default function FormPeriodo() {
 								selectsEnd
 								locale='es'
 								dateFormat='dd/MM/yyyy'
-								selected={rangeEnd ?? ''}
+								selected={rangeEnd || null}
 								startDate={rangeStart}
 								endDate={rangeEnd}
 								minDate={

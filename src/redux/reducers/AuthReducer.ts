@@ -61,7 +61,7 @@ const authSlice = createSlice({
 		});
 		builder.addCase(authAsync.fulfilled, (state, action) => {
 			state.loading = false;
-			state.token = action.payload.token;
+			state.token = action.payload.data.token;
 		});
 		builder.addCase(authAsync.rejected, (state, action) => {
 			state.loading = false;
