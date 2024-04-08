@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import { Row, Col } from 'react-bootstrap';
+import { ListaProgramasSIPPE } from '../../types/BasesProps';
 const animatedComponents = makeAnimated();
 
 interface Relacion {
@@ -16,15 +17,11 @@ interface Relacion {
 		nom: string;
 	};
 }
-interface listaProgramasSIPPE {
-	idProgramaSIPPE: number;
-	nom: string;
-	subProgramaDe: string | null;
-}
+
 export default function FormArSecUU() {
 	const dispatch = useDispatch();
 	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
-	const [sippe, setSippe] = useState<listaProgramasSIPPE[]>([]);
+	const [sippe, setSippe] = useState<ListaProgramasSIPPE[]>([]);
 	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<number[]>([]);
 	const [relacionSeleccionadas2, setRelacionSeleccionadas2] = useState<number[]>([]);
 	const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<number[]>([]);

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 
-import axios from 'axios';
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -143,10 +142,6 @@ const FormMetas = () => {
 
 	const textLimitError = (text: string, limit: number) => {
 		return text.length > limit;
-	};
-
-	const limitTextString = (text: string, limit: number) => {
-		return text.substring(0, limit);
 	};
 
 	const valoracionesText = (idValoracion: number) => {

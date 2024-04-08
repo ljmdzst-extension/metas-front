@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { LArea, ListaProgramasSIPPE } from '../../types/BasesProps';
 import { Actividad } from '../../types/ActivityProps';
-import { getBases } from '../../redux/actions/metasActions';
-import Swal from 'sweetalert2';
 
 interface Props {
 	element: Actividad;
@@ -24,31 +22,15 @@ const ElementoResumen = ({ element }: Props) => {
 
 	const [areasMap, setAreasMap] = useState<Record<string, Area>>({});
 
-	const dispatch = useDispatch();
-	const { bases, error, loading } = useSelector((state: RootState) => state.metasSlice);
+	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
+		console.log(listaSIPPE);
 		if (!error && bases) {
 			setAreas(bases.lAreas);
 			setListaSIPPE(bases.listaProgramasSIPPE);
 		}
-
-		if (!bases) {
-			const dispachBases = async () => {
-				const action = await dispatch(getBases(token));
-				if (getBases.rejected.match(action)) {
-					const { error } = action.payload as { error: string };
-					Swal.fire({
-						title: 'Error!',
-						text: `${error}`,
-						icon: 'error',
-						confirmButtonText: 'Ok',
-					});
-				}
-			};
-			dispachBases();
-		}
-	}, [bases, error]);
+	}, [bases, error, listaSIPPE]);
 
 	useEffect(() => {
 		const map: Record<string, LArea> = {};

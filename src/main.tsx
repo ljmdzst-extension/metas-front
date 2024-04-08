@@ -7,9 +7,11 @@ import { store } from './redux/store';
 import { StrictMode } from 'react';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<Provider store={store}>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
-	</Provider>,
+	<StrictMode>
+		<Provider store={store}>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</Provider>
+	</StrictMode>,
 );

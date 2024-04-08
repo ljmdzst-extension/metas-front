@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { LoginResponse, RegisterProps } from '../../types/AuthProps';
+import { AuthResponse, LoginResponse, RegisterProps } from '../../types/AuthProps';
 
 export const loginAsync = createAsyncThunk(
 	'auth/login',
@@ -22,23 +22,35 @@ export const loginAsync = createAsyncThunk(
 	},
 );
 
-export const authAsync = createAsyncThunk('auth/auth', async (token: string, thunkAPI) => {
-	const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_AUTH}/auth`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`,
-		},
-	});
+export const authAsync = createAsyncThunk<AuthResponse, string>(
+  'auth/auth',
+  async (token: string, thunkAPI) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_AUTH}/auth`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-	if (!response.ok) {
-		const errorData: LoginResponse = await response.json();
-		return thunkAPI.rejectWithValue(errorData);
-	}
+      if (!response.ok) {
+        const errorData: LoginResponse = await response.json();
+        return thunkAPI.rejectWithValue(errorData);
+      }
 
-	const data: LoginResponse = await response.json();
-	return data.data;
-});
+      const data: AuthResponse = await response.json();
+      return data;
+    } catch (err) {
+      if (err instanceof Error) {
+        return thunkAPI.rejectWithValue(err.message);
+      } else {
+        // Manejar otros tipos de errores
+        return thunkAPI.rejectWithValue('Ocurrió un error desconocido');
+      }
+    }
+  },
+);
 
 export const registerAsync = createAsyncThunk(
 	'auth/register',

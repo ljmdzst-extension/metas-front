@@ -24,6 +24,7 @@ export default function PanelProgramas() {
 
 	useEffect(() => {
 		// Realizar la solicitud GET en el efecto
+		console.log(token);
 		axios
 			.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/programas/${year}`, {
 				headers: {

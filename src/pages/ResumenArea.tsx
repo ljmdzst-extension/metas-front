@@ -1,27 +1,51 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../redux/store';
 import ElementoResumen from '../components/DataRender/ElementoResumen';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Search } from '@mui/icons-material';
 import { InputGroup, Form, Button } from 'react-bootstrap';
-import { Search } from '@mui/icons-material';
+import { Actividad } from '../types/ActivityProps';
+import Swal from 'sweetalert2'
+import { getBases } from '../redux/actions/metasActions'
+
 interface Area {
 	idArea: number;
 	nom: string;
-	listaActividades: any[]; // Reemplaza esto con el tipo correcto si es necesario
+	listaActividades: Actividad[];
 	anio: string;
 }
 
 const ResumenArea = () => {
-	const [data, setData] = useState([]);
+	const [data, setData] = useState<Actividad[]>([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [offset, setOffset] = useState(0);
 	const { idArea } = useParams<{ idArea: string }>();
-	const { token } = useSelector((state: RootState) => state.authSlice);
 	const navigate = useNavigate();
 
+	const { token } = useSelector((state: RootState) => state.authSlice);
+	const { bases } = useSelector((state: RootState) => state.metasSlice);
+	const dispatch = useDispatch<AppDispatch>();
+
 	const elementRef = useRef(null);
+
+	useEffect(() => {
+		const dispachBases = async () => {
+			const action = await dispatch(getBases({ token }));
+			if (getBases.rejected.match(action)) {
+				const { error } = action.payload as { error: string };
+				Swal.fire({
+					title: 'Error!',
+					text: `${error}`,
+					icon: 'error',
+					confirmButtonText: 'Ok',
+				});
+			}
+		};
+		if (!bases) {
+			dispachBases();
+		}
+	}, [bases, dispatch, token]);
 
 	useEffect(() => {
 		const observer = new IntersectionObserver(OnIntersection);
@@ -31,12 +55,12 @@ const ResumenArea = () => {
 		};
 	}, [data]);
 
-	const OnIntersection = async (entries) => {
+	const OnIntersection = async (entries: IntersectionObserverEntry[]) => {
 		const firstEntry = entries[0];
 		if (firstEntry.isIntersecting && hasMore) await getData(offset);
 	};
 
-	const getData = async (offset) => {
+	const getData = async (offset: number) => {
 		const stringAreaData = localStorage.getItem('currentArea');
 		const areaData = JSON.parse(stringAreaData!) as Area;
 

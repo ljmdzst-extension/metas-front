@@ -17,7 +17,6 @@ import Proyectos from './pages/Proyectos';
 import ProjectForm from './pages/ProjectForm';
 import ProjectSum from './pages/ProjectSum';
 import ResumenArea from './pages/ResumenArea';
-import { useEffect } from 'react';
 
 function App() {
 	return (

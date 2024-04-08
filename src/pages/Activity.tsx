@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import { ArrowBack, Visibility } from '@mui/icons-material';
 import ActivityDetail from '../components/metas/ActivityDetail';
 import { getBases } from '../redux/actions/metasActions';
+import { Actividad } from '../types/ActivityProps';
 
 interface Activity {
 	idActividad: number;
@@ -25,14 +26,14 @@ interface Activity {
 interface Area {
 	idArea: number;
 	nom: string;
-	listaActividades: any[]; // Reemplaza esto con el tipo correcto si es necesario
+	listaActividades: Actividad[]; // Reemplaza esto con el tipo correcto si es necesario
 	anio: string;
 }
 
 export default function Activity() {
 	const initialAreaValue: Area = localStorage.getItem('currentArea')
 		? (JSON.parse(localStorage.getItem('currentArea')!) as Area) // Usamos ! para decirle a TypeScript que estamos seguros de que localStorage.getItem('currentArea') no será null
-		: { idArea: '', nom: '', listaActividades: [], anio: '' }; // O proporciona un valor predeterminado adecuado para el tipo Area
+		: { idArea: 0, nom: '', listaActividades: [], anio: '' }; // O proporciona un valor predeterminado adecuado para el tipo Area
 
 	const [show, setShow] = useState(false);
 	const [show2, setShow2] = useState(false);
@@ -70,7 +71,7 @@ export default function Activity() {
 
 	useEffect(() => {
 		const dispachBases = async () => {
-			const action = await dispatch(getBases(token));
+			const action = await dispatch(getBases({ token }));
 			if (getBases.rejected.match(action)) {
 				const { error } = action.payload as { error: string };
 				Swal.fire({
