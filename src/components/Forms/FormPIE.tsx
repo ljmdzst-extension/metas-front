@@ -1,46 +1,24 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
+import { ListaObjetivo } from '../../types/BasesProps';
 
-interface FormPIEProps {
-	onClose: () => void;
-}
-
-interface Objetivo {
-	idObjetivo: number;
-	detalle: string;
-	nom: string;
-	tipoObjetivo: {
-		idTipoObj: number;
-		nom: string;
-	};
-}
-
-export default function FormPIE({  }: FormPIEProps) {
+export default function FormPIE() {
 	const dispatch = useDispatch();
-	const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
+	const [objetivos, setObjetivos] = useState<ListaObjetivo[]>([]);
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
+	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await axios.get('http://168.197.50.94:4005/api/v2/metas/bases/');
-				if (response.data.ok) {
-					const listaObjetivos = response.data.data.listaObjetivos;
-					setObjetivos(listaObjetivos);
-				} else {
-					console.error('Error en la respuesta de la API');
-				}
-			} catch (error) {
-				console.error('Error al obtener la lista de objetivos:', error);
-			}
-		};
-		fetchData();
-	}, []);
+		if (!error && bases) {
+			setObjetivos(bases.listaObjetivos);
+		} else {
+			// TODO: Alerta de error global
+		}
+	}, [bases, error]);
 
 	const handleSeleccionarObjetivo = (idObjetivo: number) => {
 		const objetivoIndex = objetivosSeleccionados.indexOf(idObjetivo);
@@ -58,13 +36,11 @@ export default function FormPIE({  }: FormPIEProps) {
 	const objetivosDesde16a20 = objetivos?.slice(14, 19);
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
-	const sincronizarCheckboxes = () => {
-		if (estadoActualizado.listaObjetivos) {
-			setObjetivosSeleccionados(estadoActualizado.listaObjetivos);
-		}
-	};
 
 	useEffect(() => {
+		const sincronizarCheckboxes = () => {
+			setObjetivosSeleccionados(estadoActualizado?.listaObjetivos ?? []);
+		};
 		sincronizarCheckboxes();
 	}, [estadoActualizado.listaObjetivos]);
 
@@ -72,7 +48,7 @@ export default function FormPIE({  }: FormPIEProps) {
 		<div className=' d-flex flex-column'>
 			<div className='FormPie'>
 				<p className=' px-2 text-end w-100 fst-italic'>
-					Referencia:
+					Referencia:{' '}
 					<a
 						href='https://www.unl.edu.ar/pie/wp-content/uploads/sites/55/2021/02/Plan-Institucional-Estrat%C3%A9gico.pdf'
 						target='_blank'
@@ -112,7 +88,7 @@ export default function FormPIE({  }: FormPIEProps) {
 								{objetivosDesde5a9.map((objetivo) => (
 									<Form.Check
 										id={objetivo.idObjetivo.toString()}
-										title={objetivo.detalle}
+										title={objetivo.detalle ?? undefined}
 										label={objetivo.nom}
 										key={objetivo.idObjetivo}
 										onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
@@ -125,7 +101,7 @@ export default function FormPIE({  }: FormPIEProps) {
 									<Form.Check
 										id={objetivo.idObjetivo.toString()}
 										label={objetivo.nom}
-										title={objetivo.detalle}
+										title={objetivo.detalle ?? undefined}
 										key={objetivo.idObjetivo}
 										onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
 										checked={objetivosSeleccionados.includes(objetivo.idObjetivo)}
@@ -137,7 +113,7 @@ export default function FormPIE({  }: FormPIEProps) {
 									<Form.Check
 										id={objetivo.idObjetivo.toString()}
 										label={objetivo.nom}
-										title={objetivo.detalle}
+										title={objetivo.detalle ?? undefined}
 										key={objetivo.idObjetivo}
 										onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
 										checked={objetivosSeleccionados.includes(objetivo.idObjetivo)}

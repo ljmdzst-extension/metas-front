@@ -1,4 +1,4 @@
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Row, Col, Container, Button } from 'react-bootstrap';
 
 const Management = () => {
@@ -25,8 +25,7 @@ const Management = () => {
 						variant='outline-secondary'
 						className=' w-100'
 						style={{ height: '50px' }}
-						onClick={() => handlerClick('/gestion/programas')}
-						disabled
+						onClick={() => handlerClick('/gestion/proyectos')}
 					>
 						Proyectos
 					</Button>
@@ -39,7 +38,7 @@ const Management = () => {
 						onClick={() => handlerClick('/gestion/programas')}
 						disabled
 					>
-						Practicas
+						Prácticas
 					</Button>
 				</Col>
 			</Row>

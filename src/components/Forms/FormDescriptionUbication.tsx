@@ -9,10 +9,11 @@ import Swal from 'sweetalert2';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ListGroup } from 'react-bootstrap';
-interface FormDescriptionUbicationProps {
-	onClose: () => void;
-}
-const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => {
+import { ContentCopy } from '@mui/icons-material';
+
+import { textLimitError } from '../../utils/validacionesForms';
+
+const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
@@ -23,7 +24,6 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 	const [ubicaciones, setUbicaciones] = useState<
 		{
 			idUbicacion: number | null;
-			nom: string | null;
 			idActividad: number | null;
 			enlace: string | null;
 		}[]
@@ -47,8 +47,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 		if (ubicacion.trim() !== '') {
 			const nuevaUbicacion = {
 				idUbicacion: 0,
-				idActividad: null,
-				nom: '',
+				idActividad: estadoActualizado.idActividad,
 				enlace: ubicacion,
 			};
 
@@ -57,9 +56,14 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 		}
 	};
 
-	const handleClickEditarDescripcion = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+	const handleClickEditarDescripcion = (
+		event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+		description: string,
+	) => {
 		event.preventDefault();
-		setEditandoDescripcion(!editandoDescripcion);
+		if (editandoDescripcion === true && !textLimitError(description, 5000))
+			setEditandoDescripcion(!editandoDescripcion);
+		if (editandoDescripcion === false) setEditandoDescripcion(!editandoDescripcion);
 	};
 
 	const eliminarUbicacion = (index: number) => {
@@ -94,29 +98,39 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 		return urlPattern.test(url);
 	};
 
+	const copyToClipboard = (text: string) => {
+		navigator.clipboard.writeText(text);
+	};
+
 	return (
 		<div className=' d-flex flex-column  '>
-			<div className=' m-2 mx-4 '>
-				<div className=' mt-2'>
+			<div className='  mx-4 my-2 '>
+				<div className=''>
 					<div className='Descripcion'>
 						<h5> Descripción: </h5>
 
-						<InputGroup className='mb-3 gap-1'>
+						<InputGroup className='mb-4 gap-1'>
 							<Form.Control
 								as='textarea'
 								rows={3}
 								style={{ resize: 'none' }}
+								className=' custom-scrollbar'
 								aria-label='Inserte descripción'
 								aria-describedby='basic-addon2'
 								onChange={handleDescripcionChange}
 								disabled={!editandoDescripcion}
 								value={descripcion}
+								isInvalid={textLimitError(descripcion ?? '', 2000)}
 							/>
+							<Form.Control.Feedback type='invalid' tooltip>
+								Maximo 2000 caracteres
+							</Form.Control.Feedback>
+
 							<Button
 								variant='secondary'
 								id='button-addon2'
 								style={{ width: '50px', height: '100px' }}
-								onClick={handleClickEditarDescripcion}
+								onClick={(event) => handleClickEditarDescripcion(event, descripcion)}
 							>
 								<EditIcon />
 							</Button>
@@ -124,7 +138,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 					</div>
 				</div>
 
-				<div className=' mt-2'>
+				<div className=''>
 					<div className=' d-flex justify-content-between mb-2'>
 						<h5>Ubicación:</h5>
 						<Button variant='info' size='sm' onClick={AlertBuscarUbicaciones}>
@@ -140,7 +154,7 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 							value={ubicacion}
 							isInvalid={ubicacion !== '' && !isUrlValid(ubicacion)}
 						/>
-						
+
 						<Button
 							variant='success'
 							id='button-addon2'
@@ -151,23 +165,40 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 						</Button>
 					</InputGroup>
 				</div>
-				<ListGroup style={{ height: '150px', maxHeight: '150px', overflowY: 'auto' }}>
+				<ListGroup
+					style={{ height: '150px', maxHeight: '150px', overflowY: 'auto' }}
+					className=' custom-scrollbar'
+				>
 					{ubicaciones.map((ubicacion, index) => (
-						<ListGroup.Item
-							key={index}
-							className=' d-flex justify-content-between w-75 align-self-center'
-							variant='secondary'
-						>
-							{ubicacion.enlace ?? ''}
-							<DeleteIcon
-								onClick={() => eliminarUbicacion(index)}
-								style={{
-									borderRadius: '20%',
-									backgroundColor: 'red',
-									color: 'white',
-									cursor: 'pointer',
-								}}
-							/>
+						<ListGroup.Item key={index} className=' w-75 align-self-center' variant='secondary'>
+							<div className=' d-flex justify-content-between '>
+								<a
+									href={ubicacion.enlace ?? ''}
+									target='_blank'
+									rel='noopener noreferrer'
+									style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+								>
+									{ubicacion.enlace ?? ''}
+								</a>
+								<div className=' d-flex'>
+									<ContentCopy
+										className=' cursor-pointer mx-1'
+										onClick={(event) => {
+											event.stopPropagation();
+											copyToClipboard(ubicacion.enlace ?? '');
+										}}
+									/>
+									<DeleteIcon
+										onClick={() => eliminarUbicacion(index)}
+										style={{
+											borderRadius: '20%',
+											backgroundColor: 'red',
+											color: 'white',
+											cursor: 'pointer',
+										}}
+									/>
+								</div>
+							</div>
 						</ListGroup.Item>
 					))}
 				</ListGroup>
@@ -175,8 +206,14 @@ const FormDescriptionUbication: React.FC<FormDescriptionUbicationProps> = () => 
 
 			<Button
 				variant='success'
-				className='m-2 w-auto align-self-center '
+				className=' w-auto align-self-center '
 				onClick={() => {
+					// const nuevoestado = {
+					// 	...estadoActualizado,
+					// 	desc: descripcion,
+					// 	listaUbicaciones: ubicaciones,
+					// };
+					// console.log(nuevoestado);
 					guardarActividad(
 						{ ...estadoActualizado, desc: descripcion, listaUbicaciones: ubicaciones },
 						dispatch,

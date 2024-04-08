@@ -1,0 +1,55 @@
+[
+	{
+		"title": "Datos generales",
+		"index": "1-DG"
+	},
+	{
+		"title": "Equipo Extensión",
+		"index": "2-EE",
+		"SubNav": [
+			{
+				"title": "Datos del equipo",
+				"index": "2-EE-1"
+			},
+			{
+				"title": "Integrantes",
+				"index": "2-EE-2"
+			},
+			{
+				"title": "Becas y voluntariado",
+				"index": "2-EE-3"
+			}
+		]
+	},
+	{
+		"title": "Instituciones intervinientes",
+		"index": "3-II",
+		"SubNav": null
+	},
+	{
+		"title": "Problemática y Metodología",
+		"index": "4-PM",
+		"SubNav": [
+			{
+				"title": "Problema a abordar",
+				"index": "4-PM-1"
+			},
+			{
+				"title": "Geolocalización",
+				"index": "4-PM-2"
+			},
+			{
+				"title": "Proyectos de extensión ejecutados o en ejecución relacionados al tema (dentro de los últimos tres años)",
+				"index": "4-PM-3"
+			}
+		]
+	},
+	{
+		"title": "Coherencia interna",
+		"index": "5-CI"
+	},
+	{
+		"title": "Propuesta metodológica",
+		"index": "6-PM"
+	}
+]

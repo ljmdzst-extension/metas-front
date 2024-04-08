@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PlanificationPanel from '../components/PlanificationPanel';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/store';
 import { Col, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Visibility } from '@mui/icons-material';
+import ActivityDetail from '../components/metas/ActivityDetail';
+import { getBases } from '../redux/actions/metasActions';
 
 interface Activity {
 	idActividad: number;
@@ -24,9 +26,14 @@ interface Area {
 	idArea: number;
 	nom: string;
 	listaActividades: any[]; // Reemplaza esto con el tipo correcto si es necesario
+	anio: string;
 }
 
 export default function Activity() {
+	const initialAreaValue: Area = localStorage.getItem('currentArea')
+		? (JSON.parse(localStorage.getItem('currentArea')!) as Area) // Usamos ! para decirle a TypeScript que estamos seguros de que localStorage.getItem('currentArea') no será null
+		: { idArea: '', nom: '', listaActividades: [], anio: '' }; // O proporciona un valor predeterminado adecuado para el tipo Area
+
 	const [show, setShow] = useState(false);
 	const [show2, setShow2] = useState(false);
 	const [term, setTerm] = useState('');
@@ -38,11 +45,44 @@ export default function Activity() {
 	const handleShow2 = () => setShow2(true);
 	const [arrayActivity, setArrayActivity] = useState<Activity[]>([]);
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
-	const { idArea } = useParams<{ idArea?: string }>();
-	const [area, setArea] = useState<Area | null>(null);
+	const [area, setArea] = useState<Area>(initialAreaValue);
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
 
+	const [currentActivitySelected, setCurrentActivitySelected] = useState<null | number>();
+
 	const navigation = useNavigate();
+	const location = useLocation();
+
+	const dispatch = useDispatch<AppDispatch>();
+	const { token } = useSelector((state: RootState) => state.authSlice);
+
+	useEffect(() => {
+		try {
+			const areaString = localStorage.getItem('currentArea');
+			if (areaString) {
+				setArea(JSON.parse(areaString));
+				console.log('Actualizando area' + areaString);
+			}
+		} catch (error) {
+			console.error('Error parsing area from localStorage:', error);
+		}
+	}, []);
+
+	useEffect(() => {
+		const dispachBases = async () => {
+			const action = await dispatch(getBases(token));
+			if (getBases.rejected.match(action)) {
+				const { error } = action.payload as { error: string };
+				Swal.fire({
+					title: 'Error!',
+					text: `${error}`,
+					icon: 'error',
+					confirmButtonText: 'Ok',
+				});
+			}
+		};
+		dispachBases();
+	}, [dispatch, token]);
 
 	interface Data {
 		idActividad: 0;
@@ -53,38 +93,48 @@ export default function Activity() {
 		fechaHasta: string | null;
 	}
 
-	const dispatch: AppDispatch = useDispatch();
+	// const dispatch: AppDispatch = useDispatch();
+
+	const postActivity = useCallback(
+		async (data: Data) => {
+			axios
+				.post(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, data, {
+					headers: { Authorization: `Bearer ${token}` },
+				})
+				.catch((error) => console.log(error));
+		},
+		[token],
+	);
 
 	useEffect(() => {
-		mostrarActividades();
-	}, []);
-
-	const postActivity = async function (data: Data) {
-		axios
-			.post('http://168.197.50.94:4005/api/v2/metas/actividad', data)
-			.then(() => {
-				mostrarActividades();
-			})
-			.catch((error) => console.log(error));
-	};
-
-	useEffect(() => {
-		const getArea = () => {
-			const localArea = localStorage.getItem('currentArea');
-			if (localArea && JSON.parse(localArea).idArea === parseInt(idArea ?? '0', 10)) {
-				setArea(JSON.parse(localArea));
-			} else {
-				navigation('/gestion/metas');
-			}
+		const mostrarActividades = async () => {
+			axios
+				.get(
+					`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${area.idArea}/actividades/${
+						area.anio
+					}`,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				)
+				.then((response) => {
+					const actividades = response.data;
+					setArrayActivity(actividades.data);
+				})
+				.catch((error) => {
+					console.error('Error al realizar la solicitud GET:', error);
+				});
 		};
-		getArea();
-	}, []);
+		mostrarActividades();
+	}, [area.anio, area.idArea, postActivity, token]);
 
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		postActivity({
 			idActividad: 0,
-			idArea: parseInt(idArea ?? '0', 10),
+			idArea: area.idArea,
 			nro: arrayActivity.length + 1,
 			desc: term,
 			fechaDesde: null,
@@ -92,18 +142,6 @@ export default function Activity() {
 		});
 		handleClose();
 		setTerm('');
-	};
-
-	const mostrarActividades = async function () {
-		axios
-			.get(`http://168.197.50.94:4005/api/v2/metas/areas/${idArea}/actividades`)
-			.then((response) => {
-				const actividades = response.data;
-				setArrayActivity(actividades.data);
-			})
-			.catch((error) => {
-				console.error('Error al realizar la solicitud GET:', error);
-			});
 	};
 
 	const handleButtonClick = (id: number) => {
@@ -208,6 +246,7 @@ export default function Activity() {
 			</div>
 
 			<div className=' d-flex justify-content-around gap-2  mx-3  ' style={{ height: '80%' }}>
+				{/* NOTE: SIDEBAR - LISTADO ACTIVIDADES - NAVEGACIÓN FORMS */}
 				{!isPlanificationOpen ? (
 					<Col
 						sm={3}
@@ -228,16 +267,7 @@ export default function Activity() {
 										action
 										variant='secondary'
 										title={item.desc}
-										className='text-break mx-auto my-1   rounded d-flex justify-content-center align-items-center '
-										// style={{
-										// 	width: '100%',
-										// 	borderRadius: '10px',
-										// 	display: 'flex',
-										// 	justifyContent: 'center',
-										// 	alignItems: 'center',
-										// 	margin: '5px',
-										// 	cursor: 'pointer',
-										// }}
+										className='mx-auto my-1 rounded d-flex align-items-center '
 										key={index}
 										onClick={() => {
 											if (isPlanificationOpen) {
@@ -247,6 +277,7 @@ export default function Activity() {
 												setIsPlanificationOpen(!isPlanificationOpen);
 												setNameActivity(`${item.desc}`);
 												handleButtonClick(item.idActividad);
+												setCurrentActivitySelected(null);
 											}
 										}}
 									>
@@ -260,6 +291,18 @@ export default function Activity() {
 										>
 											{item.desc}
 										</span>
+										<div
+											className=' ms-auto mt-0 h-100 cursor-pointer visibility-icon'
+											onClick={(event) => {
+												event.stopPropagation();
+												console.log(item.idActividad);
+												setCurrentActivitySelected(item.idActividad);
+												handleButtonClick(item.idActividad);
+											}}
+											title='Ver Detalle'
+										>
+											<Visibility />
+										</div>
 									</ListGroup.Item>
 								))}
 							</ListGroup>
@@ -270,6 +313,7 @@ export default function Activity() {
 						sm={3}
 						className=' position-relative h-100 d-flex flex-column border-end border-2 rounded-3 bg-white  '
 					>
+						{/* NOTE: NAVEGACION FORMULARIOS */}
 						<h4 className=' text-center m-2'>Formulario</h4>
 						<ListGroup className=' mx-2 '>
 							{formData.map((item, index) => (
@@ -298,16 +342,25 @@ export default function Activity() {
 						</ListGroup>
 					</Col>
 				)}
-				{!isPlanificationOpen && (
-					<Col sm={9} className=' bg-white border-2 rounded-3 bg-white'>
+				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
+				{!isPlanificationOpen && !currentActivitySelected && (
+					<Col sm={9} className=' bg-white border-2 rounded-3'>
 						<Row>
 							<Col className='MenuOptions'>
 								<div className='Options'>Carga de Presupuesto</div>
 							</Col>
 							<Col className='MenuOptions'>
-								<div className='Options'>Ver Resumen y Gráficos</div>
+								<Link to={`${location.pathname}/resumen`}>
+									<div className='Options'>Ver Resumen</div>
+								</Link>
 							</Col>
 						</Row>
+					</Col>
+				)}
+
+				{currentActivitySelected && (
+					<Col sm={9} className='border-2 bg-white rounded-3'>
+						<ActivityDetail />
 					</Col>
 				)}
 

@@ -13,11 +13,7 @@ type Documento = {
 	desc: string | null;
 };
 
-interface FormOrgInstProps {
-	onClose: () => void;
-}
-
-export default function FormOrgInst({}: FormOrgInstProps) {
+export default function FormOrgInst() {
 	const dispatch = useDispatch();
 	const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>([]);
 	const [descripcion, setDescripcion] = useState('');
@@ -54,12 +50,9 @@ export default function FormOrgInst({}: FormOrgInstProps) {
 	};
 
 	const eliminarDocumento = (id: number, index: number) => {
-		console.log(id, index);
-		console.log(arrayDocumentos);
 		const documentosFiltrados = arrayDocumentos.filter(
 			(item, i) => i !== index || item.idEnlace !== id,
 		);
-		console.log(documentosFiltrados);
 		setArrayDocumentos(documentosFiltrados);
 	};
 
@@ -100,11 +93,10 @@ export default function FormOrgInst({}: FormOrgInstProps) {
 						Agregar
 					</Button>
 				</Form>
-				<div className='ListaInstituciones' style={{ maxHeight: '250px', overflowY: 'auto' }}>
-					<Table striped bordered hover>
-						<thead>
+				<div className=' custom-scrollbar ' style={{ maxHeight: '250px', overflowY: 'auto' }}>
+					<Table style={{ minHeight: '400px' }}>
+						<thead style={{ position: 'sticky', top: '0' }}>
 							<tr>
-								<th>#</th>
 								<th>Descripción</th>
 								<th>Enlace</th>
 								<th></th>
@@ -113,14 +105,20 @@ export default function FormOrgInst({}: FormOrgInstProps) {
 						<tbody>
 							{arrayDocumentos.map((item, index) => (
 								<tr key={index}>
-									<td style={{ width: '30px' }}>{index + 1}</td>
-									<td style={{ width: '20%' }}>{item.desc}</td>
-									<td>
+									<td style={{ width: '15%' }}>{item.desc}</td>
+									<td
+										style={{
+											overflow: 'hidden',
+											textOverflow: 'ellipsis',
+											whiteSpace: 'nowrap',
+											maxWidth: '200px',
+										}}
+									>
 										<a href={item.link ?? ''} target='_blank' rel='noopener noreferrer'>
 											{item.link}
 										</a>
 									</td>
-									<td style={{ width: '15px' }}>
+									<td style={{ width: '5%' }}>
 										<DeleteIcon
 											color='error'
 											onClick={() => eliminarDocumento(item.idEnlace ?? 0, index)}

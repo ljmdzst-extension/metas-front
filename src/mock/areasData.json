@@ -1,0 +1,22 @@
+[
+	{
+		"idRelacion": 1,
+		"nom": "FICH",
+		"idTipoRelacion": 3
+	},
+	{
+		"idRelacion": 2,
+		"nom": "FCM",
+		"idTipoRelacion": 3
+	},
+	{
+		"idRelacion": 3,
+		"nom": "FHUC",
+		"idTipoRelacion": 3
+	},
+	{
+		"idRelacion": 9,
+		"nom": "FCJS",
+		"idTipoRelacion": 3
+	}
+]

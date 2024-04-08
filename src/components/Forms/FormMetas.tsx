@@ -11,10 +11,6 @@ import { Badge, Button, Form, Modal, Table } from 'react-bootstrap';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import Swal from 'sweetalert2';
 
-interface FormMetasProps {
-	onClose: () => void;
-}
-
 interface Valoracion {
 	idValoracion: number;
 	nom: string;
@@ -35,7 +31,7 @@ const defaultNuevaMeta = {
 	valoracion: null,
 };
 
-const FormMetas = ({  }: FormMetasProps) => {
+const FormMetas = () => {
 	const dispatch = useDispatch();
 	const [listadoMetas, setListadoMetas] = useState<metas[]>([]);
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
@@ -44,23 +40,15 @@ const FormMetas = ({  }: FormMetasProps) => {
 	const indexCurrentMeta = useRef(-1);
 
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
-		const getValoraciones = async () => {
-			try {
-				const response = await axios.get('http://168.197.50.94:4005/api/v2/metas/bases/');
-				if (response.data.ok) {
-					setValoraciones(response.data.data.listaValoraciones);
-				} else {
-					console.error('Error en la respuesta de la API');
-				}
-			} catch (error) {
-				console.error('Error al obtener la lista de objetivos:', error);
-			}
-		};
-
-		getValoraciones();
-	}, []);
+		if (!error && bases) {
+			setValoraciones(bases.listaValoraciones);
+		} else {
+			// TODO: Alerta de error global
+		}
+	}, [bases, error]);
 
 	useEffect(() => {
 		const sincronizarMetas = () => {
@@ -76,7 +64,7 @@ const FormMetas = ({  }: FormMetasProps) => {
 			dispatch({
 				type: 'CARGAR_META',
 				payload: {
-					metas : listadoMetas
+					metas: listadoMetas,
 				},
 			});
 		};
@@ -91,16 +79,16 @@ const FormMetas = ({  }: FormMetasProps) => {
 	};
 
 	const botonAgregarMeta = () => {
-		console.log(indexCurrentMeta.current);
-		console.log('Agregar');
+		// console.log(indexCurrentMeta.current);
+		// console.log('Agregar');
 		indexCurrentMeta.current = -1;
 		setNuevaMeta(defaultNuevaMeta);
 		openModal();
 	};
 
 	const guardarBotonModal = () => {
-		console.log(indexCurrentMeta.current);
-		console.log('Guardar');
+		// console.log(indexCurrentMeta.current);
+		// console.log('Guardar');
 		if (indexCurrentMeta.current === -1) {
 			// Agregar
 			const newListadoMetas = [...listadoMetas];
@@ -117,15 +105,15 @@ const FormMetas = ({  }: FormMetasProps) => {
 	};
 
 	const editarMeta = (index: number) => {
-		console.log('Editar');
+		// console.log('Editar');
+		// console.log(indexCurrentMeta.current);
 		indexCurrentMeta.current = index;
-		console.log(indexCurrentMeta.current);
 		setNuevaMeta(listadoMetas[index]);
 		openModal();
 	};
 
 	const eliminarMeta = (index: number) => {
-		console.log('Eliminar');
+		// console.log('Eliminar');
 		const newListadoMetas = [...listadoMetas];
 		newListadoMetas.splice(index, 1);
 		setListadoMetas(newListadoMetas);
@@ -161,7 +149,7 @@ const FormMetas = ({  }: FormMetasProps) => {
 		return text.substring(0, limit);
 	};
 
-	const valoracionesText = (idValoracion: number ) => {
+	const valoracionesText = (idValoracion: number) => {
 		const valoracion = valoraciones?.find((valoracion) => valoracion.idValoracion === idValoracion);
 		return valoracion?.nom;
 	};
@@ -177,27 +165,35 @@ const FormMetas = ({  }: FormMetasProps) => {
 				Agregar
 				<AddBoxRoundedIcon className=' ms-2' />
 			</Button>
-			<div className='tabla-metas-contenedor' style={{ maxHeight: '200px', overflowY: 'auto' }}>
+			<div
+				className='tabla-metas-contenedor custom-scrollbar'
+				style={{ maxHeight: '200px', overflowY: 'auto' }}
+			>
 				<Table>
-					<thead>
+					<thead style={{ position: 'sticky', top: '0' }}>
 						<tr>
 							<th>#</th>
 							<th>Meta/resultado esperado</th>
-							<th>Resultado Alcanzado</th>
-							<th>Observaciones</th>
 							<th>Valoraciones</th>
-							<th>Acciones</th>
+							<th style={{ textAlign: 'right' }}>Acciones</th>
 						</tr>
 					</thead>
 					<tbody>
 						{listadoMetas.map((meta, index) => (
 							<tr key={`${meta.descripcion}-${meta.idMeta} `}>
 								<td>{index + 1}</td>
-								<td>{limitTextString(meta.descripcion ?? '', 10)}</td>
-								<td>{limitTextString(meta.resultado ?? '', 30)}</td>
-								<td>{limitTextString(meta.observaciones ?? '', 30)}</td>
+								<td
+									style={{
+										whiteSpace: 'nowrap',
+										overflow: 'hidden',
+										textOverflow: 'ellipsis',
+										maxWidth: '600px',
+									}}
+								>
+									{meta.descripcion}
+								</td>
 								<td>{valoracionesText(meta.valoracion ?? 0)}</td>
-								<td>
+								<td style={{ textAlign: 'right' }}>
 									<VisibilityIcon
 										id={`metaLabel-${meta.idMeta}`}
 										onClick={() => alertVistaDetalle(meta as metas)}
@@ -235,19 +231,28 @@ const FormMetas = ({  }: FormMetasProps) => {
 			>
 				Guardar Actividad
 			</Button>
-			<Modal show={showModal} onHide={closeModal} size='lg'>
+			<Modal show={showModal} onHide={closeModal} size='xl' centered>
 				<Modal.Header closeButton></Modal.Header>
 				<Modal.Body className=' d-flex flex-column gap-4 '>
-					<Form.Control
-						as='textarea'
-						name='descripcion'
-						className='ParrafoDescripcion'
-						placeholder={'Meta/resultado esperado'}
-						value={nuevaMeta.descripcion ?? ''}
-						onChange={(e) => {
-							setNuevaMeta({ ...nuevaMeta, descripcion: e.target.value });
-						}}
-					/>
+					<Form.Group className=' d-flex flex-column align-items-center w-100'>
+						<Form.Control
+							as='textarea'
+							name='descripcion'
+							className='ParrafoDescripcion'
+							placeholder={'Meta/resultado esperado'}
+							value={nuevaMeta.descripcion ?? ''}
+							onChange={(e) => {
+								setNuevaMeta({ ...nuevaMeta, descripcion: e.target.value });
+							}}
+							isInvalid={textLimitError(nuevaMeta.descripcion ?? '', 5000)}
+						/>
+						<Badge
+							className=' mt-2 ms-auto'
+							bg={textLimitError(nuevaMeta.descripcion ?? '', 5000) ? 'danger' : 'primary'}
+						>
+							{nuevaMeta.descripcion?.length}/{5000}
+						</Badge>
+					</Form.Group>
 					<Form.Group className=' d-flex flex-column align-items-center w-100'>
 						<Form.Control
 							as='textarea'
@@ -259,13 +264,13 @@ const FormMetas = ({  }: FormMetasProps) => {
 							onChange={(e) => {
 								setNuevaMeta({ ...nuevaMeta, resultado: e.target.value });
 							}}
-							isInvalid={textLimitError(nuevaMeta.resultado ?? '', 500)}
+							isInvalid={textLimitError(nuevaMeta.resultado ?? '', 5000)}
 						/>
 						<Badge
 							className=' mt-2 ms-auto'
-							bg={textLimitError(nuevaMeta.resultado ?? '', 500) ? 'danger' : 'primary'}
+							bg={textLimitError(nuevaMeta.resultado ?? '', 5000) ? 'danger' : 'primary'}
 						>
-							{nuevaMeta.resultado?.length}/{500}
+							{nuevaMeta.resultado?.length}/{5000}
 						</Badge>
 					</Form.Group>
 					<Form.Group className=' d-flex flex-column align-items-center w-100'>
@@ -281,24 +286,26 @@ const FormMetas = ({  }: FormMetasProps) => {
 							onChange={(e) => {
 								setNuevaMeta({ ...nuevaMeta, observaciones: e.target.value });
 							}}
-							isInvalid={textLimitError(nuevaMeta.observaciones ?? '', 500)}
+							isInvalid={textLimitError(nuevaMeta.observaciones ?? '', 5000)}
 						/>
 						<Badge
 							className=' mt-2 ms-auto'
-							bg={textLimitError(nuevaMeta.observaciones ?? '', 500) ? 'danger' : 'primary'}
+							bg={textLimitError(nuevaMeta.observaciones ?? '', 5000) ? 'danger' : 'primary'}
 						>
-							{nuevaMeta.observaciones?.length}/{500}
+							{nuevaMeta.observaciones?.length}/{5000}
 						</Badge>
 					</Form.Group>
 					<Form.Select
 						name='valoracion'
-						className={`ParrafoObservaciones ${ nuevaMeta.valoracion === -1 ? 'placeholder-option' : ''}}`}
+						className={`ParrafoObservaciones ${
+							nuevaMeta.valoracion === -1 ? 'placeholder-option' : ''
+						}}`}
 						value={nuevaMeta.valoracion ?? -1}
 						onChange={(e) => {
 							setNuevaMeta({ ...nuevaMeta, valoracion: parseInt(e.target.value) });
 						}}
 					>
-						<option key={'nn'} value={-1} disabled  className=' placeholder-option '  >
+						<option key={'nn'} value={-1} disabled className=' placeholder-option '>
 							Valoración general de la actividad y los resultados alcanzados
 						</option>
 						{valoraciones?.map((valoracion) => (

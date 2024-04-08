@@ -1,0 +1,32 @@
+[
+	{
+		"tipoDni": "DNI",
+		"dni": "123456789",
+		"tipoMiembro": "DOCENTE",
+		"nom": "Cosme",
+		"ape": "Fulani",
+		"dom": "Calle 1234",
+		"tel": "12341234",
+		"email": "cosme@mail.com",
+		"tieneTarjeta": 1,
+		"titulo": "Ing. en Sistemas",
+		"idUnidadAcademica": 1,
+		"categoriaDocente": "Titular",
+		"categoriaDedicacion": "Simple",
+		"observ": "Test observaciones"
+	},
+	{
+		"tipoDni": "DNI",
+		"tipoMiembro": "ESTUDIANTE",
+		"dni": "123456798",
+		"ape": "Test",
+		"nom": "Uno",
+		"dom": "Calle 1234",
+		"tel": "12341234",
+		"email": "test1@mail.com",
+		"titulo": "Ing. en Sistemas",
+		"idUnidadAcademica": 1,
+		"periodoLectivo": 1,
+		"observ": "Test observaciones"
+	}
+]

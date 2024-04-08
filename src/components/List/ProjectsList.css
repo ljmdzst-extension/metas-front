@@ -1,0 +1,39 @@
+.table-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 100%;
+	margin: 0 auto;
+
+	border-radius: 4px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	background-color: #fff;
+	padding: 5px;
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+.table-container table thead tr th {
+	text-align: left;
+	font-size: 14px;
+	line-height: 1.2;
+	color: #555;
+	border-bottom: 1px solid #ddd;
+}
+
+.table-container table tbody {
+	width: 100%;
+	height: 100%;
+}
+
+.table-container table tbody tr {
+	height: 20px !important;
+}
+
+.table-container table tbody tr td {
+	padding: 5px;
+	font-size: 14px;
+	line-height: 1.3;
+	color: #555;
+	border-bottom: 1px solid #ddd;
+}

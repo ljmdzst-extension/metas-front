@@ -43,14 +43,14 @@ const authSlice = createSlice({
 			state.loading = true;
 		});
 		builder.addCase(loginAsync.fulfilled, (state, action) => {
-			console.log(action.payload);
+			// console.log(action.payload);
 			state.loading = false;
 			state.isLogged = true;
 			state.user = action.payload.nom + ' ' + action.payload.ape;
 			state.token = action.payload.token;
 		});
 		builder.addCase(loginAsync.rejected, (state, action) => {
-			console.log(action.payload);
+			// console.log(action.payload);
 			state.loading = false;
 			state.error = (action.payload as { error: string }).error;
 		});

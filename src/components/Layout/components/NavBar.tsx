@@ -7,6 +7,7 @@ import { logout } from '../../../redux/reducers/AuthReducer';
 import { Container, Image, Navbar, Nav, Button } from 'react-bootstrap';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
+import logoUNL from '../../../assets/unl_identidad.svg';
 
 export default function NavBar() {
 	const { isLogged } = useSelector((state: RootState) => state.authSlice);
@@ -29,17 +30,11 @@ export default function NavBar() {
 	};
 
 	return (
-		<Navbar className='NavBar'>
+		<Navbar className='NavBar' id='header'>
 			<Container>
 				<Navbar.Brand>
 					<a href='https://www.unl.edu.ar/'>
-						<Image
-							src='../assets/img/unl_identidad.svg'
-							alt='UNL Logo'
-							width='30'
-							height='30'
-							className='me-2'
-						/>{' '}
+						<Image src={logoUNL} alt='logo UNL' className=' me-2' style={{ width: '2.5rem', height: '2.5rem' }} />
 					</a>
 					<a href='/'>Secretaría de Extensión y Cultura</a>
 				</Navbar.Brand>

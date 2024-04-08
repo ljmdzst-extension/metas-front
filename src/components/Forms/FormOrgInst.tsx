@@ -12,10 +12,8 @@ type Institucion = {
 	nom: string | null;
 	ubicacion: string | null;
 };
-interface FormOrgInst {
-	onClose: () => void;
-}
-export default function FormOrgInst({}: FormOrgInst) {
+
+export default function FormOrgInst() {
 	const dispatch = useDispatch();
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
 	const [arrayInstitucion, setArrayInstitucion] = useState<Institucion[]>(
@@ -26,6 +24,10 @@ export default function FormOrgInst({}: FormOrgInst) {
 
 	const [name, setName] = useState('');
 	const [ubicacion, setUbicacion] = useState('');
+
+	const { token } = useSelector((state: RootState) => state.authSlice);
+	const tokenHeader = { Authorization: `Bearer ${token}` };
+
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setArrayInstitucion([...arrayInstitucion, { idInstitucion: 0, nom: name, ubicacion }]);
@@ -33,7 +35,7 @@ export default function FormOrgInst({}: FormOrgInst) {
 		setUbicacion('');
 	};
 	const eliminarInstitucion = (index: number | null) => {
-		console.log(index);
+		// console.log(index);
 		if (index !== null) {
 			setArrayInstitucion(arrayInstitucion.filter((item, i) => item && i !== index));
 		}
@@ -48,7 +50,7 @@ export default function FormOrgInst({}: FormOrgInst) {
 	const filterInstitucion = (data: Institucion[]) => {
 		// Borrar los que no tienen ubicacion
 		const newData = data.filter((inst) => inst.ubicacion !== 'NULL');
-		console.log(newData);
+		// console.log(newData);
 		return newData;
 	};
 
@@ -56,14 +58,18 @@ export default function FormOrgInst({}: FormOrgInst) {
 		let debounce: any;
 		if (name.length === 0) {
 			debounce = setTimeout(() => {
-				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones`)
+				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones`, {
+					headers: tokenHeader,
+				})
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
 					.catch((error) => console.log(error));
 			}, 1000);
 		} else {
 			debounce = setTimeout(() => {
-				fetch(`http://168.197.50.94:4005/api/v2/metas/bases/instituciones/${name}/0/10`)
+				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones/${name}/0/10`, {
+					headers: tokenHeader,
+				})
 					.then((resp) => resp.json())
 					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
 					.catch((error) => console.log(error));

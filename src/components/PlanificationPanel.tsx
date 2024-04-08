@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
+import { errorAlert, successAlert } from '../utils/Alerts';
 
 interface UbicacionProps {
 	idUbicacion: number | null;
@@ -34,15 +35,14 @@ export default function PlanificationPanel({
 	closePlanification,
 	currentFormSelected,
 	cleanFormSelected,
-}: Props) {
+}: Readonly<Props>) {
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState(String);
 	const [show2, setShow2] = useState(false);
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
 	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
-
-	const [isTittleHover, setIsTittleHover] = useState(false);
+	const { token } = useSelector((state: RootState) => state.authSlice);
 
 	useEffect(() => {
 		setMotCancel(estadoActualizado?.motivoCancel);
@@ -55,11 +55,12 @@ export default function PlanificationPanel({
 		setShow2(true);
 	};
 
-	const suspenderActividad = (data: any) => {
-		fetch('http://168.197.50.94:4005/api/v2/metas/actividad/cancel', {
+	const suspenderActividad = (data: { idActividad: number; motivo: string }) => {
+		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/cancel`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				idActividad: data.idActividad,
@@ -68,36 +69,49 @@ export default function PlanificationPanel({
 		})
 			.then((resp) => resp.json())
 			.then((data) => {
-				data.ok ? alert('Actividad Guardada !') : alert(data.error);
+				data.ok ? successAlert('Actividad Anulada') : errorAlert(data.error);
 				window.location.replace('');
 			})
-			.catch((error) => alert(JSON.stringify(error)));
-		console.log(data);
+			.catch((error) => errorAlert(JSON.stringify(error)));
 	};
+
+	const activarActividad = async () => {
+		try {
+			const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/restore`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ idActividad: estadoActualizado.idActividad }),
+			});
+
+			const data = await response.json();
+			if (data.ok) {
+				successAlert('Actividad restaurada');
+			} else {
+				errorAlert(data.error);
+			}
+		} catch (error) {
+			errorAlert(JSON.stringify(error));
+		}
+	};
+
 	const eliminarActividad = () => {
-		fetch('http://168.197.50.94:4005/api/v2/metas/actividad', {
+		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ idActividad: estadoActualizado.idActividad }),
 		})
 			.then((resp) => resp.json())
 			.then((data) => {
-				data.ok ? alert('Actividad Eliminada !') : alert(data.error);
-				window.location.replace('');
+				data.ok ? successAlert('Actividad Eliminada !') : errorAlert(data.error);
+				setTimeout(() => window.location.replace(''), 1000);
 			})
-			.catch((error) => alert(JSON.stringify(error)));
-	};
-
-	const handleCloseForm = () => {
-		setIsFormOpen(false);
-		setIndexForm('');
-		cleanFormSelected();
-	};
-
-	const toggleHover = () => {
-		setIsTittleHover(!isTittleHover);
+			.catch((error) => errorAlert(JSON.stringify(error)));
 	};
 
 	useEffect(() => {
@@ -143,46 +157,28 @@ export default function PlanificationPanel({
 	}, [currentFormSelected]);
 
 	const handleSuspenderActividad = () => {
-		if (motCancel) {
-			Swal.fire({
-				title: '¿Desea anular la suspensión?',
-				showDenyButton: true,
-				confirmButtonText: `Anular Suspensión`,
-				denyButtonText: `Cancelar`,
-			}).then((result) => {
-				if (result.isConfirmed) {
-					suspenderActividad({
-						idActividad: estadoActualizado.idActividad,
-						motivo: null,
-					});
-				} else if (result.isDenied) {
-					Swal.fire('Changes are not saved', '', 'info');
+		Swal.fire({
+			title: '¿Desea suspender la actividad?',
+			showDenyButton: true,
+			denyButtonText: `Cancelar`,
+			confirmButtonText: `Suspender`,
+			input: 'textarea',
+			inputPlaceholder: 'Ingrese el motivo de la suspensión',
+			inputValidator: (value) => {
+				if (!value) {
+					return 'Debe ingresar un motivo';
 				}
-			});
-		} else {
-			Swal.fire({
-				title: '¿Desea suspender la actividad?',
-				showDenyButton: true,
-				denyButtonText: `Cancelar`,
-				confirmButtonText: `Suspender`,
-				input: 'textarea',
-				inputPlaceholder: 'Ingrese el motivo de la suspensión',
-				inputValidator: (value) => {
-					if (!value) {
-						return 'Debe ingresar un motivo';
-					}
-				},
-			}).then((result) => {
-				if (result.isConfirmed) {
-					suspenderActividad({
-						idActividad: estadoActualizado.idActividad,
-						motivo: result.value,
-					});
-				} else if (result.isDenied) {
-					Swal.fire('Changes are not saved', '', 'info');
-				}
-			});
-		}
+			},
+		}).then((result) => {
+			if (result.isConfirmed) {
+				suspenderActividad({
+					idActividad: estadoActualizado.idActividad,
+					motivo: result.value,
+				});
+			} else if (result.isDenied) {
+				Swal.fire('Changes are not saved', '', 'info');
+			}
+		});
 	};
 
 	const handleDeleteActividad = () => {
@@ -203,7 +199,6 @@ export default function PlanificationPanel({
 		const fechaString = `${fechaSplit[2]}/${fechaSplit[1]}/${fechaSplit[0]}`;
 		return fechaString;
 	};
-
 
 	return (
 		<div className=' w-100 h-100'>
@@ -240,17 +235,18 @@ export default function PlanificationPanel({
 					</Form>
 				</Modal.Body>
 			</Modal>
+			{/* NOTE: Vista detalle form */}
 			<div className='d-flex justify-content-between align-items-center mb-2 border-bottom position-relative '>
 				<h4
 					className=' text-break m-2 border-3 '
-					style={{ borderBottom: '2px solid #0a5d52' }}
-					onMouseEnter={toggleHover}
-					onMouseLeave={toggleHover}
+					style={{
+						borderBottom: '2px solid #0a5d52',
+						textOverflow: 'ellipsis',
+						overflow: 'hidden',
+						whiteSpace: 'nowrap',
+					}}
 				>
-					{name.length > 80 ? name.slice(0, 80) + '...' : name}
-					{isTittleHover && (
-						<div className='complete-title-label position-absolute top-0 mt-1 me-5'>{name}</div>
-					)}
+					{name}
 				</h4>
 				{isFormOpen && (
 					<ArrowBack
@@ -272,6 +268,7 @@ export default function PlanificationPanel({
 					/>
 				)}
 			</div>
+			{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
 			{motCancel !== null && (
 				<h2
 					style={{
@@ -284,6 +281,7 @@ export default function PlanificationPanel({
 					ACTIVIDAD SUSPENDIDA
 				</h2>
 			)}
+			{/* NOTE: VISTA PRINCIPAL - Información */}
 			{!isFormOpen ? (
 				<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
 					<div className=' h-50 w-75 '>
@@ -333,6 +331,7 @@ export default function PlanificationPanel({
 							)}
 						</h5>
 					</div>
+					{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
 					{motCancel === null ? (
 						<div className=' d-flex justify-content-around w-100'>
 							<Button
@@ -358,7 +357,7 @@ export default function PlanificationPanel({
 							variant='warning'
 							className='Suspend'
 							onClick={() => {
-								handleSuspenderActividad();
+								activarActividad();
 							}}
 						>
 							Anular Suspensión
@@ -367,24 +366,25 @@ export default function PlanificationPanel({
 				</div>
 			) : (
 				<>
+					{/* NOTE: FORMULARIOS */}
 					{(() => {
 						switch (indexForm) {
 							case 'descr':
-								return <FormDescriptionUbication onClose={handleCloseForm} />;
+								return <FormDescriptionUbication />;
 							case 'documentacion':
-								return <FormDocuments onClose={handleCloseForm} />;
+								return <FormDocuments />;
 							case 'pie':
-								return <FormPIE onClose={handleCloseForm} />;
+								return <FormPIE />;
 							case 'area':
-								return <FormArSecUU onClose={handleCloseForm} />;
+								return <FormArSecUU />;
 							case 'periodo':
-								return <FormPeriodo onClose={handleCloseForm} />;
+								return <FormPeriodo />;
 							case 'objetivo':
-								return <FormObjetiveEst onClose={handleCloseForm} />;
+								return <FormObjetiveEst />;
 							case 'organi':
-								return <FormOrgInst onClose={handleCloseForm} />;
+								return <FormOrgInst />;
 							case 'metas':
-								return <FormMetas onClose={handleCloseForm} />;
+								return <FormMetas />;
 							default:
 								return null;
 						}

@@ -37,7 +37,7 @@ const FormRegister = () => {
 	});
 
 	const getUnidadesAcademicas = async () => {
-		await fetch('http://168.197.50.94:4006/api/v2/usr/bases/', {
+		await fetch(`${import.meta.env.VITE_API_BASE_URL_AUTH}/bases/`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
