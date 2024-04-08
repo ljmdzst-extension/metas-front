@@ -70,18 +70,20 @@ const ResumenArea = () => {
 				<h3 className=' text-uppercase text-center '>Lista de Actividades</h3>
 				<ArrowBack className=' cursor-pointer' onClick={() => navigate(-1)} />
 			</div>
-			<InputGroup className=' w-50 m-2'>
-				<Form.Control
-					type='text'
-					placeholder='Buscar Actividad'
-					name='dni'
-					disabled={true}
-					size='sm'
-				/>
-				<Button variant='outline-secondary' disabled={true} size='sm'>
-					<Search />
-				</Button>
-			</InputGroup>
+			<div className=' w-100border-2 border-bottom border-black-subtle'>
+				<InputGroup className=' w-50 m-2'>
+					<Form.Control
+						type='text'
+						placeholder='Buscar Actividad'
+						name='dni'
+						disabled={true}
+						size='sm'
+					/>
+					<Button variant='outline-secondary' disabled={true} size='sm'>
+						<Search />
+					</Button>
+				</InputGroup>
+			</div>
 			<div
 				className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-2'
 				style={{ maxHeight: '500px' }}
