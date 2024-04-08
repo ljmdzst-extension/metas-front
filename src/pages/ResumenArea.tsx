@@ -4,7 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import ElementoResumen from '../components/DataRender/ElementoResumen';
 import { ArrowBack } from '@mui/icons-material';
-
+import { InputGroup, Form, Button } from 'react-bootstrap';
+import { Search } from '@mui/icons-material';
 interface Area {
 	idArea: number;
 	nom: string;
@@ -65,11 +66,22 @@ const ResumenArea = () => {
 	};
 	return (
 		<div className=' container'>
-			<div className=' d-flex justify-content-between align-items-center'>
-				<h3 className=' text-uppercase text-center m-2'>Lista de Actividades</h3>
-
+			<div className=' d-flex justify-content-between align-items-center m-2'>
+				<h3 className=' text-uppercase text-center '>Lista de Actividades</h3>
 				<ArrowBack className=' cursor-pointer' onClick={() => navigate(-1)} />
 			</div>
+			<InputGroup className=' w-50 m-2'>
+				<Form.Control
+					type='text'
+					placeholder='Buscar Actividad'
+					name='dni'
+					disabled={true}
+					size='sm'
+				/>
+				<Button variant='outline-secondary' disabled={true} size='sm'>
+					<Search />
+				</Button>
+			</InputGroup>
 			<div
 				className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-2'
 				style={{ maxHeight: '500px' }}
