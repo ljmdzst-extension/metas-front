@@ -63,6 +63,7 @@ export default function PanelProgramas() {
 
 	const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const selectedYear = parseInt(event.target.value);
+		setIndexActivity([]);
 		setYear(selectedYear);
 	};
 

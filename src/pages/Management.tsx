@@ -26,6 +26,7 @@ const Management = () => {
 						className=' w-100'
 						style={{ height: '50px' }}
 						onClick={() => handlerClick('/gestion/proyectos')}
+						disabled
 					>
 						Proyectos
 					</Button>
