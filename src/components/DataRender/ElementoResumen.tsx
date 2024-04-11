@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { LArea, ListaProgramasSIPPE } from '../../types/BasesProps';
 import { Actividad } from '../../types/ActivityProps';
@@ -46,14 +46,15 @@ const ElementoResumen = ({ element }: Props) => {
 		return areasMap[key];
 	};
 
-	const renderArea = (data: any[], idTipoRelacion: number, nombreArea: string) => {
+	const renderArea = (data: number[], idTipoRelacion: number, nombreArea: string) => {
 		if (!data || data.length === 0) {
 			return null; // O cualquier otro componente o mensaje de aviso
 		}
 
 		const elementosArea = data
 			.map((idRelacion) => extraerRelacionCompleta(idRelacion, idTipoRelacion))
-			.filter(Boolean); //elimina los valores null, undefined, etc
+			.filter(Boolean) //elimina los valores null, undefined, etc
+			.sort((a, b) => a.nom.localeCompare(b.nom)); // Ordena las areas por su propiedad 'nom'
 
 		if (elementosArea.length === 0) {
 			return null; // No hay elementos para renderizar
@@ -133,7 +134,7 @@ const ElementoResumen = ({ element }: Props) => {
 		<div className=' pt-2 border-top border-dark-subtle border-2'>
 			<div className=' d-flex flex-column gap-2 border border-2 border-dark-subtle '>
 				<div>
-					<div style={{ ...styles.titleContainer, backgroundColor: ' green' }}>
+					<div style={{ ...styles.titleContainer, backgroundColor: '#08443c' }}>
 						<h5>Actividad: {idActividad}</h5>
 					</div>
 					<div className=' m-1'>
@@ -192,7 +193,7 @@ const ElementoResumen = ({ element }: Props) => {
 
 const styles = {
 	titleContainer: {
-		backgroundColor: '#198754',
+		backgroundColor: '#0c6a5d',
 		border: 'none',
 		color: 'white',
 		textAlign: 'center' as const,
