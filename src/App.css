@@ -320,19 +320,7 @@ h1 {
 	justify-content: space-around;
 	padding: 20px;
 }
-/* .react-datepicker-wrapper {
-	width: 240.3px;
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-}
-.react-datepicker__input-container,
-.react-datepicker__input-container input {
-	width: 100%;
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-} */
+
 .ConteinerDay {
 	width: 30%;
 	min-height: 85%;
@@ -383,8 +371,7 @@ span {
 	justify-content: flex-start;
 	align-items: center;
 	padding: 10px;
-	/* border-radius: 10px;
-	border: 3px solid #c0c0c0; */
+
 }
 .ConteinerPlan {
 	width: 90%;
@@ -393,9 +380,7 @@ span {
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	/* padding: 10px;
-	border-radius: 10px;
-	border: 3px solid #c0c0c0; */
+
 }
 .FormPlan {
 	width: 70%;
@@ -911,4 +896,3 @@ th {
 	color: #808080;
 }
 
-/*  */
