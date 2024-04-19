@@ -169,6 +169,8 @@
 	border-radius: 9px;
 	cursor: pointer;
 	transition: all 0.5s;
+	text-decoration: none;
+	color: black;
 }
 .Options:hover {
 	border: 1px solid white;
@@ -371,7 +373,6 @@ span {
 	justify-content: flex-start;
 	align-items: center;
 	padding: 10px;
-
 }
 .ConteinerPlan {
 	width: 90%;
@@ -380,7 +381,6 @@ span {
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-
 }
 .FormPlan {
 	width: 70%;
@@ -839,7 +839,6 @@ th {
 	animation: fade-in 0.2s ease-in-out;
 }
 
-
 @keyframes fade-in {
 	from {
 		opacity: 0;
@@ -895,4 +894,3 @@ th {
 .visibility-icon:hover {
 	color: #808080;
 }
-

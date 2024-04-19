@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppDispatch, RootState } from '../redux/store';
 import ElementoResumen from '../components/DataRender/ElementoResumen';
-import { ArrowBack, Search } from '@mui/icons-material';
+import { ArrowBack, Replay } from '@mui/icons-material';
 import { InputGroup, Form, Button } from 'react-bootstrap';
 import { Actividad } from '../types/ActivityProps';
 import Swal from 'sweetalert2';
@@ -58,7 +58,6 @@ const ResumenArea = () => {
 			setOffset(0);
 			setData([]);
 			setHasMore(true);
-			getData(offset);
 		}
 	};
 
@@ -79,15 +78,14 @@ const ResumenArea = () => {
 		const stringAreaData = localStorage.getItem('currentArea');
 		const areaData = JSON.parse(stringAreaData!) as Area;
 
-		let endpoint = `${import.meta.env.VITE_API_BASE_URL_METAS}/areas/resumen/${idArea}/${
-			areaData.anio
-		}/${offset}/5`;
-
-		if (search.length > 3) {
-			endpoint = endpoint + `/${search}`;
-		}
-
 		try {
+			let endpoint = `${import.meta.env.VITE_API_BASE_URL_METAS}/areas/resumen/${idArea}/${
+				areaData.anio
+			}/${offset}/5`;
+
+			if (search.length > 3) {
+				endpoint = endpoint + `/${search}`;
+			}
 			const res = await fetch(endpoint, {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -95,8 +93,10 @@ const ResumenArea = () => {
 			});
 			const resJson = await res.json();
 			console.log(resJson);
-			if (resJson.data.length === 0) setHasMore(false);
-			else {
+			console.log(resJson.data.length);
+			if (resJson.data.length === 0) {
+				setHasMore(false);
+			} else {
 				setTimeout(() => {
 					setData((data) => [...data, ...resJson.data]);
 					setOffset((offset) => offset + 5);
@@ -108,35 +108,40 @@ const ResumenArea = () => {
 	};
 
 	return (
-		<div className=' container' style={{ height: '80%' }}>
-			<div className=' d-flex justify-content-between align-items-center m-2'>
-				<h3 className=' text-uppercase text-center '>Lista de Actividades</h3>
-				<ArrowBack className=' cursor-pointer' onClick={() => navigate(-1)} />
-			</div>
-			<InputGroup className=' w-50 m-2'>
-				<Form.Control
-					type='text'
-					placeholder='Buscar Actividad'
-					name='dni'
-					onChange={handleChange}
-					size='sm'
-				/>
-				<Button variant='outline-secondary' size='sm' onClick={handleSearch}>
-					<Search />
-				</Button>
-			</InputGroup>
+		<div className=' container ' style={{ height: '90%' }}>
 			<div
-				className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-2'
-				style={{ height: '100%' }}
+				className=' d-flex flex-column h-100 m-2 border rounded'
+				style={{ backgroundColor: '#fefefe' }}
 			>
-				{data.map((el, index) => (
-					<ElementoResumen element={el} key={el.desc + '-' + index} />
-				))}
-				{hasMore && (
-					<p className=' text-secondary text-uppercase p-2' ref={elementRef}>
-						Cargando datos
-					</p>
-				)}
+				<div className=' d-flex justify-content-between align-items-center m-2'>
+					<h3 className=' text-uppercase text-center '>Lista de Actividades</h3>
+					<ArrowBack className=' cursor-pointer' onClick={() => navigate(-1)} />
+				</div>
+				<InputGroup className=' w-50 m-2'>
+					<Form.Control
+						type='text'
+						placeholder='Buscar Actividad'
+						name='dni'
+						onChange={handleChange}
+						size='sm'
+					/>
+					<Button variant='primary' size='sm' onClick={handleSearch}>
+						<Replay />
+					</Button>
+				</InputGroup>
+				<div
+					className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-2 px-2'
+					style={{ height: '100%' }}
+				>
+					{data.map((el, index) => (
+						<ElementoResumen element={el} key={el.desc + '-' + index} />
+					))}
+					{hasMore && (
+						<p className=' text-secondary text-uppercase p-2' ref={elementRef}>
+							Cargando datos
+						</p>
+					)}
+				</div>
 			</div>
 		</div>
 	);

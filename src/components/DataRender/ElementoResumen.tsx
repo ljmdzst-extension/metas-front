@@ -25,7 +25,6 @@ const ElementoResumen = ({ element }: Props) => {
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
-		console.log(listaSIPPE);
 		if (!error && bases) {
 			setAreas(bases.lAreas);
 			setListaSIPPE(bases.listaProgramasSIPPE);
