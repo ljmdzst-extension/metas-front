@@ -15,9 +15,9 @@ type Institucion = {
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 	const [arrayInstitucion, setArrayInstitucion] = useState<Institucion[]>(
-		estadoActualizado.listaInstituciones || [],
+		activity.listaInstituciones || [],
 	);
 	const [arraySearchInstitucion, setArraySearchInstitucion] = useState<Institucion[]>([]);
 	const [searchInstitucion, setSearchInstitucion] = useState<Institucion | undefined>(undefined);
@@ -184,7 +184,7 @@ export default function FormOrgInst() {
 				onClick={() => {
 					guardarActividad(
 						{
-							...estadoActualizado,
+							...activity,
 							listaInstituciones: arrayInstitucion,
 						},
 						dispatch,

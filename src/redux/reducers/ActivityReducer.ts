@@ -2,23 +2,50 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CargarDatosActividadAction } from '../actions/activityAction';
 import { Actividad } from '../../types/ActivityProps';
 
-const initialState: Actividad = {
-	idActividad: 0,
-	idArea: 0,
-	idUsuario: null,
-	nro: null,
-	desc: null,
-	motivoCancel: null,
-	fechaDesde: null,
-	fechaHasta: null,
-	listaMetas: [],
-	listaProgramasSIPPE: [],
-	listaRelaciones: [],
-	listaObjetivos: [],
-	listaUbicaciones: [],
-	listaEnlaces: [],
-	listaFechasPuntuales: [],
-	listaInstituciones: [],
+// const initialState: Actividad = {
+// 	idActividad: 0,
+// 	idArea: 0,
+// 	idUsuario: null,
+// 	nro: null,
+// 	desc: null,
+// 	motivoCancel: null,
+// 	fechaDesde: null,
+// 	fechaHasta: null,
+// 	listaMetas: [],
+// 	listaProgramasSIPPE: [],
+// 	listaRelaciones: [],
+// 	listaObjetivos: [],
+// 	listaUbicaciones: [],
+// 	listaEnlaces: [],
+// 	listaFechasPuntuales: [],
+// 	listaInstituciones: [],
+// };
+
+interface initialStateProps {
+	isLoading: boolean;
+	activity: Actividad;
+}
+
+const initialState: initialStateProps = {
+	isLoading: true,
+	activity: {
+		idActividad: 0,
+		idArea: 0,
+		idUsuario: null,
+		nro: null,
+		desc: null,
+		motivoCancel: null,
+		fechaDesde: null,
+		fechaHasta: null,
+		listaMetas: [],
+		listaProgramasSIPPE: [],
+		listaRelaciones: [],
+		listaObjetivos: [],
+		listaUbicaciones: [],
+		listaEnlaces: [],
+		listaFechasPuntuales: [],
+		listaInstituciones: [],
+	},
 };
 
 const actividadSlice = createSlice({
@@ -26,16 +53,16 @@ const actividadSlice = createSlice({
 	initialState,
 	reducers: {
 		CARGAR_MOTIVOCANCEL: (state, action: PayloadAction<{ motivo: string | null }>) => {
-			state.motivoCancel = action.payload.motivo;
-			console.log(state.motivoCancel);
+			state.activity.motivoCancel = action.payload.motivo;
+			console.log(state.activity.motivoCancel);
 			console.log('cargo el motivo');
 		},
 		CARGAR_DESCRIPCION: (
 			state,
 			action: PayloadAction<{ descripcion: string | null; ubicaciones: any[] | null }>,
 		) => {
-			state.desc = action.payload.descripcion;
-			state.listaUbicaciones = action.payload.ubicaciones;
+			state.activity.desc = action.payload.descripcion;
+			state.activity.listaUbicaciones = action.payload.ubicaciones;
 			console.log('cargo la descripcion');
 		},
 		CARGAR_PERIODO: (
@@ -49,9 +76,9 @@ const actividadSlice = createSlice({
 				}[];
 			}>,
 		) => {
-			state.fechaDesde = action.payload.fechaDesde;
-			state.fechaHasta = action.payload.fechaHasta;
-			state.listaFechasPuntuales = action.payload.listaFechasPuntuales;
+			state.activity.fechaDesde = action.payload.fechaDesde;
+			state.activity.fechaHasta = action.payload.fechaHasta;
+			state.activity.listaFechasPuntuales = action.payload.listaFechasPuntuales;
 			console.log('cargo el periodo');
 		},
 		CARGAR_PIE: (
@@ -60,7 +87,7 @@ const actividadSlice = createSlice({
 				objetivosSeleccionados: number[];
 			}>,
 		) => {
-			state.listaObjetivos = action.payload.objetivosSeleccionados;
+			state.activity.listaObjetivos = action.payload.objetivosSeleccionados;
 		},
 		CARGAR_RELACION: (
 			state,
@@ -69,8 +96,8 @@ const actividadSlice = createSlice({
 				sippeSeleccionadas: number[];
 			}>,
 		) => {
-			state.listaRelaciones = action.payload.relacionesSeleccionadas;
-			state.listaProgramasSIPPE = action.payload.sippeSeleccionadas;
+			state.activity.listaRelaciones = action.payload.relacionesSeleccionadas;
+			state.activity.listaProgramasSIPPE = action.payload.sippeSeleccionadas;
 		},
 		CARGAR_META: (
 			state,
@@ -84,7 +111,7 @@ const actividadSlice = createSlice({
 				}[];
 			}>,
 		) => {
-			state.listaMetas = action.payload.metas;
+			state.activity.listaMetas = action.payload.metas;
 		},
 		CARGAR_INSTITUCION: (
 			state,
@@ -96,30 +123,36 @@ const actividadSlice = createSlice({
 				}[];
 			}>,
 		) => {
-			state.listaInstituciones = action.payload.instituciones;
+			state.activity.listaInstituciones = action.payload.instituciones;
 		},
 	},
 	extraReducers: (builder) => {
-		builder.addCase(CargarDatosActividadAction.fulfilled, (state, action: PayloadAction<any>) => {
-			return {
-				...state,
-				idActividad: action.payload.idActividad,
-				idArea: action.payload.idArea,
-				nro: action.payload.nro,
-				desc: action.payload.desc,
-				motivoCancel: action.payload.motivoCancel,
-				fechaDesde: action.payload.fechaDesde,
-				fechaHasta: action.payload.fechaHasta,
-				listaMetas: action.payload.listaMetas,
-				listaProgramasSIPPE: action.payload.listaProgramasSIPPE,
-				listaRelaciones: action.payload.listaRelaciones,
-				listaObjetivos: action.payload.listaObjetivos,
-				listaUbicaciones: action.payload.listaUbicaciones,
-				listaEnlaces: action.payload.listaEnlaces,
-				listaFechasPuntuales: action.payload.listaFechasPuntuales,
-				listaInstituciones: action.payload.listaInstituciones,
-			};
-		});
+		builder.addCase(
+			CargarDatosActividadAction.fulfilled,
+			(state, action: PayloadAction<Actividad>) => {
+				return {
+					...state,
+					activity: {
+						...state.activity,
+						idActividad: action.payload.idActividad,
+						idArea: action.payload.idArea,
+						nro: action.payload.nro,
+						desc: action.payload.desc,
+						motivoCancel: action.payload.motivoCancel,
+						fechaDesde: action.payload.fechaDesde,
+						fechaHasta: action.payload.fechaHasta,
+						listaMetas: action.payload.listaMetas,
+						listaProgramasSIPPE: action.payload.listaProgramasSIPPE,
+						listaRelaciones: action.payload.listaRelaciones,
+						listaObjetivos: action.payload.listaObjetivos,
+						listaUbicaciones: action.payload.listaUbicaciones,
+						listaEnlaces: action.payload.listaEnlaces,
+						listaFechasPuntuales: action.payload.listaFechasPuntuales,
+						listaInstituciones: action.payload.listaInstituciones,
+					},
+				};
+			},
+		);
 	},
 });
 

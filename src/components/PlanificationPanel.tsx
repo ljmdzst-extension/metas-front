@@ -35,12 +35,12 @@ export default function PlanificationPanel({
 	const [show2, setShow2] = useState(false);
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 	const { token } = useSelector((state: RootState) => state.authSlice);
 
 	useEffect(() => {
-		setMotCancel(estadoActualizado?.motivoCancel);
-	}, [estadoActualizado?.motivoCancel]);
+		setMotCancel(activity?.motivoCancel);
+	}, [activity?.motivoCancel]);
 
 	const handleClose2 = () => {
 		setShow2(false);
@@ -77,7 +77,7 @@ export default function PlanificationPanel({
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ idActividad: estadoActualizado.idActividad }),
+				body: JSON.stringify({ idActividad: activity.idActividad }),
 			});
 
 			const data = await response.json();
@@ -98,7 +98,7 @@ export default function PlanificationPanel({
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${token}`,
 			},
-			body: JSON.stringify({ idActividad: estadoActualizado.idActividad }),
+			body: JSON.stringify({ idActividad: activity.idActividad }),
 		})
 			.then((resp) => resp.json())
 			.then((data) => {
@@ -166,7 +166,7 @@ export default function PlanificationPanel({
 		}).then((result) => {
 			if (result.isConfirmed) {
 				suspenderActividad({
-					idActividad: estadoActualizado.idActividad,
+					idActividad: activity.idActividad,
 					motivo: result.value,
 				});
 			} else if (result.isDenied) {

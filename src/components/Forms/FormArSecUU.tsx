@@ -27,26 +27,26 @@ export default function FormArSecUU() {
 	const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<number[]>([]);
 	const [sippeSeleccionadas, setSippeSeleccionadas] = useState<number[]>([]);
 
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 	useEffect(() => {
 		const sincronizarSelectsRelacion = () => {
-			if (estadoActualizado.listaRelaciones) {
-				setRelacionSeleccionadas1(estadoActualizado.listaRelaciones);
-				setRelacionSeleccionadas2(estadoActualizado.listaRelaciones);
-				setRelacionSeleccionadas3(estadoActualizado.listaRelaciones);
+			if (activity.listaRelaciones) {
+				setRelacionSeleccionadas1(activity.listaRelaciones);
+				setRelacionSeleccionadas2(activity.listaRelaciones);
+				setRelacionSeleccionadas3(activity.listaRelaciones);
 			}
 		};
 		sincronizarSelectsRelacion();
-	}, [estadoActualizado.listaRelaciones]);
+	}, [activity.listaRelaciones]);
 	useEffect(() => {
 		const sincronizarSelectsSIPPE = () => {
-			if (estadoActualizado.listaProgramasSIPPE) {
-				setSippeSeleccionadas(estadoActualizado.listaProgramasSIPPE);
+			if (activity.listaProgramasSIPPE) {
+				setSippeSeleccionadas(activity.listaProgramasSIPPE);
 			}
 		};
 		sincronizarSelectsSIPPE();
-	}, [estadoActualizado.listaProgramasSIPPE]);
+	}, [activity.listaProgramasSIPPE]);
 
 	useEffect(() => {
 		if (!error && bases) {
@@ -199,7 +199,7 @@ export default function FormArSecUU() {
 				onClick={() => {
 					guardarActividad(
 						{
-							...estadoActualizado,
+							...activity,
 							listaRelaciones: Array.from(
 								new Set([
 									...relacionSeleccionadas1,

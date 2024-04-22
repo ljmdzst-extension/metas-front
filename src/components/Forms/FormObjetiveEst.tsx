@@ -18,7 +18,7 @@ export default function FormObjetiveEst() {
 	const dispatch = useDispatch();
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
 	const objetivosDesde0a4 = objetivos?.slice(0, 4);
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
@@ -30,13 +30,13 @@ export default function FormObjetiveEst() {
 	}, [bases, error]);
 
 	const sincronizarCheckboxes = () => {
-		if (estadoActualizado.listaObjetivos) {
-			setObjetivosSeleccionados(estadoActualizado.listaObjetivos);
+		if (activity.listaObjetivos) {
+			setObjetivosSeleccionados(activity.listaObjetivos);
 		}
 	};
 	useEffect(() => {
 		sincronizarCheckboxes();
-	}, [estadoActualizado.listaObjetivos]);
+	}, [activity.listaObjetivos]);
 	const handleSeleccionarObjetivo = (idObjetivo: number) => {
 		const objetivoIndex = objetivosSeleccionados.indexOf(idObjetivo);
 		if (objetivoIndex === -1) {
@@ -72,7 +72,7 @@ export default function FormObjetiveEst() {
 				onClick={() => {
 					guardarActividad(
 						{
-							...estadoActualizado,
+							...activity,
 							listaObjetivos: objetivosSeleccionados,
 						},
 						dispatch,

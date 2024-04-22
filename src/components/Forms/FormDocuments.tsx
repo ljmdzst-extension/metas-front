@@ -18,18 +18,18 @@ export default function FormOrgInst() {
 	const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>([]);
 	const [descripcion, setDescripcion] = useState('');
 	const [nombreArchivo, setNombreArchivo] = useState('');
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 
 	useEffect(() => {
-		if (estadoActualizado.listaEnlaces) {
-			const enlacesMapeados = estadoActualizado.listaEnlaces.map((enlace) => ({
+		if (activity.listaEnlaces) {
+			const enlacesMapeados = activity.listaEnlaces.map((enlace) => ({
 				idEnlace: enlace.idEnlace,
 				link: enlace.link || null,
 				desc: enlace.desc || null,
 			}));
 			setArrayDocumentos(enlacesMapeados);
 		}
-	}, [estadoActualizado.listaEnlaces]);
+	}, [activity.listaEnlaces]);
 
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -136,7 +136,7 @@ export default function FormOrgInst() {
 				onClick={() => {
 					guardarActividad(
 						{
-							...estadoActualizado,
+							...activity,
 							listaEnlaces: arrayDocumentos,
 						},
 						dispatch,

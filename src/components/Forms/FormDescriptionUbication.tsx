@@ -17,16 +17,16 @@ import { ListaUbicacione } from '../../types/ActivityProps';
 const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
 
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 	const [editandoDescripcion, setEditandoDescripcion] = useState(false);
-	const [descripcion, setDescripcion] = useState<string>(estadoActualizado.desc ?? '');
+	const [descripcion, setDescripcion] = useState<string>(activity.desc ?? '');
 
 	const [ubicacion, setUbicacion] = useState<string>('');
 	const [ubicaciones, setUbicaciones] = useState<ListaUbicacione[]>([]);
 
 	useEffect(() => {
-		if (estadoActualizado.listaUbicaciones) {
-			setUbicaciones(estadoActualizado.listaUbicaciones);
+		if (activity.listaUbicaciones) {
+			setUbicaciones(activity.listaUbicaciones);
 		}
 	}, []);
 
@@ -204,13 +204,13 @@ const FormDescriptionUbication = () => {
 				className=' w-auto align-self-center '
 				onClick={() => {
 					// const nuevoestado = {
-					// 	...estadoActualizado,
+					// 	...activity,
 					// 	desc: descripcion,
 					// 	listaUbicaciones: ubicaciones,
 					// };
 					// console.log(nuevoestado);
 					guardarActividad(
-						{ ...estadoActualizado, desc: descripcion, listaUbicaciones: ubicaciones },
+						{ ...activity, desc: descripcion, listaUbicaciones: ubicaciones },
 						dispatch,
 					);
 				}}

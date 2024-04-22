@@ -38,7 +38,7 @@ const FormMetas = () => {
 	const [showModal, setShowModal] = useState(false);
 	const indexCurrentMeta = useRef(-1);
 
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
@@ -51,12 +51,12 @@ const FormMetas = () => {
 
 	useEffect(() => {
 		const sincronizarMetas = () => {
-			if (estadoActualizado.listaMetas) {
-				setListadoMetas(estadoActualizado.listaMetas);
+			if (activity.listaMetas) {
+				setListadoMetas(activity.listaMetas);
 			}
 		};
 		sincronizarMetas();
-	}, [estadoActualizado.listaMetas]);
+	}, [activity.listaMetas]);
 
 	useEffect(() => {
 		const actualizarRedux = () => {
@@ -68,7 +68,7 @@ const FormMetas = () => {
 			});
 		};
 		actualizarRedux();
-	}, [dispatch, estadoActualizado, listadoMetas]);
+	}, [dispatch, activity, listadoMetas]);
 
 	const openModal = () => {
 		setShowModal(true);
@@ -217,7 +217,7 @@ const FormMetas = () => {
 				onClick={() => {
 					guardarActividad(
 						{
-							...estadoActualizado,
+							...activity,
 							listaMetas: listadoMetas,
 						},
 						dispatch,
