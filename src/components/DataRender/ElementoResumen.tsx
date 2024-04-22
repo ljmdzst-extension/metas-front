@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { LArea, ListaProgramasSIPPE } from '../../types/BasesProps';
 import { Actividad } from '../../types/ActivityProps';
@@ -25,7 +25,6 @@ const ElementoResumen = ({ element }: Props) => {
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
-		console.log(listaSIPPE);
 		if (!error && bases) {
 			setAreas(bases.lAreas);
 			setListaSIPPE(bases.listaProgramasSIPPE);
@@ -46,14 +45,15 @@ const ElementoResumen = ({ element }: Props) => {
 		return areasMap[key];
 	};
 
-	const renderArea = (data: any[], idTipoRelacion: number, nombreArea: string) => {
+	const renderArea = (data: number[], idTipoRelacion: number, nombreArea: string) => {
 		if (!data || data.length === 0) {
 			return null; // O cualquier otro componente o mensaje de aviso
 		}
 
 		const elementosArea = data
 			.map((idRelacion) => extraerRelacionCompleta(idRelacion, idTipoRelacion))
-			.filter(Boolean); //elimina los valores null, undefined, etc
+			.filter(Boolean) //elimina los valores null, undefined, etc
+			.sort((a, b) => a.nom.localeCompare(b.nom)); // Ordena las areas por su propiedad 'nom'
 
 		if (elementosArea.length === 0) {
 			return null; // No hay elementos para renderizar
@@ -133,7 +133,7 @@ const ElementoResumen = ({ element }: Props) => {
 		<div className=' pt-2 border-top border-dark-subtle border-2'>
 			<div className=' d-flex flex-column gap-2 border border-2 border-dark-subtle '>
 				<div>
-					<div style={{ ...styles.titleContainer, backgroundColor: ' green' }}>
+					<div style={{ ...styles.titleContainer, backgroundColor: '#08443c' }}>
 						<h5>Actividad: {idActividad}</h5>
 					</div>
 					<div className=' m-1'>
@@ -155,15 +155,13 @@ const ElementoResumen = ({ element }: Props) => {
 						<div style={styles.gridTitle}>Valoracion</div>
 					</div>
 
-					{listaMetas.length ? (
+					{listaMetas?.length ? (
 						listaMetas.map((meta, index) => (
 							<div style={styles.gridContainer} key={index}>
 								<div style={styles.gridItem}>{meta.descripcion}</div>
 								<div style={styles.gridItem}>{meta.resultado}</div>
 								<div style={styles.gridItem}>{meta.observaciones}</div>
-								<div style={styles.gridItem}>
-									{meta.valoraciones || 'No hay valoración cargada'}
-								</div>
+								<div style={styles.gridItem}>{meta?.valoracion || 'No hay valoración cargada'}</div>
 							</div>
 						))
 					) : (
@@ -173,16 +171,17 @@ const ElementoResumen = ({ element }: Props) => {
 
 				<div>
 					<div style={{ ...styles.titleContainer }}>Áreas</div>
-					<div className=' m-1'>
-						{listaRelaciones.length > 0 && (
+					<div className='m-1'>
+						{listaRelaciones?.length !== undefined && listaRelaciones.length > 0 ? (
 							<ol>
 								{renderArea(listaRelaciones, 1, 'Internas Secretaria')}
 								{renderArea(listaRelaciones, 2, 'Otras áreas centrales')}
 								{renderArea(listaRelaciones, 3, 'Unidades Académicas involucradas')}
 								{renderArea(listaRelaciones, 4, 'Programas de Extensión')}
 							</ol>
+						) : (
+							<p>No hay Areas Cargadas</p>
 						)}
-						{listaRelaciones.length === 0 && <p>No hay Areas Cargadas</p>}
 					</div>
 				</div>
 			</div>
@@ -192,7 +191,7 @@ const ElementoResumen = ({ element }: Props) => {
 
 const styles = {
 	titleContainer: {
-		backgroundColor: '#198754',
+		backgroundColor: '#0c6a5d',
 		border: 'none',
 		color: 'white',
 		textAlign: 'center' as const,

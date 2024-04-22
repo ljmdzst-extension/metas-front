@@ -13,7 +13,7 @@ import { Col, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
-import { ArrowBack, Visibility } from '@mui/icons-material';
+import { ArrowBack } from '@mui/icons-material';
 import ActivityDetail from '../components/metas/ActivityDetail';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
@@ -232,7 +232,10 @@ export default function Activity() {
 				</Modal.Body>
 			</Modal>
 
-			<div className=' d-flex justify-content-between border border-2 rounded-3 m-0 p-2 pb-0 mx-2 my-1 bg-white '>
+			<div
+				className=' d-flex justify-content-between border border-2 rounded-3 m-0 p-2 pb-0 mx-2 my-1  '
+				style={{ backgroundColor: '#fefefe' }}
+			>
 				<h2 className=' fw-bold' style={{ color: '#0a5d52' }}>
 					{area?.nom}
 				</h2>
@@ -251,7 +254,8 @@ export default function Activity() {
 				{!isPlanificationOpen ? (
 					<Col
 						sm={3}
-						className=' position-relative h-100 d-flex flex-column border-end border-2 bg-white rounded-3 '
+						className=' position-relative h-100 d-flex flex-column border-end border-2 rounded-3 '
+						style={{ backgroundColor: '#fefefe' }}
 					>
 						<Button
 							variant='outline-success'
@@ -292,7 +296,7 @@ export default function Activity() {
 										>
 											{item.desc}
 										</span>
-										<div
+										{/* <div
 											className=' ms-auto mt-0 h-100 cursor-pointer visibility-icon'
 											onClick={(event) => {
 												event.stopPropagation();
@@ -303,7 +307,7 @@ export default function Activity() {
 											title='Ver Detalle'
 										>
 											<Visibility />
-										</div>
+										</div> */}
 									</ListGroup.Item>
 								))}
 							</ListGroup>
@@ -312,7 +316,8 @@ export default function Activity() {
 				) : (
 					<Col
 						sm={3}
-						className=' position-relative h-100 d-flex flex-column border-end border-2 rounded-3 bg-white  '
+						className=' position-relative h-100 d-flex flex-column border-end border-2 rounded-3   '
+						style={{ backgroundColor: '#fefefe' }}
 					>
 						{/* NOTE: NAVEGACION FORMULARIOS */}
 						<h4 className=' text-center m-2'>Formulario</h4>
@@ -345,14 +350,16 @@ export default function Activity() {
 				)}
 				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
 				{!isPlanificationOpen && !currentActivitySelected && (
-					<Col sm={9} className=' bg-white border-2 rounded-3'>
+					<Col sm={9} className=' border-2 rounded-3' style={{ backgroundColor: '#fefefe' }}>
 						<Row>
 							<Col className='MenuOptions'>
-								<div className='Options'>Carga de Presupuesto</div>
+								{/* <div className='Options'>Carga de Presupuesto</div> */}
+								<Button disabled>Carga de Presupuesto</Button>
 							</Col>
 							<Col className='MenuOptions'>
-								<Link to={`${location.pathname}/resumen`}>
-									<div className='Options'>Ver Resumen</div>
+								<Link to={`${location.pathname}/resumen`} style={{ textDecoration: 'none' }}>
+									{/* <div className='Options'>Ver Resumen</div> */}
+									<Button>Ver Resumen</Button>
 								</Link>
 							</Col>
 						</Row>
@@ -360,13 +367,13 @@ export default function Activity() {
 				)}
 
 				{currentActivitySelected && (
-					<Col sm={9} className='border-2 bg-white rounded-3'>
+					<Col sm={9} className='border-2  rounded-3' style={{ backgroundColor: '#fefefe' }}>
 						<ActivityDetail />
 					</Col>
 				)}
 
 				{isPlanificationOpen && (
-					<Col sm={9} className='border-2 bg-white rounded-3'>
+					<Col sm={9} className='border-2  rounded-3' style={{ backgroundColor: '#fefefe' }}>
 						<PlanificationPanel
 							name={nameActivity}
 							closePlanification={closePlanification}

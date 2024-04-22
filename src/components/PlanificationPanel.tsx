@@ -15,13 +15,7 @@ import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
 import { errorAlert, successAlert } from '../utils/Alerts';
-
-interface UbicacionProps {
-	idUbicacion: number | null;
-	idActividad: number | null;
-	nom: string;
-	enlace: string | null;
-}
+import ActivityDetail from './metas/ActivityDetail';
 
 type Props = {
 	name: string;
@@ -193,13 +187,6 @@ export default function PlanificationPanel({
 		});
 	};
 
-	const acomodarStringFecha = (fecha: string) => {
-		// entra fecha formato aaaa-mm-dd y sale dd/mm/aaaa
-		const fechaSplit = fecha.split('-');
-		const fechaString = `${fechaSplit[2]}/${fechaSplit[1]}/${fechaSplit[0]}`;
-		return fechaString;
-	};
-
 	return (
 		<div className=' w-100 h-100'>
 			<Modal show={show2} onHide={handleClose2}>
@@ -283,53 +270,9 @@ export default function PlanificationPanel({
 			)}
 			{/* NOTE: VISTA PRINCIPAL - Información */}
 			{!isFormOpen ? (
-				<div className=' d-flex flex-column justify-content-center align-items-center h-100'>
-					<div className=' h-50 w-75 '>
-						<h3>Informacion importante de la actividad</h3>
-						<h5>
-							{/* url ubicaciones */}
-							{estadoActualizado?.listaUbicaciones &&
-							estadoActualizado?.listaUbicaciones.length > 0 ? (
-								<>
-									<span>Ubicaciones:</span>
-									<ul>
-										{estadoActualizado?.listaUbicaciones.map((item: UbicacionProps) => (
-											<li key={item.idUbicacion}>
-												{item.nom}{' '}
-												{item.enlace && (
-													<a
-														href={item.enlace}
-														target='_blank'
-														rel='noreferrer'
-														className='link text-secondary text-decoration-underline '
-													>
-														Ver en mapa
-													</a>
-												)}
-											</li>
-										))}
-									</ul>
-								</>
-							) : (
-								<p>
-									<span>Ubicación:</span> No definida
-								</p>
-							)}
-						</h5>
-						<h5>
-							{estadoActualizado.fechaDesde && estadoActualizado.fechaHasta ? (
-								<p>
-									<span>Periodo:</span>{' '}
-									{`${acomodarStringFecha(estadoActualizado.fechaHasta)} - ${acomodarStringFecha(
-										estadoActualizado.fechaDesde,
-									)}`}
-								</p>
-							) : (
-								<p>
-									<span>Periodo:</span> No definido
-								</p>
-							)}
-						</h5>
+				<div className=' d-flex flex-column justify-content-between' style={{ height: '85%' }}>
+					<div style={{ height: '85%' }}>
+						<ActivityDetail />
 					</div>
 					{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
 					{motCancel === null ? (
