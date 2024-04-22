@@ -4,7 +4,6 @@ import { errorAlert, successAlert } from '../../utils/Alerts';
 
 export const guardarActividad = (dato: any, dispatch: AppDispatch) => {
 	const token = localStorage.getItem('token');
-	console.log(dato);
 	fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {
 		method: 'PUT',
 		headers: {

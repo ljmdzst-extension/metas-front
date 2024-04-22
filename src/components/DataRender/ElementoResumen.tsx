@@ -155,15 +155,13 @@ const ElementoResumen = ({ element }: Props) => {
 						<div style={styles.gridTitle}>Valoracion</div>
 					</div>
 
-					{listaMetas.length ? (
+					{listaMetas?.length ? (
 						listaMetas.map((meta, index) => (
 							<div style={styles.gridContainer} key={index}>
 								<div style={styles.gridItem}>{meta.descripcion}</div>
 								<div style={styles.gridItem}>{meta.resultado}</div>
 								<div style={styles.gridItem}>{meta.observaciones}</div>
-								<div style={styles.gridItem}>
-									{meta.valoraciones || 'No hay valoración cargada'}
-								</div>
+								<div style={styles.gridItem}>{meta?.valoracion || 'No hay valoración cargada'}</div>
 							</div>
 						))
 					) : (
@@ -173,16 +171,17 @@ const ElementoResumen = ({ element }: Props) => {
 
 				<div>
 					<div style={{ ...styles.titleContainer }}>Áreas</div>
-					<div className=' m-1'>
-						{listaRelaciones.length > 0 && (
+					<div className='m-1'>
+						{listaRelaciones?.length !== undefined && listaRelaciones.length > 0 ? (
 							<ol>
 								{renderArea(listaRelaciones, 1, 'Internas Secretaria')}
 								{renderArea(listaRelaciones, 2, 'Otras áreas centrales')}
 								{renderArea(listaRelaciones, 3, 'Unidades Académicas involucradas')}
 								{renderArea(listaRelaciones, 4, 'Programas de Extensión')}
 							</ol>
+						) : (
+							<p>No hay Areas Cargadas</p>
 						)}
-						{listaRelaciones.length === 0 && <p>No hay Areas Cargadas</p>}
 					</div>
 				</div>
 			</div>

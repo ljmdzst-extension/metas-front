@@ -13,7 +13,7 @@ import { Col, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
-import { ArrowBack, Visibility } from '@mui/icons-material';
+import { ArrowBack } from '@mui/icons-material';
 import ActivityDetail from '../components/metas/ActivityDetail';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';

@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { Actividad } from '../../types/ActivityProps';
 
 export const CARGAR_DESCRIPCION = 'CARGAR_DESCRIPCION';
 export const CargarDescripcionAction = (descripcion: string | null, ubicaciones: any[] | null) => ({
@@ -78,38 +79,7 @@ export const cargarRelacion = (seleecionadas: {
 export const CARGAR_DATOS_ACTIVIDAD = 'CARGAR_DATOS_ACTIVIDAD';
 export interface CargarDatosActividadAction {
 	type: typeof CARGAR_DATOS_ACTIVIDAD;
-	payload: {
-		idArea: number;
-		nro: number | null;
-		desc: string | null;
-		fechaDesde: string | null;
-		fechaHasta: string | null;
-		listaMetas:
-			| {
-					idMeta: number | null;
-					descripcion: string | null;
-					resultado: string | null;
-					observaciones: string | null;
-					valoracion: number | null;
-			  }[]
-			| null;
-		listaProgramasSIPPE: number[] | null;
-		listaRelaciones: number[] | null;
-		listaObjetivos: number[] | null;
-		listaUbicaciones:
-			| {
-					idUbicacion: number | null;
-					idActividad: number | null;
-					enlace: string | null;
-			  }[]
-			| null;
-		listaEnlaces: { idEnlace: number | null; desc: string | null; link: string | null }[] | null;
-		listaFechasPuntuales: { idFecha: number | null; fecha: string | null }[] | null;
-		listaInstituciones:
-			| { idInstitucion: number | null; nom: string | null; ubicacion: string | null }[]
-			| null;
-		idActividad: number;
-	};
+	payload: Actividad;
 }
 
 export const CargarDatosActividadAction = createAsyncThunk(
