@@ -36,6 +36,7 @@ export default function Activity() {
 		: { idArea: 0, nom: '', listaActividades: [], anio: '' }; // O proporciona un valor predeterminado adecuado para el tipo Area
 
 	const [show, setShow] = useState(false);
+	const [isLoadingModal, setIsLoadingModal] = useState<boolean>(false);
 	const [show2, setShow2] = useState(false);
 	const [term, setTerm] = useState('');
 	const [nameActivity, setNameActivity] = useState('');
@@ -94,8 +95,6 @@ export default function Activity() {
 		fechaHasta: string | null;
 	}
 
-	// const dispatch: AppDispatch = useDispatch();
-
 	const postActivity = useCallback(
 		async (data: Data) => {
 			axios
@@ -107,43 +106,55 @@ export default function Activity() {
 		[token],
 	);
 
-	useEffect(() => {
-		const mostrarActividades = async () => {
-			axios
-				.get(
-					`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${area.idArea}/actividades/${
-						area.anio
-					}`,
-					{
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
+	const mostrarActividades = useCallback(async () => {
+		try {
+			const response = await axios.get(
+				`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${area.idArea}/actividades/${area.anio}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
 					},
-				)
-				.then((response) => {
-					const actividades = response.data;
-					setArrayActivity(actividades.data);
-				})
-				.catch((error) => {
-					console.error('Error al realizar la solicitud GET:', error);
-				});
-		};
-		mostrarActividades();
-	}, [area.anio, area.idArea, postActivity, token]);
+				},
+			);
+			const actividades = response.data;
+			setArrayActivity(actividades.data);
+		} catch (error) {
+			console.error('Error al realizar la solicitud GET:', error);
+			// Handle the error appropriately, e.g., show a message to the user
+		}
+	}, [area.anio, area.idArea, token]);
 
-	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		postActivity({
-			idActividad: 0,
-			idArea: area.idArea,
-			nro: arrayActivity.length + 1,
-			desc: term,
-			fechaDesde: null,
-			fechaHasta: null,
-		});
-		handleClose();
-		setTerm('');
-	};
+	const submitForm = useCallback(
+		async (event: React.FormEvent<HTMLFormElement>) => {
+			event.preventDefault();
+			setIsLoadingModal(true);
+			try {
+				// Wait for postActivity to complete
+				console.log('Crear actividad');
+				await postActivity({
+					idActividad: 0,
+					idArea: area.idArea,
+					nro: arrayActivity.length + 1,
+					desc: term,
+					fechaDesde: null,
+					fechaHasta: null,
+				});
+				// Once the activity is created, update the activities list
+				await mostrarActividades();
+				setTerm('');
+				setIsLoadingModal(false);
+				handleClose();
+			} catch (error) {
+				console.error('Error al enviar la actividad:', error);
+				// Handle the error appropriately, e.g., show a message to the user
+			}
+		},
+		[area.idArea, arrayActivity.length, mostrarActividades, postActivity, term],
+	);
+
+	useEffect(() => {
+		mostrarActividades(); // Call mostrarActividades on component mount
+	}, [mostrarActividades]);
 
 	const handleButtonClick = (id: number) => {
 		dispatch(CargarDatosActividadAction(id));
@@ -198,7 +209,7 @@ export default function Activity() {
 								onChange={(e) => setTerm(e.target.value)}
 							/>
 						</Form.Group>
-						<Button variant='success' type='submit'>
+						<Button variant='success' type='submit' disabled={isLoadingModal}>
 							Crear
 						</Button>
 					</Form>
@@ -296,18 +307,6 @@ export default function Activity() {
 										>
 											{item.desc}
 										</span>
-										{/* <div
-											className=' ms-auto mt-0 h-100 cursor-pointer visibility-icon'
-											onClick={(event) => {
-												event.stopPropagation();
-												console.log(item.idActividad);
-												setCurrentActivitySelected(item.idActividad);
-												handleButtonClick(item.idActividad);
-											}}
-											title='Ver Detalle'
-										>
-											<Visibility />
-										</div> */}
 									</ListGroup.Item>
 								))}
 							</ListGroup>
