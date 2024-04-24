@@ -18,48 +18,15 @@ interface Relacion {
 	};
 }
 
+interface Option {
+	value: number;
+	label: string;
+}
+
 export default function FormArSecUU() {
 	const dispatch = useDispatch();
 	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
 	const [sippe, setSippe] = useState<ListaProgramasSIPPE[]>([]);
-	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<number[]>([]);
-	const [relacionSeleccionadas2, setRelacionSeleccionadas2] = useState<number[]>([]);
-	const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<number[]>([]);
-	const [sippeSeleccionadas, setSippeSeleccionadas] = useState<number[]>([]);
-
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
-	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
-	useEffect(() => {
-		const sincronizarSelectsRelacion = () => {
-			if (estadoActualizado.listaRelaciones) {
-				setRelacionSeleccionadas1(estadoActualizado.listaRelaciones);
-				setRelacionSeleccionadas2(estadoActualizado.listaRelaciones);
-				setRelacionSeleccionadas3(estadoActualizado.listaRelaciones);
-			}
-		};
-		sincronizarSelectsRelacion();
-	}, [estadoActualizado.listaRelaciones]);
-	useEffect(() => {
-		const sincronizarSelectsSIPPE = () => {
-			if (estadoActualizado.listaProgramasSIPPE) {
-				setSippeSeleccionadas(estadoActualizado.listaProgramasSIPPE);
-			}
-		};
-		sincronizarSelectsSIPPE();
-	}, [estadoActualizado.listaProgramasSIPPE]);
-
-	useEffect(() => {
-		if (!error && bases) {
-			setRelaciones(bases.listaRelaciones);
-			setSippe(bases.listaProgramasSIPPE);
-		} else {
-			// TODO: Alerta de error global
-		}
-	}, [bases, error]);
-	interface Option {
-		value: number;
-		label: string;
-	}
 	const relacionesInternaUnl: Option[] = relaciones
 		.filter((relacion) => relacion.tipoRelacion.nom === 'interna_unl')
 		.map((relacion) => ({
@@ -82,6 +49,46 @@ export default function FormArSecUU() {
 		value: sippe.idProgramaSippe,
 		label: sippe.nom,
 	}));
+	
+	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<number[]>([]);
+	const [relacionSeleccionadas2, setRelacionSeleccionadas2] = useState<number[]>([]);
+	const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<number[]>([]);
+	const [sippeSeleccionadas, setSippeSeleccionadas] = useState<number[]>([]);
+
+	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+
+	useEffect(() => {
+		if (!error && bases) {
+			setRelaciones(bases.listaRelaciones);
+			setSippe(bases.listaProgramasSIPPE);
+		} else {
+			// TODO: Alerta de error global
+		}
+	}, [bases, error]);
+
+	
+	
+	useEffect(() => {
+		const sincronizarSelectsRelacion = () => {
+			if (estadoActualizado.listaRelaciones) {
+				setRelacionSeleccionadas1(estadoActualizado.listaRelaciones.filter( id => relacionesInternaExtension.some( ri => ri.value === id) ));
+				setRelacionSeleccionadas2(estadoActualizado.listaRelaciones.filter( id => relacionesInternaUnl.some( ri => ri.value === id) ));
+				setRelacionSeleccionadas3(estadoActualizado.listaRelaciones.filter( id => relacionesUA.some( ri => ri.value === id) ));
+			}
+		};
+		sincronizarSelectsRelacion();
+	}, [estadoActualizado.listaRelaciones]);
+	useEffect(() => {
+		const sincronizarSelectsSIPPE = () => {
+			if (estadoActualizado.listaProgramasSIPPE) {
+				setSippeSeleccionadas(estadoActualizado.listaProgramasSIPPE);
+			}
+		};
+		sincronizarSelectsSIPPE();
+	}, [estadoActualizado.listaProgramasSIPPE]);
+
+	
 	const handleRelacionChange1 = (selectedOptions: any) => {
 		const selectedValues = selectedOptions.map((option: any) => option.value);
 		setRelacionSeleccionadas1(selectedValues);
