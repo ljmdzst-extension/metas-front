@@ -12,6 +12,7 @@ import { ListGroup } from 'react-bootstrap';
 import { ContentCopy } from '@mui/icons-material';
 
 import { textLimitError } from '../../utils/validacionesForms';
+import { ListaUbicacione } from '../../types/ActivityProps';
 
 const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
@@ -21,13 +22,7 @@ const FormDescriptionUbication = () => {
 	const [descripcion, setDescripcion] = useState<string>(estadoActualizado.desc ?? '');
 
 	const [ubicacion, setUbicacion] = useState<string>('');
-	const [ubicaciones, setUbicaciones] = useState<
-		{
-			idUbicacion: number | null;
-			idActividad: number | null;
-			enlace: string | null;
-		}[]
-	>([]);
+	const [ubicaciones, setUbicaciones] = useState<ListaUbicacione[]>([]);
 
 	useEffect(() => {
 		if (estadoActualizado.listaUbicaciones) {
@@ -47,7 +42,7 @@ const FormDescriptionUbication = () => {
 		if (ubicacion.trim() !== '') {
 			const nuevaUbicacion = {
 				idUbicacion: 0,
-				idActividad: estadoActualizado.idActividad,
+				desc: ubicacion,
 				enlace: ubicacion,
 			};
 

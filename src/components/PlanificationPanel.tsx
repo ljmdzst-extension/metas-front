@@ -17,13 +17,6 @@ import Swal from 'sweetalert2';
 import { errorAlert, successAlert } from '../utils/Alerts';
 import ActivityDetail from './metas/ActivityDetail';
 
-interface UbicacionProps {
-	idUbicacion: number | null;
-	idActividad: number | null;
-	nom: string;
-	enlace: string | null;
-}
-
 type Props = {
 	name: string;
 	currentFormSelected: string;
@@ -192,13 +185,6 @@ export default function PlanificationPanel({
 				eliminarActividad();
 			}
 		});
-	};
-
-	const acomodarStringFecha = (fecha: string) => {
-		// entra fecha formato aaaa-mm-dd y sale dd/mm/aaaa
-		const fechaSplit = fecha.split('-');
-		const fechaString = `${fechaSplit[2]}/${fechaSplit[1]}/${fechaSplit[0]}`;
-		return fechaString;
 	};
 
 	return (

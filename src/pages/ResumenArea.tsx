@@ -92,8 +92,6 @@ const ResumenArea = () => {
 				},
 			});
 			const resJson = await res.json();
-			console.log(resJson);
-			console.log(resJson.data.length);
 			if (resJson.data.length === 0) {
 				setHasMore(false);
 			} else {
