@@ -46,23 +46,19 @@ export default function FormArSecUU() {
 		}
 	}, [bases, error]);
 
-	const filtrarAreas = (nomRelacion: string): Option[] => {
-		return relaciones
-			.filter((relacion) => relacion.tipoRelacion.nom === nomRelacion)
-			.map((relacion) => ({
-				value: relacion.idRelacion,
-				label: relacion.nom,
-			}));
-	};
+	const filtrarAreas = useCallback(
+		(nomRelacion: string): Option[] => {
+			return relaciones
+				.filter((relacion) => relacion.tipoRelacion.nom === nomRelacion)
+				.map((relacion) => ({
+					value: relacion.idRelacion,
+					label: relacion.nom,
+				}));
+		},
+		[relaciones],
+	);
 
-	const formatearSippes = useCallback((): Option[] => {
-		return sippe.map((sippe) => ({
-			value: sippe.idProgramaSippe,
-			label: sippe.nom,
-		}));
-	}, [sippe]);
-
-	const filtrarRelaciones = useCallback(
+	const filtrarRelacionesSeleccionadas = useCallback(
 		(filterFn: Option[]) => {
 			if (estadoActualizado.listaRelaciones) {
 				return filterFn.filter((el) =>
@@ -76,23 +72,27 @@ export default function FormArSecUU() {
 	);
 
 	useEffect(() => {
-		setRelacionSeleccionadas1(filtrarRelaciones(filtrarAreas('interna_extensión')));
-		setRelacionSeleccionadas2(filtrarRelaciones(filtrarAreas('interna_unl')));
-		setRelacionSeleccionadas3(filtrarRelaciones(filtrarAreas('U.A.')));
-	}, [relaciones]);
+		setRelacionSeleccionadas1(filtrarRelacionesSeleccionadas(filtrarAreas('interna_extensión')));
+		setRelacionSeleccionadas2(filtrarRelacionesSeleccionadas(filtrarAreas('interna_unl')));
+		setRelacionSeleccionadas3(filtrarRelacionesSeleccionadas(filtrarAreas('U.A.')));
+	}, [filtrarAreas, filtrarRelacionesSeleccionadas, relaciones]);
+
+	const formatearSippes = useCallback((): Option[] => {
+		return sippe.map((sippe) => ({
+			value: sippe.idProgramaSippe,
+			label: sippe.nom,
+		}));
+	}, [sippe]);
+
+	const filtrarSippeSeleccionadas = useCallback(() => {
+		return formatearSippes().filter((el) =>
+			estadoActualizado.listaProgramasSIPPE?.some((ri) => ri === el.value),
+		);
+	}, [estadoActualizado.listaProgramasSIPPE, formatearSippes]);
 
 	useEffect(() => {
-		const sincronizarSelectsSIPPE = () => {
-			if (estadoActualizado.listaProgramasSIPPE) {
-				const sippesFiltradas = formatearSippes().filter((el) =>
-					estadoActualizado.listaProgramasSIPPE?.some((ri) => ri === el.value),
-				);
-
-				setSippeSeleccionadas(sippesFiltradas);
-			}
-		};
-		sincronizarSelectsSIPPE();
-	}, [estadoActualizado.listaProgramasSIPPE, sippe]);
+		setSippeSeleccionadas(filtrarSippeSeleccionadas());
+	}, [filtrarSippeSeleccionadas, sippe]);
 
 	return (
 		<div className='FormArSecuu d-flex m-0  p-0 px-5 gap-0'>
