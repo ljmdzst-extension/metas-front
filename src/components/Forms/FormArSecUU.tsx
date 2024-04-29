@@ -1,4 +1,4 @@
-import Select, { MultiValue } from 'react-select';
+import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import Button from 'react-bootstrap/Button';
 import { useCallback, useEffect, useState } from 'react';
@@ -35,7 +35,7 @@ export default function FormArSecUU() {
 	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<Option[]>([]);
 	const [relacionSeleccionadas2, setRelacionSeleccionadas2] = useState<Option[]>([]);
 	const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<Option[]>([]);
-	const [sippeSeleccionadas, setSippeSeleccionadas] = useState<number[]>([]);
+	const [sippeSeleccionadas, setSippeSeleccionadas] = useState<Option[]>([]);
 
 	useEffect(() => {
 		if (!error && bases) {
@@ -47,15 +47,6 @@ export default function FormArSecUU() {
 	}, [bases, error]);
 
 	const filtrarAreas = (nomRelacion: string): Option[] => {
-		console.log(
-			'FN filtrarAreas ' + ' - ' + nomRelacion,
-			relaciones
-				.filter((relacion) => relacion.tipoRelacion.nom === nomRelacion)
-				.map((relacion) => ({
-					value: relacion.idRelacion,
-					label: relacion.nom,
-				})),
-		);
 		return relaciones
 			.filter((relacion) => relacion.tipoRelacion.nom === nomRelacion)
 			.map((relacion) => ({
@@ -64,10 +55,12 @@ export default function FormArSecUU() {
 			}));
 	};
 
-	const listaProgramasSIPPE: Option[] = sippe.map((sippe) => ({
-		value: sippe.idProgramaSippe,
-		label: sippe.nom,
-	}));
+	const formatearSippes = useCallback((): Option[] => {
+		return sippe.map((sippe) => ({
+			value: sippe.idProgramaSippe,
+			label: sippe.nom,
+		}));
+	}, [sippe]);
 
 	const filtrarRelaciones = useCallback(
 		(filterFn: Option[]) => {
@@ -86,37 +79,20 @@ export default function FormArSecUU() {
 		setRelacionSeleccionadas1(filtrarRelaciones(filtrarAreas('interna_extensión')));
 		setRelacionSeleccionadas2(filtrarRelaciones(filtrarAreas('interna_unl')));
 		setRelacionSeleccionadas3(filtrarRelaciones(filtrarAreas('U.A.')));
-		console.log('Otras effect');
 	}, [relaciones]);
 
 	useEffect(() => {
 		const sincronizarSelectsSIPPE = () => {
 			if (estadoActualizado.listaProgramasSIPPE) {
-				setSippeSeleccionadas(estadoActualizado.listaProgramasSIPPE);
+				const sippesFiltradas = formatearSippes().filter((el) =>
+					estadoActualizado.listaProgramasSIPPE?.some((ri) => ri === el.value),
+				);
+
+				setSippeSeleccionadas(sippesFiltradas);
 			}
 		};
 		sincronizarSelectsSIPPE();
-		console.log('Sippe effect');
-	}, [estadoActualizado.listaProgramasSIPPE]);
-
-	const handleSelects = (selected: Option[], num: number) => {
-		switch (num) {
-			case 1:
-				setRelacionSeleccionadas1(selected);
-				break;
-			case 2:
-				setRelacionSeleccionadas2(selected);
-				break;
-			case 3:
-				setRelacionSeleccionadas3(selected);
-				break;
-		}
-	};
-
-	const handleSippeChange = (selectedOptions: MultiValue<Option>) => {
-		const selectedValues = selectedOptions.map((option) => option.value);
-		setSippeSeleccionadas(selectedValues);
-	};
+	}, [estadoActualizado.listaProgramasSIPPE, sippe]);
 
 	return (
 		<div className='FormArSecuu d-flex m-0  p-0 px-5 gap-0'>
@@ -136,7 +112,7 @@ export default function FormArSecUU() {
 								options={filtrarAreas('interna_extensión')}
 								placeholder={'seleccionar'}
 								value={relacionSeleccionadas1}
-								onChange={(selected) => handleSelects(selected as Option[], 1)}
+								onChange={(selected) => setRelacionSeleccionadas1(selected as Option[])}
 							/>
 						</div>
 					</div>
@@ -153,7 +129,7 @@ export default function FormArSecUU() {
 								options={filtrarAreas('interna_unl')}
 								placeholder={'seleccionar'}
 								value={relacionSeleccionadas2}
-								onChange={(selected) => handleSelects(selected as Option[], 2)}
+								onChange={(selected) => setRelacionSeleccionadas2(selected as Option[])}
 								styles={{
 									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
 								}}
@@ -175,7 +151,7 @@ export default function FormArSecUU() {
 								options={filtrarAreas('U.A.')}
 								placeholder={'seleccionar'}
 								value={relacionSeleccionadas3}
-								onChange={(selected) => handleSelects(selected as Option[], 3)}
+								onChange={(selected) => setRelacionSeleccionadas3(selected as Option[])}
 								styles={{
 									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
 								}}
@@ -192,12 +168,10 @@ export default function FormArSecUU() {
 								closeMenuOnSelect={false}
 								components={animatedComponents}
 								isMulti
-								options={listaProgramasSIPPE}
+								options={formatearSippes()}
 								placeholder={'seleccionar'}
-								value={listaProgramasSIPPE.filter((option) =>
-									sippeSeleccionadas.includes(option.value),
-								)}
-								onChange={handleSippeChange}
+								value={sippeSeleccionadas}
+								onChange={(selected) => setSippeSeleccionadas(selected as Option[])}
 								styles={{
 									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
 								}}
@@ -220,7 +194,9 @@ export default function FormArSecUU() {
 									...relacionSeleccionadas3.map((el) => el.value),
 								]),
 							),
-							listaProgramasSIPPE: Array.from(new Set([...sippeSeleccionadas])),
+							listaProgramasSIPPE: Array.from(
+								new Set([...sippeSeleccionadas.map((el) => el.value)]),
+							),
 						},
 						dispatch,
 					);
