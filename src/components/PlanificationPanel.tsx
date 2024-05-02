@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 import { errorAlert, successAlert } from '../utils/Alerts';
 import ActivityDetail from './metas/ActivityDetail';
 import { Spinner } from 'react-bootstrap';
+import useAvailableHeight from '../hooks/useAvailableHeight';
 
 type Props = {
 	name: string;
@@ -38,6 +39,8 @@ export default function PlanificationPanel({
 	const [motCancel, setMotCancel] = useState<string | null>(null);
 	const { activity, isLoading } = useSelector((state: RootState) => state.actividadSlice);
 	const { token } = useSelector((state: RootState) => state.authSlice);
+
+	const availableHeight = useAvailableHeight();
 
 	useEffect(() => {
 		setMotCancel(activity?.motivoCancel);
@@ -190,6 +193,39 @@ export default function PlanificationPanel({
 
 	return (
 		<>
+			<Modal show={show2} onHide={handleClose2}>
+				<Modal.Header>
+					<Modal.Title>¿Quiere salir de la sección?</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form>
+						<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
+							<Form.Label>Los cambios no guardados se perderán.</Form.Label>
+						</Form.Group>
+						<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<Button variant='danger' onClick={handleClose2}>
+								Cancelar
+							</Button>
+							<Button
+								variant='success'
+								onClick={() => {
+									if (isFormOpen) {
+										handleClose2();
+										setIsFormOpen(false);
+										setIndexForm('');
+										cleanFormSelected();
+									} else {
+										closePlanification();
+										handleClose2();
+									}
+								}}
+							>
+								Salir
+							</Button>
+						</Form.Group>
+					</Form>
+				</Modal.Body>
+			</Modal>
 			{isLoading ? (
 				<div className=' d-flex justify-content-center mt-5'>
 					<Spinner animation='border' role='status'>
@@ -197,42 +233,9 @@ export default function PlanificationPanel({
 					</Spinner>
 				</div>
 			) : (
-				<div className=' w-100 h-100'>
-					<Modal show={show2} onHide={handleClose2}>
-						<Modal.Header>
-							<Modal.Title>¿Quiere salir de la sección?</Modal.Title>
-						</Modal.Header>
-						<Modal.Body>
-							<Form>
-								<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
-									<Form.Label>Los cambios no guardados se perderán.</Form.Label>
-								</Form.Group>
-								<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
-									<Button variant='danger' onClick={handleClose2}>
-										Cancelar
-									</Button>
-									<Button
-										variant='success'
-										onClick={() => {
-											if (isFormOpen) {
-												handleClose2();
-												setIsFormOpen(false);
-												setIndexForm('');
-												cleanFormSelected();
-											} else {
-												closePlanification();
-												handleClose2();
-											}
-										}}
-									>
-										Salir
-									</Button>
-								</Form.Group>
-							</Form>
-						</Modal.Body>
-					</Modal>
+				<div className=' '>
 					{/* NOTE: Vista detalle form */}
-					<div className='d-flex justify-content-between align-items-center mb-2 border-bottom position-relative '>
+					<div className='d-flex justify-content-between align-items-center mb-2 border-bottom  '>
 						<h4
 							className=' text-break m-2 border-3 '
 							style={{
@@ -279,13 +282,16 @@ export default function PlanificationPanel({
 					)}
 					{/* NOTE: VISTA PRINCIPAL - Información */}
 					{!isFormOpen ? (
-						<div className=' d-flex flex-column justify-content-between' style={{ height: '85%' }}>
-							<div style={{ height: '85%' }}>
+						<div className=' d-flex flex-column '>
+							<div
+								className=' overflow-y-scroll custom-scrollbar'
+								style={{ height: availableHeight - 170 }}
+							>
 								<ActivityDetail />
 							</div>
 							{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
 							{motCancel === null ? (
-								<div className=' d-flex justify-content-around w-100'>
+								<div className=' d-flex justify-content-around w-100 '>
 									<Button
 										variant='warning'
 										className='Suspend'

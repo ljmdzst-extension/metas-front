@@ -13,10 +13,11 @@ import { Col, Row, Spinner } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Height } from '@mui/icons-material';
 import ActivityDetail from '../components/metas/ActivityDetail';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
+import useAvailableHeight from '../hooks/useAvailableHeight';
 
 interface Activity {
 	idActividad: number;
@@ -58,12 +59,14 @@ export default function Activity() {
 	const { isLoading } = useSelector((state: RootState) => state.actividadSlice);
 	const { token } = useSelector((state: RootState) => state.authSlice);
 
+	const availableHeight = useAvailableHeight();
+
 	useEffect(() => {
 		try {
 			const areaString = localStorage.getItem('currentArea');
 			if (areaString) {
 				setArea(JSON.parse(areaString));
-				console.log('Actualizando area' + areaString);
+				// console.log('Actualizando area' + areaString);
 			}
 		} catch (error) {
 			console.error('Error parsing area from localStorage:', error);
@@ -243,159 +246,162 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
-
 			<div
-				className=' d-flex justify-content-between border border-2 rounded-3 m-0 p-2 pb-0 mx-2 my-1  '
-				style={{ backgroundColor: '#fefefe' }}
+				className=' d-flex flex-column'
+				style={{
+					height: availableHeight,
+				}}
 			>
-				<h2 className=' fw-bold' style={{ color: '#0a5d52' }}>
-					{area?.nom}
-				</h2>
-				<ArrowBack
-					fontSize='large'
-					className={` m-1 rounded ${isPlanificationOpen ? 'd-none' : ''}`}
-					style={{ background: '#0a5d52', color: 'white' }}
-					onClick={() => {
-						navigation('/gestion/metas');
-					}}
-				/>
-			</div>
+				<div
+					className=' d-flex justify-content-between border border-2 rounded-3 m-0 p-2 pb-0 mx-2 my-1  '
+					style={{ backgroundColor: '#fefefe' }}
+				>
+					<h2 className=' fw-bold' style={{ color: '#0a5d52' }}>
+						{area?.nom}
+					</h2>
+					<ArrowBack
+						fontSize='large'
+						className={` m-1 rounded ${isPlanificationOpen ? 'd-none' : ''}`}
+						style={{ background: '#0a5d52', color: 'white' }}
+						onClick={() => {
+							navigation('/gestion/metas');
+						}}
+					/>
+				</div>
 
-			<div className=' d-flex justify-content-around gap-2  mx-3  ' style={{ height: '80%' }}>
-				{/* NOTE: SIDEBAR - LISTADO ACTIVIDADES - NAVEGACIÓN FORMS */}
-				{!isPlanificationOpen ? (
+				<div className=' h-100 d-flex justify-content-around gap-1 mx-3'>
+					{/* NOTE: SIDEBAR - LISTADO ACTIVIDADES - NAVEGACIÓN FORMS */}
 					<Col
 						sm={3}
-						className=' position-relative h-100 d-flex flex-column border-end border-2 rounded-3 '
+						className={` d-flex flex-column border-end border-2 rounded-3 `}
 						style={{ backgroundColor: '#fefefe' }}
 					>
-						{isLoadingArrayActivity ? (
-							<div className=' d-flex justify-content-center mt-5'>
-								<Spinner animation='border' role='status'>
-									<span className='visually-hidden'>Loading...</span>
-								</Spinner>
-							</div>
+						{!isPlanificationOpen ? (
+							<>
+								{isLoadingArrayActivity ? (
+									<div className=' d-flex justify-content-center mt-5'>
+										<Spinner animation='border' role='status'>
+											<span className='visually-hidden'>Loading...</span>
+										</Spinner>
+									</div>
+								) : (
+									<div
+										className=' d-flex flex-column position-relative'
+										style={{ height: availableHeight - 70 }}
+									>
+										<Button
+											variant='outline-success'
+											style={{ position: 'absolute', bottom: '.5rem', right: '1rem' }}
+											onClick={handleShow}
+										>
+											Agregar Actividad
+										</Button>
+										<h4 className=' text-center m-2 '>Listado de Actividades</h4>
+										<div
+											className='custom-scrollbar me-1'
+											style={{ maxHeight: '80%', overflow: 'auto' }}
+										>
+											<ListGroup className='mx-2'>
+												{arrayActivity.map((item, index) => (
+													<ListGroup.Item
+														action
+														variant='secondary'
+														title={item.desc}
+														className='mx-auto my-1 rounded d-flex align-items-center '
+														key={index}
+														onClick={() => {
+															if (isPlanificationOpen) {
+																handleShow2();
+																setNameActivityAux(`${item.desc}`);
+															} else {
+																setIsPlanificationOpen(!isPlanificationOpen);
+																setNameActivity(`${item.desc}`);
+																handleButtonClick(item.idActividad);
+															}
+														}}
+													>
+														<span
+															style={{
+																textOverflow: 'ellipsis',
+																overflow: 'hidden',
+																fontWeight: 'normal',
+																whiteSpace: 'nowrap',
+															}}
+														>
+															{item.desc}
+														</span>
+													</ListGroup.Item>
+												))}
+											</ListGroup>
+										</div>
+									</div>
+								)}
+							</>
 						) : (
 							<>
-								<Button
-									variant='outline-success'
-									style={{ position: 'absolute', bottom: '10px', right: '10px' }}
-									onClick={handleShow}
-								>
-									Agregar Actividad
-								</Button>
-								<h4 className=' text-center m-2 '>Listado de Actividades</h4>
-								<div
-									className='custom-scrollbar me-1'
-									style={{ maxHeight: '80%', overflow: 'auto' }}
-								>
-									<ListGroup className='mx-2 custom-scrollbar'>
-										{arrayActivity.map((item, index) => (
-											<ListGroup.Item
-												action
-												variant='secondary'
-												title={item.desc}
-												className='mx-auto my-1 rounded d-flex align-items-center '
-												key={index}
-												onClick={() => {
-													if (isPlanificationOpen) {
-														handleShow2();
-														setNameActivityAux(`${item.desc}`);
-													} else {
-														setIsPlanificationOpen(!isPlanificationOpen);
-														setNameActivity(`${item.desc}`);
-														handleButtonClick(item.idActividad);
-													}
-												}}
-											>
-												<span
-													style={{
-														textOverflow: 'ellipsis',
-														overflow: 'hidden',
-														fontWeight: 'normal',
-														whiteSpace: 'nowrap',
+								{/* NOTE: NAVEGACION FORMULARIOS */}
+								{isLoading ? (
+									<></>
+								) : (
+									<>
+										<h4 className=' text-center m-2'>Formulario</h4>
+										<ListGroup className=' mx-2 '>
+											{formData.map((item, index) => (
+												<ListGroup.Item
+													action
+													variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
+													title={item.Title}
+													className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
+													key={index}
+													onClick={() => {
+														selectCurrentForm(item.index);
 													}}
 												>
-													{item.desc}
-												</span>
-											</ListGroup.Item>
-										))}
-									</ListGroup>
-								</div>
+													<span
+														style={{
+															textOverflow: 'ellipsis',
+															overflow: 'hidden',
+															fontWeight: 'normal',
+															whiteSpace: 'nowrap',
+														}}
+													>
+														{item.Title}
+													</span>
+												</ListGroup.Item>
+											))}
+										</ListGroup>
+									</>
+								)}
 							</>
 						)}
 					</Col>
-				) : (
-					<Col
-						sm={3}
-						className=' position-relative h-100 d-flex flex-column border-end border-2 rounded-3   '
-						style={{ backgroundColor: '#fefefe' }}
-					>
-						{/* NOTE: NAVEGACION FORMULARIOS */}
-						<>
-							{isLoading ? (
-								<></>
-							) : (
-								<>
-									<h4 className=' text-center m-2'>Formulario</h4>
-									<ListGroup className=' mx-2 '>
-										{formData.map((item, index) => (
-											<ListGroup.Item
-												action
-												variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
-												title={item.Title}
-												className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
-												key={index}
-												onClick={() => {
-													selectCurrentForm(item.index);
-												}}
-											>
-												<span
-													style={{
-														textOverflow: 'ellipsis',
-														overflow: 'hidden',
-														fontWeight: 'normal',
-														whiteSpace: 'nowrap',
-													}}
-												>
-													{item.Title}
-												</span>
-											</ListGroup.Item>
-										))}
-									</ListGroup>
-								</>
-							)}
-						</>
-					</Col>
-				)}
-				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
-				{!isPlanificationOpen && (
+					{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
 					<Col sm={9} className=' border-2 rounded-3' style={{ backgroundColor: '#fefefe' }}>
-						<Row>
-							<Col className='MenuOptions'>
-								{/* <div className='Options'>Carga de Presupuesto</div> */}
-								<Button disabled>Carga de Presupuesto</Button>
-							</Col>
-							<Col className='MenuOptions'>
-								<Link to={`${location.pathname}/resumen`} style={{ textDecoration: 'none' }}>
-									{/* <div className='Options'>Ver Resumen</div> */}
-									<Button>Ver Resumen</Button>
-								</Link>
-							</Col>
-						</Row>
-					</Col>
-				)}
+						{!isPlanificationOpen && (
+							<Row>
+								<Col className='MenuOptions'>
+									{/* <div className='Options'>Carga de Presupuesto</div> */}
+									<Button disabled>Carga de Presupuesto</Button>
+								</Col>
+								<Col className='MenuOptions'>
+									<Link to={`${location.pathname}/resumen`} style={{ textDecoration: 'none' }}>
+										{/* <div className='Options'>Ver Resumen</div> */}
+										<Button>Ver Resumen</Button>
+									</Link>
+								</Col>
+							</Row>
+						)}
 
-				{isPlanificationOpen && (
-					<Col sm={9} className='border-2  rounded-3' style={{ backgroundColor: '#fefefe' }}>
-						<PlanificationPanel
-							name={nameActivity}
-							closePlanification={closePlanification}
-							currentFormSelected={currentFormSelected}
-							cleanFormSelected={cleanFormSelected}
-						/>
+						{isPlanificationOpen && (
+							<PlanificationPanel
+								name={nameActivity}
+								closePlanification={closePlanification}
+								currentFormSelected={currentFormSelected}
+								cleanFormSelected={cleanFormSelected}
+							/>
+						)}
 					</Col>
-				)}
+				</div>
 			</div>
 		</>
 	);
