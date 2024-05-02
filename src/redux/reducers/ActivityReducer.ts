@@ -2,32 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CargarDatosActividadAction } from '../actions/activityAction';
 import { Actividad } from '../../types/ActivityProps';
 
-// const initialState: Actividad = {
-// 	idActividad: 0,
-// 	idArea: 0,
-// 	idUsuario: null,
-// 	nro: null,
-// 	desc: null,
-// 	motivoCancel: null,
-// 	fechaDesde: null,
-// 	fechaHasta: null,
-// 	listaMetas: [],
-// 	listaProgramasSIPPE: [],
-// 	listaRelaciones: [],
-// 	listaObjetivos: [],
-// 	listaUbicaciones: [],
-// 	listaEnlaces: [],
-// 	listaFechasPuntuales: [],
-// 	listaInstituciones: [],
-// };
-
 interface initialStateProps {
 	isLoading: boolean;
 	activity: Actividad;
+	error: string | null;
 }
 
 const initialState: initialStateProps = {
 	isLoading: true,
+	error: null,
 	activity: {
 		idActividad: 0,
 		idArea: 0,
@@ -127,6 +110,13 @@ const actividadSlice = createSlice({
 		},
 	},
 	extraReducers: (builder) => {
+		builder.addCase(CargarDatosActividadAction.pending, (state) => {
+			state.isLoading = true;
+		});
+		builder.addCase(CargarDatosActividadAction.rejected, (state, action) => {
+			state.isLoading = false;
+			state.error = (action.payload as { error: string }).error;
+		});
 		builder.addCase(
 			CargarDatosActividadAction.fulfilled,
 			(state, action: PayloadAction<Actividad>) => {
@@ -150,6 +140,7 @@ const actividadSlice = createSlice({
 						listaFechasPuntuales: action.payload.listaFechasPuntuales,
 						listaInstituciones: action.payload.listaInstituciones,
 					},
+					isLoading: false,
 				};
 			},
 		);

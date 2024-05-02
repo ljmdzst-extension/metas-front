@@ -9,7 +9,7 @@ import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Spinner } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
@@ -46,16 +46,16 @@ export default function Activity() {
 	const handleShow = () => setShow(true);
 	const handleShow2 = () => setShow2(true);
 	const [arrayActivity, setArrayActivity] = useState<Activity[]>([]);
+	const [isLoadingArrayActivity, setIsLoadingArrayActivity] = useState<boolean>(true);
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
 	const [area, setArea] = useState<Area>(initialAreaValue);
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
-
-	const [currentActivitySelected, setCurrentActivitySelected] = useState<null | number>();
 
 	const navigation = useNavigate();
 	const location = useLocation();
 
 	const dispatch = useDispatch<AppDispatch>();
+	const { isLoading } = useSelector((state: RootState) => state.actividadSlice);
 	const { token } = useSelector((state: RootState) => state.authSlice);
 
 	useEffect(() => {
@@ -118,6 +118,7 @@ export default function Activity() {
 			);
 			const actividades = response.data;
 			setArrayActivity(actividades.data);
+			setIsLoadingArrayActivity(false);
 		} catch (error) {
 			console.error('Error al realizar la solicitud GET:', error);
 			// Handle the error appropriately, e.g., show a message to the user
@@ -268,49 +269,61 @@ export default function Activity() {
 						className=' position-relative h-100 d-flex flex-column border-end border-2 rounded-3 '
 						style={{ backgroundColor: '#fefefe' }}
 					>
-						<Button
-							variant='outline-success'
-							style={{ position: 'absolute', bottom: '10px', right: '10px' }}
-							onClick={handleShow}
-						>
-							Agregar Actividad
-						</Button>
-						<h4 className=' text-center m-2 '>Listado de Actividades</h4>
-						<div className='custom-scrollbar me-1' style={{ maxHeight: '80%', overflow: 'auto' }}>
-							<ListGroup className='mx-2 custom-scrollbar'>
-								{arrayActivity.map((item, index) => (
-									<ListGroup.Item
-										action
-										variant='secondary'
-										title={item.desc}
-										className='mx-auto my-1 rounded d-flex align-items-center '
-										key={index}
-										onClick={() => {
-											if (isPlanificationOpen) {
-												handleShow2();
-												setNameActivityAux(`${item.desc}`);
-											} else {
-												setIsPlanificationOpen(!isPlanificationOpen);
-												setNameActivity(`${item.desc}`);
-												handleButtonClick(item.idActividad);
-												setCurrentActivitySelected(null);
-											}
-										}}
-									>
-										<span
-											style={{
-												textOverflow: 'ellipsis',
-												overflow: 'hidden',
-												fontWeight: 'normal',
-												whiteSpace: 'nowrap',
-											}}
-										>
-											{item.desc}
-										</span>
-									</ListGroup.Item>
-								))}
-							</ListGroup>
-						</div>
+						{isLoadingArrayActivity ? (
+							<div className=' d-flex justify-content-center mt-5'>
+								<Spinner animation='border' role='status'>
+									<span className='visually-hidden'>Loading...</span>
+								</Spinner>
+							</div>
+						) : (
+							<>
+								<Button
+									variant='outline-success'
+									style={{ position: 'absolute', bottom: '10px', right: '10px' }}
+									onClick={handleShow}
+								>
+									Agregar Actividad
+								</Button>
+								<h4 className=' text-center m-2 '>Listado de Actividades</h4>
+								<div
+									className='custom-scrollbar me-1'
+									style={{ maxHeight: '80%', overflow: 'auto' }}
+								>
+									<ListGroup className='mx-2 custom-scrollbar'>
+										{arrayActivity.map((item, index) => (
+											<ListGroup.Item
+												action
+												variant='secondary'
+												title={item.desc}
+												className='mx-auto my-1 rounded d-flex align-items-center '
+												key={index}
+												onClick={() => {
+													if (isPlanificationOpen) {
+														handleShow2();
+														setNameActivityAux(`${item.desc}`);
+													} else {
+														setIsPlanificationOpen(!isPlanificationOpen);
+														setNameActivity(`${item.desc}`);
+														handleButtonClick(item.idActividad);
+													}
+												}}
+											>
+												<span
+													style={{
+														textOverflow: 'ellipsis',
+														overflow: 'hidden',
+														fontWeight: 'normal',
+														whiteSpace: 'nowrap',
+													}}
+												>
+													{item.desc}
+												</span>
+											</ListGroup.Item>
+										))}
+									</ListGroup>
+								</div>
+							</>
+						)}
 					</Col>
 				) : (
 					<Col
@@ -319,36 +332,44 @@ export default function Activity() {
 						style={{ backgroundColor: '#fefefe' }}
 					>
 						{/* NOTE: NAVEGACION FORMULARIOS */}
-						<h4 className=' text-center m-2'>Formulario</h4>
-						<ListGroup className=' mx-2 '>
-							{formData.map((item, index) => (
-								<ListGroup.Item
-									action
-									variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
-									title={item.Title}
-									className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
-									key={index}
-									onClick={() => {
-										selectCurrentForm(item.index);
-									}}
-								>
-									<span
-										style={{
-											textOverflow: 'ellipsis',
-											overflow: 'hidden',
-											fontWeight: 'normal',
-											whiteSpace: 'nowrap',
-										}}
-									>
-										{item.Title}
-									</span>
-								</ListGroup.Item>
-							))}
-						</ListGroup>
+						<>
+							{isLoading ? (
+								<></>
+							) : (
+								<>
+									<h4 className=' text-center m-2'>Formulario</h4>
+									<ListGroup className=' mx-2 '>
+										{formData.map((item, index) => (
+											<ListGroup.Item
+												action
+												variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
+												title={item.Title}
+												className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
+												key={index}
+												onClick={() => {
+													selectCurrentForm(item.index);
+												}}
+											>
+												<span
+													style={{
+														textOverflow: 'ellipsis',
+														overflow: 'hidden',
+														fontWeight: 'normal',
+														whiteSpace: 'nowrap',
+													}}
+												>
+													{item.Title}
+												</span>
+											</ListGroup.Item>
+										))}
+									</ListGroup>
+								</>
+							)}
+						</>
 					</Col>
 				)}
 				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
-				{!isPlanificationOpen && !currentActivitySelected && (
+				{!isPlanificationOpen && (
 					<Col sm={9} className=' border-2 rounded-3' style={{ backgroundColor: '#fefefe' }}>
 						<Row>
 							<Col className='MenuOptions'>
@@ -362,12 +383,6 @@ export default function Activity() {
 								</Link>
 							</Col>
 						</Row>
-					</Col>
-				)}
-
-				{currentActivitySelected && (
-					<Col sm={9} className='border-2  rounded-3' style={{ backgroundColor: '#fefefe' }}>
-						<ActivityDetail />
 					</Col>
 				)}
 

@@ -16,6 +16,7 @@ import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
 import { errorAlert, successAlert } from '../utils/Alerts';
 import ActivityDetail from './metas/ActivityDetail';
+import { Spinner } from 'react-bootstrap';
 
 type Props = {
 	name: string;
@@ -35,7 +36,7 @@ export default function PlanificationPanel({
 	const [show2, setShow2] = useState(false);
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, isLoading } = useSelector((state: RootState) => state.actividadSlice);
 	const { token } = useSelector((state: RootState) => state.authSlice);
 
 	useEffect(() => {
@@ -188,152 +189,162 @@ export default function PlanificationPanel({
 	};
 
 	return (
-		<div className=' w-100 h-100'>
-			<Modal show={show2} onHide={handleClose2}>
-				<Modal.Header>
-					<Modal.Title>¿Quiere salir de la sección?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Form>
-						<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
-							<Form.Label>Los cambios no guardados se perderán.</Form.Label>
-						</Form.Group>
-						<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<Button variant='danger' onClick={handleClose2}>
-								Cancelar
-							</Button>
-							<Button
-								variant='success'
-								onClick={() => {
-									if (isFormOpen) {
-										handleClose2();
-										setIsFormOpen(false);
-										setIndexForm('');
-										cleanFormSelected();
-									} else {
-										closePlanification();
-										handleClose2();
-									}
-								}}
-							>
-								Salir
-							</Button>
-						</Form.Group>
-					</Form>
-				</Modal.Body>
-			</Modal>
-			{/* NOTE: Vista detalle form */}
-			<div className='d-flex justify-content-between align-items-center mb-2 border-bottom position-relative '>
-				<h4
-					className=' text-break m-2 border-3 '
-					style={{
-						borderBottom: '2px solid #0a5d52',
-						textOverflow: 'ellipsis',
-						overflow: 'hidden',
-						whiteSpace: 'nowrap',
-					}}
-				>
-					{name}
-				</h4>
-				{isFormOpen && (
-					<ArrowBack
-						fontSize={'large'}
-						className='m-1 rounded'
-						style={{ background: '#0a5d52', color: 'white' }}
-						color='primary'
-						onClick={() => {
-							handleShow2();
-						}}
-					/>
-				)}
-				{!isFormOpen && (
-					<ArrowBack
-						fontSize='large'
-						className='m-1 rounded'
-						style={{ background: '#0a5d52', color: 'white' }}
-						onClick={() => handleShow2()}
-					/>
-				)}
-			</div>
-			{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
-			{motCancel !== null && (
-				<h2
-					style={{
-						textAlign: 'center',
-						fontSize: 30,
-						fontWeight: 'bold',
-						backgroundColor: 'yellow',
-					}}
-				>
-					ACTIVIDAD SUSPENDIDA
-				</h2>
-			)}
-			{/* NOTE: VISTA PRINCIPAL - Información */}
-			{!isFormOpen ? (
-				<div className=' d-flex flex-column justify-content-between' style={{ height: '85%' }}>
-					<div style={{ height: '85%' }}>
-						<ActivityDetail />
-					</div>
-					{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
-					{motCancel === null ? (
-						<div className=' d-flex justify-content-around w-100'>
-							<Button
-								variant='warning'
-								className='Suspend'
-								onClick={() => {
-									handleSuspenderActividad();
-								}}
-							>
-								Suspender Actividad
-							</Button>
-							<Button
-								variant='danger'
-								onClick={() => {
-									handleDeleteActividad();
-								}}
-							>
-								Eliminar Actividad
-							</Button>
-						</div>
-					) : (
-						<Button
-							variant='warning'
-							className='Suspend'
-							onClick={() => {
-								activarActividad();
-							}}
-						>
-							Anular Suspensión
-						</Button>
-					)}
+		<>
+			{isLoading ? (
+				<div className=' d-flex justify-content-center mt-5'>
+					<Spinner animation='border' role='status'>
+						<span className='visually-hidden'>Loading...</span>
+					</Spinner>
 				</div>
 			) : (
-				<>
-					{/* NOTE: FORMULARIOS */}
-					{(() => {
-						switch (indexForm) {
-							case 'descr':
-								return <FormDescriptionUbication />;
-							case 'documentacion':
-								return <FormDocuments />;
-							case 'pie':
-								return <FormPIE />;
-							case 'area':
-								return <FormArSecUU />;
-							case 'periodo':
-								return <FormPeriodo />;
-							case 'objetivo':
-								return <FormObjetiveEst />;
-							case 'organi':
-								return <FormOrgInst />;
-							case 'metas':
-								return <FormMetas />;
-							default:
-								return null;
-						}
-					})()}
-				</>
+				<div className=' w-100 h-100'>
+					<Modal show={show2} onHide={handleClose2}>
+						<Modal.Header>
+							<Modal.Title>¿Quiere salir de la sección?</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>
+							<Form>
+								<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
+									<Form.Label>Los cambios no guardados se perderán.</Form.Label>
+								</Form.Group>
+								<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
+									<Button variant='danger' onClick={handleClose2}>
+										Cancelar
+									</Button>
+									<Button
+										variant='success'
+										onClick={() => {
+											if (isFormOpen) {
+												handleClose2();
+												setIsFormOpen(false);
+												setIndexForm('');
+												cleanFormSelected();
+											} else {
+												closePlanification();
+												handleClose2();
+											}
+										}}
+									>
+										Salir
+									</Button>
+								</Form.Group>
+							</Form>
+						</Modal.Body>
+					</Modal>
+					{/* NOTE: Vista detalle form */}
+					<div className='d-flex justify-content-between align-items-center mb-2 border-bottom position-relative '>
+						<h4
+							className=' text-break m-2 border-3 '
+							style={{
+								borderBottom: '2px solid #0a5d52',
+								textOverflow: 'ellipsis',
+								overflow: 'hidden',
+								whiteSpace: 'nowrap',
+							}}
+						>
+							{name}
+						</h4>
+						{isFormOpen && (
+							<ArrowBack
+								fontSize={'large'}
+								className='m-1 rounded'
+								style={{ background: '#0a5d52', color: 'white' }}
+								color='primary'
+								onClick={() => {
+									handleShow2();
+								}}
+							/>
+						)}
+						{!isFormOpen && (
+							<ArrowBack
+								fontSize='large'
+								className='m-1 rounded'
+								style={{ background: '#0a5d52', color: 'white' }}
+								onClick={() => handleShow2()}
+							/>
+						)}
+					</div>
+					{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
+					{motCancel !== null && (
+						<h2
+							style={{
+								textAlign: 'center',
+								fontSize: 30,
+								fontWeight: 'bold',
+								backgroundColor: 'yellow',
+							}}
+						>
+							ACTIVIDAD SUSPENDIDA
+						</h2>
+					)}
+					{/* NOTE: VISTA PRINCIPAL - Información */}
+					{!isFormOpen ? (
+						<div className=' d-flex flex-column justify-content-between' style={{ height: '85%' }}>
+							<div style={{ height: '85%' }}>
+								<ActivityDetail />
+							</div>
+							{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
+							{motCancel === null ? (
+								<div className=' d-flex justify-content-around w-100'>
+									<Button
+										variant='warning'
+										className='Suspend'
+										onClick={() => {
+											handleSuspenderActividad();
+										}}
+									>
+										Suspender Actividad
+									</Button>
+									<Button
+										variant='danger'
+										onClick={() => {
+											handleDeleteActividad();
+										}}
+									>
+										Eliminar Actividad
+									</Button>
+								</div>
+							) : (
+								<Button
+									variant='warning'
+									className='Suspend'
+									onClick={() => {
+										activarActividad();
+									}}
+								>
+									Anular Suspensión
+								</Button>
+							)}
+						</div>
+					) : (
+						<>
+							{/* NOTE: FORMULARIOS */}
+							{(() => {
+								switch (indexForm) {
+									case 'descr':
+										return <FormDescriptionUbication />;
+									case 'documentacion':
+										return <FormDocuments />;
+									case 'pie':
+										return <FormPIE />;
+									case 'area':
+										return <FormArSecUU />;
+									case 'periodo':
+										return <FormPeriodo />;
+									case 'objetivo':
+										return <FormObjetiveEst />;
+									case 'organi':
+										return <FormOrgInst />;
+									case 'metas':
+										return <FormMetas />;
+									default:
+										return null;
+								}
+							})()}
+						</>
+					)}
+				</div>
 			)}
-		</div>
+		</>
 	);
 }

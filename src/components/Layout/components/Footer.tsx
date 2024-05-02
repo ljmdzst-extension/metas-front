@@ -26,29 +26,12 @@ export default function Footer() {
 						<h6 className='text-white mb-0 ms-3 border-end pe-3' style={{ fontSize: '0.8rem' }}>
 							Contactos
 						</h6>
-						<div >
-							<p className='text-white mb-0 ms-3' style={{ fontSize: '0.7rem' }}>
-								Área Proyectos de Extensión
-							</p>
-							<p className='text-white mb-0 ms-3' style={{ fontSize: '0.7rem' }}>
-								Tel: (0342) 4575136 Int. 108 /109
-							</p>
-							<p className='text-white mb-0 ms-3' style={{ fontSize: '0.7rem' }}>
-								Correo Electrónico:{' '}
-								<a
-									href='mailto:proyectosextensionunl@gmail.com'
-									style={{ color: 'white', textDecoration: 'underline' }}
-								>
-									proyectosextensionunl@gmail.com
-								</a>
-							</p>
-						</div>
 						<div>
 							<p className='text-white mb-0 ms-3' style={{ fontSize: '0.7rem' }}>
-								Evaluacion de Proyectos de Extensión
+								Área de Planeamiento y Evaluación
 							</p>
 							<p className='text-white mb-0 ms-3' style={{ fontSize: '0.7rem' }}>
-								Tel: (0342) 45678910
+								Tel: (0342) 4575136 Int. 112
 							</p>
 							<p className='text-white mb-0 ms-3' style={{ fontSize: '0.7rem' }}>
 								Correo Electrónico:{' '}

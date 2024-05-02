@@ -72,7 +72,6 @@
 	background-color: rgba(245, 245, 245, 0.959);
 }
 .menu {
-	min-height: 400px;
 	display: flex;
 	align-items: center;
 	justify-content: space-around;
