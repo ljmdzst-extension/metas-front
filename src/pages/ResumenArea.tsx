@@ -6,8 +6,8 @@ import ElementoResumen from '../components/DataRender/ElementoResumen';
 import { ArrowBack, Replay } from '@mui/icons-material';
 import { InputGroup, Form, Button } from 'react-bootstrap';
 import { Actividad } from '../types/ActivityProps';
-import Swal from 'sweetalert2';
 import { getBases } from '../redux/actions/metasActions';
+import { errorAlert } from '../utils/Alerts';
 
 interface Area {
 	idArea: number;
@@ -36,18 +36,13 @@ const ResumenArea = () => {
 			const action = await dispatch(getBases({ token }));
 			if (getBases.rejected.match(action)) {
 				const { error } = action.payload as { error: string };
-				Swal.fire({
-					title: 'Error!',
-					text: `${error}`,
-					icon: 'error',
-					confirmButtonText: 'Ok',
-				});
+				errorAlert(error);
 			}
 		};
 		if (!bases) {
 			dispachBases();
 		}
-	}, [bases, dispatch, token]);
+	}, [bases, dispatch, navigate, token]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(e.target.value);

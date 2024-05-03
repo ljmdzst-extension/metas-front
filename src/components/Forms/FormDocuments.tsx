@@ -94,7 +94,7 @@ export default function FormOrgInst() {
 					</Button>
 				</Form>
 				<div className=' custom-scrollbar ' style={{ maxHeight: '250px', overflowY: 'auto' }}>
-					<Table style={{ minHeight: '400px' }}>
+					<Table >
 						<thead style={{ position: 'sticky', top: '0' }}>
 							<tr>
 								<th>Descripción</th>
@@ -105,7 +105,7 @@ export default function FormOrgInst() {
 						<tbody>
 							{arrayDocumentos.map((item, index) => (
 								<tr key={index}>
-									<td style={{ width: '15%' }}>{item.desc}</td>
+									<td style={{ width: '25%' }}>{item.desc}</td>
 									<td
 										style={{
 											overflow: 'hidden',

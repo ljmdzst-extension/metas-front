@@ -15,7 +15,8 @@ interface Area {
 }
 
 const ElementoResumen = ({ element }: Props) => {
-	const { idActividad, desc, listaRelaciones, listaMetas, listaObjetivos } = element;
+	const { idActividad, desc, listaRelaciones, listaMetas, listaObjetivos, listaProgramasSIPPE } =
+		element;
 
 	const [areas, setAreas] = useState<LArea[]>([]);
 	const [listaSIPPE, setListaSIPPE] = useState<ListaProgramasSIPPE[]>();
@@ -161,7 +162,7 @@ const ElementoResumen = ({ element }: Props) => {
 								<div style={styles.gridItem}>{meta.descripcion}</div>
 								<div style={styles.gridItem}>{meta.resultado}</div>
 								<div style={styles.gridItem}>{meta.observaciones}</div>
-								<div style={styles.gridItem}>{meta?.valoracion || 'No hay valoración cargada'}</div>
+								<div style={styles.gridItem}>{meta?.valoracion ?? 'No hay valoración cargada'}</div>
 							</div>
 						))
 					) : (
@@ -177,7 +178,9 @@ const ElementoResumen = ({ element }: Props) => {
 								{renderArea(listaRelaciones, 1, 'Internas Secretaria')}
 								{renderArea(listaRelaciones, 2, 'Otras áreas centrales')}
 								{renderArea(listaRelaciones, 3, 'Unidades Académicas involucradas')}
-								{renderArea(listaRelaciones, 4, 'Programas de Extensión')}
+								{listaProgramasSIPPE?.length !== undefined && listaRelaciones.length > 0
+									? renderArea(listaProgramasSIPPE, 4, 'Programas de Extensión')
+									: null}
 							</ol>
 						) : (
 							<p>No hay Areas Cargadas</p>

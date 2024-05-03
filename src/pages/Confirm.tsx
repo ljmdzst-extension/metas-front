@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Spinner from 'react-bootstrap/Spinner';
 import Swal from 'sweetalert2';
+import { errorAlert } from '../utils/Alerts';
 
 const Confirm = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -37,13 +38,9 @@ const Confirm = () => {
 					throw new Error(data.error || 'No se pudo validar el usuario');
 				}
 			} catch (error: any) {
-				Swal.fire({
-					title: 'Error!',
-					text:
-						error.message || 'Ocurrió un error al validar el usuario, contacte al administrador',
-					icon: 'error',
-					confirmButtonText: 'Ok',
-				});
+				errorAlert(
+					error.message || 'Ocurrió un error al validar el usuario, contacte al administrador',
+				);
 				navigate('/register');
 			} finally {
 				setIsLoading(false);

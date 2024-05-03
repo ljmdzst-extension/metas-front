@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { registerAsync } from '../../redux/actions/authAction';
 import Swal from 'sweetalert2';
+import { errorAlert } from '../../utils/Alerts';
 
 export interface UnidadesAcademicas {
 	idUnidadAcademica: number;
@@ -58,12 +59,7 @@ const FormRegister = () => {
 		const action = await dispatch(registerAsync(values));
 		if (registerAsync.rejected.match(action)) {
 			const { error } = action.payload as { error: string };
-			Swal.fire({
-				title: 'Error!',
-				text: `${error}`,
-				icon: 'error',
-				confirmButtonText: 'Ok',
-			});
+			errorAlert(error);
 		} else {
 			Swal.fire({
 				title: 'Registro exitoso!',

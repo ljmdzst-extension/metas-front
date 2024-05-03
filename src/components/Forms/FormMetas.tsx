@@ -60,6 +60,7 @@ const FormMetas = () => {
 
 	useEffect(() => {
 		const actualizarRedux = () => {
+			console.log('Cargar meta - ', listadoMetas);
 			dispatch({
 				type: 'CARGAR_META',
 				payload: {
@@ -215,6 +216,7 @@ const FormMetas = () => {
 				variant='success'
 				className='mt-auto align-self-center'
 				onClick={() => {
+					console.log('guardando', listadoMetas);
 					guardarActividad(
 						{
 							...activity,

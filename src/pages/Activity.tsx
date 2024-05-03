@@ -13,11 +13,11 @@ import { Col, Row, Spinner } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
-import { ArrowBack, Height } from '@mui/icons-material';
-import ActivityDetail from '../components/metas/ActivityDetail';
+import { ArrowBack } from '@mui/icons-material';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
 import useAvailableHeight from '../hooks/useAvailableHeight';
+import { errorAlert } from '../utils/Alerts';
 
 interface Activity {
 	idActividad: number;
@@ -78,12 +78,7 @@ export default function Activity() {
 			const action = await dispatch(getBases({ token }));
 			if (getBases.rejected.match(action)) {
 				const { error } = action.payload as { error: string };
-				Swal.fire({
-					title: 'Error!',
-					text: `${error}`,
-					icon: 'error',
-					confirmButtonText: 'Ok',
-				});
+				errorAlert(error);
 			}
 		};
 		dispachBases();

@@ -115,46 +115,6 @@ export default function FormPeriodo() {
 		validarRango();
 	}, [rangeStart, rangeEnd]);
 
-	// const handlerSave = () => {
-	// 	setIsSaving(true);
-	// 	Swal.fire({
-	// 		title:'Guardando cambios',
-	// 		allowOutsideClick: false,
-	// 		showConfirmButton: false,
-	// 		didOpen: () => {
-	// 			Swal.showLoading();
-	// 		},
-	// 	});
-	// 	guardarActividad(
-	// 		{
-	// 			...activity,
-	// 			fechaDesde: fechaDesde,
-	// 			fechaHasta: fechaHasta,
-	// 			listaFechasPuntuales: listaFechasPuntuales,
-	// 		},
-	// 		dispatch,
-	// 	).then((res) => {
-	// 		if (res) {
-	// 			Swal.fire({
-	// 				title: 'Cambios guardados',
-	// 				icon: 'success',
-	// 				showConfirmButton: false,
-	// 				timer: 1500,
-	// 			});
-	// 			setIsSaving(false);
-	// 		} else {
-	// 			Swal.fire({
-	// 				title: 'Error al guardar los cambios',
-	// 				icon: 'error',
-	// 				showConfirmButton: false,
-	// 				timer: 1500,
-	// 			});
-	// 			setIsSaving(false);
-	// 		}
-	// 	});
-
-	// }
-
 	return (
 		<div className=' contenedor-forms mx-3 mb-0 pb-0'>
 			<Row className=''>
