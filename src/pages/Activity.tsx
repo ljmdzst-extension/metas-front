@@ -128,33 +128,30 @@ export default function Activity() {
 		}
 	}, [area.anio, area.idArea, token]);
 
-	const submitForm = useCallback(
-		async (event: React.FormEvent<HTMLFormElement>) => {
-			event.preventDefault();
-			setIsLoadingModal(true);
-			try {
-				// Wait for postActivity to complete
-				console.log('Crear actividad');
-				await postActivity({
-					idActividad: 0,
-					idArea: area.idArea,
-					nro: arrayActivity.length + 1,
-					desc: term,
-					fechaDesde: null,
-					fechaHasta: null,
-				});
-				// Once the activity is created, update the activities list
-				await mostrarActividades();
-				setTerm('');
-				setIsLoadingModal(false);
-				handleClose();
-			} catch (error) {
-				console.error('Error al enviar la actividad:', error);
-				// Handle the error appropriately, e.g., show a message to the user
-			}
-		},
-		[area.idArea, arrayActivity.length, mostrarActividades, postActivity, term],
-	);
+	const submitForm = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		setIsLoadingModal(true);
+		try {
+			// Wait for postActivity to complete
+			console.log('Crear actividad');
+			await postActivity({
+				idActividad: 0,
+				idArea: area.idArea,
+				nro: arrayActivity.length + 1,
+				desc: term,
+				fechaDesde: null,
+				fechaHasta: null,
+			});
+			// Once the activity is created, update the activities list
+			await mostrarActividades();
+			setTerm('');
+			setIsLoadingModal(false);
+			handleClose();
+		} catch (error) {
+			console.error('Error al enviar la actividad:', error);
+			// Handle the error appropriately, e.g., show a message to the user
+		}
+	};
 
 	useEffect(() => {
 		mostrarActividades(); // Call mostrarActividades on component mount
