@@ -7,6 +7,8 @@ export const successAlert = (message: string) => {
 		text: message,
 		confirmButtonText: 'Ok',
 	});
+
+	return null;
 };
 
 export const errorAlert = (message: string) => {
@@ -16,10 +18,11 @@ export const errorAlert = (message: string) => {
 		text: message || '¡Hemos encontrado un error!',
 		confirmButtonText: 'Ok',
 	});
-
 	if (message === 'Sesión de usuario expirada.') {
 		localStorage.removeItem('token');
 		localStorage.removeItem('user');
-		redirect('/login');
+		window.location.href = '/login';
 	}
+
+	return null;
 };
