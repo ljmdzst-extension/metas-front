@@ -103,7 +103,7 @@ const ResumenArea = () => {
 	};
 
 	return (
-		<div className=' container ' style={{ height: '90%' }}>
+		<div className=' ' style={{ height: '90%' }}>
 			<div
 				className=' d-flex flex-column h-100 m-2 border rounded'
 				style={{ backgroundColor: '#fefefe' }}
@@ -125,7 +125,7 @@ const ResumenArea = () => {
 					</Button>
 				</InputGroup>
 				<div
-					className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-2 px-2'
+					className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-4 px-2'
 					style={{ height: '100%' }}
 				>
 					{data.map((el, index) => (
