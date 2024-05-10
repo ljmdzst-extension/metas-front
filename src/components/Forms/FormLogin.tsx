@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import { Button, Form } from 'react-bootstrap';
 import { AppDispatch, RootState } from '../../redux/store';
 import Swal from 'sweetalert2';
-import { errorAlert } from '../../utils/Alerts';
+import useAlert from '../../hooks/useAlert';
 
 interface FormLoginProps {
 	email: string;
@@ -25,6 +25,7 @@ const FormLogin = () => {
 	const { loading } = useSelector((state: RootState) => state.authSlice);
 
 	const navigate = useNavigate();
+	const { errorAlert } = useAlert();
 
 	const validations = Yup.object().shape({
 		email: Yup.string().email().required('Campo requerido'),

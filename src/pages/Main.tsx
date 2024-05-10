@@ -8,11 +8,12 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { isRejectedWithValue, unwrapResult } from '@reduxjs/toolkit';
 import { AuthResponse } from '../types/AuthProps';
-import { errorAlert } from '../utils/Alerts';
+import useAlert from '../hooks/useAlert';
 
 export default function Main() {
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
+	const { errorAlert } = useAlert();
 
 	useEffect(() => {
 		const checkUser = async () => {

@@ -1,4 +1,3 @@
-import { redirect } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 export const successAlert = (message: string) => {
@@ -14,7 +13,7 @@ export const successAlert = (message: string) => {
 export const errorAlert = (message: string) => {
 	Swal.fire({
 		icon: 'error',
-		title: '¡Operacion Cancelada!',
+		title: '¡Operación Cancelada!',
 		text: message || '¡Hemos encontrado un error!',
 		confirmButtonText: 'Ok',
 	});

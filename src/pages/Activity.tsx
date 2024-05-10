@@ -17,7 +17,7 @@ import { ArrowBack } from '@mui/icons-material';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
 import useAvailableHeight from '../hooks/useAvailableHeight';
-import { errorAlert } from '../utils/Alerts';
+import useAlert from '../hooks/useAlert';
 
 interface Activity {
 	idActividad: number;
@@ -53,6 +53,7 @@ export default function Activity() {
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
 
 	const navigation = useNavigate();
+	const { errorAlert } = useAlert();
 	const location = useLocation();
 
 	const dispatch = useDispatch<AppDispatch>();

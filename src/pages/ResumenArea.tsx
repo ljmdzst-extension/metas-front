@@ -7,7 +7,7 @@ import { ArrowBack, Replay } from '@mui/icons-material';
 import { InputGroup, Form, Button } from 'react-bootstrap';
 import { Actividad } from '../types/ActivityProps';
 import { getBases } from '../redux/actions/metasActions';
-import { errorAlert } from '../utils/Alerts';
+import useAlert from '../hooks/useAlert';
 
 interface Area {
 	idArea: number;
@@ -28,6 +28,8 @@ const ResumenArea = () => {
 	const { token } = useSelector((state: RootState) => state.authSlice);
 	const { bases } = useSelector((state: RootState) => state.metasSlice);
 	const dispatch = useDispatch<AppDispatch>();
+
+	const { errorAlert } = useAlert();
 
 	const elementRef = useRef(null);
 

@@ -16,6 +16,8 @@ export const guardarActividad = (dato: any, dispatch: AppDispatch) => {
 		.then((data) => {
 			data.ok ? successAlert('Actividad guardada') : errorAlert(`Error al guardar: ${data.error}`);
 			dispatch(CargarDatosActividadAction(dato.idActividad));
+
+			return null;
 		})
 		.catch((error) => errorAlert(JSON.stringify(error)));
 };

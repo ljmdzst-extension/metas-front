@@ -3,12 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Spinner from 'react-bootstrap/Spinner';
 import Swal from 'sweetalert2';
-import { errorAlert } from '../utils/Alerts';
+import useAlert from '../hooks/useAlert';
 
 const Confirm = () => {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const { validationString } = useParams();
+	const { errorAlert } = useAlert();
 
 	const navigate = useNavigate();
 

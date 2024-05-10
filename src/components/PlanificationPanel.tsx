@@ -14,10 +14,10 @@ import { useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
-import { errorAlert, successAlert } from '../utils/Alerts';
 import ActivityDetail from './metas/ActivityDetail';
 import { Spinner } from 'react-bootstrap';
 import useAvailableHeight from '../hooks/useAvailableHeight';
+import useAlert from '../hooks/useAlert';
 
 type Props = {
 	name: string;
@@ -41,6 +41,7 @@ export default function PlanificationPanel({
 	const { token } = useSelector((state: RootState) => state.authSlice);
 
 	const availableHeight = useAvailableHeight();
+	const { errorAlert, successAlert } = useAlert();
 
 	useEffect(() => {
 		setMotCancel(activity?.motivoCancel);
