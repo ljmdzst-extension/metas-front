@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../redux/store';
 import { logout } from '../redux/reducers/AuthReducer';
 import { authAsync } from '../redux/actions/authAction';
-import Swal from 'sweetalert2';
+
 import { useNavigate } from 'react-router-dom';
 import { isRejectedWithValue, unwrapResult } from '@reduxjs/toolkit';
 import { AuthResponse } from '../types/AuthProps';

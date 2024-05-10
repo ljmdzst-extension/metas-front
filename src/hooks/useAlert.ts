@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import Swal, { SweetAlertOptions } from 'sweetalert2';
 
 const useAlert = () => {
 	const navigate = useNavigate();
