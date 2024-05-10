@@ -126,7 +126,7 @@ const FormMetas = () => {
 				<p>Descripcion: ${thisMeta.descripcion}</p>
 				<p>Resultado: ${thisMeta.resultado}</p>
 				<p>Observaciones: ${thisMeta.observaciones}</p>
-				<p>Valoracion: ${thisMeta.valoracion}</p>
+				<p>Valoracion: ${valoracionesText(thisMeta.valoracion ?? 0)}</p>
 			</div>`,
 			confirmButtonText: 'Aceptar',
 			width: '80%',

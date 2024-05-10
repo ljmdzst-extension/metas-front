@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { LArea, ListaProgramasSIPPE } from '../../types/BasesProps';
 import { Actividad } from '../../types/ActivityProps';
+import ReactDOM from 'react-dom';
 
 interface Props {
 	element: Actividad;
@@ -72,6 +73,16 @@ const ElementoResumen = ({ element }: Props) => {
 		);
 	};
 
+	function urlText(text: string) {
+		const urlRegex = /(https?:\/\/[^\s]+)/g;
+		const newText = text.replace(urlRegex, function (url) {
+			return `<a target='_blank' href=${url}>
+					${url}
+				</a>`;
+		});
+		return newText;
+	}
+
 	const renderObjetivos = () => {
 		if (!listaObjetivos || listaObjetivos.length === 0) {
 			return <div>No hay objetivos cargados</div>;
@@ -131,61 +142,71 @@ const ElementoResumen = ({ element }: Props) => {
 	};
 
 	return (
-		<div className=' pt-2 border-top border-dark-subtle border-2'>
-			<div className=' d-flex flex-column gap-2 border border-2 border-dark-subtle '>
-				<div>
-					<div style={{ ...styles.titleContainer, backgroundColor: '#08443c' }}>
-						<h5>Actividad: {idActividad}</h5>
-					</div>
-					<div className=' m-1'>
-						<p>{desc}</p>
-					</div>
+		<div
+			className=' d-flex flex-column gap-2 border border-2 border-dark-subtle '
+			style={{ background: '#e5e5e5', fontSize: '14px' }}
+		>
+			<div>
+				<div style={{ ...styles.titleContainer, backgroundColor: '#08443c' }}>
+					<h5>Actividad: {idActividad}</h5>
+				</div>
+				<div className=' m-1'>
+					<p>{desc}</p>
+				</div>
+			</div>
+
+			<div>
+				<div style={styles.titleContainer}>Lista Objetivos</div>
+				<div>{renderObjetivos()}</div>
+			</div>
+
+			<div>
+				<div style={styles.titleContainer}>Metas</div>
+				<div style={styles.gridContainer}>
+					<div style={styles.gridTitle}>Meta/Resultado esperado</div>
+					<div style={styles.gridTitle}>Resultado alcanzado</div>
+					<div style={styles.gridTitle}>Observaciones</div>
+					<div style={styles.gridTitle}>Valoracion</div>
 				</div>
 
-				<div>
-					<div style={styles.titleContainer}>Lista Objetivos</div>
-					<div>{renderObjetivos()}</div>
-				</div>
+				{listaMetas?.length ? (
+					listaMetas.map((meta, index) => (
+						<div style={styles.gridContainer} key={index}>
+							<div
+								style={styles.gridItem}
+								dangerouslySetInnerHTML={{ __html: urlText(meta.descripcion ?? '') }}
+							/>
+							<div
+								style={styles.gridItem}
+								dangerouslySetInnerHTML={{ __html: urlText(meta.resultado ?? '') }}
+							/>
+							<div
+								style={styles.gridItem}
+								dangerouslySetInnerHTML={{ __html: urlText(meta.observaciones ?? '') }}
+							/>
+							<div style={styles.gridItem}>{meta?.valoracion ?? 'No hay valoración cargada'}</div>
+						</div>
+					))
+				) : (
+					<div className=' m-1'>No hay metas cargadas</div>
+				)}
+			</div>
 
-				<div>
-					<div style={styles.titleContainer}>Metas</div>
-					<div style={styles.gridContainer}>
-						<div style={styles.gridTitle}>Meta/Resultado esperado</div>
-						<div style={styles.gridTitle}>Resultado alcanzado</div>
-						<div style={styles.gridTitle}>Observaciones</div>
-						<div style={styles.gridTitle}>Valoracion</div>
-					</div>
-
-					{listaMetas?.length ? (
-						listaMetas.map((meta, index) => (
-							<div style={styles.gridContainer} key={index}>
-								<div style={styles.gridItem}>{meta.descripcion}</div>
-								<div style={styles.gridItem}>{meta.resultado}</div>
-								<div style={styles.gridItem}>{meta.observaciones}</div>
-								<div style={styles.gridItem}>{meta?.valoracion ?? 'No hay valoración cargada'}</div>
-							</div>
-						))
+			<div>
+				<div style={{ ...styles.titleContainer }}>Áreas</div>
+				<div className='m-1'>
+					{listaRelaciones?.length !== undefined && listaRelaciones.length > 0 ? (
+						<ol>
+							{renderArea(listaRelaciones, 1, 'Internas Secretaria')}
+							{renderArea(listaRelaciones, 2, 'Otras áreas centrales')}
+							{renderArea(listaRelaciones, 3, 'Unidades Académicas involucradas')}
+							{listaProgramasSIPPE?.length !== undefined && listaRelaciones.length > 0
+								? renderArea(listaProgramasSIPPE, 4, 'Programas de Extensión')
+								: null}
+						</ol>
 					) : (
-						<div className=' m-1'>No hay metas cargadas</div>
+						<p>No hay Areas Cargadas</p>
 					)}
-				</div>
-
-				<div>
-					<div style={{ ...styles.titleContainer }}>Áreas</div>
-					<div className='m-1'>
-						{listaRelaciones?.length !== undefined && listaRelaciones.length > 0 ? (
-							<ol>
-								{renderArea(listaRelaciones, 1, 'Internas Secretaria')}
-								{renderArea(listaRelaciones, 2, 'Otras áreas centrales')}
-								{renderArea(listaRelaciones, 3, 'Unidades Académicas involucradas')}
-								{listaProgramasSIPPE?.length !== undefined && listaRelaciones.length > 0
-									? renderArea(listaProgramasSIPPE, 4, 'Programas de Extensión')
-									: null}
-							</ol>
-						) : (
-							<p>No hay Areas Cargadas</p>
-						)}
-					</div>
 				</div>
 			</div>
 		</div>
@@ -213,8 +234,10 @@ const styles = {
 		fontWeight: 'bold',
 	} as React.CSSProperties,
 	gridItem: {
+		width: '100%',
 		border: '1px solid #ccc',
 		padding: '8px',
+		wordBreak: 'break-word',
 	} as React.CSSProperties,
 };
 
