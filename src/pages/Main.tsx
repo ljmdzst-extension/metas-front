@@ -8,10 +8,12 @@ import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { isRejectedWithValue, unwrapResult } from '@reduxjs/toolkit';
 import { AuthResponse } from '../types/AuthProps';
+import useAlert from '../hooks/useAlert';
 
 export default function Main() {
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
+	const { errorAlert } = useAlert();
 
 	useEffect(() => {
 		const checkUser = async () => {
@@ -39,12 +41,7 @@ export default function Main() {
 			localStorage.removeItem('token');
 			localStorage.removeItem('user');
 			dispatch(logout());
-			Swal.fire({
-				title: `Error`,
-				text: `${error ?? 'Unknown error'}`,
-				icon: 'error',
-				confirmButtonText: 'Ok',
-			});
+			errorAlert(`${error ?? 'Unknown error'}`);
 			navigate('/login');
 		};
 

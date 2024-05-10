@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { AreaProps, ProgramaProps } from '../types/AppProps';
-import { Button, Card, Form } from 'react-bootstrap';
+import { Button, Card, Form, Spinner, Image } from 'react-bootstrap';
 
 const currentYear = new Date().getFullYear();
 
@@ -24,7 +24,7 @@ export default function PanelProgramas() {
 
 	useEffect(() => {
 		// Realizar la solicitud GET en el efecto
-
+		setIsLoading(true);
 		axios
 			.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/programas/${year}`, {
 				headers: {
@@ -69,9 +69,15 @@ export default function PanelProgramas() {
 
 	return (
 		<div className='ContainerCardMenu d-flex flex-column justify-content-start gap-1 '>
-			<h2>Titulo del Sistema</h2>
+			{/* <h2>Titulo del Sistema</h2> */}
+
+			<Image
+				src='/assets/img/UNL_Logo.png'
+				alt='logo-programas'
+				style={{ width: '15rem' }}
+			/>
 			{/* Antes validaba con is open */}
-			<Form.Group className=' align-self-start d-flex align-items-center'>
+			<Form.Group className=' align-self-start d-flex align-items-center mb-2'>
 				<label style={{ width: '140px' }}>Seleccione el año:</label>
 				<Form.Select value={year} onChange={handleYearChange} size='sm' style={{ width: '100px' }}>
 					{yearsArray.map((yearOption) => (
@@ -81,7 +87,7 @@ export default function PanelProgramas() {
 					))}
 				</Form.Select>
 			</Form.Group>
-			<div className=' d-flex justify-content-start align-items-center gap-2 w-100 '>
+			<div className=' d-flex justify-content-start align-items-center gap-2 w-100  '>
 				<Card style={{ width: '18rem' }}>
 					<div className='imgCard'>
 						<h1>
@@ -103,77 +109,83 @@ export default function PanelProgramas() {
 						</Button>
 					</Card.Body>
 				</Card>
-				{isLoading ? (
-					<h2>Cargando</h2>
-				) : (
-					<div className='menu'>
-						{programasTransformados.length > 0 ? (
-							<>
-								<Tab.Container id='list-group-tabs-example' defaultActiveKey='#link1'>
-									<Row>
-										<Col sm={4}>
-											<ListGroup
-												style={{
-													display: 'flex',
-													flexDirection: 'column',
-													alignItems: 'center',
-													width: '400px',
-													gap: '10px',
-												}}
-											>
-												{programasTransformados.map((item, index) => (
-													<ListGroup.Item
-														action
-														variant='secondary'
-														onClick={() => {
-															setIndexActivity(item.listaAreas);
-															setIndexPrograma(item.idPrograma);
-														}}
-														key={index}
-													>
-														{item.nom}
-													</ListGroup.Item>
-												))}
-											</ListGroup>
-										</Col>
-									</Row>
-								</Tab.Container>
-								<Tab.Container id='list-group-tabs-example' defaultActiveKey='#link1'>
-									<Row>
-										<Col sm={4}>
-											<ListGroup
-												style={{
-													display: 'flex',
-													flexDirection: 'column',
-													width: '400px',
-													maxHeight: '300px',
-													gap: '10px',
-													overflowY: 'auto',
-												}}
-												className='custom-scrollbar'
-											>
-												{indexActivity.map((elemento, index) => (
-													<ListGroup.Item
-														key={index}
-														action
-														variant='light'
-														onClick={() => openArea(elemento)}
-													>
-														{elemento.nom}
-													</ListGroup.Item>
-												))}
-											</ListGroup>
-										</Col>
-									</Row>
-								</Tab.Container>{' '}
-							</>
-						) : (
-							<div className=' text-center w-100'>
-								<h2>No hay programas cargados este año</h2>
-							</div>
-						)}
-					</div>
-				)}
+				<div className=' d-flex align-items-center w-100 h-100 '>
+					{isLoading ? (
+						<div className=' d-flex flex-column justify-content-center align-items-center w-100 h-100'>
+							<Spinner animation='border' role='status'>
+								<span className='visually-hidden'>Loading...</span>
+							</Spinner>
+						</div>
+					) : (
+						<>
+							{programasTransformados.length > 0 ? (
+								<>
+									<Tab.Container id='list-group-tabs-example' defaultActiveKey='#link1'>
+										<Row>
+											<Col sm={4}>
+												<ListGroup
+													style={{
+														display: 'flex',
+														flexDirection: 'column',
+														alignItems: 'center',
+														width: '400px',
+														gap: '10px',
+													}}
+												>
+													{programasTransformados.map((item, index) => (
+														<ListGroup.Item
+															action
+															variant='secondary'
+															onClick={() => {
+																setIndexActivity(item.listaAreas);
+																setIndexPrograma(item.idPrograma);
+															}}
+															key={index}
+														>
+															{item.nom}
+														</ListGroup.Item>
+													))}
+												</ListGroup>
+											</Col>
+										</Row>
+									</Tab.Container>
+									<Tab.Container id='list-group-tabs-example' defaultActiveKey='#link1'>
+										<Row>
+											<Col sm={4}>
+												<ListGroup
+													style={{
+														display: 'flex',
+														flexDirection: 'column',
+														width: '400px',
+														maxHeight: '300px',
+														gap: '10px',
+														overflowY: 'auto',
+													}}
+													className='custom-scrollbar'
+												>
+													{indexActivity.map((elemento, index) => (
+														<ListGroup.Item
+															key={index}
+															action
+															variant='light'
+															onClick={() => openArea(elemento)}
+														>
+															{elemento.nom}
+														</ListGroup.Item>
+													))}
+												</ListGroup>
+											</Col>
+										</Row>
+									</Tab.Container>{' '}
+								</>
+							) : (
+								<div className=' text-center w-100'>
+									<h2>El usuario no tiene programas cargados este año.</h2>
+								</div>
+							)}
+						</>
+					)}
+				</div>
 			</div>
 		</div>
 	);

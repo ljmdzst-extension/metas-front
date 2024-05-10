@@ -35,14 +35,14 @@ export default function FormPIE() {
 	const objetivosDesde10a15 = objetivos?.slice(9, 14);
 	const objetivosDesde16a20 = objetivos?.slice(14, 19);
 
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 
 	useEffect(() => {
 		const sincronizarCheckboxes = () => {
-			setObjetivosSeleccionados(estadoActualizado?.listaObjetivos ?? []);
+			setObjetivosSeleccionados(activity?.listaObjetivos ?? []);
 		};
 		sincronizarCheckboxes();
-	}, [estadoActualizado.listaObjetivos]);
+	}, [activity.listaObjetivos]);
 
 	return (
 		<div className=' d-flex flex-column'>
@@ -133,7 +133,7 @@ export default function FormPIE() {
 				onClick={() => {
 					guardarActividad(
 						{
-							...estadoActualizado,
+							...activity,
 							listaObjetivos: objetivosSeleccionados,
 						},
 						dispatch,

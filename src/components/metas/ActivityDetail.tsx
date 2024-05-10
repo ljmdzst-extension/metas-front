@@ -6,12 +6,12 @@ import DataRender from '../DataRender/DataRender';
 import spanishTitles from '../../mock/MetasSpanishTitles.json';
 
 const ActivityDetail = () => {
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 	const [filteredData, setFilteredData] = useState({});
 	const [showFullView, setShowFullView] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (estadoActualizado) {
+		if (activity) {
 			const {
 				desc,
 				fechaDesde,
@@ -21,7 +21,7 @@ const ActivityDetail = () => {
 				listaRelaciones,
 				listaProgramasSIPPE,
 				listaEnlaces,
-			} = estadoActualizado;
+			} = activity;
 
 			const filteredData = showFullView
 				? {
@@ -40,7 +40,7 @@ const ActivityDetail = () => {
 				  };
 			setFilteredData(filteredData);
 		}
-	}, [showFullView, estadoActualizado]);
+	}, [showFullView, activity]);
 
 	const handleViewChange = (viewType: string) => {
 		if (viewType === 'full') {

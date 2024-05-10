@@ -16,11 +16,13 @@ const PrivateLayout = ({ children }: any) => {
 	}, [isLogged, navigation]);
 
 	return (
-		<div className=' vh-100' style={{ backgroundColor: '#efe6e6' }}>
-			<NavBar />
-			<div className=' h-100 ' style={{ backgroundColor: '#efe6e6' }} >
-				{children}
-				<Outlet />
+		<div className=' d-flex flex-column'>
+			<div className=' vh-100 mb-3' style={{ backgroundColor: '#efe6e6' }}>
+				<NavBar />
+				<div className=' h-100 ' style={{ backgroundColor: '#efe6e6' }}>
+					{children}
+					<Outlet />
+				</div>
 			</div>
 			<Footer />
 		</div>

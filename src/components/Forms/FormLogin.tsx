@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import { Button, Form } from 'react-bootstrap';
 import { AppDispatch, RootState } from '../../redux/store';
 import Swal from 'sweetalert2';
+import useAlert from '../../hooks/useAlert';
 
 interface FormLoginProps {
 	email: string;
@@ -24,6 +25,7 @@ const FormLogin = () => {
 	const { loading } = useSelector((state: RootState) => state.authSlice);
 
 	const navigate = useNavigate();
+	const { errorAlert } = useAlert();
 
 	const validations = Yup.object().shape({
 		email: Yup.string().email().required('Campo requerido'),
@@ -34,12 +36,7 @@ const FormLogin = () => {
 		const action = await dispatch(loginAsync({ email: values.email, pass: values.password }));
 		if (loginAsync.rejected.match(action)) {
 			const { error } = action.payload as { error: string };
-			Swal.fire({
-				title: 'Error!',
-				text: `${error}`,
-				icon: 'error',
-				confirmButtonText: 'Ok',
-			});
+			errorAlert(error);
 		} else {
 			const { token, nom, ape } = action.payload as { token: string; nom: string; ape: string };
 			localStorage.setItem('token', token);
@@ -100,7 +97,12 @@ const FormLogin = () => {
 						</Form.Group>
 
 						<div className='d-flex justify-content-center'>
-							<Button variant='primary' type='submit' className='btn btn-primary' disabled={loading}>
+							<Button
+								variant='primary'
+								type='submit'
+								className='btn btn-primary'
+								disabled={loading}
+							>
 								{loading ? 'Ingresando...' : 'Ingresar'}
 							</Button>
 						</div>

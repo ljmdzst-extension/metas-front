@@ -26,7 +26,7 @@ interface Option {
 export default function FormArSecUU() {
 	const dispatch = useDispatch();
 
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
@@ -60,15 +60,13 @@ export default function FormArSecUU() {
 
 	const filtrarRelacionesSeleccionadas = useCallback(
 		(filterFn: Option[]) => {
-			if (estadoActualizado.listaRelaciones) {
-				return filterFn.filter((el) =>
-					estadoActualizado.listaRelaciones?.some((ri) => ri === el.value),
-				);
+			if (activity.listaRelaciones) {
+				return filterFn.filter((el) => activity.listaRelaciones?.some((ri) => ri === el.value));
 			} else {
 				return [];
 			}
 		},
-		[estadoActualizado],
+		[activity],
 	);
 
 	useEffect(() => {
@@ -86,9 +84,9 @@ export default function FormArSecUU() {
 
 	const filtrarSippeSeleccionadas = useCallback(() => {
 		return formatearSippes().filter((el) =>
-			estadoActualizado.listaProgramasSIPPE?.some((ri) => ri === el.value),
+			activity.listaProgramasSIPPE?.some((ri) => ri === el.value),
 		);
-	}, [estadoActualizado.listaProgramasSIPPE, formatearSippes]);
+	}, [activity.listaProgramasSIPPE, formatearSippes]);
 
 	useEffect(() => {
 		setSippeSeleccionadas(filtrarSippeSeleccionadas());
@@ -186,7 +184,7 @@ export default function FormArSecUU() {
 				onClick={() => {
 					guardarActividad(
 						{
-							...estadoActualizado,
+							...activity,
 							listaRelaciones: Array.from(
 								new Set([
 									...relacionSeleccionadas1.map((el) => el.value),

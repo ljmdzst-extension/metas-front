@@ -98,7 +98,7 @@ export const CargarDatosActividadAction = createAsyncThunk(
 			const data = await response.json();
 			return data.data;
 		} catch (error) {
-			console.log('error');
+			console.log('error', error);
 		}
 	},
 );

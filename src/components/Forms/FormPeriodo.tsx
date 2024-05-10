@@ -14,27 +14,23 @@ registerLocale('es', es);
 
 export default function FormPeriodo() {
 	const dispatch = useDispatch();
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 
 	// const [isSaving, setIsSaving] = useState<boolean>(false);
 
-	const [fechaDesde, setFechaDesde] = useState<string | null>(estadoActualizado.fechaDesde ?? null);
+	const [fechaDesde, setFechaDesde] = useState<string | null>(activity.fechaDesde ?? null);
 
-	const [fechaHasta, setFechaHasta] = useState<string | null>(estadoActualizado.fechaHasta ?? null);
+	const [fechaHasta, setFechaHasta] = useState<string | null>(activity.fechaHasta ?? null);
 	const [erroresRango, setErroresRango] = useState<string>('');
 	const [listaFechasPuntuales, setListaFechasPuntuales] = useState<
 		{ idFecha: number | null; fecha: string | null }[]
-	>(estadoActualizado.listaFechasPuntuales ?? []);
+	>(activity.listaFechasPuntuales ?? []);
 	const [rangeStart, setRangeStart] = useState<Date | null>(
-		estadoActualizado.fechaDesde
-			? new Date(estadoActualizado.fechaDesde?.split('-').join('/'))
-			: null,
+		activity.fechaDesde ? new Date(activity.fechaDesde?.split('-').join('/')) : null,
 	);
 
 	const [rangeEnd, setRangeEnd] = useState<Date | null>(
-		estadoActualizado.fechaHasta
-			? new Date(estadoActualizado.fechaHasta?.split('-').join('/'))
-			: null,
+		activity.fechaHasta ? new Date(activity.fechaHasta?.split('-').join('/')) : null,
 	);
 
 	const [indexDates, setIndexDates] = useState<{ idFecha: number | null; fecha: string | null }[]>(
@@ -118,46 +114,6 @@ export default function FormPeriodo() {
 		};
 		validarRango();
 	}, [rangeStart, rangeEnd]);
-
-	// const handlerSave = () => {
-	// 	setIsSaving(true);
-	// 	Swal.fire({
-	// 		title:'Guardando cambios',
-	// 		allowOutsideClick: false,
-	// 		showConfirmButton: false,
-	// 		didOpen: () => {
-	// 			Swal.showLoading();
-	// 		},
-	// 	});
-	// 	guardarActividad(
-	// 		{
-	// 			...estadoActualizado,
-	// 			fechaDesde: fechaDesde,
-	// 			fechaHasta: fechaHasta,
-	// 			listaFechasPuntuales: listaFechasPuntuales,
-	// 		},
-	// 		dispatch,
-	// 	).then((res) => {
-	// 		if (res) {
-	// 			Swal.fire({
-	// 				title: 'Cambios guardados',
-	// 				icon: 'success',
-	// 				showConfirmButton: false,
-	// 				timer: 1500,
-	// 			});
-	// 			setIsSaving(false);
-	// 		} else {
-	// 			Swal.fire({
-	// 				title: 'Error al guardar los cambios',
-	// 				icon: 'error',
-	// 				showConfirmButton: false,
-	// 				timer: 1500,
-	// 			});
-	// 			setIsSaving(false);
-	// 		}
-	// 	});
-
-	// }
 
 	return (
 		<div className=' contenedor-forms mx-3 mb-0 pb-0'>
@@ -260,7 +216,7 @@ export default function FormPeriodo() {
 					onClick={() => {
 						guardarActividad(
 							{
-								...estadoActualizado,
+								...activity,
 								fechaDesde: fechaDesde,
 								fechaHasta: fechaHasta,
 								listaFechasPuntuales: listaFechasPuntuales,

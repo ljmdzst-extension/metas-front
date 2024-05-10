@@ -18,18 +18,18 @@ export default function FormOrgInst() {
 	const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>([]);
 	const [descripcion, setDescripcion] = useState('');
 	const [nombreArchivo, setNombreArchivo] = useState('');
-	const estadoActualizado = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividadSlice);
 
 	useEffect(() => {
-		if (estadoActualizado.listaEnlaces) {
-			const enlacesMapeados = estadoActualizado.listaEnlaces.map((enlace) => ({
+		if (activity.listaEnlaces) {
+			const enlacesMapeados = activity.listaEnlaces.map((enlace) => ({
 				idEnlace: enlace.idEnlace,
 				link: enlace.link || null,
 				desc: enlace.desc || null,
 			}));
 			setArrayDocumentos(enlacesMapeados);
 		}
-	}, [estadoActualizado.listaEnlaces]);
+	}, [activity.listaEnlaces]);
 
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -94,7 +94,7 @@ export default function FormOrgInst() {
 					</Button>
 				</Form>
 				<div className=' custom-scrollbar ' style={{ maxHeight: '250px', overflowY: 'auto' }}>
-					<Table style={{ minHeight: '400px' }}>
+					<Table >
 						<thead style={{ position: 'sticky', top: '0' }}>
 							<tr>
 								<th>Descripción</th>
@@ -105,7 +105,7 @@ export default function FormOrgInst() {
 						<tbody>
 							{arrayDocumentos.map((item, index) => (
 								<tr key={index}>
-									<td style={{ width: '15%' }}>{item.desc}</td>
+									<td style={{ width: '25%' }}>{item.desc}</td>
 									<td
 										style={{
 											overflow: 'hidden',
@@ -136,7 +136,7 @@ export default function FormOrgInst() {
 				onClick={() => {
 					guardarActividad(
 						{
-							...estadoActualizado,
+							...activity,
 							listaEnlaces: arrayDocumentos,
 						},
 						dispatch,
