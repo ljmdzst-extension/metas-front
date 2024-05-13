@@ -47,7 +47,7 @@ export default function FormObjetiveEst() {
 		}
 	};
 	return (
-		<div className=' d-flex flex-column w-100 '>
+		<div className=' d-flex flex-column h-100 '>
 			<div className='FormObjetivo  w-100 '>
 				<Form className='FormObj'>
 					<p className='SubtitleObj'>
@@ -68,7 +68,7 @@ export default function FormObjetiveEst() {
 			</div>
 			<Button
 				variant='success'
-				className="Save align-self-center m-4  '"
+				className='mt-auto mb-3 align-self-center '
 				onClick={() => {
 					guardarActividad(
 						{

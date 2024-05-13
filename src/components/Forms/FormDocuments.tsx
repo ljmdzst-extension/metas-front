@@ -62,8 +62,8 @@ export default function FormOrgInst() {
 	};
 
 	return (
-		<div className=' d-flex flex-column'>
-			<div className=' d-flex flex-column  m-2'>
+		<div className=' d-flex flex-column h-100 '>
+			<div className='m-2'>
 				<p>Cargue sus enlaces:</p>
 				<Form className=' d-flex flex-column justify-content-center' onSubmit={submitForm}>
 					<div className=' d-flex gap-2 justify-content-center'>
@@ -86,15 +86,18 @@ export default function FormOrgInst() {
 					</div>
 					<Button
 						variant='success'
-						className='SaveChange mx-auto mt-2 '
+						className='mx-auto mt-2 '
 						type='submit'
 						disabled={nombreArchivo === '' || !isUrlValid(nombreArchivo)}
 					>
 						Agregar
 					</Button>
 				</Form>
-				<div className=' custom-scrollbar ' style={{ maxHeight: '250px', overflowY: 'auto' }}>
-					<Table >
+				<div
+					className=' custom-scrollbar '
+					style={{ height: '15rem', maxHeight: '15rem', overflowY: 'auto' }}
+				>
+					<Table>
 						<thead style={{ position: 'sticky', top: '0' }}>
 							<tr>
 								<th>Descripción</th>
@@ -132,7 +135,7 @@ export default function FormOrgInst() {
 			</div>
 			<Button
 				variant='success'
-				className='Save mt-auto align-self-center'
+				className='mt-auto mb-3 align-self-center '
 				onClick={() => {
 					guardarActividad(
 						{

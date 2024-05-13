@@ -98,7 +98,7 @@ const FormDescriptionUbication = () => {
 	};
 
 	return (
-		<div className=' d-flex flex-column  '>
+		<div className=' d-flex flex-column h-100  '>
 			<div className='  mx-4 my-2 '>
 				<div className=''>
 					<div className='Descripcion'>
@@ -201,14 +201,8 @@ const FormDescriptionUbication = () => {
 
 			<Button
 				variant='success'
-				className=' w-auto align-self-center '
+				className='mt-auto mb-3 align-self-center '
 				onClick={() => {
-					// const nuevoestado = {
-					// 	...activity,
-					// 	desc: descripcion,
-					// 	listaUbicaciones: ubicaciones,
-					// };
-					// console.log(nuevoestado);
 					guardarActividad(
 						{ ...activity, desc: descripcion, listaUbicaciones: ubicaciones },
 						dispatch,

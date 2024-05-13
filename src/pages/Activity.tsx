@@ -246,15 +246,15 @@ export default function Activity() {
 				}}
 			>
 				<div
-					className=' d-flex justify-content-between border border-2 rounded-3 m-0 p-2 pb-0 mx-2 my-1  '
+					className=' d-flex align-items-center justify-content-between border  rounded-3 p-1 pb-0 mx-2 my-1  '
 					style={{ backgroundColor: '#fefefe' }}
 				>
-					<h2 className=' fw-bold' style={{ color: '#0a5d52' }}>
+					<h3 className=' fw-bold' style={{ color: '#0a5d52' }}>
 						{area?.nom}
-					</h2>
+					</h3>
 					<ArrowBack
 						fontSize='large'
-						className={` m-1 rounded ${isPlanificationOpen ? 'd-none' : ''}`}
+						className={`rounded ${isPlanificationOpen ? 'd-none' : ''}`}
 						style={{ background: '#0a5d52', color: 'white' }}
 						onClick={() => {
 							navigation('/gestion/metas');

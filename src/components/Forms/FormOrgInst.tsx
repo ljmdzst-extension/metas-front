@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import { Form } from 'react-bootstrap';
+import { Form, NavLink } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Swal from 'sweetalert2';
 type Institucion = {
 	idInstitucion: number | null;
 	nom: string | null;
@@ -92,25 +92,50 @@ export default function FormOrgInst() {
 		return urlPattern.test(url);
 	};
 
+	const AlertBuscarUbicaciones = () => {
+		// Alerta con iframe y video de youtube
+		Swal.fire({
+			title: 'Ubicaciones',
+			html: ` 
+				<p>
+					Utilice la herramienta de Google Maps para insertar el enlace de la ubicación de la
+					actividad. Si necesita ayuda, consulte en este video.
+				</p>
+				<p>Si necesita ayuda para compartir el enlace, consulte el siguiente video.</p>
+			<iframe width="600" height="355" 
+				src="https://www.youtube.com/embed/KoN9aRs6a4E" 
+				title="YouTube video player" 
+				allow="fullscreen;" 
+				frameborder="0" 
+				allow="accelerometer; 
+				autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>`,
+			confirmButtonText: 'Cerrar',
+			width: '80%',
+		});
+	};
+
 	return (
-		<div className=' d-flex flex-column m-2'>
-			<p>
-				Ubicación se refiere al punto del mapa en donde se encuentre el lugar de la actividad.
-				Utilice la herramienta de Google Maps para insertar el enlace de dicha ubicación.
-			</p>
-			<p>
-				Si necesita ayuda para compartir el enlace , consulte el siguiente{' '}
-				<a
-					href='https://www.youtube.com/watch?v=KoN9aRs6a4E'
-					target='_blank'
-					className=' text-decoration-underline'
+		<div className=' d-flex flex-column h-100'>
+			<div className='m-2'>
+				<p>
+					Ubicación se refiere al punto del mapa en donde se encuentre el lugar de la actividad.
+					Utilice la herramienta de Google Maps para insertar el enlace de dicha ubicación.
+				</p>
+				<p>
+					Si necesita ayuda para compartir el enlace , consulte el siguiente{' '}
+					<span
+						onClick={() => AlertBuscarUbicaciones()}
+						className=' fw-normal cursor-pointer  '
+						style={{ color: 'blue' }}
+					>
+						video
+					</span>
+					.
+				</p>
+				<Form
+					className=' d-flex align-items-center gap-2 justify-content-center w-100 pb-2  '
+					onSubmit={submitForm}
 				>
-					video
-				</a>
-				.
-			</p>
-			<Form className=' d-flex flex-column justify-content-center w-100  ' onSubmit={submitForm}>
-				<div className='d-flex flex-row justify-content-center gap-4'>
 					<Form.Control
 						type='text'
 						name='name'
@@ -118,10 +143,14 @@ export default function FormOrgInst() {
 						placeholder='Nombre de la institucion'
 						onChange={(e) => handleInstChange(e)}
 						list='listSearchInstituciones'
-						onBlur={(e) => {
-							if (arraySearchInstitucion?.some((inst) => inst.nom === e.target.value)) {
-								e.target.value = '';
+						onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+							const inputValue = e.target.value;
+							const isValueInDatalist = arraySearchInstitucion?.some((inst) =>
+								inst.nom?.includes(inputValue),
+							);
+							if (isValueInDatalist) {
 								setName('');
+								setUbicacion('');
 							}
 						}}
 					/>
@@ -141,46 +170,44 @@ export default function FormOrgInst() {
 						onChange={(e) => setUbicacion(e.target.value)}
 						isInvalid={ubicacion.length > 0 && !isUrlValid(ubicacion)}
 					/>
-				</div>
-				<Button
-					variant='success'
-					className='SaveChange mx-auto mt-2 '
-					type='submit'
-					disabled={name.length === 0 || ubicacion.length === 0 || !isUrlValid(ubicacion)}
-				>
-					Agregar
-				</Button>
-			</Form>
-			<div className='ListaInstituciones'>
-				<h6>Las intituciones cargadas son:</h6>
-				<div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-					<Table striped bordered hover>
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Nombre</th>
-								<th>Ubicacion</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							{arrayInstitucion.map((item, index) => (
-								<tr key={index}>
-									<td style={{ width: '30px' }}>{index + 1}</td>
-									<td style={{ width: '20%' }}>{item.nom}</td>
-									<td>{item.ubicacion}</td>
-									<td style={{ width: '15px' }}>
-										<DeleteIcon color='error' onClick={() => eliminarInstitucion(index)} />
-									</td>
+					<Button
+						variant='success'
+						type='submit'
+						disabled={name.length === 0 || ubicacion.length === 0 || !isUrlValid(ubicacion)}
+					>
+						Agregar
+					</Button>
+				</Form>
+				<div className='ListaInstituciones'>
+					<div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+						<Table striped bordered hover>
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Nombre</th>
+									<th>Ubicacion</th>
+									<th></th>
 								</tr>
-							))}
-						</tbody>
-					</Table>
+							</thead>
+							<tbody>
+								{arrayInstitucion.map((item, index) => (
+									<tr key={index}>
+										<td style={{ width: '30px' }}>{index + 1}</td>
+										<td style={{ width: '20%' }}>{item.nom}</td>
+										<td>{item.ubicacion}</td>
+										<td style={{ width: '15px' }}>
+											<DeleteIcon color='error' onClick={() => eliminarInstitucion(index)} />
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</Table>
+					</div>
 				</div>
 			</div>
 			<Button
 				variant='success'
-				className='Save mt-auto align-self-center'
+				className='mt-auto mb-3 align-self-center '
 				onClick={() => {
 					guardarActividad(
 						{

@@ -342,10 +342,7 @@ h1 {
 	align-items: flex-start;
 	gap: 10px;
 }
-.SaveChange {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
+
 .ConteinerDaysSelected {
 	width: 90%;
 	min-height: 200px;

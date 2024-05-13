@@ -234,7 +234,7 @@ export default function PlanificationPanel({
 					</Spinner>
 				</div>
 			) : (
-				<div className=' '>
+				<>
 					{/* NOTE: Vista detalle form */}
 					<div className='d-flex justify-content-between align-items-center mb-2 border-bottom  '>
 						<h4
@@ -324,7 +324,7 @@ export default function PlanificationPanel({
 							)}
 						</div>
 					) : (
-						<>
+						<div style={{ height: availableHeight - 110 }}>
 							{/* NOTE: FORMULARIOS */}
 							{(() => {
 								switch (indexForm) {
@@ -348,9 +348,9 @@ export default function PlanificationPanel({
 										return null;
 								}
 							})()}
-						</>
+						</div>
 					)}
-				</div>
+				</>
 			)}
 		</>
 	);
