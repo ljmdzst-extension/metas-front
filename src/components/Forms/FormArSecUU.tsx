@@ -93,7 +93,7 @@ export default function FormArSecUU() {
 	}, [filtrarSippeSeleccionadas, sippe]);
 
 	return (
-		<div className='FormArSecuu d-flex m-0  p-0 px-5 gap-0'>
+		<div className=' d-flex flex-column h-100 px-4 gap-2'>
 			<Row>
 				<Col>
 					<div className='Areas'>
@@ -180,7 +180,7 @@ export default function FormArSecUU() {
 			</Row>
 			<Button
 				variant='success'
-				className='Save align-self-center my-2 '
+				className='mt-auto mb-3 align-self-center  '
 				onClick={() => {
 					guardarActividad(
 						{

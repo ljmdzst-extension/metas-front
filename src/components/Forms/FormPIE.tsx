@@ -45,8 +45,8 @@ export default function FormPIE() {
 	}, [activity.listaObjetivos]);
 
 	return (
-		<div className=' d-flex flex-column'>
-			<div className='FormPie'>
+		<div className=' d-flex flex-column h-100'>
+			<div className=' w-100 d-flex flex-column gap-1 '>
 				<p className=' px-2 text-end w-100 fst-italic'>
 					Referencia:{' '}
 					<a
@@ -129,7 +129,7 @@ export default function FormPIE() {
 			</div>
 			<Button
 				variant='success'
-				className='Save align-self-center my-2'
+				className=' mt-auto mb-3 align-self-center'
 				onClick={() => {
 					guardarActividad(
 						{
