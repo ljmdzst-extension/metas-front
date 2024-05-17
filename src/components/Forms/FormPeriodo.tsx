@@ -116,8 +116,8 @@ export default function FormPeriodo() {
 	}, [rangeStart, rangeEnd]);
 
 	return (
-		<div className=' contenedor-forms mx-3 mb-0 pb-0'>
-			<Row className=''>
+		<div className=' d-flex flex-column mx-3 h-100'>
+			<Row className='mt-3 h-100'>
 				<Col style={{ borderRight: '2px solid #acafb3' }} xs={7}>
 					<h4 className=' text-center mt-2'>Seleccionar Periodo</h4>
 					<p>
@@ -209,10 +209,11 @@ export default function FormPeriodo() {
 					</div>
 				</Col>
 			</Row>
+
 			<div className=' d-flex justify-content-center '>
 				<Button
 					variant='success'
-					className='mt-2 align-self-center'
+					className='mt-auto mb-3 align-self-center '
 					onClick={() => {
 						guardarActividad(
 							{

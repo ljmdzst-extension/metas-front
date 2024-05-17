@@ -151,7 +151,7 @@ const FormMetas = () => {
 	};
 
 	return (
-		<div className=' d-flex flex-column mx-4 '>
+		<div className=' d-flex flex-column mx-4 h-100'>
 			<Button
 				onClick={() => {
 					botonAgregarMeta();
@@ -214,7 +214,7 @@ const FormMetas = () => {
 			</div>
 			<Button
 				variant='success'
-				className='mt-auto align-self-center'
+				className='mt-auto mb-3 align-self-center '
 				onClick={() => {
 					console.log('guardando', listadoMetas);
 					guardarActividad(
