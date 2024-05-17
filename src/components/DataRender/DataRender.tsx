@@ -236,7 +236,14 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		});
 	}, [objectData, spanishTitles, areasMap, loading]);
 
-	return <div className=' overflow-y-scroll custom-scrollbar  '>{memoizedRenderData}</div>;
+	return (
+		<div
+			className=' overflow-y-scroll custom-scrollbar p-2 rounded-2  '
+			style={{ backgroundColor: '#e8edf1' }}
+		>
+			{memoizedRenderData}
+		</div>
+	);
 };
 
 export default DataRender;

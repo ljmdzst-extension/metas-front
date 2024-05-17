@@ -890,3 +890,11 @@ th {
 .visibility-icon:hover {
 	color: #808080;
 }
+
+.accordion {
+	--bs-accordion-bg: #dadfe4;
+}
+.accordion:hover {
+	--bs-accordion-bg: #b6babe;
+	
+}
