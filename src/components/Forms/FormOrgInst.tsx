@@ -121,17 +121,13 @@ export default function FormOrgInst() {
 					Ubicación se refiere al punto del mapa en donde se encuentre el lugar de la actividad.
 					Utilice la herramienta de Google Maps para insertar el enlace de dicha ubicación.
 				</p>
-				<p>
-					Si necesita ayuda para compartir el enlace , consulte el siguiente{' '}
-					<span
-						onClick={() => AlertBuscarUbicaciones()}
-						className=' fw-normal cursor-pointer  '
-						style={{ color: 'blue' }}
-					>
-						video
-					</span>
-					.
-				</p>
+
+				<div className='d-flex justify-content-end my-2'>
+					<Button variant='info' size='sm' onClick={AlertBuscarUbicaciones}>
+						¿Cómo buscar link de ubicación?
+					</Button>
+				</div>
+
 				<Form
 					className=' d-flex align-items-center gap-2 justify-content-center w-100 pb-2  '
 					onSubmit={submitForm}
