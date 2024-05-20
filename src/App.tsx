@@ -17,12 +17,13 @@ import Proyectos from './pages/Proyectos';
 import ProjectForm from './pages/ProjectForm';
 import ProjectSum from './pages/ProjectSum';
 import ResumenArea from './pages/ResumenArea';
+import { Graphics } from './pages/Graphics';
 
 function App() {
 	return (
 		<Routes>
 			<Route path='/' element={<Layout />}>
-				<Route index element={<h2>Pagina principal</h2>} />
+				<Route index element={<Login />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/register/validation/:validationString' element={<Confirm />} />
@@ -31,6 +32,7 @@ function App() {
 			<Route path='/gestion' element={<PrivateLayout />}>
 				<Route index element={<Management />} />
 				<Route path='metas' element={<Main />} />
+				<Route path='metas/graficas' element={<Graphics />} />
 				<Route path='metas/:idPrograma/:idArea' element={<Activity />} />
 				<Route path='metas/:idPrograma/:idArea/resumen' element={<ResumenArea />} />
 				<Route path='proyectos' element={<Proyectos />} />
