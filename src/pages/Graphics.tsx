@@ -1,5 +1,6 @@
-import { Button } from 'react-bootstrap';
-import { PieChart, Pie, ResponsiveContainer, Cell } from 'recharts';
+import { Col, Container, Row } from 'react-bootstrap';
+
+import Grafico from '../components/Graficos/Grafico';
 
 const data = [
 	{ name: 'Pie 1', value: 400 },
@@ -7,88 +8,65 @@ const data = [
 	{ name: 'Pie 3', value: 300 },
 ];
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const lineData = [
+	{ name: 'Page A', valor1: 4000, valor2: 2400, amt: 2400 },
+	{ name: 'Page B', valor1: 3000, valor2: 1398, amt: 2210 },
+	{ name: 'Page C', valor1: 2000, valor2: 9800, amt: 2290 },
+	{ name: 'Page D', valor1: 2780, valor2: 3908, amt: 2000 },
+	{ name: 'Page E', valor1: 1890, valor2: 4800, amt: 2181 },
+	{ name: 'Page F', valor1: 2390, valor2: 3800, amt: 2500 },
+	{ name: 'Page G', valor1: 3490, valor2: 4300, amt: 2100 },
+];
 
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-	const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-	const x = cx + radius * Math.cos(-midAngle * RADIAN);
-	const y = cy + radius * Math.sin(-midAngle * RADIAN);
+const lineData2 = [
+	{ name: 'Page A', valor1: 4000, valor2: 2400, valor3: 1500, amt: 2400 },
+	{ name: 'Page B', valor1: 3000, valor2: 1398, valor3: 2100, amt: 2210 },
+	{ name: 'Page C', valor1: 2000, valor2: 9800, valor3: 1800, amt: 2290 },
+	{ name: 'Page D', valor1: 2780, valor2: 3908, valor3: 2500, amt: 2000 },
+	{ name: 'Page E', valor1: 1890, valor2: 4800, valor3: 3000, amt: 2181 },
+	{ name: 'Page F', valor1: 2390, valor2: 3800, valor3: 2100, amt: 2500 },
+	{ name: 'Page G', valor1: 3490, valor2: 4300, valor3: 3200, amt: 2100 },
+];
 
-	return (
-		<text x={x} y={y} fill='white' textAnchor={x > cx ? 'start' : 'end'} dominantBaseline='central'>
-			{`${(percent * 100).toFixed(0)}%`}
-		</text>
-	);
-};
 
 export const Graphics = () => {
 	return (
-		<div className=' d-flex flex-column m-2 border rounded' style={{ backgroundColor: '#fefefe' }}>
-			<h2>Graficas y resumenes</h2>
-			<div
-				className=' d-flex flex-column border rounded m-2 p-2 '
-				style={{ backgroundColor: '#f5f5f5' }}
-			>
-				{/* TODO: Filtros */}
-				<div className=' d-flex gap-2 '>
-					<p>Filtros?:</p>
-					<p style={{ color: 'blue' }}>Fecha</p>
-					<p style={{ color: 'blue' }}>Area</p>
-					<p style={{ color: 'blue' }}>Estado</p>
-
-					<p
-						style={{
-							color: 'green',
-						}}
-						className=' cursor-pointer border-1 border rounded px-2 text-center fw-semibold'
-					>
-						Filtrar
-					</p>
-				</div>
-
-				{/* TODO: Mover a componente GraphicPie o algo similar */}
-
-				<div style={{ width: '40rem', height: '20rem' }}>
-					<ResponsiveContainer width='100%' height='100%'>
-						<PieChart>
-							<Pie
-								data={data}
-								cx='50%'
-								cy='50%'
-								labelLine={false}
-								label={renderCustomizedLabel}
-								outerRadius={80}
-								fill='#8884d8'
-								dataKey='value'
-							>
-								{data.map((entry, index) => (
-									<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-								))}
-							</Pie>
-						</PieChart>
-					</ResponsiveContainer>
-				</div>
-				{/* TODO: Leyenda grafico */}
-
-				<div className=' d-flex flex-column'>
-					<h3>Leyenda</h3>
-					<div className=' d-flex gap-2 align-items-center justify-content-start'>
-						<div className=' d-flex gap-2 '>
-							<div style={{ width: '20px', height: '20px', backgroundColor: COLORS[0] }} />
-							<p className='text-center'>Pie 1</p>
-						</div>
-						<div className=' d-flex gap-2'>
-							<div style={{ width: '20px', height: '20px', backgroundColor: COLORS[1] }} />
-							<p className='text-center'>Pie 2</p>
-						</div>
-						<div className=' d-flex gap-2'>
-							<div style={{ width: '20px', height: '20px', backgroundColor: COLORS[2] }} />
-							<p className='text-center'>Pie 3</p>
-						</div>
-					</div>
-				</div>
+		<div
+			className=' d-flex flex-column m-2 border rounded w-100 h-100'
+			style={{ backgroundColor: '#fefefe' }}
+		>
+			<div className='d-flex justify-content-center align-items-center m-2'>
+				<h2>Graficas y resumenes</h2>
 			</div>
+			<Container fluid className='h-100'>
+				<Row style={{ height: '90%', maxHeight: '600px' }}>
+					<Col md={4}>
+						<div
+							className=' d-flex flex-column border rounded w-100 h-100 p-2'
+							style={{ backgroundColor: '#f5f5f5' }}
+						>
+							<Grafico data={lineData2} type='line' />
+						</div>
+					</Col>
+					<Col md={4}>
+						<div
+							className=' d-flex flex-column border rounded w-100 h-100 p-2'
+							style={{ backgroundColor: '#f5f5f5' }}
+						>
+							<Grafico data={data} type='pie' />
+						</div>
+					</Col>
+
+					<Col md={4}>
+						<div
+							className=' d-flex flex-column border rounded w-100 h-100 p-2'
+							style={{ backgroundColor: '#f5f5f5' }}
+						>
+							<Grafico data={lineData2} type='bar' />
+						</div>
+					</Col>
+				</Row>
+			</Container>
 		</div>
 	);
 };
