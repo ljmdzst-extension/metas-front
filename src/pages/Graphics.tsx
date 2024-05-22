@@ -19,15 +19,26 @@ const lineData = [
 ];
 
 const lineData2 = [
-	{ name: 'Page A', valor1: 4000, valor2: 2400, valor3: 1500, amt: 2400 },
-	{ name: 'Page B', valor1: 3000, valor2: 1398, valor3: 2100, amt: 2210 },
-	{ name: 'Page C', valor1: 2000, valor2: 9800, valor3: 1800, amt: 2290 },
-	{ name: 'Page D', valor1: 2780, valor2: 3908, valor3: 2500, amt: 2000 },
-	{ name: 'Page E', valor1: 1890, valor2: 4800, valor3: 3000, amt: 2181 },
-	{ name: 'Page F', valor1: 2390, valor2: 3800, valor3: 2100, amt: 2500 },
-	{ name: 'Page G', valor1: 3490, valor2: 4300, valor3: 3200, amt: 2100 },
+	{ name: 'Page A', valor1: 4000, valor2: 2400, valor3: 1500 },
+	{ name: 'Page B', valor1: 3000, valor2: 1398, valor3: 2100 },
+	{ name: 'Page C', valor1: 2000, valor2: 9800, valor3: 1800 },
+	{ name: 'Page D', valor1: 2780, valor2: 3908, valor3: 2500 },
+	{ name: 'Page E', valor1: 1890, valor2: 4800, valor3: 3000 },
+	{ name: 'Page F', valor1: 2390, valor2: 3800, valor3: 2100 },
+	{ name: 'Page G', valor1: 3490, valor2: 4300, valor3: 3200 },
 ];
 
+const lineData3 = [
+	{ name: 'Page A', valor1: 4000, valor2: 2400, valor3: 1500, valor4: 3200, valor5: 2100 },
+	{ name: 'Page B', valor1: 3000, valor2: 1398, valor3: 2100, valor4: 4000, valor5: 2200 },
+	{ name: 'Page C', valor1: 2000, valor2: 9800, valor3: 1800, valor4: 4500, valor5: 2300 },
+	{ name: 'Page D', valor1: 2780, valor2: 3908, valor3: 2500, valor4: 3600, valor5: 2400 },
+	{ name: 'Page E', valor1: 1890, valor2: 4800, valor3: 3000, valor4: 3700, valor5: 2500 },
+	{ name: 'Page F', valor1: 2390, valor2: 3800, valor3: 2100, valor4: 3800, valor5: 2600 },
+	{ name: 'Page G', valor1: 3490, valor2: 4300, valor3: 3200, valor4: 3900, valor5: 2700 },
+];
+
+console.log(lineData2);
 
 export const Graphics = () => {
 	return (
@@ -45,7 +56,28 @@ export const Graphics = () => {
 							className=' d-flex flex-column border rounded w-100 h-100 p-2'
 							style={{ backgroundColor: '#f5f5f5' }}
 						>
-							<Grafico data={lineData2} type='line' />
+							<h2>Grafico de Lineas </h2>
+							{/* NOTE: Filtros */}
+							<div
+								className='d-flex align-items-center justify-content-start align-content-center p-1 
+								gap-2 border border-2 rounded  '
+							>
+								<p className='mb-0'>Filtros?:</p>
+								<p className='mb-0' style={{ color: 'blue' }}>
+									Fecha
+								</p>
+								<p className='mb-0' style={{ color: 'blue' }}>
+									Area
+								</p>
+
+								<p
+									className='cursor-pointer border-1 border rounded px-2 text-center ms-auto fw-semibold mb-0'
+									style={{ color: 'green' }}
+								>
+									Filtrar
+								</p>
+							</div>
+							<Grafico data={lineData3} type='line' />
 						</div>
 					</Col>
 					<Col md={4}>
@@ -53,6 +85,27 @@ export const Graphics = () => {
 							className=' d-flex flex-column border rounded w-100 h-100 p-2'
 							style={{ backgroundColor: '#f5f5f5' }}
 						>
+							<h2>Grafico de Torta </h2>
+							{/* NOTE: Filtros */}
+							<div
+								className='d-flex align-items-center justify-content-start align-content-center p-1 
+								gap-2 border border-2 rounded  '
+							>
+								<p className='mb-0'>Filtros?:</p>
+								<p className='mb-0' style={{ color: 'blue' }}>
+									Fecha
+								</p>
+								<p className='mb-0' style={{ color: 'blue' }}>
+									Area
+								</p>
+
+								<p
+									className='cursor-pointer border-1 border rounded px-2 text-center ms-auto fw-semibold mb-0'
+									style={{ color: 'green' }}
+								>
+									Filtrar
+								</p>
+							</div>
 							<Grafico data={data} type='pie' />
 						</div>
 					</Col>
@@ -62,6 +115,27 @@ export const Graphics = () => {
 							className=' d-flex flex-column border rounded w-100 h-100 p-2'
 							style={{ backgroundColor: '#f5f5f5' }}
 						>
+							<h2>Grafico de Barras </h2>
+							{/* NOTE: Filtros */}
+							<div
+								className='d-flex align-items-center justify-content-start align-content-center p-1 
+								gap-2 border border-2 rounded  '
+							>
+								<p className='mb-0'>Filtros?:</p>
+								<p className='mb-0' style={{ color: 'blue' }}>
+									Fecha
+								</p>
+								<p className='mb-0' style={{ color: 'blue' }}>
+									Area
+								</p>
+
+								<p
+									className='cursor-pointer border-1 border rounded px-2 text-center ms-auto fw-semibold mb-0'
+									style={{ color: 'green' }}
+								>
+									Filtrar
+								</p>
+							</div>
 							<Grafico data={lineData2} type='bar' />
 						</div>
 					</Col>

@@ -43,7 +43,11 @@ const Grafico: React.FC<GraficoProps> = ({ type, data }) => {
 	switch (type) {
 		case 'line':
 			return (
-				<ResponsiveContainer width='100%' height='100%'>
+				<ResponsiveContainer
+					width='100%'
+					height='100%'
+					className=' border rounded mt-2 p-2 bg-white'
+				>
 					<LineChart data={data}>
 						<CartesianGrid strokeDasharray='3 3' />
 						<XAxis dataKey='name' />
@@ -57,31 +61,36 @@ const Grafico: React.FC<GraficoProps> = ({ type, data }) => {
 								dataKey={key}
 								stroke={COLORS[index % COLORS.length]}
 							/>
-						))} 
+						))}
 					</LineChart>
 				</ResponsiveContainer>
 			);
 		case 'bar':
 			return (
-				<BarChart
-					width={500}
-					height={300}
-					data={data}
-					margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+				<ResponsiveContainer
+					width='100%'
+					height='100%'
+					className=' border rounded mt-2 p-2 bg-white'
 				>
-					<CartesianGrid strokeDasharray='3 3' />
-					<XAxis dataKey='name' />
-					<YAxis />
-					<Tooltip />
-					<Legend />
-					{keysWithValue.map((key, index) => (
-						<Bar key={index} dataKey={key} fill={COLORS[index % COLORS.length]} />
-					))}
-				</BarChart>
+					<BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+						<CartesianGrid strokeDasharray='3 3' />
+						<XAxis dataKey='name' />
+						<YAxis />
+						<Tooltip />
+						<Legend />
+						{keysWithValue.map((key, index) => (
+							<Bar key={index} dataKey={key} fill={COLORS[index % COLORS.length]} />
+						))}
+					</BarChart>
+				</ResponsiveContainer>
 			);
 		case 'pie':
 			return (
-				<ResponsiveContainer width='100%' height='100%'>
+				<ResponsiveContainer
+					width='100%'
+					height='100%'
+					className=' border rounded mt-2 p-2 bg-white'
+				>
 					<PieChart>
 						<Pie
 							dataKey='value'
@@ -108,74 +117,3 @@ const Grafico: React.FC<GraficoProps> = ({ type, data }) => {
 };
 
 export default Grafico;
-
-const componentePrueba = () => {
-	return (
-		<div
-			className=' d-flex flex-column border rounded w-100 h-100 p-2'
-			style={{ backgroundColor: '#f5f5f5' }}
-		>
-			<h3 className='mb-0'>Grafica de Patas</h3>
-
-			{/* NOTE: Filtros */}
-			<div
-				className='d-flex align-items-center justify-content-start align-content-center 
-				p-1
-				gap-2 border border-2 rounded  '
-			>
-				<p className='mb-0'>Filtros?:</p>
-				<p className='mb-0' style={{ color: 'blue' }}>
-					Fecha
-				</p>
-				<p className='mb-0' style={{ color: 'blue' }}>
-					Area
-				</p>
-
-				<p
-					className='cursor-pointer border-1 border rounded px-2 text-center ms-auto fw-semibold mb-0'
-					style={{ color: 'green' }}
-				>
-					Filtrar
-				</p>
-			</div>
-
-			{/* NOTE: Mover a componente GraphicPie o algo similar */}
-			<ResponsiveContainer width='100%' height='100%'>
-				<PieChart>
-					<Pie
-						data={data}
-						cx='50%'
-						cy='50%'
-						labelLine={false}
-						label={renderCustomizedLabel}
-						outerRadius={80}
-						fill='#8884d8'
-						dataKey='value'
-					>
-						{data.map((entry, index) => (
-							<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-						))}
-					</Pie>
-				</PieChart>
-			</ResponsiveContainer>
-			{/* NOTE: Leyenda grafico */}
-			<div className=' d-flex flex-column border rounded m-2 p-2 '>
-				<h5>Leyenda</h5>
-				<div className=' d-flex gap-2 align-items-center justify-content-start'>
-					{data.map(({ name }, index) => (
-						<div className=' d-flex gap-2 ' key={index}>
-							<div
-								style={{
-									width: '20px',
-									height: '20px',
-									backgroundColor: COLORS[index % COLORS.length],
-								}}
-							/>
-							<p className='text-center mb-0'>{name}</p>
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
-	);
-};
