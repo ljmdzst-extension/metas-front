@@ -1,6 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Actividad } from '../../types/ActivityProps';
 
+// export const SET_HAY_CAMBIOS = 'SET_HAY_CAMBIOS';
+// export const setHayCambios = (valor: boolean) => ({
+// 	type: SET_HAY_CAMBIOS,
+// 	payload: { valor },
+// });
+
 export const CARGAR_DESCRIPCION = 'CARGAR_DESCRIPCION';
 export const CargarDescripcionAction = (descripcion: string | null, ubicaciones: any[] | null) => ({
 	type: CARGAR_DESCRIPCION,

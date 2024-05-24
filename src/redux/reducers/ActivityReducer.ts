@@ -6,11 +6,13 @@ interface initialStateProps {
 	isLoading: boolean;
 	activity: Actividad;
 	error: string | null;
+	hayCambios: boolean;
 }
 
 const initialState: initialStateProps = {
 	isLoading: true,
 	error: null,
+	hayCambios: false,
 	activity: {
 		idActividad: 0,
 		idArea: 0,
@@ -35,6 +37,9 @@ const actividadSlice = createSlice({
 	name: 'actividad',
 	initialState,
 	reducers: {
+		SET_HAY_CAMBIOS: (state, action: PayloadAction<{ valor: boolean }>) => {
+			state.hayCambios = action.payload.valor;
+		},
 		CARGAR_MOTIVOCANCEL: (state, action: PayloadAction<{ motivo: string | null }>) => {
 			state.activity.motivoCancel = action.payload.motivo;
 			console.log(state.activity.motivoCancel);
@@ -155,6 +160,7 @@ export const {
 	CARGAR_INSTITUCION,
 	CARGAR_META,
 	CARGAR_MOTIVOCANCEL,
+	SET_HAY_CAMBIOS,
 } = actividadSlice.actions;
 
 export default actividadSlice.reducer;

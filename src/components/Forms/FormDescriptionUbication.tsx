@@ -6,18 +6,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import Swal from 'sweetalert2';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { ListGroup } from 'react-bootstrap';
-import { ContentCopy } from '@mui/icons-material';
+import { ContentCopy, Edit, Delete, ErrorOutline } from '@mui/icons-material';
 
 import { textLimitError } from '../../utils/validacionesForms';
 import { ListaUbicacione } from '../../types/ActivityProps';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
 
 const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
 
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 	const [editandoDescripcion, setEditandoDescripcion] = useState(false);
 	const [descripcion, setDescripcion] = useState<string>(activity.desc ?? '');
 
@@ -28,10 +27,15 @@ const FormDescriptionUbication = () => {
 		if (activity.listaUbicaciones) {
 			setUbicaciones(activity.listaUbicaciones);
 		}
-	}, []);
+	}, [activity.listaUbicaciones]);
+
+	useEffect(() => {
+		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+	}, [descripcion, ubicaciones]);
 
 	const handleDescripcionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setDescripcion(event.target.value);
+		checkForChanges();
 	};
 
 	const handleUbicacionInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -48,6 +52,7 @@ const FormDescriptionUbication = () => {
 
 			setUbicaciones([...ubicaciones, nuevaUbicacion]);
 			setUbicacion('');
+			checkForChanges();
 		}
 	};
 
@@ -65,9 +70,24 @@ const FormDescriptionUbication = () => {
 		const newUbicaciones = [...ubicaciones];
 		newUbicaciones.splice(index, 1);
 		setUbicaciones(newUbicaciones);
+		checkForChanges();
 	};
+
+	const checkForChanges = () => {
+		// Comprueba si hay cambios
+		const cambios =
+			activity.desc !== descripcion ||
+			JSON.stringify(activity.listaUbicaciones) !== JSON.stringify(ubicaciones);
+
+		if (hayCambios === cambios) return;
+		if (cambios) {
+			dispatch(SET_HAY_CAMBIOS({ valor: true }));
+		} else {
+			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+		}
+	};
+
 	const AlertBuscarUbicaciones = () => {
-		// Alerta con iframe y video de youtube
 		Swal.fire({
 			title: 'Ubicaciones',
 			html: ` 
@@ -98,75 +118,67 @@ const FormDescriptionUbication = () => {
 	};
 
 	return (
-		<div className=' d-flex flex-column h-100  '>
-			<div className='  mx-4 my-2 '>
-				<div className=''>
-					<div className='Descripcion'>
-						<h5> Descripción: </h5>
-
-						<InputGroup className='mb-4 gap-1'>
-							<Form.Control
-								as='textarea'
-								rows={3}
-								style={{ resize: 'none' }}
-								className=' custom-scrollbar'
-								aria-label='Inserte descripción'
-								aria-describedby='basic-addon2'
-								onChange={handleDescripcionChange}
-								disabled={!editandoDescripcion}
-								value={descripcion}
-								isInvalid={textLimitError(descripcion ?? '', 2000)}
-							/>
-							<Form.Control.Feedback type='invalid' tooltip>
-								Maximo 2000 caracteres
-							</Form.Control.Feedback>
-
-							<Button
-								variant='secondary'
-								id='button-addon2'
-								style={{ width: '50px', height: '100px' }}
-								onClick={(event) => handleClickEditarDescripcion(event, descripcion)}
-							>
-								<EditIcon />
-							</Button>
-						</InputGroup>
-					</div>
-				</div>
-
-				<div className=''>
-					<div className=' d-flex justify-content-between mb-2'>
-						<h5>Ubicación:</h5>
-						<Button variant='info' size='sm' onClick={AlertBuscarUbicaciones}>
-							¿Cómo buscar link de ubicación?
-						</Button>
-					</div>
-					<InputGroup className=' gap-1'>
+		<div className='d-flex flex-column h-100'>
+			<div className='mx-4 my-2'>
+				<div className='Descripcion'>
+					<h5> Descripción: </h5>
+					<InputGroup className='mb-4 gap-1'>
 						<Form.Control
-							placeholder='Inserte link de ubicación'
-							aria-label='Inserte link de ubicación'
+							as='textarea'
+							rows={3}
+							style={{ resize: 'none' }}
+							className='custom-scrollbar'
+							aria-label='Inserte descripción'
 							aria-describedby='basic-addon2'
-							onChange={handleUbicacionInputChange}
-							value={ubicacion}
-							isInvalid={ubicacion !== '' && !isUrlValid(ubicacion)}
+							onChange={handleDescripcionChange}
+							disabled={!editandoDescripcion}
+							value={descripcion}
+							isInvalid={textLimitError(descripcion ?? '', 2000)}
 						/>
-
+						<Form.Control.Feedback type='invalid' tooltip>
+							Máximo 2000 caracteres
+						</Form.Control.Feedback>
 						<Button
-							variant='success'
+							variant='secondary'
 							id='button-addon2'
-							onClick={agregarUbicacion}
-							disabled={ubicacion === '' || !isUrlValid(ubicacion)}
+							style={{ width: '50px', height: '100px' }}
+							onClick={(event) => handleClickEditarDescripcion(event, descripcion)}
 						>
-							Agregar Ubicación
+							<Edit />
 						</Button>
 					</InputGroup>
 				</div>
+				<div className='d-flex justify-content-between mb-2'>
+					<h5>Ubicación:</h5>
+					<Button variant='info' size='sm' onClick={AlertBuscarUbicaciones}>
+						¿Cómo buscar link de ubicación?
+					</Button>
+				</div>
+				<InputGroup className='gap-1'>
+					<Form.Control
+						placeholder='Inserte link de ubicación'
+						aria-label='Inserte link de ubicación'
+						aria-describedby='basic-addon2'
+						onChange={handleUbicacionInputChange}
+						value={ubicacion}
+						isInvalid={ubicacion !== '' && !isUrlValid(ubicacion)}
+					/>
+					<Button
+						variant='success'
+						id='button-addon2'
+						onClick={agregarUbicacion}
+						disabled={ubicacion === '' || !isUrlValid(ubicacion)}
+					>
+						Agregar Ubicación
+					</Button>
+				</InputGroup>
 				<ListGroup
 					style={{ height: '150px', maxHeight: '150px', overflowY: 'auto' }}
-					className=' custom-scrollbar'
+					className='custom-scrollbar mt-2'
 				>
 					{ubicaciones.map((ubicacion, index) => (
-						<ListGroup.Item key={index} className=' w-75 align-self-center' variant='secondary'>
-							<div className=' d-flex justify-content-between '>
+						<ListGroup.Item key={index} className='w-75 align-self-center' variant='secondary'>
+							<div className='d-flex justify-content-between'>
 								<a
 									href={ubicacion.enlace ?? ''}
 									target='_blank'
@@ -175,15 +187,15 @@ const FormDescriptionUbication = () => {
 								>
 									{ubicacion.enlace ?? ''}
 								</a>
-								<div className=' d-flex'>
+								<div className='d-flex'>
 									<ContentCopy
-										className=' cursor-pointer mx-1'
+										className='cursor-pointer mx-1'
 										onClick={(event) => {
 											event.stopPropagation();
 											copyToClipboard(ubicacion.enlace ?? '');
 										}}
 									/>
-									<DeleteIcon
+									<Delete
 										onClick={() => eliminarUbicacion(index)}
 										style={{
 											borderRadius: '20%',
@@ -198,18 +210,19 @@ const FormDescriptionUbication = () => {
 					))}
 				</ListGroup>
 			</div>
-
 			<Button
 				variant='success'
-				className='mt-auto mb-3 align-self-center '
+				className='mt-auto mb-3 align-self-center'
 				onClick={() => {
 					guardarActividad(
 						{ ...activity, desc: descripcion, listaUbicaciones: ubicaciones },
 						dispatch,
 					);
+					dispatch(SET_HAY_CAMBIOS({ valor: false })); // Restablecer el estado de cambios
 				}}
 			>
-				Guardar Actividad
+				Guardar Actividad{' '}
+				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 			</Button>
 		</div>
 	);

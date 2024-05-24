@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import { ListaObjetivo } from '../../types/BasesProps';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { ErrorOutline } from '@mui/icons-material';
 
 export default function FormPIE() {
 	const dispatch = useDispatch();
@@ -30,12 +32,30 @@ export default function FormPIE() {
 		}
 	};
 
+	useEffect(() => {
+		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+	}, [objetivosSeleccionados]);
+
+	const checkForChanges = () => {
+		// Comprueba si hay cambios
+		const cambios =
+			JSON.stringify(activity.listaObjetivos) !== JSON.stringify(objetivosSeleccionados);
+
+		if (hayCambios === cambios) return;
+
+		if (cambios) {
+			dispatch(SET_HAY_CAMBIOS({ valor: true }));
+		} else {
+			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+		}
+	};
+
 	const objetivosDesde21a24 = objetivos?.slice(19, 22);
 	const objetivosDesde5a9 = objetivos?.slice(4, 9);
 	const objetivosDesde10a15 = objetivos?.slice(9, 14);
 	const objetivosDesde16a20 = objetivos?.slice(14, 19);
 
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 
 	useEffect(() => {
 		const sincronizarCheckboxes = () => {
@@ -140,7 +160,8 @@ export default function FormPIE() {
 					);
 				}}
 			>
-				Guardar Actividad
+				Guardar Actividad{' '}
+				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 			</Button>
 		</div>
 	);

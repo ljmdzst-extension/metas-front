@@ -60,7 +60,6 @@ const FormMetas = () => {
 
 	useEffect(() => {
 		const actualizarRedux = () => {
-			console.log('Cargar meta - ', listadoMetas);
 			dispatch({
 				type: 'CARGAR_META',
 				payload: {
@@ -130,15 +129,7 @@ const FormMetas = () => {
 			</div>`,
 			confirmButtonText: 'Aceptar',
 			width: '80%',
-		})
-			.then((result) => {
-				if (result.isConfirmed) {
-					console.log('Confirmado');
-				}
-			})
-			.catch((error) => {
-				console.error('Error al mostrar la alerta:', error);
-			});
+		});
 	};
 
 	const textLimitError = (text: string, limit: number) => {
@@ -216,7 +207,6 @@ const FormMetas = () => {
 				variant='success'
 				className='mt-auto mb-3 align-self-center '
 				onClick={() => {
-					console.log('guardando', listadoMetas);
 					guardarActividad(
 						{
 							...activity,

@@ -7,6 +7,8 @@ import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import { Row, Col } from 'react-bootstrap';
 import { ListaProgramasSIPPE } from '../../types/BasesProps';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { ErrorOutline } from '@mui/icons-material'
 const animatedComponents = makeAnimated();
 
 interface Relacion {
@@ -26,7 +28,7 @@ interface Option {
 export default function FormArSecUU() {
 	const dispatch = useDispatch();
 
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
@@ -91,6 +93,36 @@ export default function FormArSecUU() {
 	useEffect(() => {
 		setSippeSeleccionadas(filtrarSippeSeleccionadas());
 	}, [filtrarSippeSeleccionadas, sippe]);
+
+	// NOTE: CHECK UPDATE
+
+	useEffect(() => {
+		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+	}, [relacionSeleccionadas1, relacionSeleccionadas2, relacionSeleccionadas3, sippeSeleccionadas]);
+
+	const checkForChanges = () => {
+		// Comprueba si hay cambios
+
+		const relacionValues = Array.from(
+			new Set([
+				...relacionSeleccionadas1.map((el) => el.value),
+				...relacionSeleccionadas2.map((el) => el.value),
+				...relacionSeleccionadas3.map((el) => el.value),
+			]),
+		).sort((a, b) => a - b);
+		const sippeValues = sippeSeleccionadas.map((el) => el.value);
+
+		const cambios =
+			JSON.stringify(activity.listaRelaciones) !== JSON.stringify(relacionValues) ||
+			JSON.stringify(activity.listaProgramasSIPPE) !== JSON.stringify(sippeValues);
+		if (hayCambios === cambios) return;
+
+		if (cambios) {
+			dispatch(SET_HAY_CAMBIOS({ valor: true }));
+		} else {
+			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+		}
+	};
 
 	return (
 		<div className=' d-flex flex-column h-100 px-4 gap-2'>
@@ -200,7 +232,8 @@ export default function FormArSecUU() {
 					);
 				}}
 			>
-				Guardar Actividad
+				Guardar Actividad{' '}
+				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 			</Button>
 		</div>
 	);
