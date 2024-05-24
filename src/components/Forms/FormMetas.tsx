@@ -9,6 +9,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Badge, Button, Form, Modal, Table } from 'react-bootstrap';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import Swal from 'sweetalert2';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { ErrorOutline } from '@mui/icons-material';
 
 interface Valoracion {
 	idValoracion: number;
@@ -38,7 +40,7 @@ const FormMetas = () => {
 	const [showModal, setShowModal] = useState(false);
 	const indexCurrentMeta = useRef(-1);
 
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 
 	useEffect(() => {
@@ -141,6 +143,24 @@ const FormMetas = () => {
 		return valoracion?.nom;
 	};
 
+	// NOTE: CHECK UPDATE
+
+	useEffect(() => {
+		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+	}, [listadoMetas]);
+
+	const checkForChanges = () => {
+		const cambio = JSON.stringify(activity.listaMetas) !== JSON.stringify(listadoMetas);
+
+		if (hayCambios === cambio) return;
+
+		if (cambio) {
+			dispatch(SET_HAY_CAMBIOS({ valor: true }));
+		} else {
+			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+		}
+	};
+
 	return (
 		<div className=' d-flex flex-column mx-4 h-100'>
 			<Button
@@ -214,9 +234,11 @@ const FormMetas = () => {
 						},
 						dispatch,
 					);
+					dispatch(SET_HAY_CAMBIOS({ valor: false })); // R
 				}}
 			>
-				Guardar Actividad
+				Guardar Actividad{' '}
+				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 			</Button>
 			<Modal show={showModal} onHide={closeModal} size='xl' centered>
 				<Modal.Header closeButton></Modal.Header>
