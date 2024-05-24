@@ -8,7 +8,7 @@ import { guardarActividad } from '../../redux/actions/putActividad';
 import { Row, Col } from 'react-bootstrap';
 import { ListaProgramasSIPPE } from '../../types/BasesProps';
 import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
-import { ErrorOutline } from '@mui/icons-material'
+import { ErrorOutline } from '@mui/icons-material';
 const animatedComponents = makeAnimated();
 
 interface Relacion {
@@ -97,7 +97,14 @@ export default function FormArSecUU() {
 	// NOTE: CHECK UPDATE
 
 	useEffect(() => {
-		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+		if (
+			relacionSeleccionadas1.length > 0 ||
+			relacionSeleccionadas2.length > 0 ||
+			relacionSeleccionadas3.length > 0 ||
+			sippeSeleccionadas.length > 0
+		) {
+			checkForChanges();
+		}
 	}, [relacionSeleccionadas1, relacionSeleccionadas2, relacionSeleccionadas3, sippeSeleccionadas]);
 
 	const checkForChanges = () => {

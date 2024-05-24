@@ -169,6 +169,7 @@ export default function Activity() {
 		}
 
 		if (!hayCambios) {
+			dispatch(SET_HAY_CAMBIOS({ valor: false }));
 			setCurrentFormSelected(formName);
 			return;
 		}
@@ -182,8 +183,8 @@ export default function Activity() {
 			cancelButtonText: 'No, cancelar',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				setCurrentFormSelected(formName);
 				dispatch(SET_HAY_CAMBIOS({ valor: false }));
+				setCurrentFormSelected(formName);
 			}
 		});
 	};

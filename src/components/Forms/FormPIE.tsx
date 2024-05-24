@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ export default function FormPIE() {
 	const [objetivos, setObjetivos] = useState<ListaObjetivo[]>([]);
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+	const isInitialMount = useRef(true);
 
 	useEffect(() => {
 		if (!error && bases) {
@@ -33,7 +34,14 @@ export default function FormPIE() {
 	};
 
 	useEffect(() => {
-		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
+
+		if (objetivosSeleccionados.length > 0) {
+			checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+		}
 	}, [objetivosSeleccionados]);
 
 	const checkForChanges = () => {

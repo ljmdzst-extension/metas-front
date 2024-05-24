@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -22,6 +22,7 @@ const FormDescriptionUbication = () => {
 
 	const [ubicacion, setUbicacion] = useState<string>('');
 	const [ubicaciones, setUbicaciones] = useState<ListaUbicacione[]>([]);
+	const isInitialMount = useRef(true);
 
 	useEffect(() => {
 		if (activity.listaUbicaciones) {
@@ -30,7 +31,13 @@ const FormDescriptionUbication = () => {
 	}, [activity.listaUbicaciones]);
 
 	useEffect(() => {
-		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
+		if (descripcion.length > 0 && ubicaciones.length > 0) {
+			checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+		}
 	}, [descripcion, ubicaciones]);
 
 	const handleDescripcionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
