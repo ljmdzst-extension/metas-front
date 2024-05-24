@@ -10,18 +10,13 @@ import { ErrorOutline } from '@mui/icons-material';
 
 export default function FormPIE() {
 	const dispatch = useDispatch();
-	const [objetivos, setObjetivos] = useState<ListaObjetivo[]>([]);
-	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
-	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+	const { bases } = useSelector((state: RootState) => state.metasSlice);
+	const [objetivos] = useState<ListaObjetivo[]>(bases?.listaObjetivos ?? []);
+	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>(
+		activity?.listaObjetivos ?? [],
+	);
 	const isInitialMount = useRef(true);
-
-	useEffect(() => {
-		if (!error && bases) {
-			setObjetivos(bases.listaObjetivos);
-		} else {
-			// TODO: Alerta de error global
-		}
-	}, [bases, error]);
 
 	const handleSeleccionarObjetivo = (idObjetivo: number) => {
 		const objetivoIndex = objetivosSeleccionados.indexOf(idObjetivo);
@@ -38,10 +33,7 @@ export default function FormPIE() {
 			isInitialMount.current = false;
 			return;
 		}
-
-		if (objetivosSeleccionados.length > 0) {
-			checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
-		}
+		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
 	}, [objetivosSeleccionados]);
 
 	const checkForChanges = () => {
@@ -62,15 +54,6 @@ export default function FormPIE() {
 	const objetivosDesde5a9 = objetivos?.slice(4, 9);
 	const objetivosDesde10a15 = objetivos?.slice(9, 14);
 	const objetivosDesde16a20 = objetivos?.slice(14, 19);
-
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-
-	useEffect(() => {
-		const sincronizarCheckboxes = () => {
-			setObjetivosSeleccionados(activity?.listaObjetivos ?? []);
-		};
-		sincronizarCheckboxes();
-	}, [activity.listaObjetivos]);
 
 	return (
 		<div className=' d-flex flex-column h-100'>

@@ -19,25 +19,20 @@ const FormDescriptionUbication = () => {
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 	const [editandoDescripcion, setEditandoDescripcion] = useState(false);
 	const [descripcion, setDescripcion] = useState<string>(activity.desc ?? '');
+	const [ubicaciones, setUbicaciones] = useState<ListaUbicacione[]>(
+		activity.listaUbicaciones ?? [],
+	);
 
 	const [ubicacion, setUbicacion] = useState<string>('');
-	const [ubicaciones, setUbicaciones] = useState<ListaUbicacione[]>([]);
 	const isInitialMount = useRef(true);
-
-	useEffect(() => {
-		if (activity.listaUbicaciones) {
-			setUbicaciones(activity.listaUbicaciones);
-		}
-	}, [activity.listaUbicaciones]);
 
 	useEffect(() => {
 		if (isInitialMount.current) {
 			isInitialMount.current = false;
 			return;
 		}
-		if (descripcion.length > 0 && ubicaciones.length > 0) {
-			checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
-		}
+
+		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
 	}, [descripcion, ubicaciones]);
 
 	const handleDescripcionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

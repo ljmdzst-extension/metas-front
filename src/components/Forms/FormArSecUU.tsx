@@ -30,6 +30,7 @@ export default function FormArSecUU() {
 
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+	const [dataLoaded, setDataLoaded] = useState(false);
 
 	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
 	const [sippe, setSippe] = useState<ListaProgramasSIPPE[]>([]);
@@ -71,12 +72,6 @@ export default function FormArSecUU() {
 		[activity],
 	);
 
-	useEffect(() => {
-		setRelacionSeleccionadas1(filtrarRelacionesSeleccionadas(filtrarAreas('interna_extensión')));
-		setRelacionSeleccionadas2(filtrarRelacionesSeleccionadas(filtrarAreas('interna_unl')));
-		setRelacionSeleccionadas3(filtrarRelacionesSeleccionadas(filtrarAreas('U.A.')));
-	}, [filtrarAreas, filtrarRelacionesSeleccionadas, relaciones]);
-
 	const formatearSippes = useCallback((): Option[] => {
 		return sippe.map((sippe) => ({
 			value: sippe.idProgramaSippe,
@@ -91,20 +86,19 @@ export default function FormArSecUU() {
 	}, [activity.listaProgramasSIPPE, formatearSippes]);
 
 	useEffect(() => {
+		setRelacionSeleccionadas1(filtrarRelacionesSeleccionadas(filtrarAreas('interna_extensión')));
+		setRelacionSeleccionadas2(filtrarRelacionesSeleccionadas(filtrarAreas('interna_unl')));
+		setRelacionSeleccionadas3(filtrarRelacionesSeleccionadas(filtrarAreas('U.A.')));
 		setSippeSeleccionadas(filtrarSippeSeleccionadas());
-	}, [filtrarSippeSeleccionadas, sippe]);
+
+		setDataLoaded(true);
+	}, [relaciones, sippe]);
 
 	// NOTE: CHECK UPDATE
 
 	useEffect(() => {
-		if (
-			relacionSeleccionadas1.length > 0 ||
-			relacionSeleccionadas2.length > 0 ||
-			relacionSeleccionadas3.length > 0 ||
-			sippeSeleccionadas.length > 0
-		) {
-			checkForChanges();
-		}
+		if (!dataLoaded) return;
+		checkForChanges();
 	}, [relacionSeleccionadas1, relacionSeleccionadas2, relacionSeleccionadas3, sippeSeleccionadas]);
 
 	const checkForChanges = () => {

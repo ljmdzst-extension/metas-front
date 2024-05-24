@@ -34,14 +34,15 @@ const defaultNuevaMeta = {
 
 const FormMetas = () => {
 	const dispatch = useDispatch();
-	const [listadoMetas, setListadoMetas] = useState<metas[]>([]);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+	const [listadoMetas, setListadoMetas] = useState<metas[]>(activity.listaMetas ?? []);
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
 	const [showModal, setShowModal] = useState(false);
 	const indexCurrentMeta = useRef(-1);
 
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+	const isInitialMount = useRef(true);
 
 	useEffect(() => {
 		if (!error && bases) {
@@ -51,27 +52,6 @@ const FormMetas = () => {
 		}
 	}, [bases, error]);
 
-	useEffect(() => {
-		const sincronizarMetas = () => {
-			if (activity.listaMetas) {
-				setListadoMetas(activity.listaMetas);
-			}
-		};
-		sincronizarMetas();
-	}, [activity.listaMetas]);
-
-	useEffect(() => {
-		const actualizarRedux = () => {
-			dispatch({
-				type: 'CARGAR_META',
-				payload: {
-					metas: listadoMetas,
-				},
-			});
-		};
-		actualizarRedux();
-	}, [dispatch, activity, listadoMetas]);
-
 	const openModal = () => {
 		setShowModal(true);
 	};
@@ -80,44 +60,37 @@ const FormMetas = () => {
 	};
 
 	const botonAgregarMeta = () => {
-		// console.log(indexCurrentMeta.current);
-		// console.log('Agregar');
 		indexCurrentMeta.current = -1;
 		setNuevaMeta(defaultNuevaMeta);
 		openModal();
 	};
 
 	const guardarBotonModal = () => {
-		// console.log(indexCurrentMeta.current);
-		// console.log('Guardar');
 		if (indexCurrentMeta.current === -1) {
-			// Agregar
 			const newListadoMetas = [...listadoMetas];
 			newListadoMetas.push(nuevaMeta);
 			setListadoMetas(newListadoMetas);
 		} else {
-			// Editar
 			const newListadoMetas = [...listadoMetas];
 			newListadoMetas[indexCurrentMeta.current] = nuevaMeta;
 			setListadoMetas(newListadoMetas);
 		}
-
+		checkForChanges();
 		closeModal();
 	};
 
 	const editarMeta = (index: number) => {
-		// console.log('Editar');
-		// console.log(indexCurrentMeta.current);
 		indexCurrentMeta.current = index;
 		setNuevaMeta(listadoMetas[index]);
 		openModal();
+		checkForChanges();
 	};
 
 	const eliminarMeta = (index: number) => {
-		// console.log('Eliminar');
 		const newListadoMetas = [...listadoMetas];
 		newListadoMetas.splice(index, 1);
 		setListadoMetas(newListadoMetas);
+		checkForChanges();
 	};
 
 	const alertVistaDetalle = (thisMeta: metas) => {
@@ -144,13 +117,9 @@ const FormMetas = () => {
 	};
 
 	// NOTE: CHECK UPDATE
-
-	useEffect(() => {
-		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
-	}, [listadoMetas]);
-
 	const checkForChanges = () => {
 		const cambio = JSON.stringify(activity.listaMetas) !== JSON.stringify(listadoMetas);
+		console.log(activity.listaMetas, ' - ', listadoMetas);
 
 		if (hayCambios === cambio) return;
 
@@ -160,6 +129,14 @@ const FormMetas = () => {
 			dispatch(SET_HAY_CAMBIOS({ valor: false }));
 		}
 	};
+	useEffect(() => {
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
+
+		checkForChanges();
+	}, [listadoMetas]);
 
 	return (
 		<div className=' d-flex flex-column mx-4 h-100'>
@@ -234,7 +211,7 @@ const FormMetas = () => {
 						},
 						dispatch,
 					);
-					dispatch(SET_HAY_CAMBIOS({ valor: false })); // R
+					dispatch(SET_HAY_CAMBIOS({ valor: false }));
 				}}
 			>
 				Guardar Actividad{' '}
