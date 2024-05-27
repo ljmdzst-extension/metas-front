@@ -49,10 +49,8 @@ export default function Main() {
 	}, [dispatch, navigate]);
 
 	return (
-		<div className=''>
-			<div className='ConteinerCards '>
-				<PanelProgramas />
-			</div>
+		<div className='ConteinerCards '>
+			<PanelProgramas />
 		</div>
 	);
 }
