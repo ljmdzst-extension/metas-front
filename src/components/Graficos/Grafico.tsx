@@ -19,6 +19,8 @@ type ChartType = 'line' | 'bar' | 'pie';
 interface GraficoProps {
 	type: ChartType;
 	data: any[];
+	dataKey?: string;
+	valueKeys: string[];
 }
 
 const RADIAN = Math.PI / 180;
@@ -37,8 +39,10 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 	);
 };
 
-const Grafico: React.FC<GraficoProps> = ({ type, data }) => {
-	const keysWithValue = Object.keys(data[0]).filter((key) => key.includes('valor'));
+const Grafico: React.FC<GraficoProps> = ({ dataKey = 'name', type, data, valueKeys }) => {
+	if (data.length === 0) {
+		return <div>No data available</div>;
+	}
 
 	switch (type) {
 		case 'line':
@@ -50,11 +54,11 @@ const Grafico: React.FC<GraficoProps> = ({ type, data }) => {
 				>
 					<LineChart data={data}>
 						<CartesianGrid strokeDasharray='3 3' />
-						<XAxis dataKey='name' />
+						<XAxis dataKey={dataKey} />
 						<YAxis />
 						<Tooltip />
 						<Legend />
-						{keysWithValue.map((key, index) => (
+						{valueKeys.map((key, index) => (
 							<Line
 								key={index}
 								type='monotone'
@@ -74,11 +78,11 @@ const Grafico: React.FC<GraficoProps> = ({ type, data }) => {
 				>
 					<BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 						<CartesianGrid strokeDasharray='3 3' />
-						<XAxis dataKey='name' />
+						<XAxis dataKey={dataKey} />
 						<YAxis />
 						<Tooltip />
 						<Legend />
-						{keysWithValue.map((key, index) => (
+						{valueKeys.map((key, index) => (
 							<Bar key={index} dataKey={key} fill={COLORS[index % COLORS.length]} />
 						))}
 					</BarChart>
@@ -93,7 +97,7 @@ const Grafico: React.FC<GraficoProps> = ({ type, data }) => {
 				>
 					<PieChart>
 						<Pie
-							dataKey='value'
+							dataKey={dataKey}
 							data={data}
 							cx='50%'
 							cy='50%'
