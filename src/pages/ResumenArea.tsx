@@ -103,40 +103,38 @@ const ResumenArea = () => {
 	};
 
 	return (
-		<div className=' ' style={{ height: '90%' }}>
+		<div
+			className=' d-flex flex-column h-100 m-2 border rounded'
+			style={{ backgroundColor: '#fefefe' }}
+		>
+			<div className=' d-flex justify-content-between align-items-center m-2'>
+				<h3 className=' text-uppercase text-center '>Lista de Actividades</h3>
+				<ArrowBack className=' cursor-pointer' onClick={() => navigate(-1)} />
+			</div>
+			<InputGroup className=' w-50 m-2'>
+				<Form.Control
+					type='text'
+					placeholder='Buscar Actividad'
+					name='dni'
+					onChange={handleChange}
+					size='sm'
+				/>
+				<Button variant='primary' size='sm' onClick={handleSearch}>
+					<Replay />
+				</Button>
+			</InputGroup>
 			<div
-				className=' d-flex flex-column h-100 m-2 border rounded'
-				style={{ backgroundColor: '#fefefe' }}
+				className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-4 p-2 m-2'
+				style={{ height: '100%' }}
 			>
-				<div className=' d-flex justify-content-between align-items-center m-2'>
-					<h3 className=' text-uppercase text-center '>Lista de Actividades</h3>
-					<ArrowBack className=' cursor-pointer' onClick={() => navigate(-1)} />
-				</div>
-				<InputGroup className=' w-50 m-2'>
-					<Form.Control
-						type='text'
-						placeholder='Buscar Actividad'
-						name='dni'
-						onChange={handleChange}
-						size='sm'
-					/>
-					<Button variant='primary' size='sm' onClick={handleSearch}>
-						<Replay />
-					</Button>
-				</InputGroup>
-				<div
-					className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-4 px-2'
-					style={{ height: '100%' }}
-				>
-					{data.map((el, index) => (
-						<ElementoResumen element={el} key={el.desc + '-' + index} />
-					))}
-					{hasMore && (
-						<p className=' text-secondary text-uppercase p-2' ref={elementRef}>
-							Cargando datos
-						</p>
-					)}
-				</div>
+				{data.map((el, index) => (
+					<ElementoResumen element={el} key={el.desc + '-' + index} />
+				))}
+				{hasMore && (
+					<p className=' text-secondary text-uppercase p-2' ref={elementRef}>
+						Cargando datos
+					</p>
+				)}
 			</div>
 		</div>
 	);

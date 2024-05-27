@@ -71,11 +71,7 @@ export default function PanelProgramas() {
 		<div className='ContainerCardMenu d-flex flex-column justify-content-start gap-1 '>
 			{/* <h2>Titulo del Sistema</h2> */}
 
-			<Image
-				src='/assets/img/UNL_Logo.png'
-				alt='logo-programas'
-				style={{ width: '15rem' }}
-			/>
+			<Image src='/assets/img/UNL_Logo.png' alt='logo-programas' style={{ width: '15rem' }} />
 			{/* Antes validaba con is open */}
 			<Form.Group className=' align-self-start d-flex align-items-center mb-2'>
 				<label style={{ width: '140px' }}>Seleccione el año:</label>
@@ -104,7 +100,7 @@ export default function PanelProgramas() {
 						<Card.Text style={{ textAlign: 'center' }}>
 							Para obtener un análisis de datos generales, presione en "Ver resumen"
 						</Card.Text>
-						<Button variant='success' disabled>
+						<Button variant='success' onClick={() => navigation('/gestion/metas/graficas')}>
 							Ver Resumen
 						</Button>
 					</Card.Body>

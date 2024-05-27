@@ -283,7 +283,7 @@ export default function PlanificationPanel({
 					)}
 					{/* NOTE: VISTA PRINCIPAL - Información */}
 					{!isFormOpen ? (
-						<div className=' d-flex flex-column '>
+						<div className=' d-flex flex-column h-100 '>
 							<div
 								className=' overflow-y-scroll custom-scrollbar'
 								style={{ height: availableHeight - 170 }}

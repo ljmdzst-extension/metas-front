@@ -16,7 +16,6 @@ import Swal from 'sweetalert2';
 import { ArrowBack, ErrorOutline } from '@mui/icons-material';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
-import useAvailableHeight from '../hooks/useAvailableHeight';
 import useAlert from '../hooks/useAlert';
 import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
 
@@ -60,8 +59,6 @@ export default function Activity() {
 	const dispatch = useDispatch<AppDispatch>();
 	const { isLoading, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 	const { token } = useSelector((state: RootState) => state.authSlice);
-
-	const availableHeight = useAvailableHeight();
 
 	useEffect(() => {
 		try {
@@ -247,12 +244,7 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<div
-				className=' d-flex flex-column'
-				style={{
-					height: availableHeight,
-				}}
-			>
+			<div className=' d-flex flex-column h-100'>
 				<div
 					className=' d-flex align-items-center justify-content-between border  rounded-3 p-1 pb-0 mx-2 my-1  '
 					style={{ backgroundColor: '#fefefe' }}
@@ -286,10 +278,7 @@ export default function Activity() {
 										</Spinner>
 									</div>
 								) : (
-									<div
-										className=' d-flex flex-column position-relative'
-										style={{ height: availableHeight - 70 }}
-									>
+									<div className=' d-flex flex-column position-relative h-100'>
 										<Button
 											variant='outline-success'
 											style={{ position: 'absolute', bottom: '.5rem', right: '1rem' }}
