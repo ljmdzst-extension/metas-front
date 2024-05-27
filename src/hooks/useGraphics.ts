@@ -8,6 +8,7 @@ import {
 } from '../types/GraphicsProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import { errorAlert } from '../utils/Alerts';
 
 interface Props {
 	year?: number;
@@ -24,6 +25,7 @@ export const useGraphics = ({ year }: Props) => {
 	useEffect(() => {
 		getGraphics();
 	}, [year]);
+
 	const getGraphics = async () => {
 		setIsLoading(true);
 		try {
@@ -38,17 +40,22 @@ export const useGraphics = ({ year }: Props) => {
 				},
 			);
 
-			if (response.ok) {
-				const data: GraphicsResponse = await response.json();
-				console.log(data);
-				setGraficoEjes(data.data.dataGraficoEjes);
-				setGraficoObjEst(data.data.dataGraficoObjEst);
-				setGraficoLy(data.data.dataGraficoLies);
-				setGraficoUUAA(data.data.dataGraficoUUAA);
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.error || 'Error fetching data');
 			}
-			setIsLoading(false);
+
+			const data: GraphicsResponse = await response.json();
+			console.log(data);
+			setGraficoEjes(data.data.dataGraficoEjes);
+			setGraficoObjEst(data.data.dataGraficoObjEst);
+			setGraficoLy(data.data.dataGraficoLies);
+			setGraficoUUAA(data.data.dataGraficoUUAA);
 		} catch (error) {
-			console.log(error);
+			console.error(error);
+			errorAlert(error.message);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
