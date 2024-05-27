@@ -1,4 +1,4 @@
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import Grafico from '../components/Graficos/Grafico';
 import { useGraphics } from '../hooks/useGraphics';
@@ -25,7 +25,7 @@ export const Graphics = () => {
 			style={{ backgroundColor: '#fefefe' }}
 		>
 			<div className='d-flex justify-content-center align-items-center m-2'>
-				<h2>Graficas y resumenes</h2>
+				<h2>Gráficos y resúmenes</h2>
 			</div>
 			<div className='d-flex justify-content-center align-items-center m-2'>
 				<label htmlFor='year-select'>Selecciona el año: </label>
@@ -76,7 +76,11 @@ export const Graphics = () => {
 							>
 								<h2>{item.title}</h2>
 								{isLoading ? (
-									<p>Cargando...</p>
+									<div className=' d-flex flex-column justify-content-center align-items-center w-100 h-100'>
+										<Spinner animation='border' role='status'>
+											<span className='visually-hidden'>Loading...</span>
+										</Spinner>
+									</div>
 								) : (
 									<Grafico
 										dataKey={item.dataKey}
