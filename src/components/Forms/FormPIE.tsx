@@ -1,24 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import { ListaObjetivo } from '../../types/BasesProps';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { ErrorOutline } from '@mui/icons-material';
 
 export default function FormPIE() {
 	const dispatch = useDispatch();
-	const [objetivos, setObjetivos] = useState<ListaObjetivo[]>([]);
-	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
-	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
-
-	useEffect(() => {
-		if (!error && bases) {
-			setObjetivos(bases.listaObjetivos);
-		} else {
-			// TODO: Alerta de error global
-		}
-	}, [bases, error]);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+	const { bases } = useSelector((state: RootState) => state.metasSlice);
+	const [objetivos] = useState<ListaObjetivo[]>(bases?.listaObjetivos ?? []);
+	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>(
+		activity?.listaObjetivos ?? [],
+	);
+	const isInitialMount = useRef(true);
 
 	const handleSeleccionarObjetivo = (idObjetivo: number) => {
 		const objetivoIndex = objetivosSeleccionados.indexOf(idObjetivo);
@@ -30,19 +28,32 @@ export default function FormPIE() {
 		}
 	};
 
+	useEffect(() => {
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			return;
+		}
+		checkForChanges(); // Comprueba si hay cambios cuando se monta el componente o cuando se actualiza el estado
+	}, [objetivosSeleccionados]);
+
+	const checkForChanges = () => {
+		// Comprueba si hay cambios
+		const cambios =
+			JSON.stringify(activity.listaObjetivos) !== JSON.stringify(objetivosSeleccionados);
+
+		if (hayCambios === cambios) return;
+
+		if (cambios) {
+			dispatch(SET_HAY_CAMBIOS({ valor: true }));
+		} else {
+			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+		}
+	};
+
 	const objetivosDesde21a24 = objetivos?.slice(19, 22);
 	const objetivosDesde5a9 = objetivos?.slice(4, 9);
 	const objetivosDesde10a15 = objetivos?.slice(9, 14);
 	const objetivosDesde16a20 = objetivos?.slice(14, 19);
-
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
-
-	useEffect(() => {
-		const sincronizarCheckboxes = () => {
-			setObjetivosSeleccionados(activity?.listaObjetivos ?? []);
-		};
-		sincronizarCheckboxes();
-	}, [activity.listaObjetivos]);
 
 	return (
 		<div className=' d-flex flex-column h-100'>
@@ -140,7 +151,8 @@ export default function FormPIE() {
 					);
 				}}
 			>
-				Guardar Actividad
+				Guardar Actividad{' '}
+				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 			</Button>
 		</div>
 	);

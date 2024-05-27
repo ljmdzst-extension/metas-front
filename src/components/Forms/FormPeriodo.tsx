@@ -9,17 +9,18 @@ import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import { Col, Row } from 'react-bootstrap';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { ErrorOutline } from '@mui/icons-material';
 
 registerLocale('es', es);
 
 export default function FormPeriodo() {
 	const dispatch = useDispatch();
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 
 	// const [isSaving, setIsSaving] = useState<boolean>(false);
 
 	const [fechaDesde, setFechaDesde] = useState<string | null>(activity.fechaDesde ?? null);
-
 	const [fechaHasta, setFechaHasta] = useState<string | null>(activity.fechaHasta ?? null);
 	const [erroresRango, setErroresRango] = useState<string>('');
 	const [listaFechasPuntuales, setListaFechasPuntuales] = useState<
@@ -73,6 +74,18 @@ export default function FormPeriodo() {
 			setListaFechasPuntuales(listaOrdenada);
 		}
 	};
+	const checkForChanges = () => {
+		const cambio =
+			activity.fechaDesde !== fechaDesde ||
+			activity.fechaHasta !== fechaHasta ||
+			JSON.stringify(activity.listaFechasPuntuales) !== JSON.stringify(listaFechasPuntuales);
+		console.log(activity.listaFechasPuntuales, ' - ', listaFechasPuntuales);
+		dispatch(SET_HAY_CAMBIOS({ valor: cambio }));
+	};
+
+	useEffect(() => {
+		checkForChanges();
+	}, [fechaDesde, fechaHasta, listaFechasPuntuales]);
 
 	const selectStartDate = (d: Date) => {
 		setRangeStart(d);
@@ -227,6 +240,7 @@ export default function FormPeriodo() {
 					}}
 				>
 					Guardar Actividad
+					{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 				</Button>
 			</div>
 		</div>

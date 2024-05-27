@@ -48,7 +48,7 @@ export const Graphics = () => {
 							legend: true,
 						},
 						{
-							title: 'Objetivos Estrategicos',
+							title: 'Objetivos Estratégicos',
 							type: 'bar' as ChartType,
 							data: graficoObjEst || [],
 							dataKey: 'objEst',
@@ -77,8 +77,8 @@ export const Graphics = () => {
 								<h2>{item.title}</h2>
 								{isLoading ? (
 									<div className=' d-flex flex-column justify-content-center align-items-center w-100 h-100'>
-										<Spinner animation='border' role='status'>
-											<span className='visually-hidden'>Loading...</span>
+										<Spinner animation='border' role='output'>
+											<span className='visually-hidden'>Cargando...</span>
 										</Spinner>
 									</div>
 								) : (
