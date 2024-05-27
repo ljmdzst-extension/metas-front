@@ -13,7 +13,7 @@ import { Col, Row, Spinner } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
-import { ArrowBack, ErrorOutline } from '@mui/icons-material';
+import { ArrowBack } from '@mui/icons-material';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
 import useAlert from '../hooks/useAlert';

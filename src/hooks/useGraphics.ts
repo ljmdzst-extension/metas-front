@@ -53,7 +53,11 @@ export const useGraphics = ({ year }: Props) => {
 			setGraficoUUAA(data.data.dataGraficoUUAA);
 		} catch (error) {
 			console.error(error);
-			errorAlert(error.message);
+			if (error instanceof Error) {
+				errorAlert(error.message);
+			} else {
+				errorAlert('An unknown error occurred');
+			}
 		} finally {
 			setIsLoading(false);
 		}

@@ -44,7 +44,24 @@ const COLORS = [
 	'#ffb6c1',
 ];
 
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+interface CustomizedLabelProps {
+	cx: number;
+	cy: number;
+	midAngle: number;
+	innerRadius: number;
+	outerRadius: number;
+	percent: number;
+	index: number;
+}
+
+const renderCustomizedLabel = ({
+	cx,
+	cy,
+	midAngle,
+	innerRadius,
+	outerRadius,
+	percent,
+}: CustomizedLabelProps) => {
 	const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
 	const x = cx + radius * Math.cos(-midAngle * RADIAN);
 	const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -56,7 +73,13 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 	);
 };
 
-const CustomTooltip = ({ active, payload, label }) => {
+interface CustomTooltipProps {
+	active: boolean;
+	payload: any[];
+	label: string;
+}
+
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) => {
 	if (active && payload && payload.length) {
 		return (
 			<div
@@ -96,7 +119,7 @@ const Grafico: React.FC<GraficoProps> = ({
 						<CartesianGrid strokeDasharray='3 3' />
 						<XAxis dataKey={dataKey} tick={shouldHideTicks ? false : undefined} />
 						<YAxis />
-						<Tooltip content={<CustomTooltip />} />
+						<Tooltip content={<CustomTooltip active={false} payload={[]} label='' />} />
 						{legend && <Legend />}
 						{valueKeys.map((key, index) => (
 							<Line
@@ -120,11 +143,11 @@ const Grafico: React.FC<GraficoProps> = ({
 						<CartesianGrid strokeDasharray='3 3' />
 						<XAxis dataKey={dataKey} tick={shouldHideTicks ? false : undefined} />
 						<YAxis />
-						<Tooltip content={<CustomTooltip />} />
+						<Tooltip content={<CustomTooltip active={false} payload={[]} label='' />} />
 						{legend && <Legend />}
 						{valueKeys.map((key, index) => (
 							<Bar key={index} dataKey={key} fill={COLORS[index % COLORS.length]}>
-								{data.map((entry, idx) => (
+								{data.map((_, idx) => (
 									<Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
 								))}
 							</Bar>
@@ -151,7 +174,7 @@ const Grafico: React.FC<GraficoProps> = ({
 							label={renderCustomizedLabel}
 							nameKey={dataKey}
 						>
-							{data.map((entry, index) => (
+							{data.map((_, index) => (
 								<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 							))}
 						</Pie>
