@@ -9,6 +9,7 @@ import { Row, Col } from 'react-bootstrap';
 import { ListaProgramasSIPPE } from '../../types/BasesProps';
 import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
 import { ErrorOutline } from '@mui/icons-material';
+
 const animatedComponents = makeAnimated();
 
 interface Relacion {
@@ -32,74 +33,72 @@ export default function FormArSecUU() {
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
 	const [dataLoaded, setDataLoaded] = useState(false);
 
-	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
-	const [sippe, setSippe] = useState<ListaProgramasSIPPE[]>([]);
-
 	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<Option[]>([]);
 	const [relacionSeleccionadas2, setRelacionSeleccionadas2] = useState<Option[]>([]);
 	const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<Option[]>([]);
 	const [sippeSeleccionadas, setSippeSeleccionadas] = useState<Option[]>([]);
 
-	useEffect(() => {
-		if (!error && bases) {
-			setRelaciones(bases.listaRelaciones);
-			setSippe(bases.listaProgramasSIPPE);
-		} else {
-			// TODO: Alerta de error global
-		}
-	}, [bases, error]);
-
 	const filtrarAreas = useCallback(
 		(nomRelacion: string): Option[] => {
-			return relaciones
-				.filter((relacion) => relacion.tipoRelacion.nom === nomRelacion)
-				.map((relacion) => ({
+			if (!bases) return [];
+			return bases.listaRelaciones
+				.filter((relacion: Relacion) => relacion.tipoRelacion.nom === nomRelacion)
+				.map((relacion: Relacion) => ({
 					value: relacion.idRelacion,
 					label: relacion.nom,
 				}));
 		},
-		[relaciones],
+		[bases],
 	);
 
 	const filtrarRelacionesSeleccionadas = useCallback(
 		(filterFn: Option[]) => {
-			if (activity.listaRelaciones) {
-				return filterFn.filter((el) => activity.listaRelaciones?.some((ri) => ri === el.value));
-			} else {
-				return [];
-			}
+			if (!activity.listaRelaciones) return [];
+			return filterFn.filter((el: Option) =>
+				activity.listaRelaciones?.some((ri: number) => ri === el.value),
+			);
 		},
 		[activity],
 	);
 
 	const formatearSippes = useCallback((): Option[] => {
-		return sippe.map((sippe) => ({
+		if (!bases) return [];
+		return bases.listaProgramasSIPPE.map((sippe: ListaProgramasSIPPE) => ({
 			value: sippe.idProgramaSippe,
 			label: sippe.nom,
 		}));
-	}, [sippe]);
+	}, [bases]);
 
 	const filtrarSippeSeleccionadas = useCallback(() => {
-		return formatearSippes().filter((el) =>
-			activity.listaProgramasSIPPE?.some((ri) => ri === el.value),
+		if (!activity.listaProgramasSIPPE) return [];
+		return formatearSippes().filter((el: Option) =>
+			activity.listaProgramasSIPPE?.some((ri: number) => ri === el.value),
 		);
 	}, [activity.listaProgramasSIPPE, formatearSippes]);
 
 	useEffect(() => {
-		setRelacionSeleccionadas1(filtrarRelacionesSeleccionadas(filtrarAreas('interna_extensión')));
-		setRelacionSeleccionadas2(filtrarRelacionesSeleccionadas(filtrarAreas('interna_unl')));
-		setRelacionSeleccionadas3(filtrarRelacionesSeleccionadas(filtrarAreas('U.A.')));
-		setSippeSeleccionadas(filtrarSippeSeleccionadas());
+		if (!error && bases) {
+			setRelacionSeleccionadas1(filtrarRelacionesSeleccionadas(filtrarAreas('interna_extensión')));
+			setRelacionSeleccionadas2(filtrarRelacionesSeleccionadas(filtrarAreas('interna_unl')));
+			setRelacionSeleccionadas3(filtrarRelacionesSeleccionadas(filtrarAreas('U.A.')));
+			setSippeSeleccionadas(filtrarSippeSeleccionadas());
 
-		setDataLoaded(true);
-	}, [relaciones, sippe]);
-
-	// NOTE: CHECK UPDATE
+			setDataLoaded(true);
+		} else {
+			// TODO: Alerta de error global
+		}
+	}, [bases, error, filtrarAreas, filtrarRelacionesSeleccionadas, filtrarSippeSeleccionadas]);
 
 	useEffect(() => {
 		if (!dataLoaded) return;
 		checkForChanges();
-	}, [relacionSeleccionadas1, relacionSeleccionadas2, relacionSeleccionadas3, sippeSeleccionadas]);
+	}, [
+		dataLoaded,
+		relacionSeleccionadas1,
+		relacionSeleccionadas2,
+		relacionSeleccionadas3,
+		sippeSeleccionadas,
+	]);
 
 	const checkForChanges = () => {
 		// Comprueba si hay cambios
@@ -213,7 +212,7 @@ export default function FormArSecUU() {
 			</Row>
 			<Button
 				variant='success'
-				className='mt-auto mb-3 align-self-center  '
+				className='mt-auto mb-3 align-self-center'
 				onClick={() => {
 					guardarActividad(
 						{

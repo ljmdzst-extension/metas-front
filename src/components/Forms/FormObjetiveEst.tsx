@@ -1,60 +1,68 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { ErrorOutline } from '@mui/icons-material';
 
-interface Objetivo {
-	idObjetivo: number;
-	nom: string;
-	tipoObjetivo: {
-		idTipoObj: number;
-		nom: string;
-	};
-}
 export default function FormObjetiveEst() {
-	const [objetivos, setObjetivos] = useState<Objetivo[]>([]);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+	const { bases } = useSelector((state: RootState) => state.metasSlice);
 	const dispatch = useDispatch();
-	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>([]);
-	const objetivosDesde0a4 = objetivos?.slice(0, 4);
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
-	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+
+	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>(
+		activity.listaObjetivos ?? [],
+	);
 
 	useEffect(() => {
-		if (!error && bases) {
-			setObjetivos(bases.listaObjetivos);
-		} else {
-			// TODO: Alerta de error global
-		}
-	}, [bases, error]);
-
-	const sincronizarCheckboxes = () => {
-		if (activity.listaObjetivos) {
-			setObjetivosSeleccionados(activity.listaObjetivos);
-		}
-	};
-	useEffect(() => {
-		sincronizarCheckboxes();
+		setObjetivosSeleccionados(activity.listaObjetivos ?? []);
 	}, [activity.listaObjetivos]);
-	const handleSeleccionarObjetivo = (idObjetivo: number) => {
-		const objetivoIndex = objetivosSeleccionados.indexOf(idObjetivo);
-		if (objetivoIndex === -1) {
-			setObjetivosSeleccionados([...objetivosSeleccionados, idObjetivo]);
-		} else {
-			const newSeleccionados = objetivosSeleccionados.filter((id) => id !== idObjetivo);
-			setObjetivosSeleccionados(newSeleccionados);
-		}
-	};
+
+	const handleSeleccionarObjetivo = useCallback((idObjetivo: number) => {
+		setObjetivosSeleccionados((prevSeleccionados) => {
+			if (prevSeleccionados.includes(idObjetivo)) {
+				// Si el objetivo ya está seleccionado, eliminarlo de la lista
+				return prevSeleccionados.filter((id) => id !== idObjetivo);
+			} else {
+				// Si el objetivo no está seleccionado, agregarlo a la lista
+				const index = prevSeleccionados.findIndex((id) => id > idObjetivo);
+				if (index === -1) {
+					// Si no se encontró ningún elemento mayor, agregar al final
+					return [...prevSeleccionados, idObjetivo];
+				} else {
+					// Insertar en la posición correcta para mantener el orden
+					return [
+						...prevSeleccionados.slice(0, index),
+						idObjetivo,
+						...prevSeleccionados.slice(index),
+					];
+				}
+			}
+		});
+	}, []);
+
+	const checkForChanges = useCallback(() => {
+		const cambios =
+			JSON.stringify(activity.listaObjetivos ?? []) !== JSON.stringify(objetivosSeleccionados);
+		console.log(activity.listaObjetivos, objetivosSeleccionados, cambios);
+		dispatch(SET_HAY_CAMBIOS({ valor: cambios }));
+	}, [activity.listaObjetivos, objetivosSeleccionados, dispatch]);
+
+	useEffect(() => {
+		checkForChanges();
+	}, [objetivosSeleccionados, checkForChanges]);
+
 	return (
-		<div className=' d-flex flex-column h-100 '>
-			<div className='FormObjetivo  w-100 '>
+		<div className='d-flex flex-column h-100'>
+			<div className='FormObjetivo w-100'>
 				<Form className='FormObj'>
 					<p className='SubtitleObj'>
 						<span>Seleccione el/los objetivo/s estratégico/s vinculado/s a la actividad :</span>
 					</p>
 					<div className='Obj'>
-						{objetivosDesde0a4.map((objetivo) => (
+						{bases?.listaObjetivos?.slice(0, 4).map((objetivo) => (
 							<Form.Check
 								id={objetivo.idObjetivo.toString()}
 								label={objetivo.nom}
@@ -68,7 +76,7 @@ export default function FormObjetiveEst() {
 			</div>
 			<Button
 				variant='success'
-				className='mt-auto mb-3 align-self-center '
+				className='mt-auto mb-3 align-self-center'
 				onClick={() => {
 					guardarActividad(
 						{
@@ -80,6 +88,7 @@ export default function FormObjetiveEst() {
 				}}
 			>
 				Guardar Actividad
+				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 			</Button>
 		</div>
 	);

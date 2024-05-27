@@ -119,7 +119,6 @@ const FormMetas = () => {
 	// NOTE: CHECK UPDATE
 	const checkForChanges = () => {
 		const cambio = JSON.stringify(activity.listaMetas) !== JSON.stringify(listadoMetas);
-		console.log(activity.listaMetas, ' - ', listadoMetas);
 
 		if (hayCambios === cambio) return;
 
@@ -211,7 +210,6 @@ const FormMetas = () => {
 						},
 						dispatch,
 					);
-					dispatch(SET_HAY_CAMBIOS({ valor: false }));
 				}}
 			>
 				Guardar Actividad{' '}

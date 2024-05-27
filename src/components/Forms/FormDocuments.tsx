@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { ErrorOutline } from '@mui/icons-material';
 
 type Documento = {
 	idEnlace: number | null;
@@ -15,21 +17,10 @@ type Documento = {
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
-	const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>([]);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+	const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>(activity.listaEnlaces || []);
 	const [descripcion, setDescripcion] = useState('');
 	const [nombreArchivo, setNombreArchivo] = useState('');
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
-
-	useEffect(() => {
-		if (activity.listaEnlaces) {
-			const enlacesMapeados = activity.listaEnlaces.map((enlace) => ({
-				idEnlace: enlace.idEnlace,
-				link: enlace.link || null,
-				desc: enlace.desc || null,
-			}));
-			setArrayDocumentos(enlacesMapeados);
-		}
-	}, [activity.listaEnlaces]);
 
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -60,6 +51,15 @@ export default function FormOrgInst() {
 		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
 		return urlPattern.test(url);
 	};
+
+	const checkForChanges = () => {
+		const cambio = JSON.stringify(activity.listaEnlaces) !== JSON.stringify(arrayDocumentos);
+		dispatch(SET_HAY_CAMBIOS({ valor: cambio }));
+	};
+
+	useEffect(() => {
+		checkForChanges();
+	}, [arrayDocumentos]);
 
 	return (
 		<div className=' d-flex flex-column h-100 '>
@@ -147,6 +147,7 @@ export default function FormOrgInst() {
 				}}
 			>
 				Guardar Actividad
+				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 			</Button>
 		</div>
 	);

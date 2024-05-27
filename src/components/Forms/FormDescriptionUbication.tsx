@@ -15,8 +15,8 @@ import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
 
 const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
-
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+
 	const [editandoDescripcion, setEditandoDescripcion] = useState(false);
 	const [descripcion, setDescripcion] = useState<string>(activity.desc ?? '');
 	const [ubicaciones, setUbicaciones] = useState<ListaUbicacione[]>(
@@ -82,11 +82,7 @@ const FormDescriptionUbication = () => {
 			JSON.stringify(activity.listaUbicaciones) !== JSON.stringify(ubicaciones);
 
 		if (hayCambios === cambios) return;
-		if (cambios) {
-			dispatch(SET_HAY_CAMBIOS({ valor: true }));
-		} else {
-			dispatch(SET_HAY_CAMBIOS({ valor: false }));
-		}
+		dispatch(SET_HAY_CAMBIOS({ valor: cambios }));
 	};
 
 	const AlertBuscarUbicaciones = () => {
@@ -220,7 +216,6 @@ const FormDescriptionUbication = () => {
 						{ ...activity, desc: descripcion, listaUbicaciones: ubicaciones },
 						dispatch,
 					);
-					dispatch(SET_HAY_CAMBIOS({ valor: false })); // Restablecer el estado de cambios
 				}}
 			>
 				Guardar Actividad{' '}
