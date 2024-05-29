@@ -7,6 +7,9 @@ import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { ErrorOutline } from '@mui/icons-material';
+
 type Institucion = {
 	idInstitucion: number | null;
 	nom: string | null;
@@ -15,42 +18,45 @@ type Institucion = {
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+	const { token } = useSelector((state: RootState) => state.authSlice);
 	const [arrayInstitucion, setArrayInstitucion] = useState<Institucion[]>(
 		activity.listaInstituciones || [],
 	);
 	const [arraySearchInstitucion, setArraySearchInstitucion] = useState<Institucion[]>([]);
-	const [searchInstitucion, setSearchInstitucion] = useState<Institucion | undefined>(undefined);
 
 	const [name, setName] = useState('');
 	const [ubicacion, setUbicacion] = useState('');
 
-	const { token } = useSelector((state: RootState) => state.authSlice);
 	const tokenHeader = { Authorization: `Bearer ${token}` };
 
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		setArrayInstitucion([...arrayInstitucion, { idInstitucion: 0, nom: name, ubicacion }]);
-		setName('');
-		setUbicacion('');
+		const isDuplicate = arrayInstitucion.some(
+			(inst) => inst.nom === name && inst.ubicacion === ubicacion,
+		);
+		if (!isDuplicate) {
+			setArrayInstitucion([...arrayInstitucion, { idInstitucion: 0, nom: name, ubicacion }]);
+			setName('');
+			setUbicacion('');
+		} else {
+			Swal.fire({
+				title: 'Error',
+				text: 'La institución ya existe en la lista.',
+				icon: 'error',
+				confirmButtonText: 'Cerrar',
+			});
+		}
 	};
+
 	const eliminarInstitucion = (index: number | null) => {
-		// console.log(index);
 		if (index !== null) {
 			setArrayInstitucion(arrayInstitucion.filter((item, i) => item && i !== index));
 		}
 	};
 
-	useEffect(() => {
-		if (searchInstitucion && arrayInstitucion.every((inst) => inst.nom !== searchInstitucion.nom)) {
-			setArrayInstitucion([...arrayInstitucion, searchInstitucion]);
-		}
-	}, [searchInstitucion]);
-
 	const filterInstitucion = (data: Institucion[]) => {
-		// Borrar los que no tienen ubicacion
 		const newData = data.filter((inst) => inst.ubicacion !== 'NULL');
-		// console.log(newData);
 		return newData;
 	};
 
@@ -79,13 +85,44 @@ export default function FormOrgInst() {
 	}, [name]);
 
 	const handleInstChange = (e: React.ChangeEvent<any>) => {
-		e.preventDefault();
-		setSearchInstitucion(arraySearchInstitucion.find((inst) => inst.nom === e.currentTarget.value));
+		setName(e.currentTarget.value);
 
-		if (!searchInstitucion) {
-			setName(e.currentTarget.value);
+		const selectedInstitution = arraySearchInstitucion.find(
+			(inst) => inst.nom === e.currentTarget.value,
+		);
+
+		if (selectedInstitution) {
+			// Check for duplicate institutions
+			const isDuplicate = arrayInstitucion.some(
+				(inst) =>
+					inst.nom === selectedInstitution.nom && inst.ubicacion === selectedInstitution.ubicacion,
+			);
+
+			if (!isDuplicate) {
+				setArrayInstitucion((prev) => [...prev, selectedInstitution]);
+				setName('');
+			} else {
+				Swal.fire({
+					title: 'Error',
+					text: 'La institución ya existe en la lista.',
+					icon: 'error',
+					confirmButtonText: 'Cerrar',
+				});
+				setName('');
+			}
 		}
 	};
+
+	// const handleInstInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+	// 	const selectedInstitution = arraySearchInstitucion.find(
+	// 		(inst) => inst.nom === e.currentTarget.value,
+	// 	);
+	// 	if (selectedInstitution) {
+	// 		setArrayInstitucion((prev) => [...prev, selectedInstitution]);
+	// 		setSearchInstitucion(undefined);
+	// 		setName('');
+	// 	}
+	// };
 
 	const isUrlValid = (url: string) => {
 		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
@@ -93,10 +130,9 @@ export default function FormOrgInst() {
 	};
 
 	const AlertBuscarUbicaciones = () => {
-		// Alerta con iframe y video de youtube
 		Swal.fire({
 			title: 'Ubicaciones',
-			html: ` 
+			html: `
 				<p>
 					Utilice la herramienta de Google Maps para insertar el enlace de la ubicación de la
 					actividad. Si necesita ayuda, consulte en este video.
@@ -114,18 +150,27 @@ export default function FormOrgInst() {
 		});
 	};
 
+	const checkForChanges = () => {
+		const cambio = JSON.stringify(activity.listaInstituciones) !== JSON.stringify(arrayInstitucion);
+		dispatch(SET_HAY_CAMBIOS({ valor: cambio }));
+	};
+
+	useEffect(() => {
+		checkForChanges();
+	}, [arrayInstitucion]);
+
 	return (
-		<div className=' d-flex flex-column h-100'>
+		<div className='d-flex flex-column h-100'>
 			<div className='m-2'>
 				<p>
 					Ubicación se refiere al punto del mapa en donde se encuentre el lugar de la actividad.
 					Utilice la herramienta de Google Maps para insertar el enlace de dicha ubicación.
 				</p>
 				<p>
-					Si necesita ayuda para compartir el enlace , consulte el siguiente{' '}
+					Si necesita ayuda para compartir el enlace, consulte el siguiente{' '}
 					<span
 						onClick={() => AlertBuscarUbicaciones()}
-						className=' fw-normal cursor-pointer  '
+						className='fw-normal cursor-pointer'
 						style={{ color: 'blue' }}
 					>
 						video
@@ -133,7 +178,7 @@ export default function FormOrgInst() {
 					.
 				</p>
 				<Form
-					className=' d-flex align-items-center gap-2 justify-content-center w-100 pb-2  '
+					className='d-flex align-items-center gap-2 justify-content-center w-100 pb-2'
 					onSubmit={submitForm}
 				>
 					<Form.Control
@@ -141,18 +186,8 @@ export default function FormOrgInst() {
 						name='name'
 						value={name}
 						placeholder='Nombre de la institucion'
-						onChange={(e) => handleInstChange(e)}
+						onChange={handleInstChange}
 						list='listSearchInstituciones'
-						onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-							const inputValue = e.target.value;
-							const isValueInDatalist = arraySearchInstitucion?.some((inst) =>
-								inst.nom?.includes(inputValue),
-							);
-							if (isValueInDatalist) {
-								setName('');
-								setUbicacion('');
-							}
-						}}
 					/>
 					<datalist id='listSearchInstituciones'>
 						{arraySearchInstitucion?.map((inst, i) => (
@@ -192,9 +227,26 @@ export default function FormOrgInst() {
 							<tbody>
 								{arrayInstitucion.map((item, index) => (
 									<tr key={index}>
-										<td style={{ width: '30px' }}>{index + 1}</td>
-										<td style={{ width: '20%' }}>{item.nom}</td>
-										<td>{item.ubicacion}</td>
+										<td>{index + 1}</td>
+										<td
+											style={{
+												overflow: 'hidden',
+												textOverflow: 'ellipsis',
+												whiteSpace: 'nowrap',
+											}}
+										>
+											{item.nom}
+										</td>
+										<td
+											style={{
+												maxWidth: '150px',
+												overflow: 'hidden',
+												textOverflow: 'ellipsis',
+												whiteSpace: 'nowrap',
+											}}
+										>
+											{item.ubicacion && <a href={item.ubicacion}>{item.ubicacion}</a>}
+										</td>
 										<td style={{ width: '15px' }}>
 											<DeleteIcon color='error' onClick={() => eliminarInstitucion(index)} />
 										</td>
@@ -207,7 +259,7 @@ export default function FormOrgInst() {
 			</div>
 			<Button
 				variant='success'
-				className='mt-auto mb-3 align-self-center '
+				className='mt-auto mb-3 align-self-center'
 				onClick={() => {
 					guardarActividad(
 						{
@@ -219,6 +271,7 @@ export default function FormOrgInst() {
 				}}
 			>
 				Guardar Actividad
+				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 			</Button>
 		</div>
 	);

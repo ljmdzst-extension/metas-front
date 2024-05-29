@@ -17,6 +17,7 @@ import { ArrowBack } from '@mui/icons-material';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
 import useAlert from '../hooks/useAlert';
+import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
 
 interface Activity {
 	idActividad: number;
@@ -56,7 +57,7 @@ export default function Activity() {
 	const location = useLocation();
 
 	const dispatch = useDispatch<AppDispatch>();
-	const { isLoading } = useSelector((state: RootState) => state.actividadSlice);
+	const { isLoading, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 	const { token } = useSelector((state: RootState) => state.authSlice);
 
 	useEffect(() => {
@@ -164,6 +165,12 @@ export default function Activity() {
 			return;
 		}
 
+		if (!hayCambios) {
+			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+			setCurrentFormSelected(formName);
+			return;
+		}
+
 		Swal.fire({
 			title: '¿Estás seguro?',
 			text: 'Se perderán los cambios no guardados',
@@ -173,6 +180,7 @@ export default function Activity() {
 			cancelButtonText: 'No, cancelar',
 		}).then((result) => {
 			if (result.isConfirmed) {
+				dispatch(SET_HAY_CAMBIOS({ valor: false }));
 				setCurrentFormSelected(formName);
 			}
 		});
@@ -331,7 +339,13 @@ export default function Activity() {
 											{formData.map((item, index) => (
 												<ListGroup.Item
 													action
-													variant={currentFormSelected === item.index ? 'primary' : 'secondary'}
+													variant={
+														hayCambios && currentFormSelected === item.index
+															? 'warning'
+															: currentFormSelected === item.index
+															? 'primary'
+															: 'secondary'
+													}
 													title={item.Title}
 													className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
 													key={index}

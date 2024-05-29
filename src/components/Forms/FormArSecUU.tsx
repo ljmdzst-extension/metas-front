@@ -7,6 +7,9 @@ import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import { Row, Col } from 'react-bootstrap';
 import { ListaProgramasSIPPE } from '../../types/BasesProps';
+import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { ErrorOutline } from '@mui/icons-material';
+
 const animatedComponents = makeAnimated();
 
 interface Relacion {
@@ -26,71 +29,100 @@ interface Option {
 export default function FormArSecUU() {
 	const dispatch = useDispatch();
 
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
 	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
-
-	const [relaciones, setRelaciones] = useState<Relacion[]>([]);
-	const [sippe, setSippe] = useState<ListaProgramasSIPPE[]>([]);
+	const [dataLoaded, setDataLoaded] = useState(false);
 
 	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<Option[]>([]);
 	const [relacionSeleccionadas2, setRelacionSeleccionadas2] = useState<Option[]>([]);
 	const [relacionSeleccionadas3, setRelacionSeleccionadas3] = useState<Option[]>([]);
 	const [sippeSeleccionadas, setSippeSeleccionadas] = useState<Option[]>([]);
 
-	useEffect(() => {
-		if (!error && bases) {
-			setRelaciones(bases.listaRelaciones);
-			setSippe(bases.listaProgramasSIPPE);
-		} else {
-			// TODO: Alerta de error global
-		}
-	}, [bases, error]);
-
 	const filtrarAreas = useCallback(
 		(nomRelacion: string): Option[] => {
-			return relaciones
-				.filter((relacion) => relacion.tipoRelacion.nom === nomRelacion)
-				.map((relacion) => ({
+			if (!bases) return [];
+			return bases.listaRelaciones
+				.filter((relacion: Relacion) => relacion.tipoRelacion.nom === nomRelacion)
+				.map((relacion: Relacion) => ({
 					value: relacion.idRelacion,
 					label: relacion.nom,
 				}));
 		},
-		[relaciones],
+		[bases],
 	);
 
 	const filtrarRelacionesSeleccionadas = useCallback(
 		(filterFn: Option[]) => {
-			if (activity.listaRelaciones) {
-				return filterFn.filter((el) => activity.listaRelaciones?.some((ri) => ri === el.value));
-			} else {
-				return [];
-			}
+			if (!activity.listaRelaciones) return [];
+			return filterFn.filter((el: Option) =>
+				activity.listaRelaciones?.some((ri: number) => ri === el.value),
+			);
 		},
 		[activity],
 	);
 
-	useEffect(() => {
-		setRelacionSeleccionadas1(filtrarRelacionesSeleccionadas(filtrarAreas('interna_extensión')));
-		setRelacionSeleccionadas2(filtrarRelacionesSeleccionadas(filtrarAreas('interna_unl')));
-		setRelacionSeleccionadas3(filtrarRelacionesSeleccionadas(filtrarAreas('U.A.')));
-	}, [filtrarAreas, filtrarRelacionesSeleccionadas, relaciones]);
-
 	const formatearSippes = useCallback((): Option[] => {
-		return sippe.map((sippe) => ({
+		if (!bases) return [];
+		return bases.listaProgramasSIPPE.map((sippe: ListaProgramasSIPPE) => ({
 			value: sippe.idProgramaSippe,
 			label: sippe.nom,
 		}));
-	}, [sippe]);
+	}, [bases]);
 
 	const filtrarSippeSeleccionadas = useCallback(() => {
-		return formatearSippes().filter((el) =>
-			activity.listaProgramasSIPPE?.some((ri) => ri === el.value),
+		if (!activity.listaProgramasSIPPE) return [];
+		return formatearSippes().filter((el: Option) =>
+			activity.listaProgramasSIPPE?.some((ri: number) => ri === el.value),
 		);
 	}, [activity.listaProgramasSIPPE, formatearSippes]);
 
 	useEffect(() => {
-		setSippeSeleccionadas(filtrarSippeSeleccionadas());
-	}, [filtrarSippeSeleccionadas, sippe]);
+		if (!error && bases) {
+			setRelacionSeleccionadas1(filtrarRelacionesSeleccionadas(filtrarAreas('interna_extensión')));
+			setRelacionSeleccionadas2(filtrarRelacionesSeleccionadas(filtrarAreas('interna_unl')));
+			setRelacionSeleccionadas3(filtrarRelacionesSeleccionadas(filtrarAreas('U.A.')));
+			setSippeSeleccionadas(filtrarSippeSeleccionadas());
+
+			setDataLoaded(true);
+		} else {
+			// TODO: Alerta de error global
+		}
+	}, [bases, error, filtrarAreas, filtrarRelacionesSeleccionadas, filtrarSippeSeleccionadas]);
+
+	useEffect(() => {
+		if (!dataLoaded) return;
+		checkForChanges();
+	}, [
+		dataLoaded,
+		relacionSeleccionadas1,
+		relacionSeleccionadas2,
+		relacionSeleccionadas3,
+		sippeSeleccionadas,
+	]);
+
+	const checkForChanges = () => {
+		// Comprueba si hay cambios
+
+		const relacionValues = Array.from(
+			new Set([
+				...relacionSeleccionadas1.map((el) => el.value),
+				...relacionSeleccionadas2.map((el) => el.value),
+				...relacionSeleccionadas3.map((el) => el.value),
+			]),
+		).sort((a, b) => a - b);
+		const sippeValues = sippeSeleccionadas.map((el) => el.value);
+
+		const cambios =
+			JSON.stringify(activity.listaRelaciones) !== JSON.stringify(relacionValues) ||
+			JSON.stringify(activity.listaProgramasSIPPE) !== JSON.stringify(sippeValues);
+		if (hayCambios === cambios) return;
+
+		if (cambios) {
+			dispatch(SET_HAY_CAMBIOS({ valor: true }));
+		} else {
+			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+		}
+	};
 
 	return (
 		<div className=' d-flex flex-column h-100 px-4 gap-2'>
@@ -180,7 +212,7 @@ export default function FormArSecUU() {
 			</Row>
 			<Button
 				variant='success'
-				className='mt-auto mb-3 align-self-center  '
+				className='mt-auto mb-3 align-self-center'
 				onClick={() => {
 					guardarActividad(
 						{
@@ -200,7 +232,8 @@ export default function FormArSecUU() {
 					);
 				}}
 			>
-				Guardar Actividad
+				Guardar Actividad{' '}
+				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
 			</Button>
 		</div>
 	);
