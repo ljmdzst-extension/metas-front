@@ -48,14 +48,14 @@ export const Graphics = () => {
 							legend: true,
 						},
 						{
-							title: 'Objetivos Estratégicos',
+							title: 'Actividades por LIE',
 							type: 'bar' as ChartType,
 							data: graficoObjEst || [],
 							dataKey: 'objEst',
 							legend: false,
 						},
 						{
-							title: 'Actividades por LIE',
+							title: 'Objetivos Estratégicos',
 							type: 'bar' as ChartType,
 							data: graficoLy || [],
 							dataKey: 'lie',
