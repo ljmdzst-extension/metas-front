@@ -42,7 +42,7 @@ export default function NavBar() {
 					{isLogged ? (
 						<>
 							<Nav.Link href='/gestion'>
-								<Button variant='outline-light'>Gestión</Button>
+								<Button variant='outline-light'>Inicio</Button>
 							</Nav.Link>
 							<Nav.Link
 								onClick={handleLogout}

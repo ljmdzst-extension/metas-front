@@ -191,10 +191,10 @@ export default function Activity() {
 				<Modal.Body>
 					<Form onSubmit={submitForm}>
 						<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
-							<Form.Label>Ingrese la descripcion de la actividad</Form.Label>
+							<Form.Label>Ingrese la descripción de la actividad</Form.Label>
 							<Form.Control
 								type='nombre'
-								placeholder='Descripcion'
+								placeholder='Descripción'
 								autoFocus
 								as='textarea'
 								rows={2}

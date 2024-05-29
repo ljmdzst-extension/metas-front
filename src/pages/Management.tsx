@@ -8,7 +8,7 @@ const Management = () => {
 	};
 	return (
 		<Container>
-			<h1 className='text-center'>Gestión</h1>
+			<h2 className='text-center '>Seleccionar la plataforma a la que  desee acceder </h2>
 			<Row>
 				<Col className='text-center' xs={12} md={4}>
 					<Button
@@ -17,7 +17,7 @@ const Management = () => {
 						style={{ height: '50px' }}
 						onClick={() => handlerClick('/gestion/metas')}
 					>
-						Metas
+						Planificaciones y resultados
 					</Button>
 				</Col>
 				<Col className='text-center' xs={12} md={4}>
@@ -28,7 +28,7 @@ const Management = () => {
 						onClick={() => handlerClick('/gestion/proyectos')}
 						disabled
 					>
-						Proyectos
+						Gestor de Proyectos de Extensión
 					</Button>
 				</Col>
 				<Col className='text-center' xs={12} md={4}>
@@ -39,7 +39,7 @@ const Management = () => {
 						onClick={() => handlerClick('/gestion/programas')}
 						disabled
 					>
-						Prácticas
+						Gestor de P.E.E.E
 					</Button>
 				</Col>
 			</Row>

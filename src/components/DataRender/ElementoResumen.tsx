@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { LArea, ListaProgramasSIPPE } from '../../types/BasesProps';
 import { Actividad } from '../../types/ActivityProps';
-import ReactDOM from 'react-dom';
 
 interface Props {
 	element: Actividad;
