@@ -117,8 +117,31 @@ export default function Activity() {
 			setArrayActivity(actividades.data);
 			setIsLoadingArrayActivity(false);
 		} catch (error) {
-			console.error('Error al realizar la solicitud GET:', error);
-			// Handle the error appropriately, e.g., show a message to the user
+			setIsLoadingArrayActivity(false);
+
+			if (axios.isAxiosError(error)) {
+				// Manejar errores de Axios
+				if (error.response) {
+					// La solicitud fue hecha y el servidor respondió con un código de estado
+					// que está fuera del rango de 2xx
+					const errorMessage = error.response.data?.error || error.response.statusText;
+					console.error('Error al realizar la solicitud GET:', errorMessage);
+					errorAlert('Error al realizar la petición: ' + errorMessage);
+				} else if (error.request) {
+					// La solicitud fue hecha pero no se recibió respuesta
+					console.error('No se recibió respuesta del servidor:', error.request);
+					errorAlert('No se recibió respuesta del servidor.');
+				} else {
+					// Algo sucedió en la configuración de la solicitud que desencadenó un error
+					console.error('Error en la configuración de la solicitud:', error.message);
+					errorAlert('Error en la configuración de la solicitud: ' + error.message);
+				}
+			} else {
+				// Manejar errores genéricos
+				const errorMessage = (error as Error).message;
+				console.error('Error desconocido:', errorMessage);
+				errorAlert('Error desconocido: ' + errorMessage);
+			}
 		}
 	}, [area.anio, area.idArea, token]);
 

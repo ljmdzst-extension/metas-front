@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { AreaProps, ProgramaProps } from '../types/AppProps';
 import { Button, Card, Form, Spinner, Image } from 'react-bootstrap';
+import useAlert from '../hooks/useAlert';
 
 const currentYear = new Date().getFullYear();
 
@@ -19,6 +20,7 @@ export default function PanelProgramas() {
 	const [indexActivity, setIndexActivity] = useState<AreaProps[]>([]);
 	const [indexPrograma, setIndexPrograma] = useState<number>();
 	const navigation = useNavigate();
+	const { errorAlert } = useAlert();
 
 	const { token } = useSelector((state: RootState) => state.authSlice);
 
@@ -40,13 +42,30 @@ export default function PanelProgramas() {
 					setProgramasTransformados(programas);
 				} else {
 					console.error('La respuesta no tiene la estructura esperada.');
+					throw new Error(data.error || 'Error fetching data');
 				}
-				setIsLoading(false);
 			})
 			.catch((error) => {
-				console.error('Error al realizar la solicitud GET:', error);
+				if (error.response) {
+					// La solicitud fue hecha y el servidor respondió con un código de estado
+					// que está fuera del rango de 2xx
+					const errorMessage = error.response.data?.error || error.response.statusText;
+					console.error('Error al realizar la solicitud GET:', errorMessage);
+					errorAlert('Error al realizar la petición: ' + errorMessage);
+				} else if (error.request) {
+					// La solicitud fue hecha pero no se recibió respuesta
+					console.error('No se recibió respuesta del servidor:', error.request);
+					errorAlert('No se recibió respuesta del servidor.');
+				} else {
+					// Algo sucedió en la configuración de la solicitud que desencadenó un error
+					console.error('Error en la configuración de la solicitud:', error.message);
+					errorAlert('Error en la configuración de la solicitud: ' + error.message);
+				}
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
-	}, [token, year]); // Ejecutar una sola vez al montar el componente
+	}, [token, year]); // Ejecutar cuando token o year cambian
 
 	const openArea = (area: AreaProps) => {
 		const areaSinLista = {
