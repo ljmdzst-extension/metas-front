@@ -37,7 +37,9 @@ export default function PlanificationPanel({
 	const [show2, setShow2] = useState(false);
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
-	const { activity, isLoading } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, isLoading, hayCambios } = useSelector(
+		(state: RootState) => state.actividadSlice,
+	);
 	const { token } = useSelector((state: RootState) => state.authSlice);
 
 	const availableHeight = useAvailableHeight();
@@ -193,7 +195,7 @@ export default function PlanificationPanel({
 	};
 
 	return (
-		<>
+		<div className=' h-100'>
 			<Modal show={show2} onHide={handleClose2}>
 				<Modal.Header>
 					<Modal.Title>¿Quiere salir de la sección?</Modal.Title>
@@ -292,7 +294,7 @@ export default function PlanificationPanel({
 							</div>
 							{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
 							{motCancel === null ? (
-								<div className=' d-flex justify-content-around w-100 '>
+								<div className=' d-flex justify-content-around w-100 mb-2 '>
 									<Button
 										variant='warning'
 										className='Suspend'
@@ -352,6 +354,6 @@ export default function PlanificationPanel({
 					)}
 				</>
 			)}
-		</>
+		</div>
 	);
 }
