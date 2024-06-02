@@ -38,16 +38,11 @@ export default function Activity() {
 
 	const [show, setShow] = useState(false);
 	const [isLoadingModal, setIsLoadingModal] = useState<boolean>(false);
-	const [show2, setShow2] = useState(false);
 	const [term, setTerm] = useState('');
 	const [nameActivity, setNameActivity] = useState('');
-	const [nameActivityAux, setNameActivityAux] = useState('');
 	const handleClose = () => setShow(false);
-	const handleClose2 = () => setShow2(false);
 	const handleShow = () => setShow(true);
-	const handleShow2 = () => {
-		if (hayCambios) setShow2(true);
-	};
+
 	const [arrayActivity, setArrayActivity] = useState<Activity[]>([]);
 	const [isLoadingArrayActivity, setIsLoadingArrayActivity] = useState<boolean>(true);
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
@@ -242,33 +237,6 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<Modal show={show2} onHide={handleClose2} name={nameActivityAux}>
-				<Modal.Header closeButton>
-					<Modal.Title>¿Quieres salir de la Actividad?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Form>
-						<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
-							<Form.Label>¿Confirma que desea salir de la actividad?</Form.Label>
-							<Form.Label>Los cambios no guardados se perderán. </Form.Label>
-						</Form.Group>
-						<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<Button variant='danger' onClick={handleClose2}>
-								Cancelar
-							</Button>
-							<Button
-								variant='success'
-								onClick={() => {
-									setIsPlanificationOpen(!isPlanificationOpen);
-									handleClose2();
-								}}
-							>
-								Salir de la actividad
-							</Button>
-						</Form.Group>
-					</Form>
-				</Modal.Body>
-			</Modal>
 			<div
 				className=' d-flex align-items-center justify-content-between border  rounded-3 p-1 pb-0 mx-2 my-1  '
 				style={{ backgroundColor: '#fefefe' }}
@@ -297,7 +265,7 @@ export default function Activity() {
 						<div style={{ maxHeight: 'calc(100vh - 130px)', height: '100%' }}>
 							{isLoadingArrayActivity ? (
 								<div className=' d-flex justify-content-center mt-5'>
-									<Spinner animation='border' role='status'>
+									<Spinner animation='border' role='output'>
 										<span className='visually-hidden'>Loading...</span>
 									</Spinner>
 								</div>
@@ -315,14 +283,9 @@ export default function Activity() {
 												className='mx-auto my-1 rounded d-flex align-items-center '
 												key={index}
 												onClick={() => {
-													if (isPlanificationOpen) {
-														handleShow2();
-														setNameActivityAux(`${item.desc}`);
-													} else {
-														setIsPlanificationOpen(!isPlanificationOpen);
-														setNameActivity(`${item.desc}`);
-														handleButtonClick(item.idActividad);
-													}
+													setIsPlanificationOpen(!isPlanificationOpen);
+													setNameActivity(`${item.desc}`);
+													handleButtonClick(item.idActividad);
 												}}
 											>
 												<span
