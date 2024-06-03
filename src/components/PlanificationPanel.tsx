@@ -18,7 +18,7 @@ import ActivityDetail from './metas/ActivityDetail';
 import { Spinner } from 'react-bootstrap';
 import useAvailableHeight from '../hooks/useAvailableHeight';
 import useAlert from '../hooks/useAlert';
-import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer'
+import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
 
 type Props = {
 	name: string;
@@ -43,7 +43,7 @@ export default function PlanificationPanel({
 	const { activity, isLoading, hayCambios } = useSelector(
 		(state: RootState) => state.actividadSlice,
 	);
-	const { token } = useSelector((state: RootState) => state.authSlice);
+	const { token, puedeEditar } = useSelector((state: RootState) => state.authSlice);
 
 	const availableHeight = useAvailableHeight();
 	const { errorAlert, successAlert } = useAlert();
@@ -298,7 +298,11 @@ export default function PlanificationPanel({
 							</div>
 							{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
 							{motCancel === null ? (
-								<div className=' d-flex justify-content-around w-100 mb-2 '>
+								<div
+									className={` d-flex justify-content-around w-100 mb-2  ${
+										puedeEditar ? '' : 'd-none'
+									} `}
+								>
 									<Button
 										variant='warning'
 										className='Suspend'

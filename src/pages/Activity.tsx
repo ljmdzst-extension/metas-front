@@ -9,11 +9,11 @@ import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
-import { Col, Row, Spinner } from 'react-bootstrap';
+import { Col, InputGroup, Row, Spinner } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Search } from '@mui/icons-material';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
 import useAlert from '../hooks/useAlert';
@@ -48,6 +48,8 @@ export default function Activity() {
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
 	const [area, setArea] = useState<Area>(initialAreaValue);
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
+	const [inputSearch, setInputSearch] = useState<string>('');
+	const [searchedActivities, setSearchedActivities] = useState<Activity[]>([]);
 
 	const navigation = useNavigate();
 	const { errorAlert } = useAlert();
@@ -55,7 +57,7 @@ export default function Activity() {
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { isLoading, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-	const { token } = useSelector((state: RootState) => state.authSlice);
+	const { token, puedeEditar } = useSelector((state: RootState) => state.authSlice);
 
 	useEffect(() => {
 		try {
@@ -169,6 +171,7 @@ export default function Activity() {
 
 	useEffect(() => {
 		mostrarActividades(); // Call mostrarActividades on component mount
+		setSearchedActivities([]);
 	}, [mostrarActividades]);
 
 	const handleButtonClick = (id: number) => {
@@ -209,6 +212,20 @@ export default function Activity() {
 	const cleanFormSelected = () => {
 		setCurrentFormSelected('');
 	};
+
+	const onSearchChange = useCallback(
+		(event: React.ChangeEvent<HTMLInputElement>) => {
+			setInputSearch(event.target.value);
+			const filteredActivities = arrayActivity.filter((activity) =>
+				activity.desc.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase()),
+			);
+			setSearchedActivities(filteredActivities);
+		},
+		[arrayActivity],
+	);
+	useEffect(() => {
+		onSearchChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>);
+	}, [isPlanificationOpen, onSearchChange]);
 
 	return (
 		<div className=' d-flex flex-column h-100'>
@@ -254,11 +271,13 @@ export default function Activity() {
 				/>
 			</div>
 
-			<div className=' h-100 d-flex justify-content-around gap-1 mx-3'>
+			<div className={` h-100 d-flex justify-content-around gap-1 mx-3 `}>
 				{/* NOTE: SIDEBAR - LISTADO ACTIVIDADES - NAVEGACIÓN FORMS */}
 				<Col
 					sm={3}
-					className=' d-flex flex-column border-end border-2 rounded-3 '
+					className={` d-flex flex-column border-end border-2 rounded-3 ${
+						isPlanificationOpen && !puedeEditar ? 'd-none' : ''
+					} `}
 					style={{ backgroundColor: '#fefefe' }}
 				>
 					{!isPlanificationOpen ? (
@@ -274,37 +293,52 @@ export default function Activity() {
 									<div className=' text-center  '>
 										<h4>Listado de Actividades</h4>
 									</div>
+									<InputGroup className='mb-3' size='sm'>
+										<Form.Control
+											onChange={onSearchChange}
+											size='sm'
+											placeholder='Buscar actividad'
+											aria-label='Activities-search'
+											aria-describedby='basic-addon1'
+										/>
+										<InputGroup.Text id='basic-addon1'>
+											<Search />
+										</InputGroup.Text>
+									</InputGroup>
 									<ListGroup className=' mb-2 overflow-y-auto custom-scrollbar '>
-										{arrayActivity.map((item, index) => (
-											<ListGroup.Item
-												action
-												variant='secondary'
-												title={item.desc}
-												className='mx-auto my-1 rounded d-flex align-items-center '
-												key={index}
-												onClick={() => {
-													setIsPlanificationOpen(!isPlanificationOpen);
-													setNameActivity(`${item.desc}`);
-													handleButtonClick(item.idActividad);
-												}}
-											>
-												<span
-													style={{
-														textOverflow: 'ellipsis',
-														overflow: 'hidden',
-														fontWeight: 'normal',
-														whiteSpace: 'nowrap',
+										{(searchedActivities.length > 0 ? searchedActivities : arrayActivity).map(
+											(item, index) => (
+												<ListGroup.Item
+													action
+													variant='secondary'
+													title={item.desc}
+													className='mx-auto my-1 rounded d-flex align-items-center '
+													key={index}
+													onClick={() => {
+														setIsPlanificationOpen(!isPlanificationOpen);
+														setNameActivity(`${item.desc}`);
+														handleButtonClick(item.idActividad);
 													}}
 												>
-													{item.desc}
-												</span>
-											</ListGroup.Item>
-										))}
+													<span
+														style={{
+															textOverflow: 'ellipsis',
+															overflow: 'hidden',
+															fontWeight: 'normal',
+															whiteSpace: 'nowrap',
+														}}
+													>
+														{item.desc}
+													</span>
+												</ListGroup.Item>
+											),
+										)}
 									</ListGroup>
 									<Button
 										variant='outline-success'
 										className=' mt-2 align-self-end mt-auto'
 										onClick={handleShow}
+										disabled={!puedeEditar}
 									>
 										Agregar Actividad
 									</Button>
@@ -356,7 +390,11 @@ export default function Activity() {
 					)}
 				</Col>
 				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
-				<Col sm={9} className=' border-2 rounded-3' style={{ backgroundColor: '#fefefe' }}>
+				<Col
+					sm={isPlanificationOpen && !puedeEditar ? '12' : 9}
+					className=' border-2 rounded-3'
+					style={{ backgroundColor: '#fefefe' }}
+				>
 					{!isPlanificationOpen && (
 						<Row>
 							<Col className='MenuOptions'>

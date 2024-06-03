@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Accordion } from 'react-bootstrap';
-
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { LArea, ListaProgramasSIPPE } from '../../types/BasesProps';
@@ -26,24 +25,22 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 	const [areas, setAreas] = useState<LArea[]>([]);
 	const [listaSIPPE, setListaSIPPE] = useState<ListaProgramasSIPPE[]>();
 
-	// Record en TypeScript es una utilidad de tipo que representa un objeto JavaScript con
-	// claves de tipo string y valores de un tipo específico. En otras palabras, Record<K, T>
-	// es una forma de definir un tipo para un objeto que tiene claves de tipo K y valores
-	// de tipo T.
 	const [areasMap, setAreasMap] = useState<Record<string, Area>>({});
-	// const [loading, setLoading] = useState<boolean>(true);
 
 	const { bases, error, loading } = useSelector((state: RootState) => state.metasSlice);
 
+	// Convert camelCase to human-readable format
 	const camelCaseToHuman = (str: string) => {
 		return str.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
 	};
 
+	// Find the name of the valoracion
 	const stringValoracion = (val: number) => {
 		const valoracion = valoraciones?.find((valoracion) => valoracion.idValoracion === val);
 		return valoracion?.nom;
 	};
 
+	// Fetch data from the store
 	useEffect(() => {
 		if (!error && bases) {
 			setValoraciones(bases.listaValoraciones);
@@ -54,6 +51,7 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 		}
 	}, [bases, error]);
 
+	// Create a map of areas
 	useEffect(() => {
 		const map: Record<string, LArea> = {};
 		areas.forEach((area) => {
@@ -70,15 +68,15 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 
 	const renderArea = (data: any[], idTipoRelacion: number, nombreArea: string) => {
 		if (!data || data.length === 0) {
-			return null; // O cualquier otro componente o mensaje de aviso
+			return null;
 		}
 
 		const elementosArea = data
 			.map((idRelacion) => extraerRelacionCompleta(idRelacion, idTipoRelacion))
-			.filter(Boolean); //elimina los valores null, undefined, etc
+			.filter(Boolean);
 
 		if (elementosArea.length === 0) {
-			return null; // No hay elementos para renderizar
+			return null;
 		}
 
 		return (
@@ -92,7 +90,8 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 			</li>
 		);
 	};
-	// Render general de listados de objetos
+
+	// General data renderer for different data types
 	const renderData = (data: any[], dataType: string) => {
 		const renderers: any = {
 			listaMetas: () => {
@@ -169,7 +168,7 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 				return (
 					<div key={dataType}>
 						<p>
-							<span>Areas</span>
+							<span>Áreas</span>
 						</p>
 						{data.length > 0 && (
 							<ol>
@@ -201,13 +200,14 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 				);
 			},
 
-			// Otros casos para renderizar diferentes tipos de listas...
+			// Other cases for rendering different types of lists...
 		};
 
 		const renderer = renderers[dataType];
 		return renderer ? renderer() : null;
 	};
-	// Render de variables simples
+
+	// Render simple values
 	const renderValue = (value: any, nameData: string) => {
 		const propertyName = spanishTitles[nameData] || camelCaseToHuman(nameData);
 

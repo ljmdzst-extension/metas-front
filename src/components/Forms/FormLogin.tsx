@@ -38,9 +38,15 @@ const FormLogin = () => {
 			const { error } = action.payload as { error: string };
 			errorAlert(error);
 		} else {
-			const { token, nom, ape } = action.payload as { token: string; nom: string; ape: string };
+			const { token, nom, ape, permisos } = action.payload as {
+				token: string;
+				nom: string;
+				ape: string;
+				permisos: string[];
+			};
 			localStorage.setItem('token', token);
 			localStorage.setItem('user', `${nom} ${ape}`);
+			localStorage.setItem('permisos', JSON.stringify(permisos));
 			Swal.fire({
 				title: 'Bienvenido!',
 				text: `${nom} ${ape}`,
@@ -55,9 +61,7 @@ const FormLogin = () => {
 	return (
 		<Formik
 			initialValues={initialValues}
-			onSubmit={(values) => {
-				handleLogin(values);
-			}}
+			onSubmit={(values) => handleLogin(values)}
 			validationSchema={validations}
 		>
 			{({ errors, touched, values, handleBlur, handleChange, handleSubmit }) => {
