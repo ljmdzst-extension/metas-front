@@ -9,11 +9,11 @@ import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
-import { Col, Row, Spinner } from 'react-bootstrap';
+import { Col, InputGroup, Row, Spinner } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Search } from '@mui/icons-material';
 import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
 import useAlert from '../hooks/useAlert';
@@ -38,19 +38,17 @@ export default function Activity() {
 
 	const [show, setShow] = useState(false);
 	const [isLoadingModal, setIsLoadingModal] = useState<boolean>(false);
-	const [show2, setShow2] = useState(false);
 	const [term, setTerm] = useState('');
 	const [nameActivity, setNameActivity] = useState('');
-	const [nameActivityAux, setNameActivityAux] = useState('');
 	const handleClose = () => setShow(false);
-	const handleClose2 = () => setShow2(false);
 	const handleShow = () => setShow(true);
-	const handleShow2 = () => setShow2(true);
+
 	const [arrayActivity, setArrayActivity] = useState<Activity[]>([]);
 	const [isLoadingArrayActivity, setIsLoadingArrayActivity] = useState<boolean>(true);
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
 	const [area, setArea] = useState<Area>(initialAreaValue);
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
+	const [searchedActivities, setSearchedActivities] = useState<Activity[]>([]);
 
 	const navigation = useNavigate();
 	const { errorAlert } = useAlert();
@@ -58,7 +56,7 @@ export default function Activity() {
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { isLoading, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-	const { token } = useSelector((state: RootState) => state.authSlice);
+	const { token, puedeEditar } = useSelector((state: RootState) => state.authSlice);
 
 	useEffect(() => {
 		try {
@@ -117,8 +115,31 @@ export default function Activity() {
 			setArrayActivity(actividades.data);
 			setIsLoadingArrayActivity(false);
 		} catch (error) {
-			console.error('Error al realizar la solicitud GET:', error);
-			// Handle the error appropriately, e.g., show a message to the user
+			setIsLoadingArrayActivity(false);
+
+			if (axios.isAxiosError(error)) {
+				// Manejar errores de Axios
+				if (error.response) {
+					// La solicitud fue hecha y el servidor respondió con un código de estado
+					// que está fuera del rango de 2xx
+					const errorMessage = error.response.data?.error || error.response.statusText;
+					console.error('Error al realizar la solicitud GET:', errorMessage);
+					errorAlert('Error al realizar la petición: ' + errorMessage);
+				} else if (error.request) {
+					// La solicitud fue hecha pero no se recibió respuesta
+					console.error('No se recibió respuesta del servidor:', error.request);
+					errorAlert('No se recibió respuesta del servidor.');
+				} else {
+					// Algo sucedió en la configuración de la solicitud que desencadenó un error
+					console.error('Error en la configuración de la solicitud:', error.message);
+					errorAlert('Error en la configuración de la solicitud: ' + error.message);
+				}
+			} else {
+				// Manejar errores genéricos
+				const errorMessage = (error as Error).message;
+				console.error('Error desconocido:', errorMessage);
+				errorAlert('Error desconocido: ' + errorMessage);
+			}
 		}
 	}, [area.anio, area.idArea, token]);
 
@@ -149,6 +170,7 @@ export default function Activity() {
 
 	useEffect(() => {
 		mostrarActividades(); // Call mostrarActividades on component mount
+		setSearchedActivities([]);
 	}, [mostrarActividades]);
 
 	const handleButtonClick = (id: number) => {
@@ -190,8 +212,21 @@ export default function Activity() {
 		setCurrentFormSelected('');
 	};
 
+	const onSearchChange = useCallback(
+		(event: React.ChangeEvent<HTMLInputElement>) => {
+			const filteredActivities = arrayActivity.filter((activity) =>
+				activity.desc.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase()),
+			);
+			setSearchedActivities(filteredActivities);
+		},
+		[arrayActivity],
+	);
+	useEffect(() => {
+		onSearchChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>);
+	}, [isPlanificationOpen, onSearchChange]);
+
 	return (
-		<>
+		<div className=' d-flex flex-column h-100'>
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton>
 					<Modal.Title>Crear Actividad</Modal.Title>
@@ -199,10 +234,10 @@ export default function Activity() {
 				<Modal.Body>
 					<Form onSubmit={submitForm}>
 						<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
-							<Form.Label>Ingrese la descripcion de la actividad</Form.Label>
+							<Form.Label>Ingrese la descripción de la actividad</Form.Label>
 							<Form.Control
 								type='nombre'
-								placeholder='Descripcion'
+								placeholder='Descripción'
 								autoFocus
 								as='textarea'
 								rows={2}
@@ -217,140 +252,70 @@ export default function Activity() {
 					</Form>
 				</Modal.Body>
 			</Modal>
-			<Modal show={show2} onHide={handleClose2} name={nameActivityAux}>
-				<Modal.Header closeButton>
-					<Modal.Title>¿Quieres salir de la Actividad?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Form>
-						<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
-							<Form.Label>¿Confirma que desea salir de la actividad?</Form.Label>
-							<Form.Label>Los cambios no guardados se perderán. </Form.Label>
-						</Form.Group>
-						<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<Button variant='danger' onClick={handleClose2}>
-								Cancelar
-							</Button>
-							<Button
-								variant='success'
-								onClick={() => {
-									setIsPlanificationOpen(!isPlanificationOpen);
-									handleClose2();
-								}}
-							>
-								Salir de la actividad
-							</Button>
-						</Form.Group>
-					</Form>
-				</Modal.Body>
-			</Modal>
-			<div className=' d-flex flex-column h-100'>
-				<div
-					className=' d-flex align-items-center justify-content-between border  rounded-3 p-1 pb-0 mx-2 my-1  '
+			<div
+				className=' d-flex align-items-center justify-content-between border  rounded-3 p-1 pb-0 mx-2 my-1  '
+				style={{ backgroundColor: '#fefefe' }}
+			>
+				<h3 className=' fw-bold' style={{ color: '#0a5d52' }}>
+					{area?.nom}
+				</h3>
+				<ArrowBack
+					fontSize='large'
+					className={`rounded ${isPlanificationOpen ? 'd-none' : ''}`}
+					style={{ background: '#0a5d52', color: 'white' }}
+					onClick={() => {
+						navigation('/gestion/metas');
+					}}
+				/>
+			</div>
+
+			<div className={` h-100 d-flex justify-content-around gap-1 mx-3 `}>
+				{/* NOTE: SIDEBAR - LISTADO ACTIVIDADES - NAVEGACIÓN FORMS */}
+				<Col
+					sm={3}
+					className={` d-flex flex-column border-end border-2 rounded-3 ${
+						isPlanificationOpen && !puedeEditar ? 'd-none' : ''
+					} `}
 					style={{ backgroundColor: '#fefefe' }}
 				>
-					<h3 className=' fw-bold' style={{ color: '#0a5d52' }}>
-						{area?.nom}
-					</h3>
-					<ArrowBack
-						fontSize='large'
-						className={`rounded ${isPlanificationOpen ? 'd-none' : ''}`}
-						style={{ background: '#0a5d52', color: 'white' }}
-						onClick={() => {
-							navigation('/gestion/metas');
-						}}
-					/>
-				</div>
-
-				<div className=' h-100 d-flex justify-content-around gap-1 mx-3'>
-					{/* NOTE: SIDEBAR - LISTADO ACTIVIDADES - NAVEGACIÓN FORMS */}
-					<Col
-						sm={3}
-						className={` d-flex flex-column border-end border-2 rounded-3 `}
-						style={{ backgroundColor: '#fefefe' }}
-					>
-						{!isPlanificationOpen ? (
-							<>
-								{isLoadingArrayActivity ? (
-									<div className=' d-flex justify-content-center mt-5'>
-										<Spinner animation='border' role='status'>
-											<span className='visually-hidden'>Loading...</span>
-										</Spinner>
+					{!isPlanificationOpen ? (
+						<div style={{ maxHeight: 'calc(100vh - 130px)', height: '100%' }}>
+							{isLoadingArrayActivity ? (
+								<div className=' d-flex justify-content-center mt-5'>
+									<Spinner animation='border' role='output'>
+										<span className='visually-hidden'>Loading...</span>
+									</Spinner>
+								</div>
+							) : (
+								<div className=' d-flex flex-column h-100 p-2 '>
+									<div className=' text-center  '>
+										<h4>Listado de Actividades</h4>
 									</div>
-								) : (
-									<div className=' d-flex flex-column position-relative h-100'>
-										<Button
-											variant='outline-success'
-											style={{ position: 'absolute', bottom: '.5rem', right: '1rem' }}
-											onClick={handleShow}
-										>
-											Agregar Actividad
-										</Button>
-										<h4 className=' text-center m-2 '>Listado de Actividades</h4>
-										<div
-											className='custom-scrollbar me-1'
-											style={{ maxHeight: '80%', overflow: 'auto' }}
-										>
-											<ListGroup className='mx-2'>
-												{arrayActivity.map((item, index) => (
-													<ListGroup.Item
-														action
-														variant='secondary'
-														title={item.desc}
-														className='mx-auto my-1 rounded d-flex align-items-center '
-														key={index}
-														onClick={() => {
-															if (isPlanificationOpen) {
-																handleShow2();
-																setNameActivityAux(`${item.desc}`);
-															} else {
-																setIsPlanificationOpen(!isPlanificationOpen);
-																setNameActivity(`${item.desc}`);
-																handleButtonClick(item.idActividad);
-															}
-														}}
-													>
-														<span
-															style={{
-																textOverflow: 'ellipsis',
-																overflow: 'hidden',
-																fontWeight: 'normal',
-																whiteSpace: 'nowrap',
-															}}
-														>
-															{item.desc}
-														</span>
-													</ListGroup.Item>
-												))}
-											</ListGroup>
-										</div>
-									</div>
-								)}
-							</>
-						) : (
-							<>
-								{/* NOTE: NAVEGACION FORMULARIOS */}
-								{isLoading ? (
-									<></>
-								) : (
-									<>
-										<h4 className=' text-center m-2'>Formulario</h4>
-										<ListGroup className=' mx-2 '>
-											{formData.map((item, index) => (
+									<InputGroup className='mb-3' size='sm'>
+										<Form.Control
+											onChange={onSearchChange}
+											size='sm'
+											placeholder='Buscar actividad'
+											aria-label='Activities-search'
+											aria-describedby='basic-addon1'
+										/>
+										<InputGroup.Text id='basic-addon1'>
+											<Search />
+										</InputGroup.Text>
+									</InputGroup>
+									<ListGroup className=' mb-2 overflow-y-auto custom-scrollbar '>
+										{(searchedActivities.length > 0 ? searchedActivities : arrayActivity).map(
+											(item, index) => (
 												<ListGroup.Item
 													action
-													variant={
-														hayCambios && currentFormSelected === item.index
-															? 'warning'
-															: currentFormSelected === item.index
-															? 'primary'
-															: 'secondary'
-													}
-													title={item.Title}
-													className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
+													variant='secondary'
+													title={item.desc}
+													className='mx-auto my-1 rounded d-flex align-items-center '
 													key={index}
 													onClick={() => {
-														selectCurrentForm(item.index);
+														setIsPlanificationOpen(!isPlanificationOpen);
+														setNameActivity(`${item.desc}`);
+														handleButtonClick(item.idActividad);
 													}}
 												>
 													<span
@@ -361,44 +326,98 @@ export default function Activity() {
 															whiteSpace: 'nowrap',
 														}}
 													>
-														{item.Title}
+														{item.desc}
 													</span>
 												</ListGroup.Item>
-											))}
-										</ListGroup>
-									</>
-								)}
-							</>
-						)}
-					</Col>
-					{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
-					<Col sm={9} className=' border-2 rounded-3' style={{ backgroundColor: '#fefefe' }}>
-						{!isPlanificationOpen && (
-							<Row>
-								<Col className='MenuOptions'>
-									{/* <div className='Options'>Carga de Presupuesto</div> */}
-									<Button disabled>Carga de Presupuesto</Button>
-								</Col>
-								<Col className='MenuOptions'>
-									<Link to={`${location.pathname}/resumen`} style={{ textDecoration: 'none' }}>
-										{/* <div className='Options'>Ver Resumen</div> */}
-										<Button>Ver Resumen</Button>
-									</Link>
-								</Col>
-							</Row>
-						)}
+											),
+										)}
+									</ListGroup>
+									<Button
+										variant='outline-success'
+										className=' mt-2 align-self-end mt-auto'
+										onClick={handleShow}
+										disabled={!puedeEditar}
+									>
+										Agregar Actividad
+									</Button>
+								</div>
+							)}
+						</div>
+					) : (
+						<>
+							{/* NOTE: NAVEGACION FORMULARIOS */}
+							{isLoading ? (
+								<></>
+							) : (
+								<>
+									<h4 className=' text-center m-2'>Formulario</h4>
+									<ListGroup className=' mx-2 '>
+										{formData.map((item, index) => (
+											<ListGroup.Item
+												action
+												variant={
+													hayCambios && currentFormSelected === item.index
+														? 'warning'
+														: currentFormSelected === item.index
+														? 'primary'
+														: 'secondary'
+												}
+												title={item.Title}
+												className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center '
+												key={index}
+												onClick={() => {
+													selectCurrentForm(item.index);
+												}}
+											>
+												<span
+													style={{
+														textOverflow: 'ellipsis',
+														overflow: 'hidden',
+														fontWeight: 'normal',
+														whiteSpace: 'nowrap',
+													}}
+												>
+													{item.Title}
+												</span>
+											</ListGroup.Item>
+										))}
+									</ListGroup>
+								</>
+							)}
+						</>
+					)}
+				</Col>
+				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
+				<Col
+					sm={isPlanificationOpen && !puedeEditar ? '12' : 9}
+					className=' border-2 rounded-3'
+					style={{ backgroundColor: '#fefefe' }}
+				>
+					{!isPlanificationOpen && (
+						<Row>
+							<Col className='MenuOptions'>
+								{/* <div className='Options'>Carga de Presupuesto</div> */}
+								<Button disabled>Carga de Presupuesto</Button>
+							</Col>
+							<Col className='MenuOptions'>
+								<Link to={`${location.pathname}/resumen`} style={{ textDecoration: 'none' }}>
+									{/* <div className='Options'>Ver Resumen</div> */}
+									<Button>Ver Resumen</Button>
+								</Link>
+							</Col>
+						</Row>
+					)}
 
-						{isPlanificationOpen && (
-							<PlanificationPanel
-								name={nameActivity}
-								closePlanification={closePlanification}
-								currentFormSelected={currentFormSelected}
-								cleanFormSelected={cleanFormSelected}
-							/>
-						)}
-					</Col>
-				</div>
+					{isPlanificationOpen && (
+						<PlanificationPanel
+							name={nameActivity}
+							closePlanification={closePlanification}
+							currentFormSelected={currentFormSelected}
+							cleanFormSelected={cleanFormSelected}
+						/>
+					)}
+				</Col>
 			</div>
-		</>
+		</div>
 	);
 }

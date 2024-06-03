@@ -9,8 +9,8 @@ import FormMetas from './Forms/FormMetas';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import { RootState } from '../redux/store';
-import { useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
 import { ArrowBack } from '@mui/icons-material';
 import Swal from 'sweetalert2';
@@ -18,6 +18,7 @@ import ActivityDetail from './metas/ActivityDetail';
 import { Spinner } from 'react-bootstrap';
 import useAvailableHeight from '../hooks/useAvailableHeight';
 import useAlert from '../hooks/useAlert';
+import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
 
 type Props = {
 	name: string;
@@ -32,13 +33,17 @@ export default function PlanificationPanel({
 	currentFormSelected,
 	cleanFormSelected,
 }: Readonly<Props>) {
+	const dispatch = useDispatch<AppDispatch>();
+
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState(String);
 	const [show2, setShow2] = useState(false);
 
 	const [motCancel, setMotCancel] = useState<string | null>(null);
-	const { activity, isLoading } = useSelector((state: RootState) => state.actividadSlice);
-	const { token } = useSelector((state: RootState) => state.authSlice);
+	const { activity, isLoading, hayCambios } = useSelector(
+		(state: RootState) => state.actividadSlice,
+	);
+	const { token, puedeEditar } = useSelector((state: RootState) => state.authSlice);
 
 	const availableHeight = useAvailableHeight();
 	const { errorAlert, successAlert } = useAlert();
@@ -193,7 +198,7 @@ export default function PlanificationPanel({
 	};
 
 	return (
-		<>
+		<div className=' h-100'>
 			<Modal show={show2} onHide={handleClose2}>
 				<Modal.Header>
 					<Modal.Title>¿Quiere salir de la sección?</Modal.Title>
@@ -215,6 +220,7 @@ export default function PlanificationPanel({
 										setIsFormOpen(false);
 										setIndexForm('');
 										cleanFormSelected();
+										dispatch(SET_HAY_CAMBIOS({ valor: false }));
 									} else {
 										closePlanification();
 										handleClose2();
@@ -229,7 +235,7 @@ export default function PlanificationPanel({
 			</Modal>
 			{isLoading ? (
 				<div className=' d-flex justify-content-center mt-5'>
-					<Spinner animation='border' role='status'>
+					<Spinner animation='border' role='output'>
 						<span className='visually-hidden'>Loading...</span>
 					</Spinner>
 				</div>
@@ -248,25 +254,25 @@ export default function PlanificationPanel({
 						>
 							{name}
 						</h4>
-						{isFormOpen && (
-							<ArrowBack
-								fontSize={'large'}
-								className='m-1 rounded'
-								style={{ background: '#0a5d52', color: 'white' }}
-								color='primary'
-								onClick={() => {
+						<ArrowBack
+							fontSize={'large'}
+							className='m-1 rounded'
+							style={{ background: '#0a5d52', color: 'white' }}
+							color='primary'
+							onClick={() => {
+								if (hayCambios) {
 									handleShow2();
-								}}
-							/>
-						)}
-						{!isFormOpen && (
-							<ArrowBack
-								fontSize='large'
-								className='m-1 rounded'
-								style={{ background: '#0a5d52', color: 'white' }}
-								onClick={() => handleShow2()}
-							/>
-						)}
+								} else {
+									if (isFormOpen) {
+										setIsFormOpen(false);
+										setIndexForm('');
+										cleanFormSelected();
+									} else {
+										closePlanification();
+									}
+								}
+							}}
+						/>
 					</div>
 					{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
 					{motCancel !== null && (
@@ -292,7 +298,11 @@ export default function PlanificationPanel({
 							</div>
 							{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
 							{motCancel === null ? (
-								<div className=' d-flex justify-content-around w-100 '>
+								<div
+									className={` d-flex justify-content-around w-100 mb-2  ${
+										puedeEditar ? '' : 'd-none'
+									} `}
+								>
 									<Button
 										variant='warning'
 										className='Suspend'
@@ -352,6 +362,6 @@ export default function PlanificationPanel({
 					)}
 				</>
 			)}
-		</>
+		</div>
 	);
 }
