@@ -48,7 +48,6 @@ export default function Activity() {
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
 	const [area, setArea] = useState<Area>(initialAreaValue);
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
-	const [inputSearch, setInputSearch] = useState<string>('');
 	const [searchedActivities, setSearchedActivities] = useState<Activity[]>([]);
 
 	const navigation = useNavigate();
@@ -215,7 +214,6 @@ export default function Activity() {
 
 	const onSearchChange = useCallback(
 		(event: React.ChangeEvent<HTMLInputElement>) => {
-			setInputSearch(event.target.value);
 			const filteredActivities = arrayActivity.filter((activity) =>
 				activity.desc.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase()),
 			);
