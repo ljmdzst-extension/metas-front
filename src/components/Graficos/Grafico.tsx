@@ -22,11 +22,12 @@ interface GraficoProps {
 	dataKey?: string;
 	valueKeys: string[];
 	legend?: boolean;
+	customColors?: { item: string; color: string }[];
 }
 
 const RADIAN = Math.PI / 180;
 
-const COLORS = [
+const DEFAULT_COLORS = [
 	'#8884d8',
 	'#82ca9d',
 	'#ffc658',
@@ -87,7 +88,9 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label })
 				style={{ backgroundColor: '#fff', padding: '5px', border: '1px solid #ccc' }}
 			>
 				<p className='label'>{`${label} :`}</p>
-				<p>Cantidad de Actividades: {payload[0].value}</p>
+				{payload.map((entry, index) => (
+					<p key={`tooltip-item-${index}`}>Cantidad de Actividades: {entry.value}</p>
+				))}
 			</div>
 		);
 	}
@@ -100,12 +103,21 @@ const Grafico: React.FC<GraficoProps> = ({
 	data,
 	valueKeys,
 	legend = true,
+	customColors,
 }) => {
 	if (data.length === 0) {
 		return <div>No data available</div>;
 	}
 
 	const shouldHideTicks = data.length > 10;
+
+	const getColor = (name: string, index: number) => {
+		if (customColors) {
+			const customColor = customColors.find((color) => color.item === name);
+			return customColor ? customColor.color : DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+		}
+		return DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+	};
 
 	switch (type) {
 		case 'line':
@@ -122,12 +134,7 @@ const Grafico: React.FC<GraficoProps> = ({
 						<Tooltip content={<CustomTooltip active={false} payload={[]} label='' />} />
 						{legend && <Legend />}
 						{valueKeys.map((key, index) => (
-							<Line
-								key={index}
-								type='monotone'
-								dataKey={key}
-								stroke={COLORS[index % COLORS.length]}
-							/>
+							<Line key={index} type='monotone' dataKey={key} stroke={getColor(key, index)} />
 						))}
 					</LineChart>
 				</ResponsiveContainer>
@@ -146,9 +153,9 @@ const Grafico: React.FC<GraficoProps> = ({
 						<Tooltip content={<CustomTooltip active={false} payload={[]} label='' />} />
 						{legend && <Legend />}
 						{valueKeys.map((key, index) => (
-							<Bar key={index} dataKey={key} fill={COLORS[index % COLORS.length]}>
-								{data.map((_, idx) => (
-									<Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
+							<Bar key={index} dataKey={key} fill={getColor(key, index)}>
+								{data.map((entry, idx) => (
+									<Cell key={`cell-${idx}`} fill={getColor(entry[dataKey], idx)} />
 								))}
 							</Bar>
 						))}
@@ -174,8 +181,8 @@ const Grafico: React.FC<GraficoProps> = ({
 							label={renderCustomizedLabel}
 							nameKey={dataKey}
 						>
-							{data.map((_, index) => (
-								<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+							{data.map((entry, index) => (
+								<Cell key={`cell-${index}`} fill={getColor(entry[dataKey], index)} />
 							))}
 						</Pie>
 						<Tooltip />

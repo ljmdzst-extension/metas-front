@@ -8,6 +8,29 @@ import { ArrowBack } from '@mui/icons-material';
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: currentYear - 2022 }, (_, i) => 2023 + i);
 
+const UACOLORS = [
+	{ item: 'FICH', color: '#0061ae' },
+	{ item: 'FHUC', color: '#ee7900' },
+	{ item: 'FCM', color: '#d60055' },
+	{ item: 'Centro Universitario Reconquista-Avellaneda', color: '#137085' },
+	{ item: 'Centro Universitario Gálvez', color: '#137085' },
+	{ item: 'Sede UNL Rafaela-Sunchales', color: '#137085' },
+	{ item: 'FBCB', color: '#009f2f' },
+	{ item: 'FCE', color: '#272b8b' },
+	{ item: 'FCJS', color: '#9f052b' },
+	{ item: 'FCV', color: '#72097c' },
+	{ item: 'FCA', color: '#7db713' },
+	{ item: 'FADU', color: '#f9b700' },
+	{ item: 'ESS', color: '#006c1f' },
+	{ item: 'FIQ', color: '#e61e00' },
+	{ item: 'ISM', color: '#bb5f00' },
+	{ item: 'Jardín Maternal La Ronda', color: '#137085' },
+	{ item: 'Escuela Secundaria UNL', color: '#137085' },
+	{ item: 'EIS', color: '#c7082a' },
+	{ item: 'EAGG', color: '#137085' },
+	{ item: 'Escuela de Nivel Inicial y Primario', color: '#d80124' },
+];
+
 type ChartType = 'line' | 'bar' | 'pie';
 export const Graphics = () => {
 	const [year, setYear] = useState(currentYear);
@@ -59,6 +82,7 @@ export const Graphics = () => {
 							data: graficoEjes || [],
 							dataKey: 'eje',
 							legend: true,
+							colors: undefined,
 						},
 						{
 							title: 'Actividades según LIE y objetivo del PIE',
@@ -66,6 +90,7 @@ export const Graphics = () => {
 							data: graficoObjEst || [],
 							dataKey: 'objEst',
 							legend: false,
+							colors: undefined,
 						},
 						{
 							title: 'Actividades según Objetivo Estratégico de la SEC',
@@ -73,6 +98,7 @@ export const Graphics = () => {
 							data: graficoLy || [],
 							dataKey: 'lie',
 							legend: false,
+							colors: undefined,
 						},
 						{
 							title: 'Actividades por UA',
@@ -80,6 +106,7 @@ export const Graphics = () => {
 							data: graficoUUAA || [],
 							dataKey: 'ua',
 							legend: false,
+							colors: UACOLORS,
 						},
 					].map((item, index) => (
 						<Col key={index} md={6} className=' mb-3'>
@@ -101,6 +128,7 @@ export const Graphics = () => {
 										type={item.type}
 										valueKeys={['cantActividades']}
 										legend={item.legend}
+										customColors={item.colors}
 									/>
 								)}
 							</div>
