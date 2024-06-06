@@ -23,19 +23,16 @@ const initialValues: FormLoginProps = {
 
 const FormLogin = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { loading } = useSelector((state: RootState) => state.authSlice);
+	const { loading, isLogged } = useSelector((state: RootState) => state.authSlice);
 
 	const navigate = useNavigate();
 	const { errorAlert } = useAlert();
 
 	useEffect(() => {
-		const token = localStorage.getItem('token');
-		const user = localStorage.getItem('user');
-		const permisos = localStorage.getItem('permisos');
-		if (token && user && permisos) {
+		if (isLogged) {
 			navigate('/gestion');
 		}
-	}, [navigate]);
+	}, [isLogged, navigate]);
 
 	const validations = Yup.object().shape({
 		email: Yup.string().email().required('Campo requerido'),

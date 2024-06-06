@@ -11,24 +11,24 @@ const years = Array.from({ length: currentYear - 2022 }, (_, i) => 2023 + i);
 const UACOLORS = [
 	{ item: 'FICH', color: '#0061ae' },
 	{ item: 'FHUC', color: '#ee7900' },
+	{ item: 'ISM', color: '#bb5f00' },
 	{ item: 'FCM', color: '#d60055' },
-	{ item: 'Centro Universitario Reconquista-Avellaneda', color: '#137085' },
-	{ item: 'Centro Universitario Gálvez', color: '#137085' },
-	{ item: 'Sede UNL Rafaela-Sunchales', color: '#137085' },
 	{ item: 'FBCB', color: '#009f2f' },
+	{ item: 'ESS', color: '#006c1f' },
 	{ item: 'FCE', color: '#272b8b' },
 	{ item: 'FCJS', color: '#9f052b' },
 	{ item: 'FCV', color: '#72097c' },
 	{ item: 'FCA', color: '#7db713' },
 	{ item: 'FADU', color: '#f9b700' },
-	{ item: 'ESS', color: '#006c1f' },
 	{ item: 'FIQ', color: '#e61e00' },
-	{ item: 'ISM', color: '#bb5f00' },
-	{ item: 'Jardín Maternal La Ronda', color: '#137085' },
-	{ item: 'Escuela Secundaria UNL', color: '#137085' },
 	{ item: 'EIS', color: '#c7082a' },
-	{ item: 'EAGG', color: '#137085' },
 	{ item: 'Escuela de Nivel Inicial y Primario', color: '#d80124' },
+	{ item: 'Centro Universitario Reconquista-Avellaneda', color: null },
+	{ item: 'Centro Universitario Gálvez', color: null },
+	{ item: 'Sede UNL Rafaela-Sunchales', color: null },
+	{ item: 'Jardín Maternal La Ronda', color: null },
+	{ item: 'Escuela Secundaria UNL', color: null },
+	{ item: 'EAGG', color: null },
 ];
 
 type ChartType = 'line' | 'bar' | 'pie';
@@ -111,10 +111,10 @@ export const Graphics = () => {
 					].map((item, index) => (
 						<Col key={index} md={6} className=' mb-3'>
 							<div
-								className='d-flex flex-column border rounded w-100 h-100 p-2'
-								style={{ backgroundColor: '#f5f5f5', minHeight: '400px' }}
+								className='d-flex flex-column border rounded w-100 h-100 p-2 text-center '
+								style={{ backgroundColor: '#f5f5f5', minHeight: '400px', maxWidth: '100%' }}
 							>
-								<h2>{item.title}</h2>
+								<h4>{item.title}</h4>
 								{isLoading ? (
 									<div className=' d-flex flex-column justify-content-center align-items-center w-100 h-100'>
 										<Spinner animation='border' role='output'>

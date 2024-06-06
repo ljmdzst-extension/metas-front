@@ -19,7 +19,7 @@ const initialState: AuthState = {
 	permisos: permisos ? JSON.parse(permisos) : [],
 	loading: false,
 	error: null,
-	isLogged: !!token,
+	isLogged: !!token && !!user,
 	puedeEditar: false,
 };
 

@@ -22,7 +22,7 @@ interface GraficoProps {
 	dataKey?: string;
 	valueKeys: string[];
 	legend?: boolean;
-	customColors?: { item: string; color: string }[];
+	customColors?: { item: string; color: string | null }[];
 }
 
 const RADIAN = Math.PI / 180;
@@ -114,7 +114,9 @@ const Grafico: React.FC<GraficoProps> = ({
 	const getColor = (name: string, index: number) => {
 		if (customColors) {
 			const customColor = customColors.find((color) => color.item === name);
-			return customColor ? customColor.color : DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+			return customColor && customColor.color
+				? customColor.color
+				: DEFAULT_COLORS[index % DEFAULT_COLORS.length];
 		}
 		return DEFAULT_COLORS[index % DEFAULT_COLORS.length];
 	};
@@ -122,11 +124,7 @@ const Grafico: React.FC<GraficoProps> = ({
 	switch (type) {
 		case 'line':
 			return (
-				<ResponsiveContainer
-					width='100%'
-					height='100%'
-					className='border rounded mt-2 p-2 bg-white'
-				>
+				<ResponsiveContainer width='100%' height='100%' className='border rounded mt-2 bg-white'>
 					<LineChart data={data}>
 						<CartesianGrid strokeDasharray='3 3' />
 						<XAxis dataKey={dataKey} tick={shouldHideTicks ? false : undefined} />
@@ -141,11 +139,7 @@ const Grafico: React.FC<GraficoProps> = ({
 			);
 		case 'bar':
 			return (
-				<ResponsiveContainer
-					width='100%'
-					height='100%'
-					className='border rounded mt-2 p-2 bg-white'
-				>
+				<ResponsiveContainer width='100%' height='100%' className='border rounded mt-2 bg-white'>
 					<BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 						<CartesianGrid strokeDasharray='3 3' />
 						<XAxis dataKey={dataKey} tick={shouldHideTicks ? false : undefined} />
@@ -164,11 +158,7 @@ const Grafico: React.FC<GraficoProps> = ({
 			);
 		case 'pie':
 			return (
-				<ResponsiveContainer
-					width='100%'
-					height='100%'
-					className='border rounded mt-2 p-2 bg-white'
-				>
+				<ResponsiveContainer width='100%' height='100%' className='border rounded mt-2 bg-white'>
 					<PieChart>
 						<Pie
 							dataKey='cantActividades'
@@ -176,7 +166,7 @@ const Grafico: React.FC<GraficoProps> = ({
 							cx='50%'
 							cy='50%'
 							labelLine={false}
-							outerRadius={80}
+							outerRadius={100}
 							fill='#8884d8'
 							label={renderCustomizedLabel}
 							nameKey={dataKey}
