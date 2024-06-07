@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,10 +23,16 @@ const initialValues: FormLoginProps = {
 
 const FormLogin = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { loading } = useSelector((state: RootState) => state.authSlice);
+	const { loading, isLogged } = useSelector((state: RootState) => state.authSlice);
 
 	const navigate = useNavigate();
 	const { errorAlert } = useAlert();
+
+	useEffect(() => {
+		if (isLogged) {
+			navigate('/gestion');
+		}
+	}, [isLogged, navigate]);
 
 	const validations = Yup.object().shape({
 		email: Yup.string().email().required('Campo requerido'),
@@ -66,9 +73,9 @@ const FormLogin = () => {
 		>
 			{({ errors, touched, values, handleBlur, handleChange, handleSubmit }) => {
 				return (
-					<Form onSubmit={handleSubmit} className=' border rounded p-5 bg-color-slate  ' noValidate>
+					<Form onSubmit={handleSubmit} className='border rounded p-5 bg-color-slate' noValidate>
 						<p className='mb-4'>Ingrese sus datos de usuario.</p>
-						<Form.Group className=' position-relative mb-4 d-flex justify-content-center'>
+						<Form.Group className='position-relative mb-4 d-flex justify-content-center'>
 							<Form.Control
 								type='email'
 								placeholder='Ingrese su email'

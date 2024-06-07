@@ -7,12 +7,19 @@ const Management = () => {
 		navigation(path);
 	};
 	return (
-		<Container>
-			<h2 className='text-center '>Seleccionar la plataforma a la que  desee acceder </h2>
-			<Row>
+		<Container
+			className='my-2 border rounded h-100 '
+			style={{ backgroundColor: 'rgba(245, 245, 245, 0.959)' }}
+		>
+			<div className=' my-2'>
+				<h2 className='text-center' style={{ color: '#0a5d52' }}>
+					Seleccionar la plataforma a la que desee acceder{' '}
+				</h2>
+			</div>
+			<Row className='my-2'>
 				<Col className='text-center' xs={12} md={4}>
 					<Button
-						variant='outline-secondary'
+						variant='success'
 						className=' w-100'
 						style={{ height: '50px' }}
 						onClick={() => handlerClick('/gestion/metas')}
@@ -22,7 +29,7 @@ const Management = () => {
 				</Col>
 				<Col className='text-center' xs={12} md={4}>
 					<Button
-						variant='outline-secondary'
+						variant='success'
 						className=' w-100'
 						style={{ height: '50px' }}
 						onClick={() => handlerClick('/gestion/proyectos')}
@@ -33,7 +40,7 @@ const Management = () => {
 				</Col>
 				<Col className='text-center' xs={12} md={4}>
 					<Button
-						variant='outline-secondary'
+						variant='success'
 						className=' w-100'
 						style={{ height: '50px' }}
 						onClick={() => handlerClick('/gestion/programas')}
