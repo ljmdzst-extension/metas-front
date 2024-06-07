@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { guardarActividad } from '../../redux/actions/putActividad';
 import Swal from 'sweetalert2';
-import { ListGroup } from 'react-bootstrap';
+import { FormControl, ListGroup } from 'react-bootstrap';
 import { ContentCopy, Edit, Delete, ErrorOutline } from '@mui/icons-material';
 
 import { textLimitError } from '../../utils/validacionesForms';
@@ -24,6 +24,7 @@ const FormDescriptionUbication = () => {
 	);
 
 	const [ubicacion, setUbicacion] = useState<string>('');
+	const [ubicacionDescripcion, setUbicacionDescripcion] = useState<string>('');
 	const isInitialMount = useRef(true);
 
 	useEffect(() => {
@@ -40,20 +41,25 @@ const FormDescriptionUbication = () => {
 		checkForChanges();
 	};
 
-	const handleUbicacionInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+	const handleUbicacionInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setUbicacion(event.target.value);
 	};
 
+	const handleUbicacionDescripcionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setUbicacionDescripcion(event.target.value);
+	};
+
 	const agregarUbicacion = () => {
-		if (ubicacion.trim() !== '') {
+		if (ubicacion.trim() !== '' && ubicacionDescripcion.trim() !== '') {
 			const nuevaUbicacion = {
 				idUbicacion: 0,
-				desc: ubicacion,
+				desc: ubicacionDescripcion,
 				enlace: ubicacion,
 			};
 
 			setUbicaciones([...ubicaciones, nuevaUbicacion]);
 			setUbicacion('');
+			setUbicacionDescripcion('');
 			checkForChanges();
 		}
 	};
@@ -153,7 +159,14 @@ const FormDescriptionUbication = () => {
 					</Button>
 				</div>
 				<InputGroup className='gap-1'>
-					<Form.Control
+					<FormControl
+						placeholder='Descripción de la ubicación'
+						aria-label='Descripción de la ubicación'
+						aria-describedby='basic-addon2'
+						onChange={handleUbicacionDescripcionChange}
+						value={ubicacionDescripcion}
+					/>
+					<FormControl
 						placeholder='Inserte link de ubicación'
 						aria-label='Inserte link de ubicación'
 						aria-describedby='basic-addon2'
@@ -165,7 +178,7 @@ const FormDescriptionUbication = () => {
 						variant='success'
 						id='button-addon2'
 						onClick={agregarUbicacion}
-						disabled={ubicacion === '' || !isUrlValid(ubicacion)}
+						disabled={ubicacion === '' || ubicacionDescripcion === '' || !isUrlValid(ubicacion)}
 					>
 						Agregar Ubicación
 					</Button>
@@ -177,14 +190,11 @@ const FormDescriptionUbication = () => {
 					{ubicaciones.map((ubicacion, index) => (
 						<ListGroup.Item key={index} className='w-75 align-self-center' variant='secondary'>
 							<div className='d-flex justify-content-between'>
-								<a
-									href={ubicacion.enlace ?? ''}
-									target='_blank'
-									rel='noopener noreferrer'
-									style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-								>
-									{ubicacion.enlace ?? ''}
-								</a>
+								<div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+									<a href={ubicacion.enlace ?? ''} target='_blank' rel='noopener noreferrer'>
+										{ubicacion.desc ?? ''}
+									</a>
+								</div>
 								<div className='d-flex'>
 									<ContentCopy
 										className='cursor-pointer mx-1'

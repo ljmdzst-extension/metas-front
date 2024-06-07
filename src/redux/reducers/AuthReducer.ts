@@ -20,7 +20,7 @@ const initialState: AuthState = {
 	loading: false,
 	error: null,
 	isLogged: !!token && !!user,
-	puedeEditar: false,
+	puedeEditar: permisos ? JSON.parse(permisos).includes('METAS_EDICION') : false,
 };
 
 const authSlice = createSlice({
