@@ -276,22 +276,28 @@ export default function PlanificationPanel({
 					</div>
 					{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
 					{motCancel !== null && (
-						<h2
+						<div
+							className=' text-center'
 							style={{
-								textAlign: 'center',
-								fontSize: 30,
-								fontWeight: 'bold',
 								backgroundColor: 'yellow',
 							}}
 						>
-							ACTIVIDAD SUSPENDIDA
-						</h2>
+							<h2
+								style={{
+									fontSize: 30,
+									fontWeight: 'bold',
+								}}
+							>
+								ACTIVIDAD SUSPENDIDA
+							</h2>
+							<p>Motivo: {motCancel}</p>
+						</div>
 					)}
 					{/* NOTE: VISTA PRINCIPAL - Información */}
 					{!isFormOpen ? (
 						<div className=' d-flex flex-column h-100 '>
 							<div
-								className=' overflow-y-scroll custom-scrollbar'
+								className=' overflow-y-scroll custom-scrollbar '
 								style={{ height: availableHeight - 170 }}
 							>
 								<ActivityDetail />
@@ -299,9 +305,7 @@ export default function PlanificationPanel({
 							{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
 							{motCancel === null ? (
 								<div
-									className={` d-flex justify-content-around w-100 mb-2  ${
-										puedeEditar ? '' : 'd-none'
-									} `}
+									className={` d-flex justify-content-around mb-2  ${puedeEditar ? '' : 'd-none'} `}
 								>
 									<Button
 										variant='warning'
@@ -322,15 +326,18 @@ export default function PlanificationPanel({
 									</Button>
 								</div>
 							) : (
-								<Button
-									variant='warning'
-									className='Suspend'
-									onClick={() => {
-										activarActividad();
-									}}
+								<div
+									className={` d-flex justify-content-around mb-2  ${puedeEditar ? '' : 'd-none'} `}
 								>
-									Anular Suspensión
-								</Button>
+									<Button
+										variant='warning'
+										onClick={() => {
+											activarActividad();
+										}}
+									>
+										Anular Suspensión
+									</Button>
+								</div>
 							)}
 						</div>
 					) : (
