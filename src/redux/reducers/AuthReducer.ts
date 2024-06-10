@@ -8,11 +8,34 @@ interface AuthState {
 	error: string | null | undefined;
 	isLogged: boolean;
 	puedeEditar: boolean;
+	areas: number[];
 }
 
 const user = localStorage.getItem('user');
 const token = localStorage.getItem('token');
 const permisos = localStorage.getItem('permisos');
+const areas = localStorage.getItem('areas');
+const currentArea = localStorage.getItem('currentArea');
+
+function canEdit(
+	permisos: string | null,
+	areas: string | null,
+	currentArea: string | null,
+): boolean {
+	if (!permisos || !areas || !currentArea) {
+		return false;
+	}
+
+	const permisosParsed = JSON.parse(permisos);
+	const areasParsed = JSON.parse(areas);
+	const currentAreaParsed = JSON.parse(currentArea);
+
+	return (
+		permisosParsed.includes('METAS_EDICION') &&
+		areasParsed.some((area) => area.idArea === currentAreaParsed.idArea)
+	);
+}
+
 const initialState: AuthState = {
 	user: user ?? '',
 	token: token ?? '',
@@ -20,7 +43,8 @@ const initialState: AuthState = {
 	loading: false,
 	error: null,
 	isLogged: !!token && !!user,
-	puedeEditar: permisos ? JSON.parse(permisos).includes('METAS_EDICION') : false,
+	areas: areas ? JSON.parse(areas) : [],
+	puedeEditar: canEdit(permisos, areas, currentArea),
 };
 
 const authSlice = createSlice({
@@ -58,6 +82,7 @@ const authSlice = createSlice({
 			state.token = action.payload.token;
 			state.permisos = action.payload.permisos;
 			state.puedeEditar = state.permisos.includes('METAS_EDICION');
+			state.areas = action.payload.areas;
 		});
 		builder.addCase(loginAsync.rejected, (state, action) => {
 			// console.log(action.payload);
