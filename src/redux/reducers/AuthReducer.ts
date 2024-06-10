@@ -31,8 +31,6 @@ function canEdit(permisos: string[], areas: number[], currentArea: string | null
 		return false;
 	}
 
-	console.log(areas, Number(currentAreaParsed.idArea));
-	console.log(areas.some((area) => Number(area) === Number(currentAreaParsed.idArea)));
 	return (
 		permisos.includes('METAS_EDICION') &&
 		areas.some((area) => Number(area) === Number(currentAreaParsed.idArea))
