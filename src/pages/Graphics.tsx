@@ -38,10 +38,6 @@ export const Graphics = () => {
 
 	const navigation = useNavigate();
 
-	useEffect(() => {
-		console.log(graficoEjes, graficoObjEst, graficoLy, graficoUUAA);
-	}, [graficoEjes, graficoObjEst, graficoLy, graficoUUAA]);
-
 	const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		setYear(parseInt(e.target.value));
 	};
