@@ -2,16 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Accordion } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { LArea, ListaProgramasSIPPE } from '../../types/BasesProps';
+import { LArea } from '../../types/BasesProps';
+import useAlert from '../../hooks/useAlert';
 
 interface Props {
 	objectData: any;
 	spanishTitles: any;
-}
-
-interface Valoracion {
-	idValoracion: number;
-	nom: string;
 }
 
 interface Area {
@@ -21,45 +17,34 @@ interface Area {
 }
 
 const DataRender = ({ objectData, spanishTitles }: Props) => {
-	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
-	const [areas, setAreas] = useState<LArea[]>([]);
-	const [listaSIPPE, setListaSIPPE] = useState<ListaProgramasSIPPE[]>();
+	const { bases, error, loading } = useSelector((state: RootState) => state.metasSlice);
+	const { errorAlert } = useAlert();
 
 	const [areasMap, setAreasMap] = useState<Record<string, Area>>({});
 
-	const { bases, error, loading } = useSelector((state: RootState) => state.metasSlice);
-
-	// Convert camelCase to human-readable format
 	const camelCaseToHuman = (str: string) => {
 		return str.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
 	};
 
-	// Find the name of the valoracion
 	const stringValoracion = (val: number) => {
-		const valoracion = valoraciones?.find((valoracion) => valoracion.idValoracion === val);
+		const valoracion = bases?.listaValoraciones?.find(
+			(valoracion) => valoracion.idValoracion === val,
+		);
 		return valoracion?.nom;
 	};
 
-	// Fetch data from the store
 	useEffect(() => {
-		if (!error && bases) {
-			setValoraciones(bases.listaValoraciones);
-			setAreas(bases.lAreas);
-			setListaSIPPE(bases.listaProgramasSIPPE);
-		} else {
-			// TODO: ALERTA
-		}
-	}, [bases, error]);
+		if (error) errorAlert(error);
+	}, [error, errorAlert]);
 
-	// Create a map of areas
 	useEffect(() => {
 		const map: Record<string, LArea> = {};
-		areas.forEach((area) => {
+		bases?.lAreas.forEach((area) => {
 			const key = `${area.idRelacion}-${area.idTipoRelacion}`;
 			map[key] = area;
 		});
 		setAreasMap(map);
-	}, [areas]);
+	}, [bases?.lAreas]);
 
 	const extraerRelacionCompleta = (idRelacion: number, idTipoRelacion: number) => {
 		const key = `${idRelacion}-${idTipoRelacion}`;
@@ -88,6 +73,24 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 					))}
 				</ul>
 			</li>
+		);
+	};
+
+	const renderObjetivos = (data: number[]) => {
+		if (!data || data.length === 0) {
+			return null;
+		}
+
+		const objetivos = bases?.listaObjetivos?.filter((objetivo) =>
+			data.includes(objetivo.idObjetivo),
+		);
+
+		return (
+			<ul>
+				{objetivos?.map((objetivo) => (
+					<li key={`objetivo-${objetivo.idObjetivo}`}>{objetivo.nom}</li>
+				))}
+			</ul>
 		);
 	};
 
@@ -184,7 +187,9 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 			listaProgramasSIPPE: () => {
 				if (!data || data.length === 0) return null;
 
-				const thisSIPPE = listaSIPPE?.filter((programa) => data.includes(programa.idProgramaSippe));
+				const thisSIPPE = bases?.listaProgramasSIPPE?.filter((programa) =>
+					data.includes(programa.idProgramaSippe),
+				);
 
 				return (
 					<div key={dataType}>
@@ -196,6 +201,66 @@ const DataRender = ({ objectData, spanishTitles }: Props) => {
 								<li key={'Sippe' + el.idProgramaSippe}>{el.nom}</li>
 							))}
 						</ul>
+					</div>
+				);
+			},
+			listaObjetivos: () => {
+				if (!data || data.length === 0) return null;
+
+				const ejesTransversales = data.filter((id) => {
+					const objetivo = bases?.listaObjetivos?.find((obj) => obj.idObjetivo === id);
+					return objetivo?.tipoObjetivo.idTipoObj === 3;
+				});
+
+				const lineasEstrategicas = data.filter((id) => {
+					const objetivo = bases?.listaObjetivos?.find((obj) => obj.idObjetivo === id);
+					return objetivo?.tipoObjetivo.idTipoObj === 2;
+				});
+
+				const objetivosEstrategicos = data.filter((id) => {
+					const objetivo = bases?.listaObjetivos?.find((obj) => obj.idObjetivo === id);
+					return objetivo?.tipoObjetivo.idTipoObj === 1;
+				});
+
+				return (
+					<div key={dataType}>
+						<p>
+							<span>Objetivos</span>
+						</p>
+						<div className=' mt-1'>
+							<p className=' fw-bold fs-6 mb-1'>- Ejes Transversales</p>
+							{renderObjetivos(ejesTransversales)}
+						</div>
+						<div className=' mt-1'>
+							<p className=' fw-bold fs-6 mb-1'>- Objetivos Estratégicos</p>
+							{renderObjetivos(lineasEstrategicas)}
+						</div>
+						<div className=' mt-1'>
+							<p className=' fw-bold fs-6 mb-1'>- Lineas Institucionales Estratégicas</p>
+							{renderObjetivos(objetivosEstrategicos)}
+						</div>
+					</div>
+				);
+			},
+			listaUbicaciones: () => {
+				if (!data || data.length === 0) return null;
+
+				return (
+					<div key={dataType}>
+						<p>
+							<span>Ubicaciones</span>
+						</p>
+						<div className='mt-1'>
+							<ul>
+								{data.map((ubicacion: { idUbicacion: number; enlace: string; desc: string }) => (
+									<li key={`ubicacion-${ubicacion.idUbicacion}`}>
+										<a href={ubicacion.enlace} target='_blank' rel='noopener noreferrer'>
+											{ubicacion.desc}
+										</a>
+									</li>
+								))}
+							</ul>
+						</div>
 					</div>
 				);
 			},

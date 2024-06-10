@@ -8,11 +8,35 @@ interface AuthState {
 	error: string | null | undefined;
 	isLogged: boolean;
 	puedeEditar: boolean;
+	areas: number[];
 }
 
 const user = localStorage.getItem('user');
 const token = localStorage.getItem('token');
 const permisos = localStorage.getItem('permisos');
+const areas = localStorage.getItem('areas');
+const currentArea = localStorage.getItem('currentArea');
+
+function canEdit(permisos: string[], areas: number[], currentArea: string | null): boolean {
+	if (!permisos || !areas || !currentArea) {
+		return false;
+	}
+
+	let currentAreaParsed;
+
+	try {
+		currentAreaParsed = JSON.parse(currentArea);
+	} catch (e) {
+		console.error('Error parsing JSON:', e);
+		return false;
+	}
+
+	return (
+		permisos.includes('METAS_EDICION') &&
+		areas.some((area) => Number(area) === Number(currentAreaParsed.idArea))
+	);
+}
+
 const initialState: AuthState = {
 	user: user ?? '',
 	token: token ?? '',
@@ -20,7 +44,12 @@ const initialState: AuthState = {
 	loading: false,
 	error: null,
 	isLogged: !!token && !!user,
-	puedeEditar: false,
+	areas: areas ? JSON.parse(areas) : [],
+	puedeEditar: canEdit(
+		permisos ? JSON.parse(permisos) : [],
+		areas ? JSON.parse(areas) : [],
+		currentArea,
+	),
 };
 
 const authSlice = createSlice({
@@ -44,6 +73,10 @@ const authSlice = createSlice({
 			state.isLogged = false;
 			state.permisos = [];
 		},
+		checkPermisoCurrentArea(state) {
+			const currentArea = localStorage.getItem('currentArea');
+			state.puedeEditar = canEdit(state.permisos, state.areas, currentArea ? currentArea : null);
+		},
 	},
 	extraReducers: (builder) => {
 		// LOGIN
@@ -58,6 +91,7 @@ const authSlice = createSlice({
 			state.token = action.payload.token;
 			state.permisos = action.payload.permisos;
 			state.puedeEditar = state.permisos.includes('METAS_EDICION');
+			state.areas = action.payload.areas;
 		});
 		builder.addCase(loginAsync.rejected, (state, action) => {
 			// console.log(action.payload);
@@ -93,6 +127,6 @@ const authSlice = createSlice({
 	},
 });
 
-export const { logout, loginFailed } = authSlice.actions;
+export const { logout, loginFailed, checkPermisoCurrentArea } = authSlice.actions;
 
 export default authSlice.reducer;

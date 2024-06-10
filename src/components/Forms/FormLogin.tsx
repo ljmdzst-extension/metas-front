@@ -45,15 +45,18 @@ const FormLogin = () => {
 			const { error } = action.payload as { error: string };
 			errorAlert(error);
 		} else {
-			const { token, nom, ape, permisos } = action.payload as {
+			const { token, nom, ape, permisos, areas } = action.payload as {
 				token: string;
 				nom: string;
 				ape: string;
 				permisos: string[];
+				areas: number[];
 			};
 			localStorage.setItem('token', token);
 			localStorage.setItem('user', `${nom} ${ape}`);
 			localStorage.setItem('permisos', JSON.stringify(permisos));
+			localStorage.setItem('areas', JSON.stringify(areas));
+
 			Swal.fire({
 				title: 'Bienvenido!',
 				text: `${nom} ${ape}`,

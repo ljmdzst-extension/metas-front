@@ -21,6 +21,8 @@ const ActivityDetail = () => {
 				listaRelaciones,
 				listaProgramasSIPPE,
 				listaEnlaces,
+				listaObjetivos,
+				listaUbicaciones,
 			} = activity;
 
 			const filteredData = showFullView
@@ -28,11 +30,13 @@ const ActivityDetail = () => {
 						descripcion: desc,
 						fechaDesde: fechaDesde,
 						fechaHasta: fechaHasta,
+						listaObjetivos: listaObjetivos,
 						listaMetas: listaMetas,
 						listaRelaciones: listaRelaciones,
 						listaProgramasSIPPE: listaProgramasSIPPE,
 						listaInstituciones: listaInstituciones,
 						listaEnlaces: listaEnlaces,
+						listaUbicaciones: listaUbicaciones,
 				  }
 				: {
 						descripcion: desc,

@@ -11,6 +11,7 @@ export interface Data {
 	nom: string;
 	token: string;
 	permisos: string[];
+	areas: number[];
 }
 
 export interface RegisterProps {

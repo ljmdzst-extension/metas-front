@@ -43,7 +43,6 @@ export const useGraphics = ({ year }: Props) => {
 				}
 	
 				const data: GraphicsResponse = await response.json();
-				console.log(data);
 				setGraficoEjes(data.data.dataGraficoEjes);
 				setGraficoObjEst(data.data.dataGraficoObjEst);
 				setGraficoLy(data.data.dataGraficoLies);
