@@ -17,22 +17,25 @@ const permisos = localStorage.getItem('permisos');
 const areas = localStorage.getItem('areas');
 const currentArea = localStorage.getItem('currentArea');
 
-function canEdit(
-	permisos: string | null,
-	areas: string | null,
-	currentArea: string | null,
-): boolean {
+function canEdit(permisos: string[], areas: number[], currentArea: string | null): boolean {
 	if (!permisos || !areas || !currentArea) {
 		return false;
 	}
 
-	const permisosParsed = JSON.parse(permisos);
-	const areasParsed = JSON.parse(areas);
-	const currentAreaParsed = JSON.parse(currentArea);
+	let currentAreaParsed;
 
+	try {
+		currentAreaParsed = JSON.parse(currentArea);
+	} catch (e) {
+		console.error('Error parsing JSON:', e);
+		return false;
+	}
+
+	console.log(areas, Number(currentAreaParsed.idArea));
+	console.log(areas.some((area) => Number(area) === Number(currentAreaParsed.idArea)));
 	return (
-		permisosParsed.includes('METAS_EDICION') &&
-		areasParsed.some((area) => area.idArea === currentAreaParsed.idArea)
+		permisos.includes('METAS_EDICION') &&
+		areas.some((area) => Number(area) === Number(currentAreaParsed.idArea))
 	);
 }
 
@@ -44,7 +47,11 @@ const initialState: AuthState = {
 	error: null,
 	isLogged: !!token && !!user,
 	areas: areas ? JSON.parse(areas) : [],
-	puedeEditar: canEdit(permisos, areas, currentArea),
+	puedeEditar: canEdit(
+		permisos ? JSON.parse(permisos) : [],
+		areas ? JSON.parse(areas) : [],
+		currentArea,
+	),
 };
 
 const authSlice = createSlice({
@@ -67,6 +74,10 @@ const authSlice = createSlice({
 			state.error = action.payload;
 			state.isLogged = false;
 			state.permisos = [];
+		},
+		checkPermisoCurrentArea(state) {
+			const currentArea = localStorage.getItem('currentArea');
+			state.puedeEditar = canEdit(state.permisos, state.areas, currentArea ? currentArea : null);
 		},
 	},
 	extraReducers: (builder) => {
@@ -118,6 +129,6 @@ const authSlice = createSlice({
 	},
 });
 
-export const { logout, loginFailed } = authSlice.actions;
+export const { logout, loginFailed, checkPermisoCurrentArea } = authSlice.actions;
 
 export default authSlice.reducer;
