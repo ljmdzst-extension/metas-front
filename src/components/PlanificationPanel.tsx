@@ -294,7 +294,7 @@ export default function PlanificationPanel({
 					</div>
 					{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
 
-					{motCancel !== null && (
+					{indexForm === '' && motCancel !== null && (
 						<Button
 							variant='outline-warning'
 							className='d-flex align-items-center justify-content-center mx-auto text-black'
