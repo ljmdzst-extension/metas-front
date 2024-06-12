@@ -19,7 +19,6 @@ import { Spinner } from 'react-bootstrap';
 import useAvailableHeight from '../hooks/useAvailableHeight';
 import useAlert from '../hooks/useAlert';
 import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
-import { useNavigate } from 'react-router-dom';
 import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 
 type Props = {
@@ -36,7 +35,6 @@ export default function PlanificationPanel({
 	cleanFormSelected,
 }: Readonly<Props>) {
 	const dispatch = useDispatch<AppDispatch>();
-	const navigate = useNavigate();
 
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState(String);

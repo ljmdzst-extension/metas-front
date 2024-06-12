@@ -1,5 +1,5 @@
 import { Col, Container, Row, Spinner } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import Grafico from '../components/Graficos/Grafico';
 import { useGraphics } from '../hooks/useGraphics';
 import { useNavigate } from 'react-router-dom';
