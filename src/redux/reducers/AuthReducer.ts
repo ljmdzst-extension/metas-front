@@ -75,7 +75,7 @@ const authSlice = createSlice({
 		},
 		checkPermisoCurrentArea(state) {
 			const currentArea = localStorage.getItem('currentArea');
-			state.puedeEditar = canEdit(state.permisos, state.areas, currentArea ? currentArea : null);
+			state.puedeEditar = canEdit(state.permisos, state.areas, currentArea ?? null);
 		},
 	},
 	extraReducers: (builder) => {

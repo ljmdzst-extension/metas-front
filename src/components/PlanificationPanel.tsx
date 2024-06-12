@@ -12,13 +12,14 @@ import Form from 'react-bootstrap/Form';
 import { AppDispatch, RootState } from '../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import FormDocuments from './Forms/FormDocuments';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Info } from '@mui/icons-material';
 import Swal from 'sweetalert2';
 import ActivityDetail from './metas/ActivityDetail';
 import { Spinner } from 'react-bootstrap';
 import useAvailableHeight from '../hooks/useAvailableHeight';
 import useAlert from '../hooks/useAlert';
 import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
 	name: string;
@@ -34,6 +35,7 @@ export default function PlanificationPanel({
 	cleanFormSelected,
 }: Readonly<Props>) {
 	const dispatch = useDispatch<AppDispatch>();
+	const navigate = useNavigate();
 
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState(String);
@@ -196,6 +198,22 @@ export default function PlanificationPanel({
 			}
 		});
 	};
+	const handleSuspensionModal = () => {
+		Swal.fire({
+			title: 'Actividad Suspendida',
+			text: `Motivo: ${motCancel}`,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Anular Suspensión',
+			cancelButtonText: 'Ocultar',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				activarActividad().then(() => {
+					navigate(0); // Use navigate or history.push('/') if you want to redirect to a specific path
+				});
+			}
+		});
+	};
 
 	return (
 		<div className=' h-100'>
@@ -275,22 +293,15 @@ export default function PlanificationPanel({
 						/>
 					</div>
 					{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
+
 					{motCancel !== null && (
-						<div
-							className=' text-center'
-							style={{
-								backgroundColor: 'yellow',
-							}}
-						>
-							<h2
-								style={{
-									fontSize: 30,
-									fontWeight: 'bold',
-								}}
-							>
-								ACTIVIDAD SUSPENDIDA
-							</h2>
-							<p>Motivo: {motCancel}</p>
+						<div className=' d-flex justify-content-between mx-2 px-2 align-items-center text-center border rounded border-warning '>
+							Actividad Suspendida
+							<Info
+								fontSize='large'
+								style={{ color: 'orange', cursor: 'pointer' }}
+								onClick={handleSuspensionModal}
+							/>
 						</div>
 					)}
 					{/* NOTE: VISTA PRINCIPAL - Información */}
@@ -303,7 +314,7 @@ export default function PlanificationPanel({
 								<ActivityDetail />
 							</div>
 							{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
-							{motCancel === null ? (
+							{motCancel === null && (
 								<div
 									className={` d-flex justify-content-around mb-2  ${puedeEditar ? '' : 'd-none'} `}
 								>
@@ -323,19 +334,6 @@ export default function PlanificationPanel({
 										}}
 									>
 										Eliminar Actividad
-									</Button>
-								</div>
-							) : (
-								<div
-									className={` d-flex justify-content-around mb-2  ${puedeEditar ? '' : 'd-none'} `}
-								>
-									<Button
-										variant='warning'
-										onClick={() => {
-											activarActividad();
-										}}
-									>
-										Anular Suspensión
 									</Button>
 								</div>
 							)}
