@@ -20,6 +20,7 @@ import useAvailableHeight from '../hooks/useAvailableHeight';
 import useAlert from '../hooks/useAlert';
 import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
 import { useNavigate } from 'react-router-dom';
+import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 
 type Props = {
 	name: string;
@@ -76,7 +77,7 @@ export default function PlanificationPanel({
 			.then((resp) => resp.json())
 			.then((data) => {
 				data.ok ? successAlert('Actividad Anulada') : errorAlert(data.error);
-				window.location.replace('');
+				dispatch(CargarDatosActividadAction(activity.idActividad));
 			})
 			.catch((error) => errorAlert(JSON.stringify(error)));
 	};
@@ -181,8 +182,6 @@ export default function PlanificationPanel({
 					idActividad: activity.idActividad,
 					motivo: result.value,
 				});
-			} else if (result.isDenied) {
-				Swal.fire('Changes are not saved', '', 'info');
 			}
 		});
 	};
@@ -209,7 +208,8 @@ export default function PlanificationPanel({
 		}).then((result) => {
 			if (result.isConfirmed) {
 				activarActividad().then(() => {
-					navigate(0); // Use navigate or history.push('/') if you want to redirect to a specific path
+					dispatch(CargarDatosActividadAction(activity.idActividad));
+					// navigate(0); // Use navigate or history.push('/') if you want to redirect to a specific path
 				});
 			}
 		});
@@ -295,14 +295,16 @@ export default function PlanificationPanel({
 					{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
 
 					{motCancel !== null && (
-						<div className=' d-flex justify-content-between mx-2 px-2 align-items-center text-center border rounded border-warning '>
+						<Button
+							variant='outline-warning'
+							className='d-flex align-items-center justify-content-center mx-auto text-black'
+							onClick={handleSuspensionModal}
+							size='sm'
+							style={{ width: 'fit-content' }}
+						>
 							Actividad Suspendida
-							<Info
-								fontSize='large'
-								style={{ color: 'orange', cursor: 'pointer' }}
-								onClick={handleSuspensionModal}
-							/>
-						</div>
+							<Info fontSize='medium' style={{ color: 'orange', marginLeft: '8px' }} />
+						</Button>
 					)}
 					{/* NOTE: VISTA PRINCIPAL - Información */}
 					{!isFormOpen ? (
