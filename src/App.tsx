@@ -1,45 +1,51 @@
 import { Route, Routes } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
+import LoadingSpinner from './components/Spinner/LoadingSpinner';
 
-import Confirm from './pages/Confirm';
-import Help from './pages/Help';
-import Login from './pages/Login';
-import Register from './pages/Register';
+const Confirm = lazy(() => import('./pages/Confirm'));
+const Help = lazy(() => import('./pages/Help'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
 
-import Activity from './pages/Activity';
-import Layout from './components/Layout/Layout';
-import Main from './pages/Main';
-import Management from './pages/Management';
-import PrivateLayout from './components/Layout/PrivateLayout';
-import Proyectos from './pages/Proyectos';
-import ProjectForm from './pages/ProjectForm';
-import ProjectSum from './pages/ProjectSum';
-import ResumenArea from './pages/ResumenArea';
-import { Graphics } from './pages/Graphics';
+const Activity = lazy(() => import('./pages/Activity'));
+const Layout = lazy(() => import('./components/Layout/Layout'));
+const Main = lazy(() => import('./pages/Main'));
+const Management = lazy(() => import('./pages/Management'));
+const PrivateLayout = lazy(() => import('./components/Layout/PrivateLayout'));
+const Proyectos = lazy(() => import('./pages/Proyectos'));
+const ProjectForm = lazy(() => import('./pages/ProjectForm'));
+const ProjectSum = lazy(() => import('./pages/ProjectSum'));
+const ResumenArea = lazy(() => import('./pages/ResumenArea'));
+const Graphics = lazy(() => import('./pages/Graphics'));
+
 
 function App() {
 	return (
-		<Routes>
-			<Route path='/' element={<Layout />}>
-				<Route index element={<Login />} />
-				<Route path='/login' element={<Login />} />
-				<Route path='/register' element={<Register />} />
-				<Route path='/register/validation/:validationString' element={<Confirm />} />
-				<Route path='/ayuda' element={<Help />} />
-			</Route>
-			<Route path='/gestion' element={<PrivateLayout />}>
-				<Route index element={<Management />} />
-				<Route path='metas' element={<Main />} />
-				<Route path='metas/graficas' element={<Graphics />} />
-				<Route path='metas/:idPrograma/:idArea' element={<Activity />} />
-				<Route path='metas/:idPrograma/:idArea/resumen' element={<ResumenArea />} />
-				<Route path='proyectos' element={<Proyectos />} />
-				<Route path='proyectos/summ/:id' element={<ProjectSum />} />
-				<Route path='proyectos/form/:id' element={<ProjectForm />} />
-			</Route>
-		</Routes>
+		<Suspense fallback={<LoadingSpinner />}>
+			<Routes>
+				<Route path='/' element={<Layout />}>
+					<Route index element={<Login />} />
+					<Route path='login' element={<Login />} />
+					<Route path='register' element={<Register />} />
+					<Route path='register/validation/:validationString' element={<Confirm />} />
+					<Route path='ayuda' element={<Help />} />
+				</Route>
+				<Route path='/gestion' element={<PrivateLayout />}>
+					<Route index element={<Management />} />
+					<Route path='metas' element={<Main />} />
+					<Route path='metas/graficas' element={<Graphics />} />
+					<Route path='metas/:idPrograma/:idArea' element={<Activity />} />
+					<Route path='metas/:idPrograma/:idArea/resumen' element={<ResumenArea />} />
+					<Route path='proyectos' element={<Proyectos />} />
+					<Route path='proyectos/summ/:id' element={<ProjectSum />} />
+					<Route path='proyectos/form/:id' element={<ProjectForm />} />
+				</Route>
+				<Route path='*' element={<div>404 Not Found</div>} />
+			</Routes>
+		</Suspense>
 	);
 }
 

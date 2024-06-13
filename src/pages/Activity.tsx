@@ -9,7 +9,7 @@ import { CargarDatosActividadAction } from '../redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
-import { Col, InputGroup, Row, Spinner } from 'react-bootstrap';
+import { Col, InputGroup, Row } from 'react-bootstrap';
 
 import formData from './../mock/activityFormData.json';
 import Swal from 'sweetalert2';
@@ -18,6 +18,7 @@ import { getBases } from '../redux/actions/metasActions';
 import { Actividad } from '../types/ActivityProps';
 import useAlert from '../hooks/useAlert';
 import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
+import LoadingSpinner from '../components/Spinner/LoadingSpinner';
 
 interface Activity {
 	idActividad: number;
@@ -281,11 +282,7 @@ export default function Activity() {
 					{!isPlanificationOpen ? (
 						<div style={{ maxHeight: 'calc(100vh - 130px)', height: '100%' }}>
 							{isLoadingArrayActivity ? (
-								<div className=' d-flex justify-content-center mt-5'>
-									<Spinner animation='border' role='output'>
-										<span className='visually-hidden'>Loading...</span>
-									</Spinner>
-								</div>
+								<LoadingSpinner />
 							) : (
 								<div className=' d-flex flex-column h-100 p-2 '>
 									<div className=' text-center  '>

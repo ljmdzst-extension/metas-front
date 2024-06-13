@@ -1,25 +1,29 @@
 import { useEffect, useState } from 'react';
-import FormDescriptionUbication from './Forms/FormDescriptionUbication';
-import FormPIE from './Forms/FormPIE';
-import FormArSecUU from './Forms/FormArSecUU';
-import FormPeriodo from './Forms/FormPeriodo';
-import FormObjetiveEst from './Forms/FormObjetiveEst';
-import FormOrgInst from './Forms/FormOrgInst';
-import FormMetas from './Forms/FormMetas';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
-import { AppDispatch, RootState } from '../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import FormDocuments from './Forms/FormDocuments';
-import { ArrowBack, Info } from '@mui/icons-material';
-import Swal from 'sweetalert2';
-import ActivityDetail from './metas/ActivityDetail';
-import { Spinner } from 'react-bootstrap';
+import { AppDispatch, RootState } from '../redux/store';
+import { CargarDatosActividadAction } from '../redux/actions/activityAction';
+import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
+
 import useAvailableHeight from '../hooks/useAvailableHeight';
 import useAlert from '../hooks/useAlert';
-import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
-import { CargarDatosActividadAction } from '../redux/actions/activityAction';
+
+import { Button, Form, Modal } from 'react-bootstrap';
+import { ArrowBack, Info } from '@mui/icons-material';
+import Swal from 'sweetalert2';
+
+import {
+	FormArSecUU,
+	FormDescriptionUbication,
+	FormDocuments,
+	FormMetas,
+	FormObjetiveEst,
+	FormOrgInst,
+	FormPeriodo,
+	FormPIE,
+} from './Forms/metas';
+
+import ActivityDetail from './metas/ActivityDetail';
+import LoadingSpinner from './Spinner/LoadingSpinner';
 
 type Props = {
 	name: string;
@@ -250,11 +254,7 @@ export default function PlanificationPanel({
 				</Modal.Body>
 			</Modal>
 			{isLoading ? (
-				<div className=' d-flex justify-content-center mt-5'>
-					<Spinner animation='border' role='output'>
-						<span className='visually-hidden'>Loading...</span>
-					</Spinner>
-				</div>
+				<LoadingSpinner />
 			) : (
 				<>
 					{/* NOTE: Vista detalle form */}

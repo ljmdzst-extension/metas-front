@@ -1,9 +1,10 @@
-import { Col, Container, Row, Spinner } from 'react-bootstrap';
-import {  useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { useState } from 'react';
 import Grafico from '../components/Graficos/Grafico';
 import { useGraphics } from '../hooks/useGraphics';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
+import LoadingSpinner from '../components/Spinner/LoadingSpinner';
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: currentYear - 2022 }, (_, i) => 2023 + i);
@@ -32,7 +33,7 @@ const UACOLORS = [
 ];
 
 type ChartType = 'line' | 'bar' | 'pie';
-export const Graphics = () => {
+const Graphics = () => {
 	const [year, setYear] = useState(currentYear);
 	const { graficoEjes, graficoObjEst, graficoLy, graficoUUAA, isLoading } = useGraphics({ year });
 
@@ -112,11 +113,7 @@ export const Graphics = () => {
 							>
 								<h4>{item.title}</h4>
 								{isLoading ? (
-									<div className=' d-flex flex-column justify-content-center align-items-center w-100 h-100'>
-										<Spinner animation='border' role='output'>
-											<span className='visually-hidden'>Cargando...</span>
-										</Spinner>
-									</div>
+									<LoadingSpinner />
 								) : (
 									<Grafico
 										dataKey={item.dataKey}
@@ -135,3 +132,5 @@ export const Graphics = () => {
 		</div>
 	);
 };
+
+export default Graphics;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import Spinner from 'react-bootstrap/Spinner';
 import Swal from 'sweetalert2';
 import useAlert from '../hooks/useAlert';
+import LoadingSpinner from '../components/Spinner/LoadingSpinner';
 
 const Confirm = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -53,7 +53,7 @@ const Confirm = () => {
 
 	return (
 		<div className=' d-flex justify-content-center py-5'>
-			{isLoading ? <Spinner animation='border' variant='primary' /> : <></>}
+			{isLoading ? <LoadingSpinner /> : <></>}
 		</div>
 	);
 };
