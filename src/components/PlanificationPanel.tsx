@@ -32,158 +32,84 @@ type Props = {
 	cleanFormSelected: () => void;
 };
 
-export default function PlanificationPanel({
+const FORM_TYPES = {
+	DESCR: 'descr',
+	DOCUMENTACION: 'documentacion',
+	PIE: 'pie',
+	AREA: 'area',
+	PERIODO: 'periodo',
+	OBJETIVO: 'objetivo',
+	ORGANI: 'organi',
+	METAS: 'metas',
+};
+
+const PlanificationPanel = ({
 	name,
 	closePlanification,
 	currentFormSelected,
 	cleanFormSelected,
-}: Readonly<Props>) {
+}: Readonly<Props>) => {
 	const dispatch = useDispatch<AppDispatch>();
-
-	const [isFormOpen, setIsFormOpen] = useState(false);
-	const [indexForm, setIndexForm] = useState(String);
-	const [show2, setShow2] = useState(false);
-
-	const [motCancel, setMotCancel] = useState<string | null>(null);
 	const { activity, isLoading, hayCambios } = useSelector(
 		(state: RootState) => state.actividadSlice,
 	);
 	const { token, puedeEditar } = useSelector((state: RootState) => state.authSlice);
 
+	const [isFormOpen, setIsFormOpen] = useState(false);
+	const [indexForm, setIndexForm] = useState('');
+	const [showModal, setShowModal] = useState(false);
+
 	const availableHeight = useAvailableHeight();
 	const { errorAlert, successAlert } = useAlert();
 
-	useEffect(() => {
-		setMotCancel(activity?.motivoCancel);
-	}, [activity?.motivoCancel]);
+	const handleModalClose = () => setShowModal(false);
+	const handleModalShow = () => setShowModal(true);
 
-	const handleClose2 = () => {
-		setShow2(false);
-	};
-	const handleShow2 = () => {
-		setShow2(true);
+	const handleFormChange = (formType: string) => {
+		setIndexForm(formType);
+		setIsFormOpen(true);
 	};
 
-	const suspenderActividad = (data: { idActividad: number; motivo: string }) => {
-		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/cancel`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
-			},
-			body: JSON.stringify({
-				idActividad: data.idActividad,
-				motivoCancel: data.motivo,
-			}),
-		})
-			.then((resp) => resp.json())
-			.then((data) => {
-				data.ok ? successAlert('Actividad Anulada') : errorAlert(data.error);
-				dispatch(CargarDatosActividadAction(activity.idActividad));
-			})
-			.catch((error) => errorAlert(JSON.stringify(error)));
-	};
-
-	const activarActividad = async () => {
+	const handleApiCall = async (
+		url: string,
+		method: string,
+		body: object,
+		successMessage: string,
+	) => {
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/restore`, {
-				method: 'PUT',
+			const response = await fetch(url, {
+				method,
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ idActividad: activity.idActividad }),
+				body: JSON.stringify(body),
 			});
-
 			const data = await response.json();
-			if (data.ok) {
-				successAlert('Actividad restaurada');
-			} else {
-				errorAlert(data.error);
-			}
+			data.ok ? successAlert(successMessage) : errorAlert(data.error);
+			dispatch(CargarDatosActividadAction(activity.idActividad));
 		} catch (error) {
 			errorAlert(JSON.stringify(error));
 		}
 	};
 
-	const eliminarActividad = () => {
-		fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
-			},
-			body: JSON.stringify({ idActividad: activity.idActividad }),
-		})
-			.then((resp) => resp.json())
-			.then((data) => {
-				data.ok ? successAlert('Actividad Eliminada !') : errorAlert(data.error);
-				setTimeout(() => window.location.replace(''), 1000);
-			})
-			.catch((error) => errorAlert(JSON.stringify(error)));
-	};
-
-	useEffect(() => {
-		const changeFromSideBar = () => {
-			switch (currentFormSelected) {
-				case 'descr':
-					setIndexForm('descr');
-					setIsFormOpen(true);
-					break;
-				case 'documentacion':
-					setIndexForm('documentacion');
-					setIsFormOpen(true);
-					break;
-				case 'pie':
-					setIndexForm('pie');
-					setIsFormOpen(true);
-					break;
-				case 'area':
-					setIndexForm('area');
-					setIsFormOpen(true);
-					break;
-				case 'periodo':
-					setIndexForm('periodo');
-					setIsFormOpen(true);
-					break;
-				case 'objetivo':
-					setIndexForm('objetivo');
-					setIsFormOpen(true);
-					break;
-				case 'organi':
-					setIndexForm('organi');
-					setIsFormOpen(true);
-					break;
-				case 'metas':
-					setIndexForm('metas');
-					setIsFormOpen(true);
-					break;
-				default:
-					break;
-			}
-		};
-		changeFromSideBar();
-	}, [currentFormSelected]);
-
 	const handleSuspenderActividad = () => {
 		Swal.fire({
 			title: '¿Desea suspender la actividad?',
 			showDenyButton: true,
-			denyButtonText: `Cancelar`,
-			confirmButtonText: `Suspender`,
+			denyButtonText: 'Cancelar',
+			confirmButtonText: 'Suspender',
 			input: 'textarea',
 			inputPlaceholder: 'Ingrese el motivo de la suspensión',
-			inputValidator: (value) => {
-				if (!value) {
-					return 'Debe ingresar un motivo';
-				}
-			},
+			inputValidator: (value) => !value && 'Debe ingresar un motivo',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				suspenderActividad({
-					idActividad: activity.idActividad,
-					motivo: result.value,
-				});
+				handleApiCall(
+					`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/cancel`,
+					'PUT',
+					{ idActividad: activity.idActividad, motivoCancel: result.value },
+					'Actividad Anulada',
+				);
 			}
 		});
 	};
@@ -192,58 +118,73 @@ export default function PlanificationPanel({
 		Swal.fire({
 			title: '¿Desea eliminar la actividad?',
 			showCancelButton: true,
-			confirmButtonText: `Eliminar`,
+			confirmButtonText: 'Eliminar',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				eliminarActividad();
+				handleApiCall(
+					`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`,
+					'DELETE',
+					{ idActividad: activity.idActividad },
+					'Actividad Eliminada !',
+				);
+				setTimeout(() => window.location.replace(''), 1000);
 			}
 		});
 	};
+
 	const handleSuspensionModal = () => {
 		Swal.fire({
 			title: 'Actividad Suspendida',
-			text: `Motivo: ${motCancel}`,
+			text: `Motivo: ${activity.motivoCancel}`,
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonText: 'Anular Suspensión',
 			cancelButtonText: 'Ocultar',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				activarActividad().then(() => {
-					dispatch(CargarDatosActividadAction(activity.idActividad));
-					// navigate(0); // Use navigate or history.push('/') if you want to redirect to a specific path
-				});
+				handleApiCall(
+					`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/restore`,
+					'PUT',
+					{ idActividad: activity.idActividad },
+					'Actividad restaurada',
+				);
 			}
 		});
 	};
 
+	useEffect(() => {
+		if (currentFormSelected) {
+			handleFormChange(currentFormSelected);
+		}
+	}, [currentFormSelected]);
+
 	return (
-		<div className=' h-100'>
-			<Modal show={show2} onHide={handleClose2}>
+		<div className='h-100'>
+			<Modal show={showModal} onHide={handleModalClose}>
 				<Modal.Header>
 					<Modal.Title>¿Quiere salir de la sección?</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form>
-						<Form.Group className='mb-3' controlId='exampleForm.ControlInput1'>
+						<Form.Group className='mb-3'>
 							<Form.Label>Los cambios no guardados se perderán.</Form.Label>
 						</Form.Group>
-						<Form.Group style={{ display: 'flex', justifyContent: 'space-between' }}>
-							<Button variant='danger' onClick={handleClose2}>
+						<Form.Group className='d-flex justify-content-between'>
+							<Button variant='danger' onClick={handleModalClose}>
 								Cancelar
 							</Button>
 							<Button
 								variant='success'
 								onClick={() => {
 									if (isFormOpen) {
-										handleClose2();
+										handleModalClose();
 										setIsFormOpen(false);
 										setIndexForm('');
 										cleanFormSelected();
 										dispatch(SET_HAY_CAMBIOS({ valor: false }));
 									} else {
 										closePlanification();
-										handleClose2();
+										handleModalClose();
 									}
 								}}
 							>
@@ -257,10 +198,9 @@ export default function PlanificationPanel({
 				<LoadingSpinner />
 			) : (
 				<>
-					{/* NOTE: Vista detalle form */}
-					<div className='d-flex justify-content-between align-items-center mb-2 border-bottom  '>
+					<div className='d-flex justify-content-between align-items-center mb-2 border-bottom'>
 						<h4
-							className=' text-break m-2 border-3 '
+							className='text-break m-2 border-3'
 							style={{
 								borderBottom: '2px solid #0a5d52',
 								textOverflow: 'ellipsis',
@@ -271,28 +211,24 @@ export default function PlanificationPanel({
 							{name}
 						</h4>
 						<ArrowBack
-							fontSize={'large'}
+							fontSize='large'
 							className='m-1 rounded'
 							style={{ background: '#0a5d52', color: 'white' }}
 							color='primary'
 							onClick={() => {
 								if (hayCambios) {
-									handleShow2();
+									handleModalShow();
+								} else if (isFormOpen) {
+									setIsFormOpen(false);
+									setIndexForm('');
+									cleanFormSelected();
 								} else {
-									if (isFormOpen) {
-										setIsFormOpen(false);
-										setIndexForm('');
-										cleanFormSelected();
-									} else {
-										closePlanification();
-									}
+									closePlanification();
 								}
 							}}
 						/>
 					</div>
-					{/* NOTE: VISTA ACTIVIDAD SUSPENDIDA */}
-
-					{indexForm === '' && motCancel !== null && (
+					{indexForm === '' && activity.motivoCancel !== null && (
 						<Button
 							variant='outline-warning'
 							className='d-flex align-items-center justify-content-center mx-auto text-black'
@@ -304,35 +240,20 @@ export default function PlanificationPanel({
 							<Info fontSize='medium' style={{ color: 'orange', marginLeft: '8px' }} />
 						</Button>
 					)}
-					{/* NOTE: VISTA PRINCIPAL - Información */}
 					{!isFormOpen ? (
-						<div className=' d-flex flex-column h-100 '>
+						<div className='d-flex flex-column h-100'>
 							<div
-								className=' overflow-y-scroll custom-scrollbar '
+								className='overflow-y-scroll custom-scrollbar'
 								style={{ height: availableHeight - 170 }}
 							>
 								<ActivityDetail />
 							</div>
-							{/* // NOTE: VISTA PRINCIPAL - BOTONES ELIMINAR / SUSPENDER */}
-							{motCancel === null && (
-								<div
-									className={` d-flex justify-content-around mb-2  ${puedeEditar ? '' : 'd-none'} `}
-								>
-									<Button
-										variant='warning'
-										className='Suspend'
-										onClick={() => {
-											handleSuspenderActividad();
-										}}
-									>
+							{activity.motivoCancel === null && puedeEditar && (
+								<div className='d-flex justify-content-around mb-2'>
+									<Button variant='warning' onClick={handleSuspenderActividad}>
 										Suspender Actividad
 									</Button>
-									<Button
-										variant='danger'
-										onClick={() => {
-											handleDeleteActividad();
-										}}
-									>
+									<Button variant='danger' onClick={handleDeleteActividad}>
 										Eliminar Actividad
 									</Button>
 								</div>
@@ -340,24 +261,23 @@ export default function PlanificationPanel({
 						</div>
 					) : (
 						<div style={{ height: availableHeight - 110 }}>
-							{/* NOTE: FORMULARIOS */}
 							{(() => {
 								switch (indexForm) {
-									case 'descr':
+									case FORM_TYPES.DESCR:
 										return <FormDescriptionUbication />;
-									case 'documentacion':
+									case FORM_TYPES.DOCUMENTACION:
 										return <FormDocuments />;
-									case 'pie':
+									case FORM_TYPES.PIE:
 										return <FormPIE />;
-									case 'area':
+									case FORM_TYPES.AREA:
 										return <FormArSecUU />;
-									case 'periodo':
+									case FORM_TYPES.PERIODO:
 										return <FormPeriodo />;
-									case 'objetivo':
+									case FORM_TYPES.OBJETIVO:
 										return <FormObjetiveEst />;
-									case 'organi':
+									case FORM_TYPES.ORGANI:
 										return <FormOrgInst />;
-									case 'metas':
+									case FORM_TYPES.METAS:
 										return <FormMetas />;
 									default:
 										return null;
@@ -369,4 +289,6 @@ export default function PlanificationPanel({
 			)}
 		</div>
 	);
-}
+};
+
+export default PlanificationPanel;
