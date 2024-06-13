@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-import { guardarActividad } from '../../redux/actions/putActividad';
-import { ListaObjetivo } from '../../types/BasesProps';
-import { SET_HAY_CAMBIOS } from '../../redux/reducers/ActivityReducer';
+import { RootState } from '../../../redux/store';
+import { guardarActividad } from '../../../redux/actions/putActividad';
+import { ListaObjetivo } from '../../../types/BasesProps';
+import { SET_HAY_CAMBIOS } from '../../../redux/reducers/ActivityReducer';
 import { ErrorOutline } from '@mui/icons-material';
 
 export default function FormPIE() {

@@ -22,18 +22,17 @@ function canEdit(permisos: string[], areas: number[], currentArea: string | null
 		return false;
 	}
 
-	let currentAreaParsed;
+	let idArea: number;
 
 	try {
-		currentAreaParsed = JSON.parse(currentArea);
+		idArea = JSON.parse(currentArea).idArea;
 	} catch (e) {
 		console.error('Error parsing JSON:', e);
 		return false;
 	}
 
 	return (
-		permisos.includes('METAS_EDICION') &&
-		areas.some((area) => Number(area) === Number(currentAreaParsed.idArea))
+		permisos.includes('METAS_EDICION') && areas.some((area) => Number(area) === Number(idArea))
 	);
 }
 
@@ -75,7 +74,7 @@ const authSlice = createSlice({
 		},
 		checkPermisoCurrentArea(state) {
 			const currentArea = localStorage.getItem('currentArea');
-			state.puedeEditar = canEdit(state.permisos, state.areas, currentArea ? currentArea : null);
+			state.puedeEditar = canEdit(state.permisos, state.areas, currentArea ?? null);
 		},
 	},
 	extraReducers: (builder) => {

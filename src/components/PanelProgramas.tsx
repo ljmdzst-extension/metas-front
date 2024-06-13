@@ -8,8 +8,9 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { AreaProps, ProgramaProps } from '../types/AppProps';
-import { Button, Card, Form, Spinner, Image } from 'react-bootstrap';
+import { Button, Card, Form, Image } from 'react-bootstrap';
 import useAlert from '../hooks/useAlert';
+import LoadingSpinner from './Spinner/LoadingSpinner';
 
 const currentYear = new Date().getFullYear();
 
@@ -126,11 +127,7 @@ export default function PanelProgramas() {
 				</Card>
 				<div className=' d-flex align-items-center w-100 h-100 '>
 					{isLoading ? (
-						<div className=' d-flex flex-column justify-content-center align-items-center w-100 h-100'>
-							<Spinner animation='border' role='status'>
-								<span className='visually-hidden'>Loading...</span>
-							</Spinner>
-						</div>
+						<LoadingSpinner />
 					) : (
 						<>
 							{programasTransformados.length > 0 ? (
