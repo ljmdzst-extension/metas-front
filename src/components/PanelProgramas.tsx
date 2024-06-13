@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { AreaProps, ProgramaProps } from '../types/AppProps';
-import { Button, Card, Form, Spinner, Image } from 'react-bootstrap';
+import { Button, Card, Form, Image } from 'react-bootstrap';
 import useAlert from '../hooks/useAlert';
 import LoadingSpinner from './Spinner/LoadingSpinner';
 
