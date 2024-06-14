@@ -34,7 +34,12 @@ export default function NavBar() {
 			<Container>
 				<Navbar.Brand>
 					<a href='https://www.unl.edu.ar/'>
-						<Image src={logoUNL} alt='logo UNL' className=' me-2' style={{ width: '2.5rem', height: '2.5rem' }} />
+						<Image
+							src={logoUNL}
+							alt='logo UNL'
+							className=' me-2'
+							style={{ width: '2.5rem', height: '2.5rem' }}
+						/>
 					</a>
 					<a href='/'>Secretaría de Extensión y Cultura</a>
 				</Navbar.Brand>
@@ -52,10 +57,7 @@ export default function NavBar() {
 							</Nav.Link>
 						</>
 					) : (
-						<>
-							<Nav.Link href='/login'>Iniciar Sesión</Nav.Link>
-							<Nav.Link href='/register'>Registrarse</Nav.Link>
-						</>
+						<Nav.Link href='/login'>Iniciar Sesión</Nav.Link>
 					)}
 				</Nav>
 			</Container>

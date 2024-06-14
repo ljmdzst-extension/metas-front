@@ -21,10 +21,15 @@ const ProjectSum = lazy(() => import('./pages/ProjectSum'));
 const ResumenArea = lazy(() => import('./pages/ResumenArea'));
 const Graphics = lazy(() => import('./pages/Graphics'));
 
-
 function App() {
 	return (
-		<Suspense fallback={<LoadingSpinner />}>
+		<Suspense
+			fallback={
+				<div className='vh-100'>
+					<LoadingSpinner />
+				</div>
+			}
+		>
 			<Routes>
 				<Route path='/' element={<Layout />}>
 					<Route index element={<Login />} />
