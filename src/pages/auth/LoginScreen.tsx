@@ -1,6 +1,6 @@
-import FormLogin from '../components/Forms/FormLogin';
+import FormLogin from '@/components/Forms/FormLogin';
 
-const Login = () => {
+const LoginScreen = () => {
 	return (
 		<div className='d-flex flex-column justify-content-center align-items-center mt-5'>
 			<FormLogin />
@@ -8,4 +8,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default LoginScreen;

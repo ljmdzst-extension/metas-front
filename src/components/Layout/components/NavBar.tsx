@@ -1,16 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 
-import { logout } from '../../../redux/reducers/AuthReducer';
+import { logout } from '@/redux/reducers/AuthReducer';
 
 import { Container, Image, Navbar, Nav, Button } from 'react-bootstrap';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
-import logoUNL from '../../../assets/unl_identidad.svg';
+import logoUNL from '@/assets/unl_identidad.svg';
 
 export default function NavBar() {
-	const { isLogged } = useSelector((state: RootState) => state.authSlice);
+	const { isLogged, isAdmin } = useSelector((state: RootState) => state.authSlice);
 
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
@@ -34,7 +34,12 @@ export default function NavBar() {
 			<Container>
 				<Navbar.Brand>
 					<a href='https://www.unl.edu.ar/'>
-						<Image src={logoUNL} alt='logo UNL' className=' me-2' style={{ width: '2.5rem', height: '2.5rem' }} />
+						<Image
+							src={logoUNL}
+							alt='logo UNL'
+							className=' me-2'
+							style={{ width: '2.5rem', height: '2.5rem' }}
+						/>
 					</a>
 					<a href='/'>Secretaría de Extensión y Cultura</a>
 				</Navbar.Brand>
@@ -44,6 +49,11 @@ export default function NavBar() {
 							<Nav.Link href='/gestion'>
 								<Button variant='outline-light'>Inicio</Button>
 							</Nav.Link>
+							{isAdmin ? (
+								<Nav.Link href='/gestion/admin'>
+									<Button variant='outline-light'>Admin</Button>
+								</Nav.Link>
+							) : null}
 							<Nav.Link
 								onClick={handleLogout}
 								className=' d-flex flex-column justify-content-center'
@@ -52,10 +62,7 @@ export default function NavBar() {
 							</Nav.Link>
 						</>
 					) : (
-						<>
-							<Nav.Link href='/login'>Iniciar Sesión</Nav.Link>
-							<Nav.Link href='/register'>Registrarse</Nav.Link>
-						</>
+						<Nav.Link href='/login'>Iniciar Sesión</Nav.Link>
 					)}
 				</Nav>
 			</Container>

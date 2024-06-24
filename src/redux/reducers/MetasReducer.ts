@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { BasesDataProps } from '../../types/BasesProps';
+import { BasesDataProps } from '@/types/BasesProps';
 import { getBases } from '../actions/metasActions';
 
 interface metasState {

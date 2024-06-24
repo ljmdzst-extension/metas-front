@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CargarDatosActividadAction } from '../actions/activityAction';
-import { Actividad } from '../../types/ActivityProps';
+import { Actividad } from '@/types/ActivityProps';
 
 interface initialStateProps {
 	isLoading: boolean;

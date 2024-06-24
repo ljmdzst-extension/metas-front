@@ -1,5 +1,5 @@
 import { Table } from 'react-bootstrap';
-import { projectHistoryProps } from '../../types/ProjectsProps';
+import { projectHistoryProps } from '@/types/ProjectsProps';
 
 interface dataProps {
 	data: projectHistoryProps[];

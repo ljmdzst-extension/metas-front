@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import mockMembers from '../../../mock/memberListData.json';
-import mockAreas from '../../../mock/areasData.json';
+import mockMembers from '@/mocks/memberListData.json';
+import mockAreas from '@/mocks/areasData.json';
 
 import {
 	Button,

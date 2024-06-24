@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import useAvailableHeight from '../../hooks/useAvailableHeight';
+import useAvailableHeight from '@/hooks/useAvailableHeight';
 
 interface GeneralPanelProps {
 	SideBarPanel: ReactNode;

@@ -9,6 +9,7 @@ interface AuthState {
 	isLogged: boolean;
 	puedeEditar: boolean;
 	areas: number[];
+	isAdmin: boolean;
 }
 
 const user = localStorage.getItem('user');
@@ -49,6 +50,7 @@ const initialState: AuthState = {
 		areas ? JSON.parse(areas) : [],
 		currentArea,
 	),
+	isAdmin: true,
 };
 
 const authSlice = createSlice({

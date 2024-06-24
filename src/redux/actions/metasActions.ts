@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FechBasesProps } from '../../types/BasesProps';
+import { FechBasesProps } from '@/types/BasesProps';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL_METAS;
 

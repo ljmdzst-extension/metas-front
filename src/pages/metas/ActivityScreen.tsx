@@ -1,24 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PlanificationPanel from '../components/PlanificationPanel';
+import PlanificationPanel from '@/components/PlanificationPanel';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { CargarDatosActividadAction } from '../redux/actions/activityAction';
+import { CargarDatosActividadAction } from '@/redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { Col, InputGroup, Row } from 'react-bootstrap';
 
-import formData from './../mock/activityFormData.json';
+import formData from '@/mocks/activityFormData.json';
 import Swal from 'sweetalert2';
 import { ArrowBack, Search } from '@mui/icons-material';
-import { getBases } from '../redux/actions/metasActions';
-import { Actividad } from '../types/ActivityProps';
-import useAlert from '../hooks/useAlert';
-import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
-import LoadingSpinner from '../components/Spinner/LoadingSpinner';
+import { getBases } from '@/redux/actions/metasActions';
+import { Actividad } from '@/types/ActivityProps';
+import useAlert from '@/hooks/useAlert';
+import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
 
 interface Activity {
 	idActividad: number;
@@ -32,7 +32,7 @@ interface Area {
 	anio: string;
 }
 
-export default function Activity() {
+export default function ActivityScreen() {
 	const initialAreaValue: Area = localStorage.getItem('currentArea')
 		? (JSON.parse(localStorage.getItem('currentArea')!) as Area) // Usamos ! para decirle a TypeScript que estamos seguros de que localStorage.getItem('currentArea') no será null
 		: { idArea: 0, nom: '', listaActividades: [], anio: '' }; // O proporciona un valor predeterminado adecuado para el tipo Area

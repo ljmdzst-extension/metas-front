@@ -3,12 +3,12 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Col, Form, FormSelect, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { RegisterProps } from '../../types/AuthProps';
+import { RegisterProps } from '@/types/AuthProps';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../redux/store';
-import { registerAsync } from '../../redux/actions/authAction';
+import { AppDispatch, RootState } from '@/redux/store';
+import { registerAsync } from '@/redux/actions/authAction';
 import Swal from 'sweetalert2';
-import useAlert from '../../hooks/useAlert';
+import useAlert from '@/hooks/useAlert';
 
 export interface UnidadesAcademicas {
 	idUnidadAcademica: number;

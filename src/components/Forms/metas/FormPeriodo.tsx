@@ -5,11 +5,11 @@ import es from 'date-fns/locale/es';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
-import { guardarActividad } from '../../../redux/actions/putActividad';
+import { RootState } from '@/redux/store';
+import { guardarActividad } from '@/redux/actions/putActividad';
 import { Col, Row } from 'react-bootstrap';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { SET_HAY_CAMBIOS } from '../../../redux/reducers/ActivityReducer';
+import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 import { ErrorOutline } from '@mui/icons-material';
 
 registerLocale('es', es);

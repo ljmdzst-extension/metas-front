@@ -1,4 +1,4 @@
-const Help = () => {
+const HelpScreen = () => {
 	return (
 		<div className='container help-page'>
 			<div className='help-container'>
@@ -47,4 +47,4 @@ const Help = () => {
 	);
 };
 
-export default Help;
+export default HelpScreen;

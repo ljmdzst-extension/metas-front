@@ -3,11 +3,11 @@ import makeAnimated from 'react-select/animated';
 import Button from 'react-bootstrap/Button';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
-import { guardarActividad } from '../../../redux/actions/putActividad';
+import { RootState } from '@/redux/store';
+import { guardarActividad } from '@/redux/actions/putActividad';
 import { Row, Col } from 'react-bootstrap';
-import { ListaProgramasSIPPE } from '../../../types/BasesProps';
-import { SET_HAY_CAMBIOS } from '../../../redux/reducers/ActivityReducer';
+import { ListaProgramasSIPPE } from '@/types/BasesProps';
+import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 import { ErrorOutline } from '@mui/icons-material';
 
 const animatedComponents = makeAnimated();

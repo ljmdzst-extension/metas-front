@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
-import { CargarDatosActividadAction } from '../redux/actions/activityAction';
-import { SET_HAY_CAMBIOS } from '../redux/reducers/ActivityReducer';
+import { AppDispatch, RootState } from '@/redux/store';
+import { CargarDatosActividadAction } from '@/redux/actions/activityAction';
+import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 
-import useAvailableHeight from '../hooks/useAvailableHeight';
-import useAlert from '../hooks/useAlert';
+import useAvailableHeight from '@/hooks/useAvailableHeight';
+import useAlert from '@/hooks/useAlert';
 
 import { Button, Form, Modal } from 'react-bootstrap';
 import { ArrowBack, Info } from '@mui/icons-material';

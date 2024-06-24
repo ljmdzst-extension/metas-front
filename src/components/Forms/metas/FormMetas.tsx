@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { RootState } from '../../../redux/store';
+import { RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
@@ -7,9 +7,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Badge, Button, Form, Modal, Table } from 'react-bootstrap';
-import { guardarActividad } from '../../../redux/actions/putActividad';
+import { guardarActividad } from '@/redux/actions/putActividad';
 import Swal from 'sweetalert2';
-import { SET_HAY_CAMBIOS } from '../../../redux/reducers/ActivityReducer';
+import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 import { ErrorOutline } from '@mui/icons-material';
 
 interface Valoracion {

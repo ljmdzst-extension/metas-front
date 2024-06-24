@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Form, FormSelect, Modal } from 'react-bootstrap';
-import { IntegranteEquipoProps } from '../../../../types/ProjectsProps';
+import { IntegranteEquipoProps } from '@/types/ProjectsProps';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 

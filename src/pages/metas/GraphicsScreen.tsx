@@ -1,10 +1,10 @@
 import { Col, Container, Row } from 'react-bootstrap';
 import { useState } from 'react';
-import Grafico from '../components/Graficos/Grafico';
-import { useGraphics } from '../hooks/useGraphics';
+import Grafico from '@/components/Graficos/Grafico';
+import { useGraphics } from '@/hooks/useGraphics';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
-import LoadingSpinner from '../components/Spinner/LoadingSpinner';
+import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: currentYear - 2022 }, (_, i) => 2023 + i);
@@ -33,7 +33,7 @@ const UACOLORS = [
 ];
 
 type ChartType = 'line' | 'bar' | 'pie';
-const Graphics = () => {
+const GraphicsScreen = () => {
 	const [year, setYear] = useState(currentYear);
 	const { graficoEjes, graficoObjEst, graficoLy, graficoUUAA, isLoading } = useGraphics({ year });
 
@@ -133,4 +133,4 @@ const Graphics = () => {
 	);
 };
 
-export default Graphics;
+export default GraphicsScreen;

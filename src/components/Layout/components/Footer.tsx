@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import logoUNL from '../../../assets/unl_identidad.svg';
+import logoUNL from '@/assets/unl_identidad.svg';
 
 // enlace a pagina de ayuda
 

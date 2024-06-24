@@ -1,6 +1,6 @@
-import FormRegister from '../components/Forms/FormRegister';
+import FormRegister from '@/components/Forms/FormRegister';
 
-const Register = () => {
+const RegisterScreen = () => {
 	return (
 		<div className='d-flex flex-column justify-content-center align-items-center mt-5 '>
 			<FormRegister />
@@ -8,4 +8,4 @@ const Register = () => {
 	);
 };
 
-export default Register;
+export default RegisterScreen;

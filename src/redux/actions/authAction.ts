@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AuthResponse, LoginResponse, RegisterProps } from '../../types/AuthProps';
+import { AuthResponse, LoginResponse, RegisterProps } from '@/types/AuthProps';
 
 export const loginAsync = createAsyncThunk(
 	'auth/login',

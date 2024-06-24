@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { AppDispatch, RootState } from '../../redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
-import useAvailableHeight from '../../hooks/useAvailableHeight';
-import { checkPermisoCurrentArea } from '../../redux/reducers/AuthReducer';
+import useAvailableHeight from '@/hooks/useAvailableHeight';
+import { checkPermisoCurrentArea } from '@/redux/reducers/AuthReducer';
 
 const PrivateLayout = ({ children }: any) => {
 	const { isLogged } = useSelector((state: RootState) => state.authSlice);
@@ -30,7 +30,7 @@ const PrivateLayout = ({ children }: any) => {
 			<div className=' vh-100 pb-4' style={{ backgroundColor: '#efe6e6' }}>
 				<NavBar />
 				<div
-					style={{ backgroundColor: '#efe6e6', height: availableHeight, paddingBottom: '.5rem' }}
+					style={{ backgroundColor: '#efe6e6', height: availableHeight, paddingBottom: '1rem' }}
 				>
 					{children}
 					<Outlet />

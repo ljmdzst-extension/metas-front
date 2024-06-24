@@ -3,15 +3,15 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
-import { guardarActividad } from '../../../redux/actions/putActividad';
+import { RootState } from '@/redux/store';
+import { guardarActividad } from '@/redux/actions/putActividad';
 import Swal from 'sweetalert2';
 import { FormControl, ListGroup } from 'react-bootstrap';
 import { ContentCopy, Edit, Delete, ErrorOutline } from '@mui/icons-material';
 
-import { textLimitError } from '../../../utils/validacionesForms';
-import { ListaUbicacione } from '../../../types/ActivityProps';
-import { SET_HAY_CAMBIOS } from '../../../redux/reducers/ActivityReducer';
+import { textLimitError } from '@/utils/validacionesForms';
+import { ListaUbicacione } from '@/types/ActivityProps';
+import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 
 const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
