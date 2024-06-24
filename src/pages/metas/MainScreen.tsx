@@ -10,7 +10,7 @@ import { AppDispatch } from '@/redux/store';
 import { authAsync } from '@/redux/actions/authAction';
 import { logout } from '@/redux/reducers/AuthReducer';
 
-export default function Main() {
+export default function MainScreen() {
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 	const { errorAlert } = useAlert();

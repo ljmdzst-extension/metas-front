@@ -6,7 +6,7 @@ import { projectHistoryProps } from '@/types/ProjectsProps';
 import data from '@/mocks/historyExample.json';
 import SideBarSumm from '@/components/Panel/component/SideBarSumm';
 
-const ProjectSum = () => {
+const ProjectSumScreen = () => {
 	const typeData: projectHistoryProps[] = data.map((item) => {
 		const date = new Date(item.fechaCreacion);
 		return { ...item, fechaCreacion: date };
@@ -25,4 +25,4 @@ const ProjectSum = () => {
 	);
 };
 
-export default ProjectSum;
+export default ProjectSumScreen;

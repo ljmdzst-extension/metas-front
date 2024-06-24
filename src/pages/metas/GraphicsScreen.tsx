@@ -33,7 +33,7 @@ const UACOLORS = [
 ];
 
 type ChartType = 'line' | 'bar' | 'pie';
-const Graphics = () => {
+const GraphicsScreen = () => {
 	const [year, setYear] = useState(currentYear);
 	const { graficoEjes, graficoObjEst, graficoLy, graficoUUAA, isLoading } = useGraphics({ year });
 
@@ -133,4 +133,4 @@ const Graphics = () => {
 	);
 };
 
-export default Graphics;
+export default GraphicsScreen;

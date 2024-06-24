@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import useAlert from '@/hooks/useAlert';
 import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
 
-const Confirm = () => {
+const ConfirmScreen = () => {
 	const [isLoading, setIsLoading] = useState(true);
 
 	const { validationString } = useParams();
@@ -58,4 +58,4 @@ const Confirm = () => {
 	);
 };
 
-export default Confirm;
+export default ConfirmScreen;

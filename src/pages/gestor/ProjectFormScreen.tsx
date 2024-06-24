@@ -3,8 +3,8 @@ import GeneralPanel from '@/components/Panel/GeneralPanel';
 import SideBarNav from '@/components/Panel/component/SideBarNav';
 import data from '@/mocks/formAExample.json';
 
-const ProjectForm = () => {
+const ProjectFormScreen = () => {
 	return <GeneralPanel SideBarPanel={<SideBarNav data={data} />} ContentPanel={<FormMembers />} />;
 };
 
-export default ProjectForm;
+export default ProjectFormScreen;

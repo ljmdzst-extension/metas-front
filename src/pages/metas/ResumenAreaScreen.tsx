@@ -16,7 +16,7 @@ interface Area {
 	anio: string;
 }
 
-const ResumenArea = () => {
+const ResumenAreaScreen = () => {
 	const [data, setData] = useState<Actividad[]>([]);
 	const [hasMore, setHasMore] = useState(true);
 	const [offset, setOffset] = useState(0);
@@ -140,4 +140,4 @@ const ResumenArea = () => {
 	);
 };
 
-export default ResumenArea;
+export default ResumenAreaScreen;

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Container, Button } from 'react-bootstrap';
 
-const Management = () => {
+const ManagementScreen = () => {
 	const navigation = useNavigate();
 	const handlerClick = (path: string) => {
 		navigation(path);
@@ -54,4 +54,4 @@ const Management = () => {
 	);
 };
 
-export default Management;
+export default ManagementScreen;

@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import logoUNL from '@/assets/unl_identidad.svg';
 
 export default function NavBar() {
-	const { isLogged } = useSelector((state: RootState) => state.authSlice);
+	const { isLogged, isAdmin } = useSelector((state: RootState) => state.authSlice);
 
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
@@ -49,6 +49,11 @@ export default function NavBar() {
 							<Nav.Link href='/gestion'>
 								<Button variant='outline-light'>Inicio</Button>
 							</Nav.Link>
+							{isAdmin ? (
+								<Nav.Link href='/gestion/admin'>
+									<Button variant='outline-light'>Admin</Button>
+								</Nav.Link>
+							) : null}
 							<Nav.Link
 								onClick={handleLogout}
 								className=' d-flex flex-column justify-content-center'

@@ -32,7 +32,7 @@ interface Area {
 	anio: string;
 }
 
-export default function Activity() {
+export default function ActivityScreen() {
 	const initialAreaValue: Area = localStorage.getItem('currentArea')
 		? (JSON.parse(localStorage.getItem('currentArea')!) as Area) // Usamos ! para decirle a TypeScript que estamos seguros de que localStorage.getItem('currentArea') no será null
 		: { idArea: 0, nom: '', listaActividades: [], anio: '' }; // O proporciona un valor predeterminado adecuado para el tipo Area
