@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppDispatch, RootState } from '../redux/store';
-import ElementoResumen from '../components/DataRender/ElementoResumen';
+import { AppDispatch, RootState } from '@/redux/store';
+import ElementoResumen from '@/components/DataRender/ElementoResumen';
 import { ArrowBack, Replay } from '@mui/icons-material';
 import { InputGroup, Form, Button } from 'react-bootstrap';
-import { Actividad } from '../types/ActivityProps';
-import { getBases } from '../redux/actions/metasActions';
-import useAlert from '../hooks/useAlert';
+import { Actividad } from '@/types/ActivityProps';
+import { getBases } from '@/redux/actions/metasActions';
+import useAlert from '@/hooks/useAlert';
 
 interface Area {
 	idArea: number;

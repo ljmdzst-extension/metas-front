@@ -3,23 +3,25 @@ import { Suspense, lazy } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
-import LoadingSpinner from './components/Spinner/LoadingSpinner';
+import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
 
-const Confirm = lazy(() => import('./pages/Confirm'));
-const Help = lazy(() => import('./pages/Help'));
-const Login = lazy(() => import('./pages/Login'));
-const Register = lazy(() => import('./pages/Register'));
+const Layout = lazy(() => import('@/components/Layout/Layout'));
+const PrivateLayout = lazy(() => import('@/components/Layout/PrivateLayout'));
+const Help = lazy(() => import('@/pages/Help'));
+const Login = lazy(() => import('@/pages/auth/Login'));
+const Register = lazy(() => import('@/pages/auth/Register'));
+const Confirm = lazy(() => import('@/pages/auth/Confirm'));
+const Admin = lazy(() => import('@/pages/app/adminScreen'));
 
-const Activity = lazy(() => import('./pages/Activity'));
-const Layout = lazy(() => import('./components/Layout/Layout'));
-const Main = lazy(() => import('./pages/Main'));
-const Management = lazy(() => import('./pages/Management'));
-const PrivateLayout = lazy(() => import('./components/Layout/PrivateLayout'));
-const Proyectos = lazy(() => import('./pages/Proyectos'));
-const ProjectForm = lazy(() => import('./pages/ProjectForm'));
-const ProjectSum = lazy(() => import('./pages/ProjectSum'));
-const ResumenArea = lazy(() => import('./pages/ResumenArea'));
-const Graphics = lazy(() => import('./pages/Graphics'));
+const Activity = lazy(() => import('@/pages/metas/Activity'));
+const Graphics = lazy(() => import('@/pages/metas/Graphics'));
+const Main = lazy(() => import('@/pages/metas/Main'));
+const Management = lazy(() => import('@/pages/Management'));
+const ResumenArea = lazy(() => import('@/pages/metas/ResumenArea'));
+
+const Proyectos = lazy(() => import('@/pages/gestor/Proyectos'));
+const ProjectForm = lazy(() => import('@/pages/gestor/ProjectForm'));
+const ProjectSum = lazy(() => import('@/pages/gestor/ProjectSum'));
 
 function App() {
 	return (
@@ -40,6 +42,7 @@ function App() {
 				</Route>
 				<Route path='/gestion' element={<PrivateLayout />}>
 					<Route index element={<Management />} />
+					<Route path='admin' element={<Admin />} />
 					<Route path='metas' element={<Main />} />
 					<Route path='metas/graficas' element={<Graphics />} />
 					<Route path='metas/:idPrograma/:idArea' element={<Activity />} />

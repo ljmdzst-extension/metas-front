@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Actividad } from '../../types/ActivityProps';
+import { Actividad } from '@/types/ActivityProps';
 
 // export const SET_HAY_CAMBIOS = 'SET_HAY_CAMBIOS';
 // export const setHayCambios = (valor: boolean) => ({

@@ -7,8 +7,8 @@ import {
 	DataGraficoUUAA,
 } from '../types/GraphicsProps';
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { errorAlert } from '../utils/Alerts';
+import { RootState } from '@/redux/store';
+import { errorAlert } from '@/utils/Alerts';
 
 interface Props {
 	year?: number;
@@ -36,12 +36,12 @@ export const useGraphics = ({ year }: Props) => {
 						},
 					},
 				);
-	
+
 				if (!response.ok) {
 					const errorData = await response.json();
 					throw new Error(errorData.error || 'Error fetching data');
 				}
-	
+
 				const data: GraphicsResponse = await response.json();
 				setGraficoEjes(data.data.dataGraficoEjes);
 				setGraficoObjEst(data.data.dataGraficoObjEst);
@@ -60,7 +60,6 @@ export const useGraphics = ({ year }: Props) => {
 		};
 		getGraphics();
 	}, [token, year]);
-
 
 	return {
 		isLoading,

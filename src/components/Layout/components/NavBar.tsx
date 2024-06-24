@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 
-import { logout } from '../../../redux/reducers/AuthReducer';
+import { logout } from '@/redux/reducers/AuthReducer';
 
 import { Container, Image, Navbar, Nav, Button } from 'react-bootstrap';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from 'sweetalert2';
-import logoUNL from '../../../assets/unl_identidad.svg';
+import logoUNL from '@/assets/unl_identidad.svg';
 
 export default function NavBar() {
 	const { isLogged } = useSelector((state: RootState) => state.authSlice);

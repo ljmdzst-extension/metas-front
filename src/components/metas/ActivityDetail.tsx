@@ -1,9 +1,9 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import { RootState } from '@/redux/store';
 import DataRender from '../DataRender/DataRender';
-import spanishTitles from '../../mock/MetasSpanishTitles.json';
+import spanishTitles from '@/mocks/MetasSpanishTitles.json';
 
 const ActivityDetail = () => {
 	const { activity } = useSelector((state: RootState) => state.actividadSlice);

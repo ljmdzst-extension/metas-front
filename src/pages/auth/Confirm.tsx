@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
-import useAlert from '../hooks/useAlert';
-import LoadingSpinner from '../components/Spinner/LoadingSpinner';
+import useAlert from '@/hooks/useAlert';
+import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
 
 const Confirm = () => {
 	const [isLoading, setIsLoading] = useState(true);

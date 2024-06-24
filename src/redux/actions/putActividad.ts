@@ -1,6 +1,6 @@
 import { AppDispatch } from '../store';
 import { CargarDatosActividadAction } from './activityAction';
-import { errorAlert, successAlert } from '../../utils/Alerts';
+import { errorAlert, successAlert } from '@/utils/Alerts';
 
 export const guardarActividad = (dato: any, dispatch: AppDispatch) => {
 	const token = localStorage.getItem('token');

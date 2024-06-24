@@ -3,10 +3,10 @@ import Button from 'react-bootstrap/Button';
 import { Form } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
-import { guardarActividad } from '../../../redux/actions/putActividad';
+import { RootState } from '@/redux/store';
+import { guardarActividad } from '@/redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { SET_HAY_CAMBIOS } from '../../../redux/reducers/ActivityReducer';
+import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 import { ErrorOutline } from '@mui/icons-material';
 
 type Documento = {

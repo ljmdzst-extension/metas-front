@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { AppDispatch, RootState } from '../../redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
-import useAvailableHeight from '../../hooks/useAvailableHeight';
-import { checkPermisoCurrentArea } from '../../redux/reducers/AuthReducer';
+import useAvailableHeight from '@/hooks/useAvailableHeight';
+import { checkPermisoCurrentArea } from '@/redux/reducers/AuthReducer';
 
 const PrivateLayout = ({ children }: any) => {
 	const { isLogged } = useSelector((state: RootState) => state.authSlice);

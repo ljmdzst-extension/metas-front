@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Accordion } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
-import { LArea } from '../../types/BasesProps';
-import useAlert from '../../hooks/useAlert';
+import { RootState } from '@/redux/store';
+import { LArea } from '@/types/BasesProps';
+import useAlert from '@/hooks/useAlert';
 
 interface Props {
 	objectData: any;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Pagination, Table } from 'react-bootstrap';
-import { ResponseProjectsProps, ProjectProps } from '../../types/ProjectsProps';
+import { ResponseProjectsProps, ProjectProps } from '@/types/ProjectsProps';
 
 import './ProjectsList.css';
 import { ContentCopy } from '@mui/icons-material';

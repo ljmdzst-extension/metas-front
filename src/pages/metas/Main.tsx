@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
-import PanelProgramas from '../components/PanelProgramas';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../redux/store';
-import { logout } from '../redux/reducers/AuthReducer';
-import { authAsync } from '../redux/actions/authAction';
 
 import { useNavigate } from 'react-router-dom';
 import { isRejectedWithValue, unwrapResult } from '@reduxjs/toolkit';
-import { AuthResponse } from '../types/AuthProps';
-import useAlert from '../hooks/useAlert';
+import useAlert from '@/hooks/useAlert';
+import { AuthResponse } from '@/types/AuthProps';
+import PanelProgramas from '@/components/PanelProgramas';
+import { AppDispatch } from '@/redux/store';
+import { authAsync } from '@/redux/actions/authAction';
+import { logout } from '@/redux/reducers/AuthReducer';
 
 export default function Main() {
 	const dispatch = useDispatch<AppDispatch>();

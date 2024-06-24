@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { navLinkProps } from '../../../types/AppProps';
+import { navLinkProps } from '@/types/AppProps';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import './SideBarNav.css';

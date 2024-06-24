@@ -2,14 +2,14 @@ import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { loginAsync } from '../../redux/actions/authAction';
+import { loginAsync } from '@/redux/actions/authAction';
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form } from 'react-bootstrap';
-import { AppDispatch, RootState } from '../../redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
 import Swal from 'sweetalert2';
-import useAlert from '../../hooks/useAlert';
+import useAlert from '@/hooks/useAlert';
 
 interface FormLoginProps {
 	email: string;
