@@ -30,7 +30,7 @@ const PrivateLayout = ({ children }: any) => {
 			<div className=' vh-100 pb-4' style={{ backgroundColor: '#efe6e6' }}>
 				<NavBar />
 				<div
-					style={{ backgroundColor: '#efe6e6', height: availableHeight, paddingBottom: '.5rem' }}
+					style={{ backgroundColor: '#efe6e6', height: availableHeight, paddingBottom: '1rem' }}
 				>
 					{children}
 					<Outlet />
