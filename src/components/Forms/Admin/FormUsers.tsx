@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import Select from 'react-select';
 import IconButton from '@mui/material/IconButton';
@@ -21,22 +22,48 @@ interface FormUsersProps {
 	onSave: (userData: User) => void;
 }
 
+const roles = ['Admin', 'User', 'Manager'];
+const areas = [1, 2, 3];
+
+const validationRules = {
+	nom: { required: 'Nombre es requerido' },
+	ape: { required: 'Apellido es requerido' },
+	email: {
+		required: 'Email es requerido',
+		pattern: {
+			value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+			message: 'Email inválido',
+		},
+	},
+	pass: { required: 'Contraseña es requerida' },
+};
+
+const FormInput = ({ control, name, label, type = 'text', rules }: any) => (
+	<Form.Group controlId={`form${name}`}>
+		<Form.Label>{label}</Form.Label>
+		<Controller
+			name={name}
+			control={control}
+			rules={rules}
+			render={({ field, fieldState: { error } }) => (
+				<>
+					<Form.Control size='sm' type={type} isInvalid={!!error} {...field} />
+					<Form.Control.Feedback type='invalid'>{error?.message}</Form.Control.Feedback>
+				</>
+			)}
+		/>
+	</Form.Group>
+);
+
 const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave }) => {
-	const [formData, setFormData] = useState<User>(userData);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-		const { name, value } = e.target;
-		setFormData({ ...formData, [name]: value });
-	};
+	const { handleSubmit, control } = useForm<User>({
+		defaultValues: userData,
+	});
 
-	const handleSelectChange = (name: string, selectedOptions: any) => {
-		const values = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
-		setFormData({ ...formData, [name]: values });
-	};
-
-	const handleSave = () => {
-		onSave(formData);
+	const onSubmit = (data: User) => {
+		onSave(data);
 	};
 
 	const toggleShowPassword = () => {
@@ -44,56 +71,44 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave }) => {
 	};
 
 	return (
-		<Form>
+		<Form onSubmit={handleSubmit(onSubmit)}>
 			<Row>
 				<Col>
-					<Form.Group controlId='formNom'>
-						<Form.Label>Nombre</Form.Label>
-						<Form.Control
-							size='sm'
-							type='text'
-							name='nom'
-							value={formData.nom}
-							onChange={handleChange}
-						/>
-					</Form.Group>
+					<FormInput control={control} name='nom' label='Nombre' rules={validationRules.nom} />
 				</Col>
 				<Col>
-					<Form.Group controlId='formApe'>
-						<Form.Label>Apellido</Form.Label>
-						<Form.Control
-							size='sm'
-							type='text'
-							name='ape'
-							value={formData.ape}
-							onChange={handleChange}
-						/>
-					</Form.Group>
+					<FormInput control={control} name='ape' label='Apellido' rules={validationRules.ape} />
 				</Col>
 			</Row>
 			<Row>
 				<Col>
-					<Form.Group controlId='formEmail'>
-						<Form.Label>Email</Form.Label>
-						<Form.Control
-							size='sm'
-							type='email'
-							name='email'
-							value={formData.email}
-							onChange={handleChange}
-						/>
-					</Form.Group>
+					<FormInput
+						control={control}
+						name='email'
+						label='Email'
+						type='email'
+						rules={validationRules.email}
+					/>
 				</Col>
 				<Col>
 					<Form.Group controlId='formPass'>
 						<Form.Label>Contraseña</Form.Label>
 						<div className='d-flex align-items-center'>
-							<Form.Control
-								size='sm'
-								type={showPassword ? 'text' : 'password'}
+							<Controller
 								name='pass'
-								value={formData.pass}
-								onChange={handleChange}
+								control={control}
+								rules={validationRules.pass}
+								render={({ field, fieldState: { error } }) => (
+									<div>
+										<Form.Control
+											size='sm'
+											type={showPassword ? 'text' : 'password'}
+											isInvalid={!!error}
+											{...field}
+										/>
+										<Form.Control.Feedback type='invalid'>{error?.message}</Form.Control.Feedback>
+									</div>
+								)}
 							/>
 							<IconButton onClick={toggleShowPassword} className='ml-2'>
 								{showPassword ? <VisibilityOff /> : <Visibility />}
@@ -104,26 +119,42 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave }) => {
 			</Row>
 			<Form.Group controlId='formRoles'>
 				<Form.Label>Roles</Form.Label>
-				<Select
-					isMulti
+				<Controller
 					name='roles'
-					options={roles.map((role) => ({ label: role, value: role }))}
-					value={formData.roles.map((role) => ({ label: role, value: role }))}
-					onChange={(selectedOptions) => handleSelectChange('roles', selectedOptions)}
+					control={control}
+					render={({ field }) => (
+						<Select
+							{...field}
+							isMulti
+							options={roles.map((role) => ({ label: role, value: role }))}
+							value={field.value.map((role: string) => ({ label: role, value: role }))}
+							onChange={(selectedOptions) =>
+								field.onChange(selectedOptions.map((option: any) => option.value))
+							}
+						/>
+					)}
 				/>
 			</Form.Group>
 			<Form.Group controlId='formAreas'>
 				<Form.Label>Áreas</Form.Label>
-				<Select
-					isMulti
+				<Controller
 					name='areas'
-					options={areas.map((area) => ({ label: `Area ${area}`, value: area }))}
-					value={formData.areas.map((area) => ({ label: `Area ${area}`, value: area }))}
-					onChange={(selectedOptions) => handleSelectChange('areas', selectedOptions)}
+					control={control}
+					render={({ field }) => (
+						<Select
+							{...field}
+							isMulti
+							options={areas.map((area) => ({ label: `Area ${area}`, value: area }))}
+							value={field.value.map((area: number) => ({ label: `Area ${area}`, value: area }))}
+							onChange={(selectedOptions) =>
+								field.onChange(selectedOptions.map((option: any) => option.value))
+							}
+						/>
+					)}
 				/>
 			</Form.Group>
 			<div className='d-flex justify-content-end mt-2'>
-				<Button variant='primary' size='sm' onClick={handleSave}>
+				<Button variant='primary' size='sm' type='submit'>
 					Guardar
 				</Button>
 			</div>
@@ -132,6 +163,3 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave }) => {
 };
 
 export default FormUsers;
-
-const roles = ['Admin', 'User', 'Manager'];
-const areas = [1, 2, 3];
