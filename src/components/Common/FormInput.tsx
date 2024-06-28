@@ -2,7 +2,7 @@ import { Controller } from 'react-hook-form';
 import { Form } from 'react-bootstrap';
 
 const FormInput = ({ control, name, label, type = 'text', rules }: any) => (
-	<Form.Group controlId={`form${name}`} className='mb-3'>
+	<Form.Group controlId={`form${name}`} className='mb-2'>
 		<Form.Label>{label}</Form.Label>
 		<Controller
 			name={name}

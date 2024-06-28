@@ -87,7 +87,11 @@ const AdminScreen = () => {
 					</Col>
 					{selectedUser && (
 						<Col md={4} className='border rounded p-2 bg-color-slate'>
-							<FormUsers userData={selectedUser} onSave={handleSave} />
+							<FormUsers
+								userData={selectedUser}
+								onSave={handleSave}
+								onClose={() => setSelectedUser(null)}
+							/>
 						</Col>
 					)}
 				</Row>

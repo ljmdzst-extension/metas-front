@@ -5,7 +5,11 @@ import Select from 'react-select';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import FormInput from '@/components/Common/FormInput';
+
+const MySwal = withReactContent(Swal);
 
 interface User {
 	id: number;
@@ -21,6 +25,7 @@ interface User {
 interface FormUsersProps {
 	userData: User;
 	onSave: (userData: User) => void;
+	onClose: () => void;
 }
 
 const roles = ['Admin', 'User', 'Manager'];
@@ -39,23 +44,43 @@ const validationRules = {
 	pass: { required: 'Contraseña es requerida' },
 };
 
-const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave }) => {
+const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
-	const { handleSubmit, control } = useForm<User>({
+	const { handleSubmit, control, reset, formState } = useForm<User>({
 		defaultValues: userData,
 	});
 
 	const onSubmit = (data: User) => {
 		onSave(data);
+		reset(data);
 	};
 
 	const toggleShowPassword = () => {
 		setShowPassword(!showPassword);
 	};
 
+	const handleClose = () => {
+		if (formState.isDirty) {
+			MySwal.fire({
+				title: '¿Estás seguro?',
+				text: 'Tienes cambios no guardados. ¿Seguro que deseas cerrar?',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Sí, cerrar',
+				cancelButtonText: 'Cancelar',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					onClose();
+				}
+			});
+		} else {
+			onClose();
+		}
+	};
+
 	return (
-		<Form onSubmit={handleSubmit(onSubmit)}>
+		<Form onSubmit={handleSubmit(onSubmit)} className=' d-flex flex-column h-100'>
 			<Row>
 				<Col>
 					<FormInput control={control} name='nom' label='Nombre' rules={validationRules.nom} />
@@ -75,7 +100,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave }) => {
 					/>
 				</Col>
 				<Col>
-					<Form.Group controlId='formPass'>
+					<Form.Group controlId='formPass' className=' mb-2'>
 						<Form.Label>Contraseña</Form.Label>
 						<div className='d-flex align-items-center'>
 							<Controller
@@ -101,7 +126,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave }) => {
 					</Form.Group>
 				</Col>
 			</Row>
-			<Form.Group controlId='formRoles'>
+			<Form.Group controlId='formRoles' className=' mb-2'>
 				<Form.Label>Roles</Form.Label>
 				<Controller
 					name='roles'
@@ -137,7 +162,10 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave }) => {
 					)}
 				/>
 			</Form.Group>
-			<div className='d-flex justify-content-end mt-2'>
+			<div className='d-flex justify-content-end mt-2 gap-2 mt-auto'>
+				<Button variant='secondary' size='sm' className='mr-2' onClick={handleClose}>
+					Cerrar
+				</Button>
 				<Button variant='primary' size='sm' type='submit'>
 					Guardar
 				</Button>
