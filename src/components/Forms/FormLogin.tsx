@@ -4,12 +4,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAsync } from '@/redux/actions/authAction';
 
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Button, Form } from 'react-bootstrap';
 import { AppDispatch, RootState } from '@/redux/store';
 import Swal from 'sweetalert2';
 import useAlert from '@/hooks/useAlert';
+import FormInput from '@/components/Common/FormInput';
 
 interface FormLoginProps {
 	email: string;
@@ -19,6 +19,17 @@ interface FormLoginProps {
 const initialValues: FormLoginProps = {
 	email: '',
 	password: '',
+};
+
+const validationRules = {
+	email: {
+		required: 'Email es requerido',
+		pattern: {
+			value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+			message: 'Email inválido',
+		},
+	},
+	password: { required: 'Contraseña es requerida' },
 };
 
 const FormLogin = () => {
@@ -34,12 +45,11 @@ const FormLogin = () => {
 		}
 	}, [isLogged, navigate]);
 
-	const validations = Yup.object().shape({
-		email: Yup.string().email().required('Campo requerido'),
-		password: Yup.string().required('Campo requerido'),
+	const { control, handleSubmit } = useForm<FormLoginProps>({
+		defaultValues: initialValues,
 	});
 
-	const handleLogin = async (values: FormLoginProps) => {
+	const handleLogin: SubmitHandler<FormLoginProps> = async (values) => {
 		const action = await dispatch(loginAsync({ email: values.email, pass: values.password }));
 		if (loginAsync.rejected.match(action)) {
 			const { error } = action.payload as { error: string };
@@ -69,94 +79,63 @@ const FormLogin = () => {
 	};
 
 	return (
-		<Formik
-			initialValues={initialValues}
-			onSubmit={(values) => handleLogin(values)}
-			validationSchema={validations}
+		<Form
+			onSubmit={handleSubmit(handleLogin)}
+			className='border rounded p-5 bg-color-slate'
+			noValidate
 		>
-			{({ errors, touched, values, handleBlur, handleChange, handleSubmit }) => {
-				return (
-					<Form onSubmit={handleSubmit} className='border rounded p-5 bg-color-slate' noValidate>
-						<p className='mb-4'>Ingrese sus datos de usuario.</p>
-						<Form.Group className='position-relative mb-4 d-flex justify-content-center'>
-							<Form.Control
-								type='email'
-								placeholder='Ingrese su email'
-								name='email'
-								onChange={handleChange}
-								onBlur={handleBlur}
-								value={values.email}
-								isInvalid={!!errors.email && touched.email}
-								aria-describedby='inputGroupPrepend'
-								className='w-50'
-							/>
-							<Form.Control.Feedback type='invalid' tooltip>
-								{errors.email}
-							</Form.Control.Feedback>
-						</Form.Group>
-						<Form.Group className='position-relative mb-4 d-flex justify-content-center'>
-							<Form.Control
-								type='password'
-								placeholder='Ingrese su contraseña'
-								name='password'
-								onChange={handleChange}
-								onBlur={handleBlur}
-								value={values.password}
-								isInvalid={!!errors.password && touched.password}
-								className='w-50'
-							/>
-							<Form.Control.Feedback type='invalid' tooltip>
-								{errors.password}
-							</Form.Control.Feedback>
-						</Form.Group>
+			<p className='mb-4'>Ingrese sus datos de usuario.</p>
 
-						<div className='d-flex justify-content-center'>
-							<Button
-								variant='primary'
-								type='submit'
-								className='btn btn-primary'
-								disabled={loading}
-							>
-								{loading ? 'Ingresando...' : 'Ingresar'}
-							</Button>
-						</div>
+			<FormInput
+				control={control}
+				name='email'
+				label='Correo electrónico'
+				type='email'
+				rules={validationRules.email}
+			/>
+			<FormInput
+				control={control}
+				name='password'
+				label='Contraseña'
+				type='password'
+				rules={validationRules.password}
+			/>
 
-						<div>
-							<p className='mt-4'>
-								¿No tienes cuenta?{' '}
-								<Link
-									to='/register'
-									style={{ color: '#08473f' }}
-									className='text-decoration-underline'
-								>
-									Registrate
-								</Link>
-							</p>
+			<div className='d-flex justify-content-center mt-2'>
+				<Button variant='primary' type='submit' className='btn btn-primary' disabled={loading}>
+					{loading ? 'Ingresando...' : 'Ingresar'}
+				</Button>
+			</div>
 
-							<p>
-								Si olvidó su contraseña, comuníquese con Mesa de Ayuda{' '}
-								<Link
-									to='mailto:gestor.extunl@gmail.com'
-									style={{ color: '#08473f' }}
-									className='text-decoration-underline'
-								>
-									gestor.extunl@gmail.com
-								</Link>
-								.
-							</p>
+			<div>
+				<p className='mt-4'>
+					¿No tienes cuenta?{' '}
+					<Link to='/register' style={{ color: '#08473f' }} className='text-decoration-underline'>
+						Registrate
+					</Link>
+				</p>
 
-							<p>
-								Para mayor información, ingrese a{' '}
-								<Link to='' style={{ color: '#08473f' }} className=' text-decoration-underline'>
-									Seccion de ayuda
-								</Link>
-								.
-							</p>
-						</div>
-					</Form>
-				);
-			}}
-		</Formik>
+				<p>
+					Si olvidó su contraseña, comuníquese con Mesa de Ayuda{' '}
+					<Link
+						to='mailto:gestor.extunl@gmail.com'
+						style={{ color: '#08473f' }}
+						className='text-decoration-underline'
+					>
+						gestor.extunl@gmail.com
+					</Link>
+					.
+				</p>
+
+				<p>
+					Para mayor información, ingrese a{' '}
+					<Link to='' style={{ color: '#08473f' }} className=' text-decoration-underline'>
+						Seccion de ayuda
+					</Link>
+					.
+				</p>
+			</div>
+		</Form>
 	);
 };
 

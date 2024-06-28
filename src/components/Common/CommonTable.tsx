@@ -1,5 +1,4 @@
 import { Edit, Visibility } from '@mui/icons-material';
-import React from 'react';
 import { Table, Button } from 'react-bootstrap';
 
 interface CommonTableProps<T> {
@@ -14,7 +13,7 @@ const CommonTable = <T,>({ data, onAction }: CommonTableProps<T>) => {
 
 	return (
 		<Table bordered hover>
-			<thead>
+			<thead style={{ position: 'sticky', top: -0.1 }}>
 				<tr>
 					{keys.map((key) => (
 						<th key={String(key)}>{key}</th>

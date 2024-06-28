@@ -5,6 +5,7 @@ import Select from 'react-select';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import FormInput from '@/components/Common/FormInput';
 
 interface User {
 	id: number;
@@ -37,23 +38,6 @@ const validationRules = {
 	},
 	pass: { required: 'Contraseña es requerida' },
 };
-
-const FormInput = ({ control, name, label, type = 'text', rules }: any) => (
-	<Form.Group controlId={`form${name}`}>
-		<Form.Label>{label}</Form.Label>
-		<Controller
-			name={name}
-			control={control}
-			rules={rules}
-			render={({ field, fieldState: { error } }) => (
-				<>
-					<Form.Control size='sm' type={type} isInvalid={!!error} {...field} />
-					<Form.Control.Feedback type='invalid'>{error?.message}</Form.Control.Feedback>
-				</>
-			)}
-		/>
-	</Form.Group>
-);
 
 const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave }) => {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
