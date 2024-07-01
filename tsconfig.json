@@ -32,7 +32,8 @@
 			"pages/*": ["src/pages/*"],
 			"appRedux/*": ["src/redux/*"],
 			"types/*": ["src/types/*"],
-			"utils/*": ["src/utils/*"]
+			"utils/*": ["src/utils/*"],
+			"services/*": ["src/services/*"]
 		}
 	},
 	"include": ["src", "custom.d.ts"],

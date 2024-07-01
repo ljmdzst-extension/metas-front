@@ -21,6 +21,7 @@ export default defineConfig({
 			appRedux: path.resolve(__dirname, './src/redux'),
 			types: path.resolve(__dirname, './src/types'),
 			utils: path.resolve(__dirname, './src/utils'),
+			services: path.resolve(__dirname, './src/services'),
 		},
 	},
 });
