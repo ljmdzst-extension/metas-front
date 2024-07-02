@@ -4,9 +4,9 @@ import authSlice from './AuthReducer';
 import metasSlice from './MetasReducer';
 
 const routeReducer = combineReducers({
-	actividadSlice,
-	authSlice,
-	metasSlice,
+	actividad: actividadSlice,
+	auth: authSlice,
+	metas: metasSlice,
 });
 
 export default routeReducer;

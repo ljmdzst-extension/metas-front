@@ -15,7 +15,7 @@ import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 
 const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
 
 	const [editandoDescripcion, setEditandoDescripcion] = useState(false);
 	const [descripcion, setDescripcion] = useState<string>(activity.desc ?? '');

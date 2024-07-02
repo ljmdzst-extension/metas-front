@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const useGraphics = ({ year }: Props) => {
-	const { token } = useSelector((state: RootState) => state.authSlice);
+	const { token } = useSelector((state: RootState) => state.auth);
 	const [isLoading, setIsLoading] = useState(true);
 	const [graficoEjes, setGraficoEjes] = useState<DataGraficoEje[]>([]);
 	const [graficoObjEst, setGraficoObjEst] = useState<DataGraficoObjEst[]>([]);

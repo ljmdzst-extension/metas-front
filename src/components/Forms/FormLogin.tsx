@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAsync } from '@/redux/actions/authAction';
 
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button, Form } from 'react-bootstrap';
 import { AppDispatch, RootState } from '@/redux/store';
 import Swal from 'sweetalert2';
@@ -34,7 +34,7 @@ const validationRules = {
 
 const FormLogin = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { loading, isLogged } = useSelector((state: RootState) => state.authSlice);
+	const { loading, isLogged } = useSelector((state: RootState) => state.auth);
 
 	const navigate = useNavigate();
 	const { errorAlert } = useAlert();

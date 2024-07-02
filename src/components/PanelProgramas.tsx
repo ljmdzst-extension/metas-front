@@ -23,7 +23,7 @@ export default function PanelProgramas() {
 	const navigation = useNavigate();
 	const { errorAlert } = useAlert();
 
-	const { token } = useSelector((state: RootState) => state.authSlice);
+	const { token } = useSelector((state: RootState) => state.auth);
 
 	useEffect(() => {
 		// Realizar la solicitud GET en el efecto

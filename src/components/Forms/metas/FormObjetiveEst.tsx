@@ -8,8 +8,8 @@ import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 import { ErrorOutline } from '@mui/icons-material';
 
 export default function FormObjetiveEst() {
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-	const { bases } = useSelector((state: RootState) => state.metasSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
+	const { bases } = useSelector((state: RootState) => state.metas);
 	const dispatch = useDispatch();
 
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>(

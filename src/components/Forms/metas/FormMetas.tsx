@@ -34,8 +34,8 @@ const defaultNuevaMeta = {
 
 const FormMetas = () => {
 	const dispatch = useDispatch();
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
+	const { bases, error } = useSelector((state: RootState) => state.metas);
 	const [listadoMetas, setListadoMetas] = useState<metas[]>(activity.listaMetas ?? []);
 	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);

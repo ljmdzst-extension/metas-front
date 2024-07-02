@@ -14,7 +14,6 @@ import { Col, InputGroup, Row } from 'react-bootstrap';
 import formData from '@/mocks/activityFormData.json';
 import Swal from 'sweetalert2';
 import { ArrowBack, Search } from '@mui/icons-material';
-import { getBases } from '@/redux/actions/metasActions';
 import { Actividad } from '@/types/ActivityProps';
 import useAlert from '@/hooks/useAlert';
 import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
@@ -56,8 +55,8 @@ export default function ActivityScreen() {
 	const location = useLocation();
 
 	const dispatch = useDispatch<AppDispatch>();
-	const { isLoading, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-	const { token, puedeEditar } = useSelector((state: RootState) => state.authSlice);
+	const { isLoading, hayCambios } = useSelector((state: RootState) => state.actividad);
+	const { token, puedeEditar } = useSelector((state: RootState) => state.auth);
 
 	useEffect(() => {
 		try {
@@ -70,17 +69,6 @@ export default function ActivityScreen() {
 			console.error('Error parsing area from localStorage:', error);
 		}
 	}, []);
-
-	useEffect(() => {
-		const dispachBases = async () => {
-			const action = await dispatch(getBases({ token }));
-			if (getBases.rejected.match(action)) {
-				const { error } = action.payload as { error: string };
-				errorAlert(error);
-			}
-		};
-		dispachBases();
-	}, [dispatch, token]);
 
 	interface Data {
 		idActividad: 0;

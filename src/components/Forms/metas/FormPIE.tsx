@@ -10,8 +10,8 @@ import { ErrorOutline } from '@mui/icons-material';
 
 export default function FormPIE() {
 	const dispatch = useDispatch();
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-	const { bases } = useSelector((state: RootState) => state.metasSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
+	const { bases } = useSelector((state: RootState) => state.metas);
 	const [objetivos] = useState<ListaObjetivo[]>(bases?.listaObjetivos ?? []);
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>(
 		activity?.listaObjetivos ?? [],

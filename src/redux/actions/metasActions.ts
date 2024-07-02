@@ -1,12 +1,15 @@
+// actions/metasActions.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FechBasesProps } from '@/types/BasesProps';
 
 const baseURL = import.meta.env.VITE_API_BASE_URL_METAS;
 
-export const getBases = createAsyncThunk(
-	'get/bases',
-	async (credential: { token: string }, thunkAPI) => {
-		// const token = localStorage.getItem('token');
+export const getBases = createAsyncThunk<
+	FechBasesProps, // Tipo de datos que la acción retornará
+	{ token: string }, // Tipo de argumento que la acción recibe
+	{ rejectValue: FechBasesProps | { error: string } } // Tipo de valor de rechazo
+>('get/bases', async (credential, thunkAPI) => {
+	try {
 		const response = await fetch(`${baseURL}/bases`, {
 			headers: {
 				Authorization: `Bearer ${credential.token}`,
@@ -15,9 +18,16 @@ export const getBases = createAsyncThunk(
 
 		if (!response.ok) {
 			const errorData: FechBasesProps = await response.json();
-			return thunkAPI.rejectWithValue(errorData);
+			throw errorData;
 		}
+
 		const data: FechBasesProps = await response.json();
-		return data.data;
-	},
-);
+		return data;
+	} catch (error) {
+		if (error) {
+			return thunkAPI.rejectWithValue(error as FechBasesProps);
+		} else {
+			return thunkAPI.rejectWithValue({ error: 'An unknown error occurred' });
+		}
+	}
+});

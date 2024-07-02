@@ -17,7 +17,7 @@ type Documento = {
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
 	const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>(activity.listaEnlaces || []);
 	const [descripcion, setDescripcion] = useState('');
 	const [nombreArchivo, setNombreArchivo] = useState('');

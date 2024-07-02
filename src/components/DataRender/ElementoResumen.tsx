@@ -23,7 +23,7 @@ const ElementoResumen = ({ element }: Props) => {
 
 	const [areasMap, setAreasMap] = useState<Record<string, Area>>({});
 
-	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+	const { bases, error } = useSelector((state: RootState) => state.metas);
 
 	useEffect(() => {
 		if (!error && bases) {

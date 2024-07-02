@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import logoUNL from '@/assets/unl_identidad.svg';
 
 export default function NavBar() {
-	const { isLogged, isAdmin } = useSelector((state: RootState) => state.authSlice);
+	const { isLogged, isAdmin } = useSelector((state: RootState) => state.auth);
 
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();

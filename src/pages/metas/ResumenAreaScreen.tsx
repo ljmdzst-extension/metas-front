@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppDispatch, RootState } from '@/redux/store';
 import ElementoResumen from '@/components/DataRender/ElementoResumen';
 import { ArrowBack, Replay } from '@mui/icons-material';
 import { InputGroup, Form, Button } from 'react-bootstrap';
 import { Actividad } from '@/types/ActivityProps';
-import { getBases } from '@/redux/actions/metasActions';
-import useAlert from '@/hooks/useAlert';
+import { RootState } from '@/redux/store';
 
 interface Area {
 	idArea: number;
@@ -25,26 +23,9 @@ const ResumenAreaScreen = () => {
 
 	const [search, setSearch] = useState<string>('');
 
-	const { token } = useSelector((state: RootState) => state.authSlice);
-	const { bases } = useSelector((state: RootState) => state.metasSlice);
-	const dispatch = useDispatch<AppDispatch>();
-
-	const { errorAlert } = useAlert();
+	const { token } = useSelector((state: RootState) => state.auth);
 
 	const elementRef = useRef(null);
-
-	useEffect(() => {
-		const dispachBases = async () => {
-			const action = await dispatch(getBases({ token }));
-			if (getBases.rejected.match(action)) {
-				const { error } = action.payload as { error: string };
-				errorAlert(error);
-			}
-		};
-		if (!bases) {
-			dispachBases();
-		}
-	}, [bases, dispatch, navigate, token]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(e.target.value);

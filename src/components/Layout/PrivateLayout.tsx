@@ -1,18 +1,32 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { AppDispatch, RootState } from '@/redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from '@/redux/store';
+import { useSelector } from 'react-redux';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import useAvailableHeight from '@/hooks/useAvailableHeight';
 import { checkPermisoCurrentArea } from '@/redux/reducers/AuthReducer';
+import { getBases } from '@/redux/actions/metasActions';
+import { errorAlert } from '@/utils/Alerts';
 
 const PrivateLayout = ({ children }: any) => {
-	const { isLogged } = useSelector((state: RootState) => state.authSlice);
-	const dispatch = useDispatch<AppDispatch>();
+	const { isLogged, token } = useSelector((state: RootState) => state.auth);
+	const dispatch = useAppDispatch();
 	const navigation = useNavigate();
 	const location = useLocation();
 	const availableHeight = useAvailableHeight();
+
+	useEffect(() => {
+		const dispachBases = async () => {
+			const action = await dispatch(getBases({ token }));
+			if (getBases.rejected.match(action)) {
+				if (action.payload?.error) {
+					errorAlert(action.payload.error);
+				}
+			}
+		};
+		dispachBases();
+	}, [dispatch, token]);
 
 	useEffect(() => {
 		if (!isLogged) {
@@ -29,9 +43,7 @@ const PrivateLayout = ({ children }: any) => {
 		<div className=' d-flex flex-column'>
 			<div className=' vh-100 pb-4' style={{ backgroundColor: '#efe6e6' }}>
 				<NavBar />
-				<div
-					style={{ backgroundColor: '#efe6e6', height: availableHeight, paddingBottom: '1rem' }}
-				>
+				<div style={{ backgroundColor: '#efe6e6', height: availableHeight, paddingBottom: '1rem' }}>
 					{children}
 					<Outlet />
 				</div>

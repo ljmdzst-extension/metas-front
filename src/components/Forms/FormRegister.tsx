@@ -18,7 +18,7 @@ const FormRegister = () => {
 	const [unidadesAcademicas, setUnidadesAcademicas] = React.useState<UnidadesAcademicas[]>([]);
 
 	const dispatch = useDispatch<AppDispatch>();
-	const { loading } = useSelector((state: RootState) => state.authSlice);
+	const { loading } = useSelector((state: RootState) => state.auth);
 	const { errorAlert } = useAlert();
 
 	const validationRules = {

@@ -18,8 +18,8 @@ type Institucion = {
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-	const { token } = useSelector((state: RootState) => state.authSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
+	const { token } = useSelector((state: RootState) => state.auth);
 	const [arrayInstitucion, setArrayInstitucion] = useState<Institucion[]>(
 		activity.listaInstituciones || [],
 	);

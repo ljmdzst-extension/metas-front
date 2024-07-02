@@ -29,8 +29,8 @@ interface Option {
 export default function FormArSecUU() {
 	const dispatch = useDispatch();
 
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
-	const { bases, error } = useSelector((state: RootState) => state.metasSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
+	const { bases, error } = useSelector((state: RootState) => state.metas);
 	const [dataLoaded, setDataLoaded] = useState(false);
 
 	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<Option[]>([]);

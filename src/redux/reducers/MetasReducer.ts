@@ -5,13 +5,13 @@ import { getBases } from '../actions/metasActions';
 interface metasState {
 	bases: BasesDataProps | undefined;
 	loading: boolean;
-	error: string | null | undefined;
+	error: string | undefined;
 }
 
 const initialState: metasState = {
 	bases: undefined,
 	loading: false,
-	error: null,
+	error: undefined,
 };
 
 const metasSlice = createSlice({
@@ -24,11 +24,11 @@ const metasSlice = createSlice({
 		});
 		builder.addCase(getBases.fulfilled, (state, action) => {
 			state.loading = false;
-			state.bases = action.payload;
+			state.bases = action.payload.data;
 		});
 		builder.addCase(getBases.rejected, (state, action) => {
 			state.loading = false;
-			state.error = (action.payload as { error: string }).error;
+			state.error = action.payload?.error;
 		});
 	},
 });

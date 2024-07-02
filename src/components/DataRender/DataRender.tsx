@@ -17,7 +17,7 @@ interface Area {
 }
 
 const DataRender = ({ objectData, spanishTitles }: Props) => {
-	const { bases, error, loading } = useSelector((state: RootState) => state.metasSlice);
+	const { bases, error, loading } = useSelector((state: RootState) => state.metas);
 	const { errorAlert } = useAlert();
 
 	const [areasMap, setAreasMap] = useState<Record<string, Area>>({});

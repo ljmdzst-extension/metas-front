@@ -36,7 +36,7 @@ const AdminScreen = () => {
 	const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
 	const [searchQuery, setSearchQuery] = useState<string>('');
 
-	const { bases, error, loading } = useSelector((state: RootState) => state.metasSlice);
+	const { bases, error, loading } = useSelector((state: RootState) => state.metas);
 
 	// NOTE: Obtiene todos los usuarios
 	useEffect(() => {

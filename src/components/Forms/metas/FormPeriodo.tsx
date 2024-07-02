@@ -16,7 +16,7 @@ registerLocale('es', es);
 
 export default function FormPeriodo() {
 	const dispatch = useDispatch();
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
 
 	// const [isSaving, setIsSaving] = useState<boolean>(false);
 

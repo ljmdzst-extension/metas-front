@@ -50,10 +50,8 @@ const PlanificationPanel = ({
 	cleanFormSelected,
 }: Readonly<Props>) => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { activity, isLoading, hayCambios } = useSelector(
-		(state: RootState) => state.actividadSlice,
-	);
-	const { token, puedeEditar } = useSelector((state: RootState) => state.authSlice);
+	const { activity, isLoading, hayCambios } = useSelector((state: RootState) => state.actividad);
+	const { token, puedeEditar } = useSelector((state: RootState) => state.auth);
 
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState('');

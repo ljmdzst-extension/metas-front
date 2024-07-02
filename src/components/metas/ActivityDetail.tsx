@@ -6,7 +6,7 @@ import DataRender from '../DataRender/DataRender';
 import spanishTitles from '@/mocks/MetasSpanishTitles.json';
 
 const ActivityDetail = () => {
-	const { activity } = useSelector((state: RootState) => state.actividadSlice);
+	const { activity } = useSelector((state: RootState) => state.actividad);
 	const [filteredData, setFilteredData] = useState({});
 	const [showFullView, setShowFullView] = useState<boolean>(true);
 

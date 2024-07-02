@@ -1,7 +1,8 @@
 // Metas Bases
 export interface FechBasesProps {
 	ok: boolean;
-	data: BasesDataProps;
+	data: BasesDataProps ;
+	error: string ;
 }
 
 export interface BasesDataProps {
