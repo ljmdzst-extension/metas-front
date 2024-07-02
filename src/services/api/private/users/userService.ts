@@ -1,12 +1,12 @@
-import { UserFetch } from '@/types/UserProps';
-import axiosInstance from '../api/axiosInstance';
 import axios from 'axios';
+import { UserFetch } from '@/types/UserProps';
+import { privateAxiosInstance } from '../../axiosInstance';
 
 const basePath = '/metas/admin/usr';
 
 export const getAllUsers = async (): Promise<UserFetch> => {
 	try {
-		const response = await axiosInstance.get<UserFetch>(basePath);
+		const response = await privateAxiosInstance.get<UserFetch>(basePath);
 		return response.data;
 	} catch (error) {
 		if (

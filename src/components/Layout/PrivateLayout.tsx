@@ -18,7 +18,7 @@ const PrivateLayout = ({ children }: any) => {
 
 	useEffect(() => {
 		const dispachBases = async () => {
-			const action = await dispatch(getBases({ token }));
+			const action = await dispatch(getBases());
 			if (getBases.rejected.match(action)) {
 				if (action.payload?.error) {
 					errorAlert(action.payload.error);

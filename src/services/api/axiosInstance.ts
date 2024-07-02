@@ -1,13 +1,20 @@
 import axios from 'axios';
 
-const axiosInstance = axios.create({
+const publicAxiosInstance = axios.create({
 	baseURL: import.meta.env.VITE_API_BASE_URL,
 	headers: {
 		'Content-Type': 'application/json',
 	},
 });
 
-axiosInstance.interceptors.request.use(
+const privateAxiosInstance = axios.create({
+	baseURL: import.meta.env.VITE_API_BASE_URL,
+	headers: {
+		'Content-Type': 'application/json',
+	},
+});
+
+privateAxiosInstance.interceptors.request.use(
 	(config) => {
 		const token = localStorage.getItem('token');
 
@@ -21,4 +28,4 @@ axiosInstance.interceptors.request.use(
 	},
 );
 
-export default axiosInstance;
+export { publicAxiosInstance, privateAxiosInstance };
