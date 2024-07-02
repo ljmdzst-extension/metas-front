@@ -1,8 +1,7 @@
-// Metas Bases
-export interface FechBasesProps {
+export interface FetchBasesProps {
 	ok: boolean;
-	data: BasesDataProps ;
-	error: string ;
+	data: BasesDataProps;
+	error: string;
 }
 
 export interface BasesDataProps {
@@ -11,7 +10,7 @@ export interface BasesDataProps {
 	listaProgramasSIPPE: ListaProgramasSIPPE[];
 	listaRelaciones: ListaRelacione[];
 	listaValoraciones: ListaValoracione[];
-	unidadesAcademicas: ListaRelacione[];
+	unidadesAcademicas: UnidadesAcademica[];
 }
 
 export interface LArea {
@@ -62,5 +61,10 @@ export enum TipoRelacionNom {
 
 export interface ListaValoracione {
 	idValoracion: number;
+	nom: string;
+}
+
+export interface UnidadesAcademica {
+	idUnidadAcademica: number;
 	nom: string;
 }
