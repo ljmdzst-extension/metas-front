@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { isRejectedWithValue, unwrapResult } from '@reduxjs/toolkit';
 import useAlert from '@/hooks/useAlert';
-import { AuthResponse } from '@/types/AuthProps';
 import PanelProgramas from '@/components/PanelProgramas';
 import { AppDispatch } from '@/redux/store';
 import { authAsync } from '@/redux/actions/authAction';
@@ -21,13 +20,13 @@ export default function MainScreen() {
 
 			if (currentToken && user) {
 				try {
-					const action = await dispatch(authAsync(currentToken));
+					const action = await dispatch(authAsync());
 
 					if (isRejectedWithValue(action)) {
-						handleAuthError((action.payload as AuthResponse).error);
+						handleAuthError((action.payload as { error: string }).error);
 					} else {
-						const { data } = unwrapResult(action);
-						localStorage.setItem('token', data.token);
+						const { token } = unwrapResult(action);
+						localStorage.setItem('token', token);
 					}
 				} catch (err) {
 					console.error('Error occurred:', err);

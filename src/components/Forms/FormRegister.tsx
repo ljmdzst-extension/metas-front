@@ -35,7 +35,7 @@ const FormRegister = () => {
 		pass: { required: 'Campo requerido' },
 		confirmPass: {
 			required: 'Campo requerido',
-			validate: (value: string, context) =>
+			validate: (value: string, context: RegisterProps) =>
 				value === context.pass || 'Las contraseñas no coinciden',
 		},
 		idUnidadAcademica: {
@@ -79,11 +79,7 @@ const FormRegister = () => {
 		getUnidadesAcademicas();
 	}, []);
 
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<RegisterProps>({
+	const { control, handleSubmit } = useForm<RegisterProps>({
 		defaultValues: {
 			dni: '',
 			ape: '',

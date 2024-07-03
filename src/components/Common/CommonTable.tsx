@@ -2,13 +2,13 @@ import { Edit, Visibility, VisibilityOff } from '@mui/icons-material';
 import { Table, Button } from 'react-bootstrap';
 import { useState } from 'react';
 
-interface CommonTableProps<T> {
+interface CommonTableProps<T extends object> {
 	data: T[];
 	headers: { [K in keyof T]: string }; // Encabezados como objeto
 	onAction: (action: 'view' | 'edit', item: T) => void;
 }
 
-const CommonTable = <T,>({ data, headers, onAction }: CommonTableProps<T>) => {
+const CommonTable = <T extends object>({ data, headers, onAction }: CommonTableProps<T>) => {
 	const [visiblePasswords, setVisiblePasswords] = useState<{ [index: number]: boolean }>({});
 
 	if (!data || data.length === 0) return <div>No data available</div>;
@@ -36,7 +36,7 @@ const CommonTable = <T,>({ data, headers, onAction }: CommonTableProps<T>) => {
 							<td key={String(key)} className=''>
 								{key === 'pass' ? (
 									<p>
-										{visiblePasswords[index] ? item[key] : '********'}
+										{visiblePasswords[index] ? String(item[key]) : '********'}
 										<Button variant='link' onClick={() => togglePasswordVisibility(index)}>
 											{visiblePasswords[index] ? <VisibilityOff /> : <Visibility />}
 										</Button>

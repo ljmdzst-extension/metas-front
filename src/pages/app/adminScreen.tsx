@@ -36,8 +36,6 @@ const AdminScreen = () => {
 	const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
 	const [searchQuery, setSearchQuery] = useState<string>('');
 
-	const { bases, error, loading } = useSelector((state: RootState) => state.metas);
-
 	// NOTE: Obtiene todos los usuarios
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -121,16 +119,18 @@ const AdminScreen = () => {
 					onChange={(e) => setSearchQuery(e.target.value)}
 					className=' w-50 mx-auto mb-2'
 				/>
-				<div style={{ overflowY: 'scroll', maxHeight: '65vh' }} className='custom-scrollbar'>
-					<CommonTable<UserTableData>
-						data={mappedFilteredUsers}
-						headers={tableHeaders}
-						onAction={handleAction}
-					/>
-				</div>
 			</div>
 			<Container fluid>
 				<Row>
+					<Col md={selectedUser ? 8 : 12}>
+						<div style={{ overflowY: 'scroll', maxHeight: '65vh' }} className='custom-scrollbar'>
+							<CommonTable<UserTableData>
+								data={mappedFilteredUsers}
+								headers={tableHeaders}
+								onAction={handleAction}
+							/>
+						</div>
+					</Col>
 					{selectedUser && (
 						<Col md={4} className='border rounded p-2 bg-color-slate'>
 							<FormUsers

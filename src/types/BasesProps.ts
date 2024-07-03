@@ -1,3 +1,4 @@
+
 export interface FetchBasesProps {
 	ok: boolean;
 	data: BasesDataProps;
@@ -11,12 +12,38 @@ export interface BasesDataProps {
 	listaRelaciones: ListaRelacione[];
 	listaValoraciones: ListaValoracione[];
 	unidadesAcademicas: UnidadesAcademica[];
+	lAreasProgramasAnios: LAreasProgramasAnio[];
 }
 
 export interface LArea {
 	idRelacion: number;
 	nom: string;
 	idTipoRelacion: number;
+}
+
+export interface LAreasProgramasAnio {
+	anio: number;
+	listaProgramas: ListaPrograma[];
+}
+
+export interface ListaPrograma {
+	idPrograma: number;
+	nom: ListaProgramaNom;
+	listaAreas: ListaArea[];
+}
+
+export interface ListaArea {
+	idArea: number;
+	nom: string;
+}
+
+export enum ListaProgramaNom {
+	FormaciónYCapacitación = 'Formación y Capacitación',
+	IntegraciónDeFunciones = 'Integración de Funciones',
+	IntervenciónSociocultural = 'Intervención Sociocultural',
+	ProgramasDeExtensiónSIPPPE = 'Programas de extensión (SIPPPE)',
+	Publicaciones = 'Publicaciones',
+	ÁreasEstratégicas = 'Áreas Estratégicas',
 }
 
 export interface ListaObjetivo {

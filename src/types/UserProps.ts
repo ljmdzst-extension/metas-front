@@ -4,6 +4,17 @@ export interface UserFetch {
 	error: string | null;
 }
 
+export interface UserFormData {
+	nom: string;
+	ape: string;
+	email: string;
+	pass: string;
+	roles: string[];
+	anio: number | null;
+	programas: number[];
+	areas: number[];
+}
+
 export interface UserData {
 	idUsuario: string;
 	nroDoc: string;
@@ -16,6 +27,9 @@ export interface UserData {
 	deletedAt: Date | null;
 	categoria: Categoria;
 	areas: Area[];
+	roles: string[];
+	nom: string;
+	ape: string;
 }
 
 export interface Area {

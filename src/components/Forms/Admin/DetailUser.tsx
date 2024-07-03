@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { UserData, Categoria, Area } from '@/types/UserProps';
+import { UserData } from '@/types/UserProps';
 
 interface DetailsUserProps {
 	user: UserData;
@@ -19,7 +19,7 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 		if (key === 'pass') {
 			return (
 				<span>
-					{showPassword ? value : '********'}
+					{showPassword ? String(value) : '********'}
 					<IconButton onClick={toggleShowPassword} style={{ marginLeft: '10px' }}>
 						{showPassword ? <VisibilityOff /> : <Visibility />}
 					</IconButton>
@@ -32,7 +32,7 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 						<li key={index}>
 							{Object.entries(item).map(([k, v]) => (
 								<p key={k}>
-									<strong>{k}:</strong> {v}
+									<strong>{k}:</strong> {String(v)}
 								</p>
 							))}
 						</li>
@@ -44,13 +44,13 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 				<div>
 					{Object.entries(value).map(([k, v]) => (
 						<p key={k}>
-							<strong>{k}:</strong> {v}
+							<strong>{k}:</strong> {String(v)}
 						</p>
 					))}
 				</div>
 			);
 		} else {
-			return value;
+			return String(value);
 		}
 	};
 

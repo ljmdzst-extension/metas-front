@@ -1,10 +1,10 @@
 export interface LoginResponse {
 	ok: boolean;
-	data: Data;
+	data: UserData;
 	error: null | string;
 }
 
-export interface Data {
+export interface UserData {
 	idUsuario: string;
 	email: string;
 	ape: string;
@@ -26,10 +26,10 @@ export interface RegisterProps {
 
 export interface AuthResponse {
 	ok: boolean;
-	data: Data;
+	data: AuthData;
 	error: null;
 }
 
-export interface Data {
+export interface AuthData {
 	token: string;
 }
