@@ -79,6 +79,8 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
 	useEffect(() => {
 		if (selectedYear !== null) {
 			setLoadingPrograms(true);
+			setUserProgramsOptions([]);
+			setAllProgramsOptions([]);
 			// Cargar programas para el año seleccionado
 			const userPrograms = userData.areas
 				.filter((area) => area.anio === selectedYear.value)
@@ -93,12 +95,14 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
 			const uniqueUserPrograms = [...new Set(userPrograms)].map((id) =>
 				allPrograms.find((program) => program.value === id),
 			);
-			setUserProgramsOptions(uniqueUserPrograms);
+			setUserProgramsOptions(uniqueUserPrograms as OptionProps[]);
 			setLoadingPrograms(false);
 		}
 	}, [selectedYear, bases.lAreasProgramasAnios, userData.areas]);
 
 	useEffect(() => {
+		setUserAreasOptions([]);
+		setAllAreasOptions([]);
 		if (selectedProgram !== null) {
 			setLoadingAreas(true);
 			const areas = bases.lAreasProgramasAnios
@@ -125,30 +129,31 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
 	};
 
 	const onSubmit = (data: UserFormData) => {
-		const areas: Area[] = (data.areas || []).map((areaId) => {
-			const programId = data.programas.find((program) => program === areaId);
-			return {
-				idArea: areaId,
-				idPrograma: programId || 0,
-				anio: data.anio || 0,
-				idCategoria: 0, // Define según tu lógica
-				idUsuario: userData.idUsuario,
-			};
-		});
+		console.log(data);
+		// const areas: Area[] = (data.areas || []).map((areaId) => {
+		// 	const programId = data.programas.find((program) => program === areaId);
+		// 	return {
+		// 		idArea: areaId,
+		// 		idPrograma: programId || 0,
+		// 		anio: data.anio || 0,
+		// 		idCategoria: 0, // Define según tu lógica
+		// 		idUsuario: userData.idUsuario,
+		// 	};
+		// });
 
-		const userDataToSave: UserData = {
-			...userData,
-			nom: data.nom,
-			ape: data.ape,
-			email: data.email,
-			pass: data.pass,
-			roles: data.roles,
-			areas,
-			updatedAt: new Date(),
-		};
+		// const userDataToSave: UserData = {
+		// 	...userData,
+		// 	nom: data.nom,
+		// 	ape: data.ape,
+		// 	email: data.email,
+		// 	pass: data.pass,
+		// 	roles: data.roles,
+		// 	areas,
+		// 	updatedAt: new Date(),
+		// };
 
-		onSave(userDataToSave);
-		reset(data);
+		// onSave(userDataToSave);
+		// reset(data);
 	};
 
 	const toggleShowPassword = () => {

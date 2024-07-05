@@ -50,7 +50,7 @@ const initialState: AuthState = {
 		areas ? JSON.parse(areas) : [],
 		currentArea,
 	),
-	isAdmin: true,
+	isAdmin: false,
 };
 
 const authSlice = createSlice({

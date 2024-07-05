@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CargarDatosActividadAction } from '../actions/activityAction';
-import { Actividad } from '@/types/ActivityProps';
+import { Actividad, FechasPuntuale, Institucione, Meta, Ubicacione } from '@/types/ActivityProps';
 
 interface initialStateProps {
 	isLoading: boolean;
@@ -17,11 +17,11 @@ const initialState: initialStateProps = {
 		idActividad: 0,
 		idArea: 0,
 		idUsuario: null,
-		nro: null,
-		desc: null,
-		motivoCancel: null,
-		fechaDesde: null,
-		fechaHasta: null,
+		nro: 0,
+		desc: '',
+		motivoCancel: '',
+		fechaDesde: new Date().toISOString(),
+		fechaHasta: new Date().toISOString(),
 		listaMetas: [],
 		listaProgramasSIPPE: [],
 		listaRelaciones: [],
@@ -40,14 +40,14 @@ const actividadSlice = createSlice({
 		SET_HAY_CAMBIOS: (state, action: PayloadAction<{ valor: boolean }>) => {
 			state.hayCambios = action.payload.valor;
 		},
-		CARGAR_MOTIVOCANCEL: (state, action: PayloadAction<{ motivo: string | null }>) => {
+		CARGAR_MOTIVOCANCEL: (state, action: PayloadAction<{ motivo: string }>) => {
 			state.activity.motivoCancel = action.payload.motivo;
 			console.log(state.activity.motivoCancel);
 			console.log('cargo el motivo');
 		},
 		CARGAR_DESCRIPCION: (
 			state,
-			action: PayloadAction<{ descripcion: string | null; ubicaciones: any[] | null }>,
+			action: PayloadAction<{ descripcion: string; ubicaciones: Ubicacione[] }>,
 		) => {
 			state.activity.desc = action.payload.descripcion;
 			state.activity.listaUbicaciones = action.payload.ubicaciones;
@@ -56,12 +56,9 @@ const actividadSlice = createSlice({
 		CARGAR_PERIODO: (
 			state,
 			action: PayloadAction<{
-				fechaDesde: string | null;
-				fechaHasta: string | null;
-				listaFechasPuntuales: {
-					idFecha: number | null;
-					fecha: string | null;
-				}[];
+				fechaDesde: string;
+				fechaHasta: string;
+				listaFechasPuntuales: FechasPuntuale[];
 			}>,
 		) => {
 			state.activity.fechaDesde = action.payload.fechaDesde;
@@ -90,13 +87,7 @@ const actividadSlice = createSlice({
 		CARGAR_META: (
 			state,
 			action: PayloadAction<{
-				metas: {
-					idMeta: number | null;
-					descripcion: string | null;
-					observaciones: string | null;
-					resultado: string | null;
-					valoracion: number | null;
-				}[];
+				metas: Meta[];
 			}>,
 		) => {
 			state.activity.listaMetas = action.payload.metas;
@@ -104,11 +95,7 @@ const actividadSlice = createSlice({
 		CARGAR_INSTITUCION: (
 			state,
 			action: PayloadAction<{
-				instituciones: {
-					idInstitucion: number | null;
-					nom: string | null;
-					ubicacion: string | null;
-				}[];
+				instituciones: Institucione[];
 			}>,
 		) => {
 			state.activity.listaInstituciones = action.payload.instituciones;

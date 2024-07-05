@@ -10,8 +10,6 @@ import DetailsUser from '@/components/Forms/Admin/DetailUser';
 import { getAllUsers } from '@/services';
 import { UserData } from '@/types/UserProps';
 import { errorAlert } from '@/utils/Alerts';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 
 const MySwal = withReactContent(Swal);
 
