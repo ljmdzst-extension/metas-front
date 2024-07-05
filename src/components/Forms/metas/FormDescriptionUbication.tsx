@@ -10,7 +10,7 @@ import { FormControl, ListGroup } from 'react-bootstrap';
 import { ContentCopy, Edit, Delete, ErrorOutline } from '@mui/icons-material';
 
 import { textLimitError } from '@/utils/validacionesForms';
-import { ListaUbicacione } from '@/types/ActivityProps';
+import { Ubicacione } from '@/types/ActivityProps';
 import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 
 const FormDescriptionUbication = () => {
@@ -19,7 +19,7 @@ const FormDescriptionUbication = () => {
 
 	const [editandoDescripcion, setEditandoDescripcion] = useState(false);
 	const [descripcion, setDescripcion] = useState<string>(activity.desc ?? '');
-	const [ubicaciones, setUbicaciones] = useState<ListaUbicacione[]>(
+	const [ubicaciones, setUbicaciones] = useState<Ubicacione[]>(
 		activity.listaUbicaciones ?? [],
 	);
 

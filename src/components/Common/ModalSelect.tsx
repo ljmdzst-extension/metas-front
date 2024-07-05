@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import Select, { MultiValue, SingleValue } from 'react-select';
+import Select, { MultiValue } from 'react-select';
 
 interface OptionProps {
   value: number;

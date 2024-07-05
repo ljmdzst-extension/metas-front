@@ -90,7 +90,7 @@ export interface Enlace {
 
 export interface FechasPuntuale {
 	idFecha: number;
-	fecha: Date;
+	fecha: string;
 }
 
 export interface Institucione {

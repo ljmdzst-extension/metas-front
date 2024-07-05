@@ -3,7 +3,7 @@ import { BasesDataProps } from '@/types/BasesProps';
 import { getBases } from '../actions/metasActions';
 
 interface metasState {
-	bases: BasesDataProps;
+	bases: BasesDataProps | undefined;
 	loading: boolean;
 	error: string | undefined;
 }

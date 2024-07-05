@@ -11,6 +11,7 @@ import { Col, Row } from 'react-bootstrap';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 import { ErrorOutline } from '@mui/icons-material';
+import { FechasPuntuale } from '@/types/ActivityProps'
 
 registerLocale('es', es);
 
@@ -24,7 +25,7 @@ export default function FormPeriodo() {
 	const [fechaHasta, setFechaHasta] = useState<string | null>(activity.fechaHasta ?? null);
 	const [erroresRango, setErroresRango] = useState<string>('');
 	const [listaFechasPuntuales, setListaFechasPuntuales] = useState<
-		{ idFecha: number | null; fecha: string | null }[]
+		FechasPuntuale[]
 	>(activity.listaFechasPuntuales ?? []);
 	const [rangeStart, setRangeStart] = useState<Date | null>(
 		activity.fechaDesde ? new Date(activity.fechaDesde?.split('-').join('/')) : null,
@@ -34,7 +35,7 @@ export default function FormPeriodo() {
 		activity.fechaHasta ? new Date(activity.fechaHasta?.split('-').join('/')) : null,
 	);
 
-	const [indexDates, setIndexDates] = useState<{ idFecha: number | null; fecha: string | null }[]>(
+	const [indexDates, setIndexDates] = useState<FechasPuntuale[]>(
 		listaFechasPuntuales.filter((fecha) => fecha.fecha !== null),
 	);
 
@@ -56,7 +57,7 @@ export default function FormPeriodo() {
 		const dateString = dateToString(d);
 
 		if (!indexDates.find((date) => date.fecha === dateString)) {
-			const nuevaFecha = {
+			const nuevaFecha: FechasPuntuale = {
 				idFecha: 0,
 				fecha: dateString,
 			};
