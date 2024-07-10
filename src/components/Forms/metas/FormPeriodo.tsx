@@ -9,7 +9,7 @@ import { RootState } from '@/redux/store';
 import { guardarActividad } from '@/redux/actions/putActividad';
 import { Col, Row } from 'react-bootstrap';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+import { setHayCambios } from '@/redux/actions/activityAction'
 import { ErrorOutline } from '@mui/icons-material';
 import { FechasPuntuale } from '@/types/ActivityProps'
 
@@ -81,7 +81,7 @@ export default function FormPeriodo() {
 			activity.fechaHasta !== fechaHasta ||
 			JSON.stringify(activity.listaFechasPuntuales) !== JSON.stringify(listaFechasPuntuales);
 		console.log(activity.listaFechasPuntuales, ' - ', listaFechasPuntuales);
-		dispatch(SET_HAY_CAMBIOS({ valor: cambio }));
+		dispatch(setHayCambios({ valor: cambio }));
 	};
 
 	useEffect(() => {

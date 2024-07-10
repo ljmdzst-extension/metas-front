@@ -54,7 +54,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
 	const [loadingAreas, setLoadingAreas] = useState<boolean>(false);
 
 	const { bases } = useSelector((state: RootState) => state.metas);
-
+	
 	const { handleSubmit, control, reset, formState } = useForm<UserFormData>({
 		defaultValues: {
 			nom: userData.nom,
@@ -70,6 +70,8 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
 
 	useEffect(() => {
 		// Cargar años disponibles
+
+
 		setYearOptions(
 			bases.lAreasProgramasAnios.map((item) => ({ label: item.anio.toString(), value: item.anio })),
 		);
@@ -142,9 +144,9 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
 		// });
 
 		// const userDataToSave: UserData = {
-		// 	...userData,
-		// 	nom: data.nom,
-		// 	ape: data.ape,
+			// 	...userData,
+			// 	nom: data.nom,
+			// 	ape: data.ape,
 		// 	email: data.email,
 		// 	pass: data.pass,
 		// 	roles: data.roles,
@@ -178,7 +180,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
 			onClose();
 		}
 	};
-
+	
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)} className='d-flex flex-column h-100'>
 			<Row>

@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { guardarActividad } from '@/redux/actions/putActividad';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+import { setHayCambios } from '@/redux/actions/activityAction'
 import { ErrorOutline } from '@mui/icons-material';
 
 export default function FormObjetiveEst() {
@@ -47,7 +47,7 @@ export default function FormObjetiveEst() {
 		const cambios =
 			JSON.stringify(activity.listaObjetivos ?? []) !== JSON.stringify(objetivosSeleccionados);
 		console.log(activity.listaObjetivos, objetivosSeleccionados, cambios);
-		dispatch(SET_HAY_CAMBIOS({ valor: cambios }));
+		dispatch(setHayCambios({ valor: cambios }));
 	}, [activity.listaObjetivos, objetivosSeleccionados, dispatch]);
 
 	useEffect(() => {

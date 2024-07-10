@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { CargarDatosActividadAction } from '@/redux/actions/activityAction';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+
 
 import useAvailableHeight from '@/hooks/useAvailableHeight';
 import useAlert from '@/hooks/useAlert';
@@ -24,6 +23,7 @@ import {
 
 import ActivityDetail from './metas/ActivityDetail';
 import LoadingSpinner from './Spinner/LoadingSpinner';
+import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction'
 
 type Props = {
 	name: string;
@@ -85,7 +85,7 @@ const PlanificationPanel = ({
 			});
 			const data = await response.json();
 			data.ok ? successAlert(successMessage) : errorAlert(data.error);
-			dispatch(CargarDatosActividadAction(activity.idActividad));
+			dispatch(cargarDatosActividad(activity.idActividad));
 		} catch (error) {
 			errorAlert(JSON.stringify(error));
 		}
@@ -179,7 +179,7 @@ const PlanificationPanel = ({
 										setIsFormOpen(false);
 										setIndexForm('');
 										cleanFormSelected();
-										dispatch(SET_HAY_CAMBIOS({ valor: false }));
+										dispatch(setHayCambios({ valor: false }));
 									} else {
 										closePlanification();
 										handleModalClose();

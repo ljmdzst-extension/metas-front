@@ -1,5 +1,5 @@
 import { AppDispatch } from '../store';
-import { CargarDatosActividadAction } from './activityAction';
+import { cargarDatosActividad } from './activityAction';
 import { errorAlert, successAlert } from '@/utils/Alerts';
 
 export const guardarActividad = (dato: any, dispatch: AppDispatch) => {
@@ -15,7 +15,7 @@ export const guardarActividad = (dato: any, dispatch: AppDispatch) => {
 		.then((resp) => resp.json())
 		.then((data) => {
 			data.ok ? successAlert('Actividad guardada') : errorAlert(`Error al guardar: ${data.error}`);
-			dispatch(CargarDatosActividadAction(dato.idActividad));
+			dispatch(cargarDatosActividad(dato.idActividad));
 
 			return null;
 		})

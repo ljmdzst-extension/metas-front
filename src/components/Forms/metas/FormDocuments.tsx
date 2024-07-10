@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { guardarActividad } from '@/redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+import { setHayCambios } from '@/redux/actions/activityAction'
 import { ErrorOutline } from '@mui/icons-material';
 
 type Documento = {
@@ -54,7 +54,7 @@ export default function FormOrgInst() {
 
 	const checkForChanges = () => {
 		const cambio = JSON.stringify(activity.listaEnlaces) !== JSON.stringify(arrayDocumentos);
-		dispatch(SET_HAY_CAMBIOS({ valor: cambio }));
+		dispatch(setHayCambios({ valor: cambio }));
 	};
 
 	useEffect(() => {

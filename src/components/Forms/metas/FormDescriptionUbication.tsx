@@ -11,7 +11,7 @@ import { ContentCopy, Edit, Delete, ErrorOutline } from '@mui/icons-material';
 
 import { textLimitError } from '@/utils/validacionesForms';
 import { Ubicacione } from '@/types/ActivityProps';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+import { setHayCambios } from '@/redux/actions/activityAction'
 
 const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
@@ -88,7 +88,7 @@ const FormDescriptionUbication = () => {
 			JSON.stringify(activity.listaUbicaciones) !== JSON.stringify(ubicaciones);
 
 		if (hayCambios === cambios) return;
-		dispatch(SET_HAY_CAMBIOS({ valor: cambios }));
+		dispatch(setHayCambios({ valor: cambios }));
 	};
 
 	const AlertBuscarUbicaciones = () => {

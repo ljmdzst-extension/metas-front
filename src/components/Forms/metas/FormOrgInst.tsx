@@ -7,7 +7,7 @@ import { RootState } from '@/redux/store';
 import { guardarActividad } from '@/redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+import { setHayCambios } from '@/redux/actions/activityAction'
 import { ErrorOutline } from '@mui/icons-material';
 
 type Institucion = {
@@ -152,7 +152,7 @@ export default function FormOrgInst() {
 
 	const checkForChanges = () => {
 		const cambio = JSON.stringify(activity.listaInstituciones) !== JSON.stringify(arrayInstitucion);
-		dispatch(SET_HAY_CAMBIOS({ valor: cambio }));
+		dispatch(setHayCambios({ valor: cambio }));
 	};
 
 	useEffect(() => {

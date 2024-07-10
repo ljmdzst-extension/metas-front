@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Badge, Button, Form, Modal, Table } from 'react-bootstrap';
 import { guardarActividad } from '@/redux/actions/putActividad';
 import Swal from 'sweetalert2';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+import { setHayCambios } from '@/redux/actions/activityAction'
 import { ErrorOutline } from '@mui/icons-material';
 
 interface Valoracion {
@@ -123,9 +123,9 @@ const FormMetas = () => {
 		if (hayCambios === cambio) return;
 
 		if (cambio) {
-			dispatch(SET_HAY_CAMBIOS({ valor: true }));
+			dispatch(setHayCambios({ valor: true }));
 		} else {
-			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+			dispatch(setHayCambios({ valor: false }));
 		}
 	};
 	useEffect(() => {

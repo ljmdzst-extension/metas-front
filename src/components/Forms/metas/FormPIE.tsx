@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { guardarActividad } from '@/redux/actions/putActividad';
 import { ListaObjetivo } from '@/types/BasesProps';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+import { setHayCambios } from '@/redux/actions/activityAction'
 import { ErrorOutline } from '@mui/icons-material';
 
 export default function FormPIE() {
@@ -44,9 +44,9 @@ export default function FormPIE() {
 		if (hayCambios === cambios) return;
 
 		if (cambios) {
-			dispatch(SET_HAY_CAMBIOS({ valor: true }));
+			dispatch(setHayCambios({ valor: true }));
 		} else {
-			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+			dispatch(setHayCambios({ valor: false }));
 		}
 	};
 

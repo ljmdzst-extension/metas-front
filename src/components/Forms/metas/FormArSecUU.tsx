@@ -7,8 +7,8 @@ import { RootState } from '@/redux/store';
 import { guardarActividad } from '@/redux/actions/putActividad';
 import { Row, Col } from 'react-bootstrap';
 import { ListaProgramasSIPPE } from '@/types/BasesProps';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
 import { ErrorOutline } from '@mui/icons-material';
+import { setHayCambios } from '@/redux/actions/activityAction'
 
 const animatedComponents = makeAnimated();
 
@@ -118,9 +118,9 @@ export default function FormArSecUU() {
 		if (hayCambios === cambios) return;
 
 		if (cambios) {
-			dispatch(SET_HAY_CAMBIOS({ valor: true }));
+			dispatch(setHayCambios({ valor: true }));
 		} else {
-			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+			dispatch(setHayCambios({ valor: false }));
 		}
 	};
 

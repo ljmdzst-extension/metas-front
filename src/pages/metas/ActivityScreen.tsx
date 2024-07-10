@@ -5,7 +5,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { CargarDatosActividadAction } from '@/redux/actions/activityAction';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
@@ -16,7 +15,7 @@ import Swal from 'sweetalert2';
 import { ArrowBack, Search } from '@mui/icons-material';
 import { Actividad } from '@/types/ActivityProps';
 import useAlert from '@/hooks/useAlert';
-import { SET_HAY_CAMBIOS } from '@/redux/reducers/ActivityReducer';
+import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction'
 import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
 
 interface Activity {
@@ -163,7 +162,7 @@ export default function ActivityScreen() {
 	}, [mostrarActividades]);
 
 	const handleButtonClick = (id: number) => {
-		dispatch(CargarDatosActividadAction(id));
+		dispatch(cargarDatosActividad(id));
 	};
 
 	const closePlanification = () => {
@@ -177,7 +176,7 @@ export default function ActivityScreen() {
 		}
 
 		if (!hayCambios) {
-			dispatch(SET_HAY_CAMBIOS({ valor: false }));
+			dispatch(setHayCambios({ valor: false }));
 			setCurrentFormSelected(formName);
 			return;
 		}
@@ -191,7 +190,7 @@ export default function ActivityScreen() {
 			cancelButtonText: 'No, cancelar',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				dispatch(SET_HAY_CAMBIOS({ valor: false }));
+				dispatch(setHayCambios({ valor: false }));
 				setCurrentFormSelected(formName);
 			}
 		});
