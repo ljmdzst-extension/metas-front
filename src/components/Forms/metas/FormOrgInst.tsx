@@ -7,23 +7,18 @@ import { RootState } from '@/redux/store';
 import { guardarActividad } from '@/redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
-import { setHayCambios } from '@/redux/actions/activityAction'
+import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
-
-type Institucion = {
-	idInstitucion: number | null;
-	nom: string | null;
-	ubicacion: string | null;
-};
+import { Institucione } from '@/types/ActivityProps';
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
 	const { token } = useSelector((state: RootState) => state.auth);
-	const [arrayInstitucion, setArrayInstitucion] = useState<Institucion[]>(
+	const [arrayInstitucion, setArrayInstitucion] = useState<Institucione[]>(
 		activity.listaInstituciones || [],
 	);
-	const [arraySearchInstitucion, setArraySearchInstitucion] = useState<Institucion[]>([]);
+	const [arraySearchInstitucion, setArraySearchInstitucion] = useState<Institucione[]>([]);
 
 	const [name, setName] = useState('');
 	const [ubicacion, setUbicacion] = useState('');
@@ -55,7 +50,7 @@ export default function FormOrgInst() {
 		}
 	};
 
-	const filterInstitucion = (data: Institucion[]) => {
+	const filterInstitucion = (data: Institucione[]) => {
 		const newData = data.filter((inst) => inst.ubicacion !== 'NULL');
 		return newData;
 	};

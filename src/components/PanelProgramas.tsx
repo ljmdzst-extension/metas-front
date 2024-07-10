@@ -11,6 +11,7 @@ import LoadingSpinner from './Spinner/LoadingSpinner';
 import useAlert from '@/hooks/useAlert';
 import { RootState } from '@/redux/store';
 import { AreaProps, ProgramaProps } from '@/types/AppProps';
+import { getProgramas } from '@/services/api/private/programs/programsService';
 
 const currentYear = new Date().getFullYear();
 
@@ -26,46 +27,23 @@ export default function PanelProgramas() {
 	const { token } = useSelector((state: RootState) => state.auth);
 
 	useEffect(() => {
-		// Realizar la solicitud GET en el efecto
-		setIsLoading(true);
-		axios
-			.get(`${import.meta.env.VITE_API_BASE_URL_METAS}/programas/${year}`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
-			.then((response) => {
-				const data = response.data;
+		const obtenerProgramas = async () => {
+			setIsLoading(true);
+			const data = await getProgramas(year);
 
-				// Verifica si la respuesta tiene la estructura esperada
-				if (data?.ok && data?.data) {
-					const programas: ProgramaProps[] = data.data;
-					setProgramasTransformados(programas);
-				} else {
-					console.error('La respuesta no tiene la estructura esperada.');
-					throw new Error(data.error || 'Error fetching data');
-				}
-			})
-			.catch((error) => {
-				if (error.response) {
-					// La solicitud fue hecha y el servidor respondió con un código de estado
-					// que está fuera del rango de 2xx
-					const errorMessage = error.response.data?.error || error.response.statusText;
-					console.error('Error al realizar la solicitud GET:', errorMessage);
-					errorAlert('Error al realizar la petición: ' + errorMessage);
-				} else if (error.request) {
-					// La solicitud fue hecha pero no se recibió respuesta
-					console.error('No se recibió respuesta del servidor:', error.request);
-					errorAlert('No se recibió respuesta del servidor.');
-				} else {
-					// Algo sucedió en la configuración de la solicitud que desencadenó un error
-					console.error('Error en la configuración de la solicitud:', error.message);
-					errorAlert('Error en la configuración de la solicitud: ' + error.message);
-				}
-			})
-			.finally(() => {
+			if (!data.ok) {
+				console.error('La respuesta no tiene la estructura esperada.');
+				throw new Error(data.error || 'Error fetching data');
+			}
+
+			if (data.error) {
+				errorAlert(data.error);
+			} else {
+				setProgramasTransformados(data.data);
 				setIsLoading(false);
-			});
+			}
+		};
+		obtenerProgramas();
 	}, [token, year]); // Ejecutar cuando token o year cambian
 
 	const openArea = (area: AreaProps) => {

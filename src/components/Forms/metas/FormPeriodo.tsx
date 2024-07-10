@@ -9,9 +9,9 @@ import { RootState } from '@/redux/store';
 import { guardarActividad } from '@/redux/actions/putActividad';
 import { Col, Row } from 'react-bootstrap';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { setHayCambios } from '@/redux/actions/activityAction'
+import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
-import { FechasPuntuale } from '@/types/ActivityProps'
+import { FechasPuntuale } from '@/types/ActivityProps';
 
 registerLocale('es', es);
 
@@ -21,12 +21,12 @@ export default function FormPeriodo() {
 
 	// const [isSaving, setIsSaving] = useState<boolean>(false);
 
-	const [fechaDesde, setFechaDesde] = useState<string | null>(activity.fechaDesde ?? null);
-	const [fechaHasta, setFechaHasta] = useState<string | null>(activity.fechaHasta ?? null);
+	const [fechaDesde, setFechaDesde] = useState<string>(activity.fechaDesde);
+	const [fechaHasta, setFechaHasta] = useState<string>(activity.fechaHasta);
 	const [erroresRango, setErroresRango] = useState<string>('');
-	const [listaFechasPuntuales, setListaFechasPuntuales] = useState<
-		FechasPuntuale[]
-	>(activity.listaFechasPuntuales ?? []);
+	const [listaFechasPuntuales, setListaFechasPuntuales] = useState<FechasPuntuale[]>(
+		activity.listaFechasPuntuales ?? [],
+	);
 	const [rangeStart, setRangeStart] = useState<Date | null>(
 		activity.fechaDesde ? new Date(activity.fechaDesde?.split('-').join('/')) : null,
 	);

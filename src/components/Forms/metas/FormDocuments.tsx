@@ -8,17 +8,12 @@ import { guardarActividad } from '@/redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { setHayCambios } from '@/redux/actions/activityAction'
 import { ErrorOutline } from '@mui/icons-material';
-
-type Documento = {
-	idEnlace: number | null;
-	link: string | null;
-	desc: string | null;
-};
+import { Enlace } from '@/types/ActivityProps'
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
-	const [arrayDocumentos, setArrayDocumentos] = useState<Documento[]>(activity.listaEnlaces || []);
+	const [arrayDocumentos, setArrayDocumentos] = useState<Enlace[]>(activity.listaEnlaces || []);
 	const [descripcion, setDescripcion] = useState('');
 	const [nombreArchivo, setNombreArchivo] = useState('');
 
@@ -32,7 +27,7 @@ export default function FormOrgInst() {
 					idEnlace: 0,
 					link: nombreArchivo,
 					desc: descripcion,
-				},
+				} as Enlace,
 			]);
 
 			setDescripcion('');

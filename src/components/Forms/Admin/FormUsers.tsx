@@ -8,11 +8,10 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import FormInput from '@/components/Common/FormInput';
-import { UserData, UserFormData, Area } from '@/types/UserProps';
+import { UserData, UserFormData } from '@/types/UserProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { Add } from '@mui/icons-material';
-import ModalSelect from '@/components/Common/ModalSelect';
 
 const MySwal = withReactContent(Swal);
 

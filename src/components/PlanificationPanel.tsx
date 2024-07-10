@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 
-
 import useAvailableHeight from '@/hooks/useAvailableHeight';
 import useAlert from '@/hooks/useAlert';
 
@@ -23,7 +22,9 @@ import {
 
 import ActivityDetail from './metas/ActivityDetail';
 import LoadingSpinner from './Spinner/LoadingSpinner';
-import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction'
+import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
+import { deleteActivity, restoreActivity, suspendActivity } from '@/services';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
 	name: string;
@@ -50,8 +51,9 @@ const PlanificationPanel = ({
 	cleanFormSelected,
 }: Readonly<Props>) => {
 	const dispatch = useDispatch<AppDispatch>();
+	const navigate = useNavigate();
 	const { activity, isLoading, hayCambios } = useSelector((state: RootState) => state.actividad);
-	const { token, puedeEditar } = useSelector((state: RootState) => state.auth);
+	const { puedeEditar } = useSelector((state: RootState) => state.auth);
 
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [indexForm, setIndexForm] = useState('');
@@ -68,29 +70,6 @@ const PlanificationPanel = ({
 		setIsFormOpen(true);
 	};
 
-	const handleApiCall = async (
-		url: string,
-		method: string,
-		body: object,
-		successMessage: string,
-	) => {
-		try {
-			const response = await fetch(url, {
-				method,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify(body),
-			});
-			const data = await response.json();
-			data.ok ? successAlert(successMessage) : errorAlert(data.error);
-			dispatch(cargarDatosActividad(activity.idActividad));
-		} catch (error) {
-			errorAlert(JSON.stringify(error));
-		}
-	};
-
 	const handleSuspenderActividad = () => {
 		Swal.fire({
 			title: '¿Desea suspender la actividad?',
@@ -102,11 +81,15 @@ const PlanificationPanel = ({
 			inputValidator: (value) => !value && 'Debe ingresar un motivo',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				handleApiCall(
-					`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/cancel`,
-					'PUT',
-					{ idActividad: activity.idActividad, motivoCancel: result.value },
-					'Actividad Anulada',
+				suspendActivity({ idActividad: activity.idActividad, motivoCancel: result.value }).then(
+					(response) => {
+						if (response.ok) {
+							successAlert('Actividad Anulada');
+							dispatch(cargarDatosActividad(activity.idActividad));
+						} else {
+							errorAlert(response.error);
+						}
+					},
 				);
 			}
 		});
@@ -119,13 +102,18 @@ const PlanificationPanel = ({
 			confirmButtonText: 'Eliminar',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				handleApiCall(
-					`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`,
-					'DELETE',
-					{ idActividad: activity.idActividad },
-					'Actividad Eliminada !',
-				);
-				setTimeout(() => window.location.replace(''), 1000);
+				deleteActivity(activity.idActividad).then((response) => {
+					if (response.ok) {
+						successAlert('Actividad Eliminada !');
+						dispatch(cargarDatosActividad(activity.idActividad));
+						setTimeout(
+							() => navigate(0),
+							500,
+						);
+					} else {
+						errorAlert(response.error);
+					}
+				});
 			}
 		});
 	};
@@ -140,12 +128,14 @@ const PlanificationPanel = ({
 			cancelButtonText: 'Ocultar',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				handleApiCall(
-					`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/restore`,
-					'PUT',
-					{ idActividad: activity.idActividad },
-					'Actividad restaurada',
-				);
+				restoreActivity(activity.idActividad).then((response) => {
+					if (response.ok) {
+						successAlert('Actividad restaurada');
+						dispatch(cargarDatosActividad(activity.idActividad));
+					} else {
+						errorAlert(response.error);
+					}
+				});
 			}
 		});
 	};

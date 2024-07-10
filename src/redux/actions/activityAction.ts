@@ -1,5 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { Actividad, FechasPuntuale, Institucione, Meta, Ubicacione } from '@/types/ActivityProps';
+import { getActivity } from '@/services';
 
 // Acciones sincrónicas
 export const setHayCambios = createAction<{ valor: boolean }>('setHayCambios');
@@ -23,24 +24,18 @@ export const cargarRelacion = createAction<{
 }>('CARGAR_RELACION');
 
 // Acción asincrónica
-export const cargarDatosActividad = createAsyncThunk(
+export const cargarDatosActividad = createAsyncThunk<Actividad, number, { rejectValue: string }>(
 	'CARGAR_DATOS_ACTIVIDAD',
-	async (id: number, { rejectWithValue }) => {
-		const token = localStorage.getItem('token');
+	async (id, { rejectWithValue } ) => {
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad/${id}`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			});
-			if (!response.ok) {
-				return rejectWithValue('Error al cargar los datos de actividad');
-			}
-			const data = await response.json();
-			return data.data as Actividad;
+			const data = await getActivity(id);
+			return data.data;
 		} catch (error) {
-			console.error('Error:', error);
-			return rejectWithValue('Error de red o del servidor');
+			if (error instanceof Error) {
+				return rejectWithValue(error.message);
+			} else {
+				return rejectWithValue('An unexpected error occurred');
+			}
 		}
 	},
 );

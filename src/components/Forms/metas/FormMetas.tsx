@@ -9,35 +9,29 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Badge, Button, Form, Modal, Table } from 'react-bootstrap';
 import { guardarActividad } from '@/redux/actions/putActividad';
 import Swal from 'sweetalert2';
-import { setHayCambios } from '@/redux/actions/activityAction'
+import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
+import { Meta } from '@/types/ActivityProps';
 
 interface Valoracion {
 	idValoracion: number;
 	nom: string;
 }
-interface metas {
-	idMeta: number | null;
-	descripcion: string | null;
-	resultado: string | null;
-	observaciones: string | null;
-	valoracion: number | null;
-}
 
-const defaultNuevaMeta = {
+const defaultNuevaMeta: Meta = {
 	idMeta: 0,
 	descripcion: '',
 	resultado: '',
 	observaciones: '',
-	valoracion: null,
+	valoracion: -1,
 };
 
 const FormMetas = () => {
 	const dispatch = useDispatch();
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
 	const { bases, error } = useSelector((state: RootState) => state.metas);
-	const [listadoMetas, setListadoMetas] = useState<metas[]>(activity.listaMetas ?? []);
-	const [nuevaMeta, setNuevaMeta] = useState<metas>(defaultNuevaMeta);
+	const [listadoMetas, setListadoMetas] = useState<Meta[]>(activity.listaMetas ?? []);
+	const [nuevaMeta, setNuevaMeta] = useState<Meta>(defaultNuevaMeta);
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
 	const [showModal, setShowModal] = useState(false);
 	const indexCurrentMeta = useRef(-1);
@@ -93,7 +87,7 @@ const FormMetas = () => {
 		checkForChanges();
 	};
 
-	const alertVistaDetalle = (thisMeta: metas) => {
+	const alertVistaDetalle = (thisMeta: Meta) => {
 		Swal.fire({
 			html: `
 			<div style='text-align: start;'>
@@ -179,7 +173,7 @@ const FormMetas = () => {
 								<td style={{ textAlign: 'right' }}>
 									<VisibilityIcon
 										id={`metaLabel-${meta.idMeta}`}
-										onClick={() => alertVistaDetalle(meta as metas)}
+										onClick={() => alertVistaDetalle(meta as Meta)}
 										color='primary'
 										className='cursor-pointer'
 									/>
