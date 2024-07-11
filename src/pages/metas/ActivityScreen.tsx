@@ -5,7 +5,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { Col, InputGroup, Row } from 'react-bootstrap';
@@ -15,8 +14,9 @@ import Swal from 'sweetalert2';
 import { ArrowBack, Search } from '@mui/icons-material';
 import { Actividad } from '@/types/ActivityProps';
 import useAlert from '@/hooks/useAlert';
-import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction'
+import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
 import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
+import { getListaActividadesPorArea, postActivity } from '@/services/api/private/metas';
 
 interface Activity {
 	idActividad: number;
@@ -55,7 +55,7 @@ export default function ActivityScreen() {
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { isLoading, hayCambios } = useSelector((state: RootState) => state.actividad);
-	const { token, puedeEditar } = useSelector((state: RootState) => state.auth);
+	const { puedeEditar } = useSelector((state: RootState) => state.auth);
 
 	useEffect(() => {
 		try {
@@ -69,90 +69,42 @@ export default function ActivityScreen() {
 		}
 	}, []);
 
-	interface Data {
-		idActividad: 0;
-		idArea: number;
-		nro: number;
-		desc: string;
-		fechaDesde: string | null;
-		fechaHasta: string | null;
-	}
-
-	const postActivity = useCallback(
-		async (data: Data) => {
-			axios
-				.post(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, data, {
-					headers: { Authorization: `Bearer ${token}` },
-				})
-				.catch((error) => console.log(error));
-		},
-		[token],
-	);
-
-	const mostrarActividades = useCallback(async () => {
-		try {
-			const response = await axios.get(
-				`${import.meta.env.VITE_API_BASE_URL_METAS}/areas/${area.idArea}/actividades/${area.anio}`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			);
-			const actividades = response.data;
-			setArrayActivity(actividades.data);
-			setIsLoadingArrayActivity(false);
-		} catch (error) {
-			setIsLoadingArrayActivity(false);
-
-			if (axios.isAxiosError(error)) {
-				// Manejar errores de Axios
-				if (error.response) {
-					// La solicitud fue hecha y el servidor respondió con un código de estado
-					// que está fuera del rango de 2xx
-					const errorMessage = error.response.data?.error || error.response.statusText;
-					console.error('Error al realizar la solicitud GET:', errorMessage);
-					errorAlert('Error al realizar la petición: ' + errorMessage);
-				} else if (error.request) {
-					// La solicitud fue hecha pero no se recibió respuesta
-					console.error('No se recibió respuesta del servidor:', error.request);
-					errorAlert('No se recibió respuesta del servidor.');
-				} else {
-					// Algo sucedió en la configuración de la solicitud que desencadenó un error
-					console.error('Error en la configuración de la solicitud:', error.message);
-					errorAlert('Error en la configuración de la solicitud: ' + error.message);
-				}
-			} else {
-				// Manejar errores genéricos
-				const errorMessage = (error as Error).message;
-				console.error('Error desconocido:', errorMessage);
-				errorAlert('Error desconocido: ' + errorMessage);
-			}
-		}
-	}, [area.anio, area.idArea, token]);
+	const mostrarActividades = useCallback(() => {
+		getListaActividadesPorArea(area.idArea.toString(), area.anio)
+			.then((response) => {
+				setArrayActivity(response.data);
+				setIsLoadingArrayActivity(false);
+			})
+			.catch((error) => {
+				console.error('Error al realizar la petición: ', error);
+				errorAlert('Error al realizar la petición: ' + error);
+			});
+	}, [area]);
 
 	const submitForm = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setIsLoadingModal(true);
+
 		try {
-			// Wait for postActivity to complete
-			console.log('Crear actividad');
-			await postActivity({
+			const res = await postActivity({
 				idActividad: 0,
 				idArea: area.idArea,
 				nro: arrayActivity.length + 1,
 				desc: term,
-				fechaDesde: null,
-				fechaHasta: null,
-			});
-			// Once the activity is created, update the activities list
-			await mostrarActividades();
-			setTerm('');
-			setIsLoadingModal(false);
-			handleClose();
+			} as Actividad);
+
+			if (res.error) {
+				errorAlert(res.error);
+			} else {
+				await mostrarActividades();
+				setTerm('');
+				setIsLoadingModal(false);
+				handleClose();
+				handleButtonClick(res.data.idActividad); // Abre la actividad creada
+			}
 		} catch (error) {
 			console.error('Error al enviar la actividad:', error);
-			// Handle the error appropriately, e.g., show a message to the user
+			setIsLoadingModal(false);
 		}
 	};
 
@@ -161,8 +113,10 @@ export default function ActivityScreen() {
 		setSearchedActivities([]);
 	}, [mostrarActividades]);
 
-	const handleButtonClick = (id: number) => {
-		dispatch(cargarDatosActividad(id));
+	const handleButtonClick = async (id: number) => {
+		const result = await dispatch(cargarDatosActividad(id)).unwrap();
+		setIsPlanificationOpen(!isPlanificationOpen);
+		setNameActivity(result.desc);
 	};
 
 	const closePlanification = () => {
@@ -297,8 +251,6 @@ export default function ActivityScreen() {
 													className='mx-auto my-1 rounded d-flex align-items-center '
 													key={index}
 													onClick={() => {
-														setIsPlanificationOpen(!isPlanificationOpen);
-														setNameActivity(`${item.desc}`);
 														handleButtonClick(item.idActividad);
 													}}
 												>

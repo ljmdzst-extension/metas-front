@@ -64,3 +64,19 @@ export interface Ubicacione {
 	enlace: string;
 	desc: string;
 }
+
+// NOTE: FetchLista
+
+export interface FetchListaActividades {
+	ok:    boolean;
+	data:  actividadDesc[];
+	error: null;
+}
+
+export interface actividadDesc {
+	idActividad: number;
+	desc:        string;
+}
+
+// NOTE: POSTActividades
+

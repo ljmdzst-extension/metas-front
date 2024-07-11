@@ -58,6 +58,24 @@ export const putActivity = async (data: Actividad) => {
 	}
 };
 
+export const postActivity = async (data: Actividad) : Promise<FetchActividad> => {
+	try {
+		const response = await privateAxiosInstance.post<FetchActividad>(`${basePath}`, data);
+		return response.data;
+	} catch (error) {
+		if (
+			axios.isAxiosError(error) &&
+			error.response &&
+			error.response.data &&
+			error.response.data.error
+		) {
+			throw new Error(error.response.data.error);
+		} else {
+			throw new Error('An unexpected error occurred');
+		}
+	}
+};
+
 export const suspendActivity = async (body: { idActividad: number; motivoCancel: string }) => {
 	try {
 		const response = await privateAxiosInstance.put(`${basePath}/cancel`, body);
