@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { FetchBasesProps, FetchInstituciones } from '@/types/BasesProps';
-import { privateAxiosInstance } from '../../axiosInstance';
+import { privateAxiosInstance } from '../../../axiosInstance';
 
 const basePath = '/metas/bases';
 

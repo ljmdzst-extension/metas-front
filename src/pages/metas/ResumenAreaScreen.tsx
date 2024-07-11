@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ElementoResumen from '@/components/DataRender/ElementoResumen';
 import { ArrowBack, Replay } from '@mui/icons-material';
-import { InputGroup, Form, Button, Spinner } from 'react-bootstrap';
+import { InputGroup, Form, Button } from 'react-bootstrap';
 import { Actividad } from '@/types/ActivityProps';
-import { getAreasResumen } from '@/services';
+import { getAreasResumen } from '@/services/api/private/metas';
 import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
 
 interface Area {
@@ -97,23 +97,8 @@ const ResumenAreaScreen = () => {
 					<ElementoResumen element={el} key={el.desc + '-' + index} />
 				))}
 				{hasMore && (
-					<div
-						className='d-flex justify-content-center align-items-center gap-2 p-2'
-						style={{
-							height: '100px',
-							backgroundColor: '#fefefe',
-							borderColor: 'green',
-							borderRadius: '10px',
-							borderWidth: '2px', 
-							borderStyle: 'solid',
-						}}
-					>
-						<p className=' text-uppercase p-2 m-0' style={{ color: 'green', fontWeight: 'bold'}} ref={elementRef}>
-							Cargando datos
-						</p>
-						<div className='d-flex align-items-center h-100'>
-							<LoadingSpinner />
-						</div>
+					<div className='d-flex align-items-center h-100' ref={elementRef}>
+						<LoadingSpinner />
 					</div>
 				)}
 			</div>

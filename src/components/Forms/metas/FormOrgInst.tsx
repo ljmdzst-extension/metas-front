@@ -10,12 +10,11 @@ import Swal from 'sweetalert2';
 import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
 import { Institucione } from '@/types/ActivityProps';
-import { getInstituciones } from '@/services';
+import { getInstituciones } from '@/services/api/private/metas';
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
-	const { token } = useSelector((state: RootState) => state.auth);
 	const [arrayInstitucion, setArrayInstitucion] = useState<Institucione[]>(
 		activity.listaInstituciones || [],
 	);
@@ -23,8 +22,6 @@ export default function FormOrgInst() {
 
 	const [name, setName] = useState('');
 	const [ubicacion, setUbicacion] = useState('');
-
-	const tokenHeader = { Authorization: `Bearer ${token}` };
 
 	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();

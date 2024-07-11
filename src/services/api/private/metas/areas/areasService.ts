@@ -1,6 +1,6 @@
 import { FetchActividades } from "@/types/ActivityProps"
 import axios from "axios"
-import { privateAxiosInstance } from "../../axiosInstance"
+import { privateAxiosInstance } from "../../../axiosInstance"
 
 const basePath = '/metas/areas';
 

@@ -4,14 +4,13 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { Button, Card, Form, Image } from 'react-bootstrap';
 import LoadingSpinner from './Spinner/LoadingSpinner';
 import useAlert from '@/hooks/useAlert';
 import { RootState } from '@/redux/store';
 import { AreaProps, ProgramaProps } from '@/types/AppProps';
-import { getProgramas } from '@/services/api/private/programs/programsService';
+import { getProgramas } from '@/services/api/private/metas';
 
 const currentYear = new Date().getFullYear();
 

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { Actividad, FechasPuntuale, Institucione, Meta, Ubicacione } from '@/types/ActivityProps';
-import { getActivity } from '@/services';
+import { getActivity } from '@/services/api/private/metas';
 
 // Acciones sincrónicas
 export const setHayCambios = createAction<{ valor: boolean }>('setHayCambios');
@@ -26,7 +26,7 @@ export const cargarRelacion = createAction<{
 // Acción asincrónica
 export const cargarDatosActividad = createAsyncThunk<Actividad, number, { rejectValue: string }>(
 	'CARGAR_DATOS_ACTIVIDAD',
-	async (id, { rejectWithValue } ) => {
+	async (id, { rejectWithValue }) => {
 		try {
 			const data = await getActivity(id);
 			return data.data;

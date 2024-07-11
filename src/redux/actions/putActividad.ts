@@ -1,7 +1,7 @@
 import { AppDispatch } from '../store';
 import { cargarDatosActividad } from './activityAction';
 import { errorAlert, successAlert } from '@/utils/Alerts';
-import { putActivity } from '@/services';
+import { putActivity } from '@/services/api/private/metas';
 import { Actividad } from '@/types/ActivityProps';
 
 export const guardarActividad = (dato: Actividad, dispatch: AppDispatch) => {

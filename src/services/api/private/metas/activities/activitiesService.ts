@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { privateAxiosInstance } from '../../axiosInstance';
+import { privateAxiosInstance } from '../../../axiosInstance';
 import { Actividad, FetchActividad } from '@/types/ActivityProps';
 
 const basePath = '/metas/actividad';

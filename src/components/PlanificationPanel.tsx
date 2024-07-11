@@ -23,7 +23,7 @@ import {
 import ActivityDetail from './metas/ActivityDetail';
 import LoadingSpinner from './Spinner/LoadingSpinner';
 import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
-import { deleteActivity, restoreActivity, suspendActivity } from '@/services';
+import { deleteActivity, restoreActivity, suspendActivity } from '@/services/api/private/metas';
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
@@ -106,10 +106,7 @@ const PlanificationPanel = ({
 					if (response.ok) {
 						successAlert('Actividad Eliminada !');
 						dispatch(cargarDatosActividad(activity.idActividad));
-						setTimeout(
-							() => navigate(0),
-							500,
-						);
+						setTimeout(() => navigate(0), 500);
 					} else {
 						errorAlert(response.error);
 					}

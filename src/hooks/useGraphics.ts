@@ -8,7 +8,7 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { errorAlert } from '@/utils/Alerts';
-import { getGraphicsData } from '@/services/api/private/graphics/graphicsService';
+import { getGraphicsData } from '@/services/api/private/metas';
 
 interface Props {
 	year?: number;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { GraphicsResponse } from '@/types/GraphicsProps';
-import { privateAxiosInstance } from '../../axiosInstance';
+import { privateAxiosInstance } from '../../../axiosInstance';
 
 const basePath = '/metas/graficos';
 

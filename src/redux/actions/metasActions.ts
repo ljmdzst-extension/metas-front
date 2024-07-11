@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FetchBasesProps } from '@/types/BasesProps';
-import { getBases as getBasesService } from '@/services';
+import { getBases as getBasesService } from '@/services/api/private/metas';
 
 export const getBases = createAsyncThunk<
 	FetchBasesProps, // Tipo de datos que la acción retornará
@@ -18,4 +18,3 @@ export const getBases = createAsyncThunk<
 		}
 	}
 });
-

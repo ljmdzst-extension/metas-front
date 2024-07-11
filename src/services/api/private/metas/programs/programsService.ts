@@ -1,5 +1,5 @@
 import { FetchProgramasProps } from "@/types/AppProps"
-import { privateAxiosInstance } from "../../axiosInstance"
+import { privateAxiosInstance } from "../../../axiosInstance"
 import axios from "axios"
 
 
