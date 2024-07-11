@@ -95,3 +95,18 @@ export interface UnidadesAcademica {
 	idUnidadAcademica: number;
 	nom: string;
 }
+
+
+// INSTITUCIONES 
+
+export interface FetchInstituciones {
+	ok:    boolean;
+	data:  Institucion[];
+	error: null | string;
+}
+
+export interface Institucion {
+	idInstitucion: number;
+	nom:           string;
+	ubicacion:     string;
+}

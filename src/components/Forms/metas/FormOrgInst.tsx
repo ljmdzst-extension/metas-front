@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
 import { Institucione } from '@/types/ActivityProps';
+import { getInstituciones } from '@/services';
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
@@ -56,26 +57,20 @@ export default function FormOrgInst() {
 	};
 
 	useEffect(() => {
-		let debounce: any;
+		let debounce: ReturnType<typeof setTimeout>;
+
+		const fetchData = (searchName?: string) => {
+			getInstituciones(searchName)
+				.then((data) => setArraySearchInstitucion(filterInstitucion(data.data)))
+				.catch((error) => console.log(error));
+		};
+
 		if (name.length === 0) {
-			debounce = setTimeout(() => {
-				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones`, {
-					headers: tokenHeader,
-				})
-					.then((resp) => resp.json())
-					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
-					.catch((error) => console.log(error));
-			}, 1000);
+			debounce = setTimeout(() => fetchData(), 1000);
 		} else {
-			debounce = setTimeout(() => {
-				fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/bases/instituciones/${name}/0/10`, {
-					headers: tokenHeader,
-				})
-					.then((resp) => resp.json())
-					.then((data) => data.ok && setArraySearchInstitucion(filterInstitucion(data.data)))
-					.catch((error) => console.log(error));
-			}, 3000);
+			debounce = setTimeout(() => fetchData(name), 3000);
 		}
+
 		return () => clearTimeout(debounce);
 	}, [name]);
 
@@ -108,17 +103,6 @@ export default function FormOrgInst() {
 		}
 	};
 
-	// const handleInstInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	const selectedInstitution = arraySearchInstitucion.find(
-	// 		(inst) => inst.nom === e.currentTarget.value,
-	// 	);
-	// 	if (selectedInstitution) {
-	// 		setArrayInstitucion((prev) => [...prev, selectedInstitution]);
-	// 		setSearchInstitucion(undefined);
-	// 		setName('');
-	// 	}
-	// };
-
 	const isUrlValid = (url: string) => {
 		const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
 		return urlPattern.test(url);
@@ -145,14 +129,14 @@ export default function FormOrgInst() {
 		});
 	};
 
-	const checkForChanges = () => {
-		const cambio = JSON.stringify(activity.listaInstituciones) !== JSON.stringify(arrayInstitucion);
-		dispatch(setHayCambios({ valor: cambio }));
-	};
-
 	useEffect(() => {
+		const checkForChanges = () => {
+			const cambio =
+				JSON.stringify(activity.listaInstituciones) !== JSON.stringify(arrayInstitucion);
+			dispatch(setHayCambios({ valor: cambio }));
+		};
 		checkForChanges();
-	}, [arrayInstitucion]);
+	}, [activity.listaInstituciones, arrayInstitucion, dispatch]);
 
 	return (
 		<div className='d-flex flex-column h-100'>
