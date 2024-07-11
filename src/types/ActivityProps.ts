@@ -5,6 +5,12 @@ export interface FetchActividad {
 	error: string;
 }
 
+export interface FetchActividades {
+	ok: boolean;
+	data: Actividad[];
+	error: string;
+}
+
 export interface Actividad {
 	idActividad: number;
 	idArea: number;

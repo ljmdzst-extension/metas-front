@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import ElementoResumen from '@/components/DataRender/ElementoResumen';
 import { ArrowBack, Replay } from '@mui/icons-material';
-import { InputGroup, Form, Button } from 'react-bootstrap';
+import { InputGroup, Form, Button, Spinner } from 'react-bootstrap';
 import { Actividad } from '@/types/ActivityProps';
-import { RootState } from '@/redux/store';
+import { getAreasResumen } from '@/services';
+import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
 
 interface Area {
 	idArea: number;
@@ -22,8 +22,6 @@ const ResumenAreaScreen = () => {
 	const navigate = useNavigate();
 
 	const [search, setSearch] = useState<string>('');
-
-	const { token } = useSelector((state: RootState) => state.auth);
 
 	const elementRef = useRef(null);
 
@@ -56,30 +54,17 @@ const ResumenAreaScreen = () => {
 		const stringAreaData = localStorage.getItem('currentArea');
 		const areaData = JSON.parse(stringAreaData!) as Area;
 
-		try {
-			let endpoint = `${import.meta.env.VITE_API_BASE_URL_METAS}/areas/resumen/${idArea}/${
-				areaData.anio
-			}/${offset}/5`;
-
-			if (search.length > 3) {
-				endpoint = endpoint + `/${search}`;
-			}
-			const res = await fetch(endpoint, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
+		if (idArea) {
+			getAreasResumen(idArea, areaData.anio, offset.toString(), '5').then((res) => {
+				if (res.data.length === 0) {
+					setHasMore(false);
+				} else {
+					setTimeout(() => {
+						setData((data) => [...data, ...res.data]);
+						setOffset((offset) => offset + 5);
+					}, 2000);
+				}
 			});
-			const resJson = await res.json();
-			if (resJson.data.length === 0) {
-				setHasMore(false);
-			} else {
-				setTimeout(() => {
-					setData((data) => [...data, ...resJson.data]);
-					setOffset((offset) => offset + 5);
-				}, 2000);
-			}
-		} catch (err) {
-			console.log(err);
 		}
 	};
 
@@ -112,9 +97,24 @@ const ResumenAreaScreen = () => {
 					<ElementoResumen element={el} key={el.desc + '-' + index} />
 				))}
 				{hasMore && (
-					<p className=' text-secondary text-uppercase p-2' ref={elementRef}>
-						Cargando datos
-					</p>
+					<div
+						className='d-flex justify-content-center align-items-center gap-2 p-2'
+						style={{
+							height: '100px',
+							backgroundColor: '#fefefe',
+							borderColor: 'green',
+							borderRadius: '10px',
+							borderWidth: '2px', 
+							borderStyle: 'solid',
+						}}
+					>
+						<p className=' text-uppercase p-2 m-0' style={{ color: 'green', fontWeight: 'bold'}} ref={elementRef}>
+							Cargando datos
+						</p>
+						<div className='d-flex align-items-center h-100'>
+							<LoadingSpinner />
+						</div>
+					</div>
 				)}
 			</div>
 		</div>
