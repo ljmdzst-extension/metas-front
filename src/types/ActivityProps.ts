@@ -77,6 +77,3 @@ export interface actividadDesc {
 	idActividad: number;
 	desc:        string;
 }
-
-// NOTE: POSTActividades
-
