@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
 import { useSelector } from 'react-redux';
 import { Button, Card, Form, Image } from 'react-bootstrap';
-import LoadingSpinner from './Common/Spinner/LoadingSpinner';
+import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import useAlert from '@/hooks/useAlert';
 import { RootState } from '@/redux/store';
 import { AreaProps, ProgramaProps } from '@/types/AppProps';

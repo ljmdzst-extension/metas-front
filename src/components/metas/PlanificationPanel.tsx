@@ -18,13 +18,13 @@ import {
 	FormOrgInst,
 	FormPeriodo,
 	FormPIE,
-} from './Metas/Forms';
+} from '@/components/Metas/Forms';
 
-import ActivityDetail from './Metas/ActivityDetail';
-import LoadingSpinner from './Common/Spinner/LoadingSpinner';
 import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
 import { deleteActivity, restoreActivity, suspendActivity } from '@/services/api/private/metas';
 import { useNavigate } from 'react-router-dom';
+import ActivityDetail from './ActivityDetail'
+import LoadingSpinner from '../Common/Spinner/LoadingSpinner'
 
 type Props = {
 	name: string;

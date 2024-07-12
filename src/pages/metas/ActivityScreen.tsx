@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PlanificationPanel from '@/components/PlanificationPanel';
+import PlanificationPanel from '@/components/Metas/PlanificationPanel';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
