@@ -15,7 +15,6 @@ interface Props {
 }
 
 export const useGraphics = ({ year }: Props) => {
-	const { token } = useSelector((state: RootState) => state.auth);
 	const [isLoading, setIsLoading] = useState(true);
 	const [graficoEjes, setGraficoEjes] = useState<DataGraficoEje[]>([]);
 	const [graficoObjEst, setGraficoObjEst] = useState<DataGraficoObjEst[]>([]);
@@ -39,7 +38,7 @@ export const useGraphics = ({ year }: Props) => {
 					errorAlert('An unknown error occurred');
 				}
 			});
-	}, [token, year]);
+	}, [ year]);
 
 	return {
 		isLoading,

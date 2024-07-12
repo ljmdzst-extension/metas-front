@@ -15,7 +15,7 @@ import {
 } from 'react-bootstrap';
 
 import { IntegranteEquipoProps } from '../../../types/ProjectsProps';
-import { ModalMember } from './components/ModalMember';
+import { ModalMember } from '../components/ModalMember';
 import { Delete, Search, Visibility } from '@mui/icons-material';
 import { Formik } from 'formik';
 import * as Yup from 'yup';

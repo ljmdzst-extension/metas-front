@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
 import useAlert from '@/hooks/useAlert';
-import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
+import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import { validateEmail } from '@/services';
 
 const ConfirmScreen = () => {

@@ -1,6 +1,6 @@
-import ProjectsList from '@/components/List/ProjectsList';
-import GeneralPanel from '@/components/Panel/GeneralPanel';
-import SideBarNews from '@/components/Panel/component/SideBarNews';
+import ProjectsList from '@/components/Propuestas/List/ProjectsList';
+import GeneralPanel from '@/components/Common/PanelLayout/GeneralPanel';
+import SideBarNews from '@/components/Common/PanelLayout/component/SideBarNews';
 
 const ProyectosScreen = () => {
 	// logica de login y roles de usuario?

@@ -18,10 +18,10 @@ import {
 	FormOrgInst,
 	FormPeriodo,
 	FormPIE,
-} from './Forms/metas';
+} from './Metas/Forms';
 
-import ActivityDetail from './metas/ActivityDetail';
-import LoadingSpinner from './Spinner/LoadingSpinner';
+import ActivityDetail from './Metas/ActivityDetail';
+import LoadingSpinner from './Common/Spinner/LoadingSpinner';
 import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
 import { deleteActivity, restoreActivity, suspendActivity } from '@/services/api/private/metas';
 import { useNavigate } from 'react-router-dom';

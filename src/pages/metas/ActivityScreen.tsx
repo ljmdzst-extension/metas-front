@@ -15,7 +15,7 @@ import { ArrowBack, Search } from '@mui/icons-material';
 import { Actividad } from '@/types/ActivityProps';
 import useAlert from '@/hooks/useAlert';
 import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
-import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
+import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import { getListaActividadesPorArea, postActivity } from '@/services/api/private/metas';
 
 interface Activity {

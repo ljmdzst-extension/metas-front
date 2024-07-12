@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
-import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
+import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 
 const Layout = lazy(() => import('@/components/Layout/Layout'));
 const PrivateLayout = lazy(() => import('@/components/Layout/PrivateLayout'));
