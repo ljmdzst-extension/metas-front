@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import DataRender from './DataRender/DataRender';
+import DataRender from '../../DataRender/DataRender';
 import spanishTitles from '@/mocks/MetasSpanishTitles.json';
 
 const ActivityDetail = () => {

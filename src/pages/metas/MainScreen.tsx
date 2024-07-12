@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { isRejectedWithValue, unwrapResult } from '@reduxjs/toolkit';
 import useAlert from '@/hooks/useAlert';
-import PanelProgramas from '@/components/Metas/PanelProgramas';
+import PanelProgramas from '@/components/Metas/Panels/PanelProgramas';
 import { AppDispatch } from '@/redux/store';
 import { authAsync } from '@/redux/actions/authAction';
 import { logout } from '@/redux/reducers/AuthReducer';
