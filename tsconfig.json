@@ -37,6 +37,6 @@
 			"navigation/*": ["src/navigation/*"]
 		}
 	},
-	"include": ["src", "custom.d.ts"],
+	"include": ["cypress", "src", "custom.d.ts"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }

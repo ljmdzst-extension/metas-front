@@ -83,6 +83,7 @@ const FormLogin = () => {
 			onSubmit={handleSubmit(handleLogin)}
 			className='border rounded p-5 bg-color-slate'
 			noValidate
+			data-testid='form-login'
 		>
 			<p className='mb-4'>Ingrese sus datos de usuario.</p>
 
