@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import DataRender from '../../DataRender/DataRender';
 import spanishTitles from '@/mocks/MetasSpanishTitles.json';
+import DataRender from '../../DataRender/DataRender'
 
 const ActivityDetail = () => {
 	const { activity } = useSelector((state: RootState) => state.actividad);

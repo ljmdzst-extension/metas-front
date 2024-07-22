@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from '@/redux/store';
 import Swal from 'sweetalert2';
 import useAlert from '@/hooks/useAlert';
 import FormInput from '@/components/Common/FormInput';
+import { UserData } from '@/types/AuthProps';
 
 interface FormLoginProps {
 	email: string;
@@ -55,8 +56,8 @@ const FormLogin = () => {
 			const { error } = action.payload as { error: string };
 			errorAlert(error);
 		} else {
-			const { token, nom, ape, permisos, categorias, areas } = action.payload as UserData;
-			saveUserData({ token, nom, ape, permisos, categorias, areas });
+			const { nom, ape } = action.payload as UserData;
+			saveUserData(action.payload);
 
 			Swal.fire({
 				title: 'Bienvenido!',

@@ -1,3 +1,13 @@
+export interface RegisterProps {
+	dni: string;
+	ape: string;
+	nom: string;
+	idUnidadAcademica: number;
+	email: string;
+	pass: string;
+	confirmPass: string;
+}
+
 export interface AuthResponse {
 	ok: boolean;
 	data: AuthData;

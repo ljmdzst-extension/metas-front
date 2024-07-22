@@ -16,7 +16,7 @@ import useAlert from '@/hooks/useAlert';
 import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
 import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import { getListaActividadesPorArea, postActivity } from '@/services/api/private/metas';
-import PlanificationPanel from '@/components/metas/Panels/PlanificationPanel'
+import PlanificationPanel from '@/components/Metas/Panels/PlanificationPanel'
 
 interface Activity {
 	idActividad: number;
