@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authAsync, loginAsync, registerAsync } from '../actions/authAction';
+import { Area } from '@/types/AuthProps';
+
 interface AuthState {
 	user: string;
 	token: string;
@@ -8,17 +10,30 @@ interface AuthState {
 	error: string | null | undefined;
 	isLogged: boolean;
 	puedeEditar: boolean;
-	areas: number[];
+	areas: Area[];
+	categorias: string[];
 	isAdmin: boolean;
 }
 
-const user = localStorage.getItem('user');
-const token = localStorage.getItem('token');
-const permisos = localStorage.getItem('permisos');
-const areas = localStorage.getItem('areas');
-const currentArea = localStorage.getItem('currentArea');
+const getUserDataFromLocalStorage = () => {
+	const user = localStorage.getItem('user');
+	const token = localStorage.getItem('token');
+	const permisos = localStorage.getItem('permisos');
+	const categorias = localStorage.getItem('categorias');
+	const areas = localStorage.getItem('areas');
+	const currentArea = localStorage.getItem('currentArea');
 
-function canEdit(permisos: string[], areas: number[], currentArea: string | null): boolean {
+	return {
+		user: user ?? '',
+		token: token ?? '',
+		permisos: permisos ? JSON.parse(permisos) : [],
+		categorias: categorias ? JSON.parse(categorias) : [],
+		areas: areas ? JSON.parse(areas) : [],
+		currentArea,
+	};
+};
+
+function canEdit(permisos: string[], areas: Area[], currentArea: string | null): boolean {
 	if (!permisos || !areas || !currentArea) {
 		return false;
 	}
@@ -33,23 +48,27 @@ function canEdit(permisos: string[], areas: number[], currentArea: string | null
 	}
 
 	return (
-		permisos.includes('METAS_EDICION') && areas.some((area) => Number(area) === Number(idArea))
+		permisos.includes('METAS_EDICION') &&
+		areas.some((area) =>
+			area.listaProgramas.some((programa) =>
+				programa.listaAreas.some((area) => area.idArea === idArea),
+			),
+		)
 	);
 }
 
+const { user, token, permisos, categorias, areas, currentArea } = getUserDataFromLocalStorage();
+
 const initialState: AuthState = {
-	user: user ?? '',
-	token: token ?? '',
-	permisos: permisos ? JSON.parse(permisos) : [],
+	user,
+	token,
+	permisos,
 	loading: false,
 	error: null,
 	isLogged: !!token && !!user,
-	areas: areas ? JSON.parse(areas) : [],
-	puedeEditar: canEdit(
-		permisos ? JSON.parse(permisos) : [],
-		areas ? JSON.parse(areas) : [],
-		currentArea,
-	),
+	areas,
+	categorias,
+	puedeEditar: canEdit(permisos, areas, currentArea),
 	isAdmin: false,
 };
 
@@ -64,6 +83,8 @@ const authSlice = createSlice({
 			state.error = null;
 			state.isLogged = false;
 			state.permisos = [];
+			state.categorias = [];
+			state.areas = [];
 			console.log('usuario deslogueado');
 		},
 		loginFailed(state, action: PayloadAction<string>) {
@@ -73,6 +94,8 @@ const authSlice = createSlice({
 			state.error = action.payload;
 			state.isLogged = false;
 			state.permisos = [];
+			state.categorias = [];
+			state.areas = [];
 		},
 		checkPermisoCurrentArea(state) {
 			const currentArea = localStorage.getItem('currentArea');
@@ -85,17 +108,16 @@ const authSlice = createSlice({
 			state.loading = true;
 		});
 		builder.addCase(loginAsync.fulfilled, (state, action) => {
-			// console.log(action.payload);
 			state.loading = false;
 			state.isLogged = true;
 			state.user = action.payload.nom + ' ' + action.payload.ape;
 			state.token = action.payload.token;
 			state.permisos = action.payload.permisos;
-			state.puedeEditar = state.permisos.includes('METAS_EDICION');
+			state.categorias = action.payload.categorias;
 			state.areas = action.payload.areas;
+			state.puedeEditar = canEdit(state.permisos, state.areas, localStorage.getItem('currentArea'));
 		});
 		builder.addCase(loginAsync.rejected, (state, action) => {
-			// console.log(action.payload);
 			state.loading = false;
 			state.error = (action.payload as { error: string }).error;
 		});

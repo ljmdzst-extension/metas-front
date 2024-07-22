@@ -37,7 +37,7 @@ const FormLogin = () => {
 	const { loading, isLogged } = useSelector((state: RootState) => state.auth);
 
 	const navigate = useNavigate();
-	const { errorAlert } = useAlert();
+	const { errorAlert } = useAlert();ð
 
 	useEffect(() => {
 		if (isLogged) {
@@ -55,17 +55,8 @@ const FormLogin = () => {
 			const { error } = action.payload as { error: string };
 			errorAlert(error);
 		} else {
-			const { token, nom, ape, permisos, areas } = action.payload as {
-				token: string;
-				nom: string;
-				ape: string;
-				permisos: string[];
-				areas: number[];
-			};
-			localStorage.setItem('token', token);
-			localStorage.setItem('user', `${nom} ${ape}`);
-			localStorage.setItem('permisos', JSON.stringify(permisos));
-			localStorage.setItem('areas', JSON.stringify(areas));
+			const { token, nom, ape, permisos, categorias, areas } = action.payload as UserData;
+			saveUserData({ token, nom, ape, permisos, categorias, areas });
 
 			Swal.fire({
 				title: 'Bienvenido!',
@@ -76,6 +67,14 @@ const FormLogin = () => {
 			});
 			navigate('/gestion');
 		}
+	};
+
+	const saveUserData = ({ token, nom, ape, permisos, categorias, areas }: UserData) => {
+		localStorage.setItem('token', token);
+		localStorage.setItem('user', `${nom} ${ape}`);
+		localStorage.setItem('permisos', JSON.stringify(permisos));
+		localStorage.setItem('categorias', JSON.stringify(categorias));
+		localStorage.setItem('areas', JSON.stringify(areas));
 	};
 
 	return (
@@ -130,7 +129,7 @@ const FormLogin = () => {
 				<p>
 					Para mayor información, ingrese a{' '}
 					<Link to='' style={{ color: '#08473f' }} className=' text-decoration-underline'>
-						Seccion de ayuda
+						Sección de ayuda
 					</Link>
 					.
 				</p>
