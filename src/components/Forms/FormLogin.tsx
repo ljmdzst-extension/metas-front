@@ -37,7 +37,7 @@ const FormLogin = () => {
 	const { loading, isLogged } = useSelector((state: RootState) => state.auth);
 
 	const navigate = useNavigate();
-	const { errorAlert } = useAlert();ð
+	const { errorAlert } = useAlert();
 
 	useEffect(() => {
 		if (isLogged) {
