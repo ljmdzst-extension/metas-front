@@ -10,7 +10,7 @@ import { getBases } from '@/redux/actions/metasActions';
 import { errorAlert } from '@/utils/Alerts';
 
 const PrivateLayout = ({ children }: any) => {
-	const { isLogged, token } = useSelector((state: RootState) => state.auth);
+	const { isLogged } = useSelector((state: RootState) => state.auth);
 	const dispatch = useAppDispatch();
 	const navigation = useNavigate();
 	const location = useLocation();
@@ -26,7 +26,7 @@ const PrivateLayout = ({ children }: any) => {
 			}
 		};
 		dispachBases();
-	}, [dispatch, token]);
+	}, [dispatch]);
 
 	useEffect(() => {
 		if (!isLogged) {

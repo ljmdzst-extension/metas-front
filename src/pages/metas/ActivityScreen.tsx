@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PlanificationPanel from '@/components/Metas/Panels/PlanificationPanel';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
@@ -17,6 +16,7 @@ import useAlert from '@/hooks/useAlert';
 import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
 import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import { getListaActividadesPorArea, postActivity } from '@/services/api/private/metas';
+import PlanificationPanel from '@/components/metas/Panels/PlanificationPanel'
 
 interface Activity {
 	idActividad: number;

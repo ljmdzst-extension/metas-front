@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ElementoResumen from '@/components/Metas/DataRender/ElementoResumen';
 import { ArrowBack, Replay } from '@mui/icons-material';
 import { InputGroup, Form, Button } from 'react-bootstrap';
 import { Actividad } from '@/types/ActivityProps';
 import { getAreasResumen } from '@/services/api/private/metas';
 import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
+import ElementoResumen from '@/components/metas/DataRender/ElementoResumen'
 
 interface Area {
 	idArea: number;
