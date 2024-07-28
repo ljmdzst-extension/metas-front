@@ -132,7 +132,7 @@ const FormLogin = () => {
 
 				<p>
 					Para mayor información, ingrese a{' '}
-					<Link to='' style={{ color: '#08473f' }} className=' text-decoration-underline'>
+					<Link to='/ayuda' style={{ color: '#08473f' }} className=' text-decoration-underline'>
 						Sección de ayuda
 					</Link>
 					.

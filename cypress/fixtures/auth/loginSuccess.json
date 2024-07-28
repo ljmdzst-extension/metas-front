@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "data": {
+    "idUsuario": "123",
+    "email": "user@example.com",
+    "ape": "Doe",
+    "nom": "John",
+    "permisos": ["read", "write"],
+    "categorias": ["admin", "user"],
+    "areas": [1, 2],
+    "token": "fakeToken"
+  },
+  "error": null
+}

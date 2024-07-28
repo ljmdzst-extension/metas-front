@@ -5,6 +5,15 @@ describe('Login page test', () => {
 
 	beforeEach(() => {
 		cy.visit('/login');
+		cy.intercept('GET', '**/bases', {
+			delay: 2000,
+			statusCode: 200,
+			body: {
+				"ok": true,
+				"data": [],
+				"error": null
+			},
+		}).as('basesRequest');
 	});
 
 	it('should render login form', () => {
@@ -24,23 +33,13 @@ describe('Login page test', () => {
 	});
 
 	it('should login successfully with correct credentials', () => {
-		cy.intercept('POST', '**/login', {
-			statusCode: 200,
-			body: {
-				ok: true,
-				data: {
-					idUsuario: '123',
-					email: 'user@example.com',
-					ape: 'Doe',
-					nom: 'John',
-					permisos: ['read', 'write'],
-					categorias: ['admin', 'user'],
-					areas: [1, 2],
-					token: 'fakeToken',
-				},
-				error: null,
-			},
-		}).as('loginRequest');
+		cy.fixture('auth/loginSuccess.json').then((loginSuccess) => {
+			cy.intercept('POST', '**/login', {
+				delay: 2000,
+				statusCode: 200,
+				body: loginSuccess,
+			}).as('loginRequest');
+		});
 
 		formValidator.fillField('email', 'user@example.com');
 		formValidator.fillField('password', 'password123');
@@ -53,15 +52,12 @@ describe('Login page test', () => {
 	});
 
 	it('should show error message when login fails', () => {
-		cy.intercept('POST', '**/login', {
-			statusCode: 400,
-			body: {
-				ok: false,
-				data: null,
-				error: 'Invalid credentials',
-			},
-		}).as('loginRequest');
-
+		cy.fixture('auth/loginFailure.json').then((response) => {
+			cy.intercept('POST', '**/login', {
+				statusCode: 400,
+				body: response,
+			}).as('loginRequest');
+		});
 		formValidator.fillField('email', 'user@example.com');
 		formValidator.fillField('password', 'password123');
 		formValidator.submitForm();
@@ -72,24 +68,13 @@ describe('Login page test', () => {
 	});
 
 	it('disable submit button when is loading', () => {
-		cy.intercept('POST', '**/login', {
-			delay: 2000,
-			statusCode: 200,
-			body: {
-				ok: true,
-				data: {
-					idUsuario: '123',
-					email: 'user@example.com',
-					ape: 'Doe',
-					nom: 'John',
-					permisos: ['read', 'write'],
-					categorias: ['admin', 'user'],
-					areas: [1, 2],
-					token: 'fakeToken',
-				},
-				error: null,
-			},
-		}).as('loginRequest');
+		cy.fixture('auth/loginSuccess.json').then((loginSuccess) => {
+			cy.intercept('POST', '**/login', {
+				delay: 2000,
+				statusCode: 200,
+				body: loginSuccess,
+			}).as('loginRequest');
+		});
 
 		formValidator.fillField('email', 'user@example.com');
 		formValidator.fillField('password', 'password123');
@@ -98,5 +83,7 @@ describe('Login page test', () => {
 		formValidator.checkButtonDisabled('Ingresando...');
     cy.wait('@loginRequest');
     formValidator.checkButtonDisabled('Ingresar', false);
+		
+	
 	});
 });
