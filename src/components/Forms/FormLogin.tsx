@@ -1,15 +1,14 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAsync } from '@/redux/actions/authAction';
-
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Button, Form } from 'react-bootstrap';
 import { AppDispatch, RootState } from '@/redux/store';
 import Swal from 'sweetalert2';
 import useAlert from '@/hooks/useAlert';
 import FormInput from '@/components/Common/FormInput';
+import { UserData } from '@/types/AuthProps';
 
 interface FormLoginProps {
 	email: string;
@@ -31,6 +30,8 @@ const validationRules = {
 	},
 	password: { required: 'Contraseña es requerida' },
 };
+
+const TOKEN_LIFETIME_MS = 4 * 60 * 60 * 1000; // 4 hour in milliseconds
 
 const FormLogin = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -55,17 +56,8 @@ const FormLogin = () => {
 			const { error } = action.payload as { error: string };
 			errorAlert(error);
 		} else {
-			const { token, nom, ape, permisos, areas } = action.payload as {
-				token: string;
-				nom: string;
-				ape: string;
-				permisos: string[];
-				areas: number[];
-			};
-			localStorage.setItem('token', token);
-			localStorage.setItem('user', `${nom} ${ape}`);
-			localStorage.setItem('permisos', JSON.stringify(permisos));
-			localStorage.setItem('areas', JSON.stringify(areas));
+			const { nom, ape } = action.payload as UserData;
+			saveUserData(action.payload);
 
 			Swal.fire({
 				title: 'Bienvenido!',
@@ -76,6 +68,16 @@ const FormLogin = () => {
 			});
 			navigate('/gestion');
 		}
+	};
+
+	const saveUserData = ({ token, nom, ape, permisos, categorias, areas }: UserData) => {
+		const expiryDate = new Date().getTime() + TOKEN_LIFETIME_MS;
+		localStorage.setItem('token', token);
+		localStorage.setItem('tokenExpiry', expiryDate.toString());
+		localStorage.setItem('user', `${nom} ${ape}`);
+		localStorage.setItem('permisos', JSON.stringify(permisos));
+		localStorage.setItem('categorias', JSON.stringify(categorias));
+		localStorage.setItem('areas', JSON.stringify(areas));
 	};
 
 	return (
@@ -131,7 +133,7 @@ const FormLogin = () => {
 				<p>
 					Para mayor información, ingrese a{' '}
 					<Link to='' style={{ color: '#08473f' }} className=' text-decoration-underline'>
-						Seccion de ayuda
+						Sección de ayuda
 					</Link>
 					.
 				</p>

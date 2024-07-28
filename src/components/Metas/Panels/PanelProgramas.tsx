@@ -4,11 +4,9 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import Tab from 'react-bootstrap/Tab';
-import { useSelector } from 'react-redux';
 import { Button, Card, Form, Image } from 'react-bootstrap';
 import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import useAlert from '@/hooks/useAlert';
-import { RootState } from '@/redux/store';
 import { AreaProps, ProgramaProps } from '@/types/AppProps';
 import { getProgramas } from '@/services/api/private/metas';
 
@@ -22,8 +20,6 @@ export default function PanelProgramas() {
 	const [indexPrograma, setIndexPrograma] = useState<number>();
 	const navigation = useNavigate();
 	const { errorAlert } = useAlert();
-
-	const { token } = useSelector((state: RootState) => state.auth);
 
 	useEffect(() => {
 		const obtenerProgramas = async () => {
@@ -43,7 +39,7 @@ export default function PanelProgramas() {
 			}
 		};
 		obtenerProgramas();
-	}, [token, year]); // Ejecutar cuando token o year cambian
+	}, [year]); // Ejecutar cuando token o year cambian
 
 	const openArea = (area: AreaProps) => {
 		const areaSinLista = {

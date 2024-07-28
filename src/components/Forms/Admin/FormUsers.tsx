@@ -39,7 +39,7 @@ interface OptionProps {
 	label: string;
 }
 
-const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
+const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [selectedYear, setSelectedYear] = useState<OptionProps | null>(null);
 	const [yearOptions, setYearOptions] = useState<OptionProps[]>([]);
@@ -54,7 +54,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onSave, onClose }) => {
 
 	const { bases } = useSelector((state: RootState) => state.metas);
 	
-	const { handleSubmit, control, reset, formState } = useForm<UserFormData>({
+	const { handleSubmit, control, formState } = useForm<UserFormData>({
 		defaultValues: {
 			nom: userData.nom,
 			ape: userData.ape,
