@@ -34,7 +34,7 @@ const CommonTable = <T extends object>({ data, headers, onAction }: CommonTableP
 
 		if (key === 'categorias' && Array.isArray(item[key])) {
 			return (
-				<Badge>
+				<Badge bg="secondary">
 					{(item[key] as unknown as Categoria[]).map((categoria) => categoria.nombre).join(', ')}
 				</Badge>
 			);
