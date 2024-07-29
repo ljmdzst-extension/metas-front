@@ -8,7 +8,7 @@ import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
 import DetailsUser from '@/components/Forms/Admin/DetailUser';
 import { getAllUsers } from '@/services';
-import { UserData } from '@/types/UserProps';
+import { Categoria, UserData } from '@/types/UserProps';
 import { errorAlert } from '@/utils/Alerts';
 
 const MySwal = withReactContent(Swal);
@@ -17,15 +17,19 @@ interface UserTableData {
 	nroDoc: string;
 	email: string;
 	pass: string;
-	categoria: string;
+	categorias: Categoria[];
 }
 
-const mapUserDataForTable = (user: UserData): UserTableData => ({
-	nroDoc: user.nroDoc,
-	email: user.email,
-	pass: user.pass,
-	categoria: user.categoria,
-});
+const mapUserDataForTable = (user: UserData): UserTableData => {
+	const { usuario } = user;
+
+	return {
+		nroDoc: usuario.nroDoc,
+		email: usuario.email,
+		pass: usuario.pass,
+		categorias: user.categorias,
+	};
+};
 
 const AdminScreen = () => {
 	const navigate = useNavigate();
@@ -52,7 +56,7 @@ const AdminScreen = () => {
 	}, []);
 
 	const handleAction = (action: 'view' | 'edit', user: UserTableData) => {
-		const originalUser = users.find((u) => u.nroDoc === user.nroDoc); // Encuentra el usuario original por Documento
+		const originalUser = users.find((u) => u.usuario.nroDoc === user.nroDoc); // Encuentra el usuario original por Documento
 		if (!originalUser) return;
 		console.log(originalUser);
 		if (action === 'view') {
@@ -69,18 +73,45 @@ const AdminScreen = () => {
 
 	const handleSave = (userData: UserData) => {
 		setUsers((prevUsers) =>
-			prevUsers.map((user) => (user.nroDoc === userData.nroDoc ? userData : user)),
+			prevUsers.map((user) => (user.persona.nroDoc === userData.persona.nroDoc ? userData : user)),
 		);
 		setSelectedUser(null);
 	};
 
 	useEffect(() => {
 		const lowercasedQuery = searchQuery.toLowerCase();
-		const filteredData = users.filter((user) =>
-			Object.values(user).some((value) =>
+
+		const filterUser = (user: UserData): boolean => {
+			const personaMatches = Object.values(user.persona).some((value) =>
 				value?.toString().toLowerCase().includes(lowercasedQuery),
-			),
-		);
+			);
+
+			const usuarioMatches = Object.values(user.usuario).some((value) =>
+				value?.toString().toLowerCase().includes(lowercasedQuery),
+			);
+
+			const categoriasMatches = user.categorias.some((categoria) =>
+				categoria.nombre.toLowerCase().includes(lowercasedQuery),
+			);
+
+			const permisosMatches = user.permisos.some((permiso) =>
+				permiso.nombre.toLowerCase().includes(lowercasedQuery),
+			);
+
+			const areasMatches = user.areas.some((area) =>
+				Object.values(area).some((value) =>
+					Array.isArray(value)
+						? value.some((subValue) => subValue.nom.toLowerCase().includes(lowercasedQuery))
+						: value?.toString().toLowerCase().includes(lowercasedQuery),
+				),
+			);
+
+			return (
+				personaMatches || usuarioMatches || categoriasMatches || permisosMatches || areasMatches
+			);
+		};
+
+		const filteredData = users.filter(filterUser);
 		setFilteredUsers(filteredData);
 	}, [searchQuery, users]);
 
@@ -90,7 +121,7 @@ const AdminScreen = () => {
 		nroDoc: 'Documento',
 		email: 'Email',
 		pass: 'Contraseña',
-		categoria: 'Categoría',
+		categorias: 'Categoría',
 	};
 
 	return (
@@ -120,14 +151,16 @@ const AdminScreen = () => {
 			</div>
 			<Container fluid>
 				<Row>
-					<Col md={selectedUser ? 8 : 12}>
-						<div style={{ overflowY: 'scroll', maxHeight: '65vh' }} className='custom-scrollbar'>
-							<CommonTable<UserTableData>
-								data={mappedFilteredUsers}
-								headers={tableHeaders}
-								onAction={handleAction}
-							/>
-						</div>
+					<Col
+						md={selectedUser ? 8 : 12}
+						style={{ overflowY: 'scroll', maxHeight: '65vh' }}
+						className='custom-scrollbar'
+					>
+						<CommonTable<UserTableData>
+							data={mappedFilteredUsers}
+							headers={tableHeaders}
+							onAction={handleAction}
+						/>
 					</Col>
 					{selectedUser && (
 						<Col md={4} className='border rounded p-2 bg-color-slate'>

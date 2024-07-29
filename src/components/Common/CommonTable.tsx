@@ -1,6 +1,7 @@
 import { Edit, Visibility, VisibilityOff } from '@mui/icons-material';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Badge } from 'react-bootstrap';
 import { useState } from 'react';
+import { Categoria } from '@/types/UserProps';
 
 interface CommonTableProps<T extends object> {
 	data: T[];
@@ -19,6 +20,29 @@ const CommonTable = <T extends object>({ data, headers, onAction }: CommonTableP
 		setVisiblePasswords((prev) => ({ ...prev, [index]: !prev[index] }));
 	};
 
+	const renderCell = (key: keyof T, item: T, index: number) => {
+		if (key === 'pass') {
+			return (
+				<>
+					{visiblePasswords[index] ? String(item[key]) : '********'}
+					<Button variant='link' onClick={() => togglePasswordVisibility(index)}>
+						{visiblePasswords[index] ? <VisibilityOff /> : <Visibility />}
+					</Button>
+				</>
+			);
+		}
+
+		if (key === 'categorias' && Array.isArray(item[key])) {
+			return (
+				<Badge>
+					{(item[key] as unknown as Categoria[]).map((categoria) => categoria.nombre).join(', ')}
+				</Badge>
+			);
+		}
+
+		return String(item[key]);
+	};
+
 	return (
 		<Table bordered hover size='sm'>
 			<thead style={{ position: 'sticky', top: -0.1 }}>
@@ -33,25 +57,16 @@ const CommonTable = <T extends object>({ data, headers, onAction }: CommonTableP
 				{data.map((item, index) => (
 					<tr key={index}>
 						{keys.map((key) => (
-							<td key={String(key)} className=''>
-								{key === 'pass' ? (
-									<p>
-										{visiblePasswords[index] ? String(item[key]) : '********'}
-										<Button variant='link' onClick={() => togglePasswordVisibility(index)}>
-											{visiblePasswords[index] ? <VisibilityOff /> : <Visibility />}
-										</Button>
-									</p>
-								) : (
-									String(item[key])
-								)}
+							<td key={String(key)} className=' align-middle'>
+								{renderCell(key, item, index)}
 							</td>
 						))}
-						<td>
-							<Button variant='outlined-info' onClick={() => onAction('view', item)}>
-								<Visibility />
+						<td className=' d-flex justify-content-start gap-1'>
+							<Button variant='outline-info' size='sm' onClick={() => onAction('view', item)}>
+								<Visibility onClick={() => onAction('view', item)} />
 							</Button>
-							<Button variant='outlined-warning' onClick={() => onAction('edit', item)}>
-								<Edit />
+							<Button variant='outline-warning' size='sm'>
+								<Edit onClick={() => onAction('edit', item)} />
 							</Button>
 						</td>
 					</tr>

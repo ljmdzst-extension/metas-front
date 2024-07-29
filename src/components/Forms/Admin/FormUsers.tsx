@@ -56,11 +56,10 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	
 	const { handleSubmit, control, formState } = useForm<UserFormData>({
 		defaultValues: {
-			nom: userData.nom,
-			ape: userData.ape,
-			email: userData.email,
-			pass: userData.pass,
-			roles: userData.roles,
+			nom: userData.persona.nom,
+			ape: userData.persona.ape,
+			email: userData.usuario.email,
+			pass: userData.usuario.pass,
 			anio: undefined,
 			programas: undefined,
 			areas: undefined,
@@ -131,30 +130,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 
 	const onSubmit = (data: UserFormData) => {
 		console.log(data);
-		// const areas: Area[] = (data.areas || []).map((areaId) => {
-		// 	const programId = data.programas.find((program) => program === areaId);
-		// 	return {
-		// 		idArea: areaId,
-		// 		idPrograma: programId || 0,
-		// 		anio: data.anio || 0,
-		// 		idCategoria: 0, // Define según tu lógica
-		// 		idUsuario: userData.idUsuario,
-		// 	};
-		// });
 
-		// const userDataToSave: UserData = {
-			// 	...userData,
-			// 	nom: data.nom,
-			// 	ape: data.ape,
-		// 	email: data.email,
-		// 	pass: data.pass,
-		// 	roles: data.roles,
-		// 	areas,
-		// 	updatedAt: new Date(),
-		// };
-
-		// onSave(userDataToSave);
-		// reset(data);
 	};
 
 	const toggleShowPassword = () => {
