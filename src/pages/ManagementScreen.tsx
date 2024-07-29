@@ -10,6 +10,7 @@ const ManagementScreen = () => {
 		<Container
 			className='my-2 border rounded h-100 '
 			style={{ backgroundColor: 'rgba(245, 245, 245, 0.959)' }}
+			data-testid='management-screen'
 		>
 			<div className=' my-2'>
 				<h2 className='text-center' style={{ color: '#0a5d52' }}>
