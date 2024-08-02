@@ -18,12 +18,18 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import FormInput from '@/components/Common/FormInput';
-import { UserData, UserFormData } from '@/types/UserProps';
+import { Area, UserData, UserFormData } from '@/types/UserProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { Add } from '@mui/icons-material';
 
 const MySwal = withReactContent(Swal);
+
+Swal.bindClickHandler();
+
+Swal.mixin({
+	toast: true,
+}).bindClickHandler('#data-swal-custom-toast');
 
 interface FormUsersProps {
 	userData: UserData;
@@ -64,22 +70,17 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 
 	const { bases } = useSelector((state: RootState) => state.metas);
 
-	const { handleSubmit, control, formState } = useForm<UserFormData>({
-		defaultValues: {
-			nom: userData.persona.nom,
-			ape: userData.persona.ape,
-			email: userData.usuario.email,
-			pass: userData.usuario.pass,
-			anio: undefined,
-			programas: [],
-			areas: [],
-		},
+	const { handleSubmit, control, formState, setValue } = useForm<UserData>({
+		defaultValues: userData,
 	});
 
 	useEffect(() => {
 		// Cargar años disponibles
 		setYearOptions(
-			bases.lAreasProgramasAnios.map((item) => ({ label: item.anio.toString(), value: item.anio })),
+			bases.lAreasProgramasAnios.map((item, index) => ({
+				label: item.anio.toString(),
+				value: index,
+			})),
 		);
 		setLoadingYears(false);
 	}, [bases.lAreasProgramasAnios]);
@@ -92,12 +93,12 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 
 			// Cargar programas para el año seleccionado
 			const userPrograms = userData.areas
-				.filter((area) => area.anio === selectedYear.value)
+				.filter((area) => area.anio === Number(selectedYear.label))
 				.flatMap((area) => area.listaProgramas)
 				.map((program) => ({ label: program.nom, value: program.idPrograma }));
 
 			const allPrograms = bases.lAreasProgramasAnios
-				.filter((item) => item.anio === selectedYear.value)
+				.filter((item) => item.anio === Number(selectedYear.label))
 				.flatMap((item) => item.listaProgramas)
 				.map((program) => ({ label: program.nom, value: program.idPrograma }));
 
@@ -113,14 +114,14 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 		if (selectedProgram !== null) {
 			setLoadingAreas(true);
 			const areas = bases.lAreasProgramasAnios
-				.filter((item) => item.anio === selectedYear?.value)
+				.filter((item) => item.anio === Number(selectedYear?.label))
 				.flatMap((item) => item.listaProgramas)
 				.filter((program) => program.idPrograma === selectedProgram.value)
 				.flatMap((program) => program.listaAreas)
 				.map((area) => ({ label: area.nom, value: area.idArea }));
 
 			const userAreas = userData.areas
-				.filter((area) => area.anio === selectedYear?.value)
+				.filter((area) => area.anio === Number(selectedYear?.label))
 				.flatMap((area) => area.listaProgramas)
 				.filter((program) => program.idPrograma === selectedProgram.value)
 				.flatMap((program) => program.listaAreas)
@@ -137,13 +138,67 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 		setSelectedProgram(selectedOption);
 	};
 
-	const onSubmit = (data: UserFormData) => {
+	const onSubmit = (data: UserData) => {
 		console.log(data);
 		// Implement your onSave logic here
 	};
 
 	const toggleShowPassword = () => {
 		setShowPassword(!showPassword);
+	};
+	const handleAddProgram = () => {
+		MySwal.fire({
+			title: 'Agregar Programa',
+			animation: false,
+			html: allProgramsOptions
+				.map(
+					(program) =>
+						`<button class="swal2-program-button btn btn-primary btn-sm m-1" data-value="${program.value}">${program.label}</button>`,
+				)
+				.join(''),
+			toast: true,
+			showCloseButton: true,
+			showConfirmButton: false,
+			showCancelButton: false,
+			didOpen: () => {
+				const toastContainer = MySwal.getContainer();
+				const addButton = document.getElementById('addProgramButton');
+				if (toastContainer && addButton) {
+					const rect = addButton.getBoundingClientRect();
+					toastContainer.style.position = 'absolute';
+					toastContainer.style.left = `${rect.right - 220}px`; // A la derecha del botón
+					toastContainer.style.top = `${rect.top}px`; // Alineado verticalmente
+				}
+
+				const buttons = document.querySelectorAll('.swal2-program-button');
+				buttons.forEach((button) => {
+					button.addEventListener('click', () => {
+						const selectedValue = parseInt(button.getAttribute('data-value') as string);
+						const selectedProgram = allProgramsOptions.find(
+							(program) => program.value === selectedValue,
+						);
+						if (selectedProgram) {
+							setUserProgramsOptions([...userProgramsOptions, selectedProgram]);
+
+							// console.log(
+							// 	'map',
+
+							// 	userData.areas.findIndex((area) => area.anio === selectedYear?.value),
+							// );
+
+							// console.log(userData.areas);
+							// guardar programa seleccionado en react-hook-form state
+							setValue(`areas.${Number(selectedYear?.value)}.listaProgramas`, [
+								...userData.areas.flatMap((area) => area.listaProgramas).map((p) => p.idPrograma),
+								selectedValue,
+							]);
+
+							MySwal.close();
+						}
+					});
+				});
+			},
+		});
 	};
 
 	return (
@@ -158,7 +213,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 							<Col>
 								<FormInput
 									control={control}
-									name='nom'
+									name='persona.nom'
 									label='Nombre'
 									rules={validationRules.nom}
 								/>
@@ -166,7 +221,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 							<Col>
 								<FormInput
 									control={control}
-									name='ape'
+									name='persona.ape'
 									label='Apellido'
 									rules={validationRules.ape}
 								/>
@@ -176,7 +231,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 							<Col>
 								<FormInput
 									control={control}
-									name='email'
+									name='usuario.email'
 									label='Email'
 									type='email'
 									rules={validationRules.email}
@@ -187,7 +242,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 									<Form.Label>Contraseña</Form.Label>
 									<div className='d-flex align-items-center'>
 										<Controller
-											name='pass'
+											name='usuario.pass'
 											control={control}
 											rules={validationRules.pass}
 											render={({ field, fieldState: { error } }) => (
@@ -221,7 +276,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 								<p>Cargando años...</p>
 							) : (
 								<Controller
-									name='anio'
+									name={`areas.${Number(selectedYear?.value)}.anio`}
 									control={control}
 									render={({ field }) => (
 										<Select
@@ -231,7 +286,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 												field.onChange(selectedOption?.value || null);
 												setSelectedYear(selectedOption);
 											}}
-											value={yearOptions.find((option) => option.value === field.value) || null}
+											value={selectedYear}
 										/>
 									)}
 								/>
@@ -242,7 +297,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 							{selectedYear && !loadingPrograms ? (
 								<InputGroup className='d-flex'>
 									<Controller
-										name='programas'
+										name={`areas.${Number(selectedYear?.value)}.listaProgramas`}
 										control={control}
 										render={({ field }) => (
 											<Select
@@ -253,15 +308,12 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 													handleProgramChange(selectedOption);
 												}}
 												isClearable
-												placeholder='Agregar Programa'
+												placeholder='No hay programas cargados'
 												className='flex-grow-1'
 											/>
 										)}
 									/>
-									<IconButton
-										className='ml-2'
-										onClick={() => console.log('Agregar nuevo programa')}
-									>
+									<IconButton className='ml-2' id='addProgramButton' onClick={handleAddProgram}>
 										<Add />
 									</IconButton>
 								</InputGroup>
@@ -274,13 +326,16 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 							{selectedProgram && !loadingAreas ? (
 								<InputGroup className='d-flex'>
 									<Controller
-										name='areas'
+										name={`areas.${Number(selectedYear?.value)}.listaProgramas.${Number(
+											selectedProgram?.value,
+										)}.listaAreas`}
 										control={control}
 										render={({ field }) => (
 											<Select
 												options={allAreasOptions}
 												onChange={(selectedOption: MultiValue<OptionProps>) => {
 													const value = selectedOption.map((opt) => opt.value);
+													setUserAreasOptions(selectedOption as OptionProps[]);
 													field.onChange(value);
 												}}
 												isClearable
@@ -299,7 +354,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 					</Container>
 				</Tab>
 				<Tab eventKey='gestor' title='Gestor'>
-					Programas
+					<div className=' d-flex justify-content-center align-items-center'>Gestor</div>
 				</Tab>
 			</Tabs>
 
