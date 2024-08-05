@@ -42,7 +42,6 @@ const FormMetas = () => {
 		if (!error && bases) {
 			setValoraciones(bases.listaValoraciones);
 		} else {
-			// TODO: Alerta de error global
 		}
 	}, [bases, error]);
 

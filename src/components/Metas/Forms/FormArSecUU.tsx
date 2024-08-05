@@ -85,7 +85,6 @@ export default function FormArSecUU() {
 
 			setDataLoaded(true);
 		} else {
-			// TODO: Alerta de error global
 		}
 	}, [bases, error, filtrarAreas, filtrarRelacionesSeleccionadas, filtrarSippeSeleccionadas]);
 
