@@ -250,6 +250,15 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const toggleShowPassword = () => {
 		setShowPassword(!showPassword);
 	};
+
+	const handleYearChange = useCallback((selectedOption: SingleValue<OptionProps>) => {
+		setSelectedYear(selectedOption);
+	}, []);
+
+	const handleProgramChange = useCallback((selectedOption: SingleValue<OptionProps>) => {
+		setSelectedProgram(selectedOption);
+	}, []);
+
 	const handleAddProgram = () => {
 		MySwal.fire({
 			title: 'Agregar Programa',
@@ -376,9 +385,9 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 										<Select
 											{...field}
 											options={yearOptions}
-											onChange={(selectedOption: SingleValue<OptionProps>) => {
+											onChange={(selectedOption) => {
+												handleYearChange(selectedOption);
 												field.onChange(selectedOption?.value || null);
-												setSelectedYear(selectedOption);
 											}}
 											value={selectedYear}
 										/>
@@ -395,9 +404,10 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 										control={control}
 										render={({ field }) => (
 											<Select
+												{...field}
 												options={getPrograms('user')}
-												onChange={(selectedOption: SingleValue<OptionProps>) => {
-													setSelectedProgram(selectedOption);
+												onChange={(selectedOption) => {
+													handleProgramChange(selectedOption);
 													field.onChange(selectedOption);
 												}}
 												placeholder='No hay programas cargados'
@@ -424,12 +434,12 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 										control={control}
 										render={({ field }) => (
 											<Select
+												{...field}
 												options={getAreas('all')}
-												onChange={(selectedOption: MultiValue<OptionProps>) => {
-													// TODO: Arreglar esto
-													console.log('valor seleccionado', selectedOption);
-													editAreaData('add-area', selectedOption as OptionProps[]);
-													field.onChange(selectedOption);
+												onChange={(selectedOption) => {
+													const selectedAreas = selectedOption as MultiValue<OptionProps>;
+													field.onChange(selectedAreas);
+													editAreaData('add-area', selectedAreas);
 												}}
 												isClearable
 												isMulti
