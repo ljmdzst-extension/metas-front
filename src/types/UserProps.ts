@@ -14,10 +14,10 @@ export interface UserData {
 
 export interface Area {
 	anio: number;
-	listaProgramas: ListaPrograma[];
+	listaProgramas: Programa[];
 }
 
-export interface ListaPrograma {
+export interface Programa {
 	idPrograma: number;
 	nom: programasNom;
 	listaAreas: ListaArea[];

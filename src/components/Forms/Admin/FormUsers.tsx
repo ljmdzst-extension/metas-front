@@ -67,7 +67,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 
 	const { bases } = useSelector((state: RootState) => state.metas);
 
-	const { handleSubmit, control } = useForm<UserData>({
+	const { handleSubmit, control, watch } = useForm<UserData>({
 		defaultValues: userData,
 	});
 
@@ -251,9 +251,39 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 		setShowPassword(!showPassword);
 	};
 
-	const handleYearChange = useCallback((selectedOption: SingleValue<OptionProps>) => {
-		setSelectedYear(selectedOption);
-	}, []);
+	const generateFieldName = useCallback(
+		(type: 'anio' | 'programas' | 'areas'): any => {
+			const yearIndex = selectedYear ? Number(selectedYear.value) : 0;
+			console.log(selectedYear)
+
+			if (type === 'anio') {
+				return `areas.${yearIndex}.anio`;
+			}
+
+			if (!selectedProgram) return '';
+
+			const programIndex = currentCompleteAreaList[yearIndex]?.listaProgramas.findIndex(
+				(program) => program.idPrograma === selectedProgram.value,
+			);
+
+			if (type === 'programas') {
+				return `areas.${yearIndex}.listaProgramas`;
+			} else if (type === 'areas') {
+				return `areas.${yearIndex}.listaProgramas.${programIndex}.listaAreas`;
+			}
+
+			return '';
+		},
+		[currentCompleteAreaList, selectedProgram, selectedYear],
+	);
+
+	const handleYearChange = useCallback(
+		(selectedOption: SingleValue<OptionProps>) => {
+			setSelectedYear(selectedOption);
+			console.log(watch(generateFieldName('anio')));
+		},
+		[generateFieldName, watch],
+	);
 
 	const handleProgramChange = useCallback((selectedOption: SingleValue<OptionProps>) => {
 		setSelectedProgram(selectedOption);
@@ -379,7 +409,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 								<p>Cargando años...</p>
 							) : (
 								<Controller
-									name={`areas.${Number(selectedYear?.value)}.anio`}
+									name={generateFieldName('anio')}
 									control={control}
 									render={({ field }) => (
 										<Select
@@ -400,7 +430,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 							{selectedYear && !loadingPrograms ? (
 								<InputGroup className='d-flex'>
 									<Controller
-										name={`areas.${Number(selectedYear?.value)}.listaProgramas`}
+										name={generateFieldName('programas')}
 										control={control}
 										render={({ field }) => (
 											<Select
@@ -428,14 +458,12 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 							{selectedProgram && !loadingAreas ? (
 								<InputGroup className='d-flex'>
 									<Controller
-										name={`areas.${Number(selectedYear?.value)}.listaProgramas.${Number(
-											selectedProgram?.value,
-										)}.listaAreas`}
+										name={generateFieldName('areas')}
 										control={control}
 										render={({ field }) => (
 											<Select
 												{...field}
-												options={getAreas('all')}
+												options={getAreas()}
 												onChange={(selectedOption) => {
 													const selectedAreas = selectedOption as MultiValue<OptionProps>;
 													field.onChange(selectedAreas);

@@ -28,7 +28,7 @@ export interface LAreasProgramasAnio {
 
 export interface ListaPrograma {
 	idPrograma: number;
-	nom: ListaProgramaNom;
+	nom: programasNom;
 	listaAreas: ListaArea[];
 }
 
@@ -37,7 +37,7 @@ export interface ListaArea {
 	nom: string;
 }
 
-export enum ListaProgramaNom {
+export enum programasNom {
 	FormaciónYCapacitación = 'Formación y Capacitación',
 	IntegraciónDeFunciones = 'Integración de Funciones',
 	IntervenciónSociocultural = 'Intervención Sociocultural',
