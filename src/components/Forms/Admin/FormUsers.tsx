@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
 	Form,
@@ -56,30 +56,24 @@ interface OptionProps {
 }
 
 const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
+	const { bases } = useSelector((state: RootState) => state.metas);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [selectedYear, setSelectedYear] = useState<OptionProps | null>(null);
-	const [yearOptions, setYearOptions] = useState<OptionProps[]>([]);
 	const [selectedProgram, setSelectedProgram] = useState<OptionProps | null>(null);
-	const [loadingYears, setLoadingYears] = useState<boolean>(true);
 	const [loadingPrograms, setLoadingPrograms] = useState<boolean>(false);
 	const [loadingAreas, setLoadingAreas] = useState<boolean>(false);
 	const [currentCompleteAreaList, setCurrentCompleteAreaList] = useState<Area[]>(userData.areas);
-
-	const { bases } = useSelector((state: RootState) => state.metas);
 
 	const { handleSubmit, control, watch } = useForm<UserData>({
 		defaultValues: userData,
 	});
 
-	useEffect(() => {
-		// Cargar años disponibles
-		setYearOptions(
-			bases.lAreasProgramasAnios.map((item, index) => ({
-				label: item.anio.toString(),
-				value: index,
-			})),
-		);
-		setLoadingYears(false);
+	const getYearOptions = useCallback((): OptionProps[] => {
+		const yearOptions = bases.lAreasProgramasAnios.map((item, index) => ({
+			label: item.anio.toString(),
+			value: index,
+		}));
+		return yearOptions;
 	}, [bases.lAreasProgramasAnios]);
 
 	const getPrograms = useCallback(
@@ -254,7 +248,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const generateFieldName = useCallback(
 		(type: 'anio' | 'programas' | 'areas'): any => {
 			const yearIndex = selectedYear ? Number(selectedYear.value) : 0;
-			console.log(selectedYear)
+			console.log(selectedYear);
 
 			if (type === 'anio') {
 				return `areas.${yearIndex}.anio`;
@@ -267,7 +261,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 			);
 
 			if (type === 'programas') {
-				return `areas.${yearIndex}.listaProgramas`;
+				return `areas.${yearIndex}.listaProgramas.${programIndex}.nom`;
 			} else if (type === 'areas') {
 				return `areas.${yearIndex}.listaProgramas.${programIndex}.listaAreas`;
 			}
@@ -405,25 +399,21 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 					<Container>
 						<Form.Group controlId='formYear' className='mb-2'>
 							<Form.Label>Año</Form.Label>
-							{loadingYears ? (
-								<p>Cargando años...</p>
-							) : (
-								<Controller
-									name={generateFieldName('anio')}
-									control={control}
-									render={({ field }) => (
-										<Select
-											{...field}
-											options={yearOptions}
-											onChange={(selectedOption) => {
-												handleYearChange(selectedOption);
-												field.onChange(selectedOption?.value || null);
-											}}
-											value={selectedYear}
-										/>
-									)}
-								/>
-							)}
+							<Controller
+								name={generateFieldName('anio')}
+								control={control}
+								render={({ field }) => (
+									<Select
+										{...field}
+										options={getYearOptions()}
+										onChange={(selectedOption) => {
+											handleYearChange(selectedOption);
+											field.onChange(selectedOption?.value || null);
+										}}
+										value={selectedYear}
+									/>
+								)}
+							/>
 						</Form.Group>
 						<Form.Group controlId='formPrograms' className='mb-2'>
 							<Form.Label>Programas</Form.Label>
