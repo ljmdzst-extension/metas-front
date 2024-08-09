@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
 	Form,
@@ -64,17 +64,17 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const [loadingAreas, setLoadingAreas] = useState<boolean>(false);
 	const [currentCompleteAreaList, setCurrentCompleteAreaList] = useState<Area[]>(userData.areas);
 
-	const { handleSubmit, control, watch } = useForm<UserData>({
+	const yearOptions = useMemo(
+		() =>
+			bases.lAreasProgramasAnios.map((item, index) => ({
+				label: item.anio.toString(),
+				value: index,
+			})),
+		[bases.lAreasProgramasAnios],
+	);
+	const { handleSubmit, control, watch, setValue } = useForm<UserData>({
 		defaultValues: userData,
 	});
-
-	const getYearOptions = useCallback((): OptionProps[] => {
-		const yearOptions = bases.lAreasProgramasAnios.map((item, index) => ({
-			label: item.anio.toString(),
-			value: index,
-		}));
-		return yearOptions;
-	}, [bases.lAreasProgramasAnios]);
 
 	const getPrograms = useCallback(
 		(type = 'all'): OptionProps[] => {
@@ -82,23 +82,22 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 				return [];
 			}
 			setLoadingPrograms(true);
+			const programs = bases.lAreasProgramasAnios
+				.filter((item) => item.anio === Number(selectedYear.label))
+				.flatMap((item) => item.listaProgramas)
+				.map((program) => ({ label: program.nom, value: program.idPrograma }));
+
+			setLoadingPrograms(false);
+
 			if (type === 'user') {
-				const userPrograms = currentCompleteAreaList
-					.filter((area) => area.anio === Number(selectedYear.label))
-					.flatMap((area) => area.listaProgramas)
-					.map((program) => ({ label: program.nom, value: program.idPrograma }));
-				setLoadingPrograms(false);
-				return userPrograms;
-			} else if (type === 'all') {
-				const allPrograms = bases.lAreasProgramasAnios
-					.filter((item) => item.anio === Number(selectedYear.label))
-					.flatMap((item) => item.listaProgramas)
-					.map((program) => ({ label: program.nom, value: program.idPrograma }));
-				setLoadingPrograms(false);
-				return allPrograms;
+				return programs.filter((program) =>
+					currentCompleteAreaList
+						.flatMap((area) => area.listaProgramas)
+						.some((userProgram) => userProgram.idPrograma === program.value),
+				);
 			}
 
-			return [];
+			return programs;
 		},
 		[selectedYear, currentCompleteAreaList, bases.lAreasProgramasAnios],
 	);
@@ -109,146 +108,111 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 				return [];
 			}
 			setLoadingAreas(true);
+			const areas = bases.lAreasProgramasAnios
+				.filter((item) => item.anio === Number(selectedYear?.label))
+				.flatMap((item) => item.listaProgramas)
+				.filter((program) => program.idPrograma === selectedProgram.value)
+				.flatMap((program) => program.listaAreas)
+				.map((area) => ({ label: area.nom, value: area.idArea }));
+
+			setLoadingAreas(false);
+
 			if (type === 'user') {
-				const userAreas = currentCompleteAreaList
-					.filter((area) => area.anio === Number(selectedYear?.label))
-					.flatMap((area) => area.listaProgramas)
-					.filter((program) => program.idPrograma === selectedProgram.value)
-					.flatMap((program) => program.listaAreas)
-					.map((area) => ({ label: area.nom, value: area.idArea }));
-				setLoadingAreas(false);
-				return userAreas;
-			} else if (type === 'all') {
-				const allAreas = bases.lAreasProgramasAnios
-					.filter((item) => item.anio === Number(selectedYear?.label))
-					.flatMap((item) => item.listaProgramas)
-					.filter((program) => program.idPrograma === selectedProgram.value)
-					.flatMap((program) => program.listaAreas)
-					.map((area) => ({ label: area.nom, value: area.idArea }));
-				setLoadingAreas(false);
-				return allAreas;
+				return areas.filter((area) =>
+					currentCompleteAreaList
+						.flatMap((completeArea) => completeArea.listaProgramas)
+						.some((program) =>
+							program.listaAreas.some((userArea) => userArea.idArea === area.value),
+						),
+				);
 			}
 
-			return [];
+			return areas;
 		},
 		[selectedProgram, currentCompleteAreaList, selectedYear?.label, bases.lAreasProgramasAnios],
 	);
 
 	const editAreaData = useCallback(
 		(type: string, data: any) => {
-			switch (type) {
-				case 'add-program':
-					setCurrentCompleteAreaList((prevState) => {
-						const updatedList = [...prevState];
-						const yearIndex = updatedList.findIndex(
-							(area) => area.anio === Number(selectedYear?.label),
+			setCurrentCompleteAreaList((prevState) => {
+				const updatedList = [...prevState];
+				const yearIndex = updatedList.findIndex(
+					(area) => area.anio === Number(selectedYear?.label),
+				);
+
+				if (yearIndex !== -1) {
+					if (type === 'add-program') {
+						const programIndex = updatedList[yearIndex].listaProgramas.findIndex(
+							(program) => program.idPrograma === data.value,
 						);
 
-						if (yearIndex !== -1) {
-							const programIndex = updatedList[yearIndex].listaProgramas.findIndex(
-								(program) => program.idPrograma === data.value,
-							);
-
-							if (programIndex === -1) {
-								updatedList[yearIndex].listaProgramas.push({
-									idPrograma: data.value,
-									nom: data.label,
-									listaAreas: [],
-								});
-							}
-						} else {
-							updatedList.push({
-								anio: Number(selectedYear?.label),
-								listaProgramas: [
-									{
-										idPrograma: data.value,
-										nom: data.label,
-										listaAreas: [],
-									},
-								],
+						if (programIndex === -1) {
+							updatedList[yearIndex].listaProgramas.push({
+								idPrograma: data.value,
+								nom: data.label,
+								listaAreas: [],
 							});
 						}
-
-						return updatedList;
-					});
-					break;
-
-				case 'add-area':
-					setCurrentCompleteAreaList((prevState) => {
-						const updatedList = [...prevState];
-						const yearIndex = updatedList.findIndex(
-							(area) => area.anio === Number(selectedYear?.label),
+					} else if (type === 'add-area') {
+						const programIndex = updatedList[yearIndex].listaProgramas.findIndex(
+							(program) => program.idPrograma === selectedProgram?.value,
 						);
 
-						if (yearIndex !== -1) {
-							const programIndex = updatedList[yearIndex].listaProgramas.findIndex(
-								(program) => program.idPrograma === selectedProgram?.value,
-							);
+						if (programIndex !== -1) {
+							data.forEach((area: OptionProps) => {
+								const areaIndex = updatedList[yearIndex].listaProgramas[
+									programIndex
+								].listaAreas.findIndex((existingArea) => existingArea.idArea === area.value);
 
-							if (programIndex !== -1) {
-								data.forEach((area: OptionProps) => {
-									const areaIndex = updatedList[yearIndex].listaProgramas[
-										programIndex
-									].listaAreas.findIndex((existingArea) => existingArea.idArea === area.value);
-
-									if (areaIndex === -1) {
-										updatedList[yearIndex].listaProgramas[programIndex].listaAreas.push({
-											idArea: area.value,
-											nom: area.label,
-										});
-									}
-								});
-							} else {
-								updatedList[yearIndex].listaProgramas.push({
-									idPrograma: selectedProgram?.value,
-									nom: selectedProgram?.label,
-									listaAreas: data.map((area: OptionProps) => ({
+								if (areaIndex === -1) {
+									updatedList[yearIndex].listaProgramas[programIndex].listaAreas.push({
 										idArea: area.value,
 										nom: area.label,
-									})),
-								});
-							}
+									});
+								}
+							});
 						} else {
-							updatedList.push({
-								anio: Number(selectedYear?.label),
-								listaProgramas: [
-									{
-										idPrograma: selectedProgram?.value,
-										nom: selectedProgram?.label,
-										listaAreas: data.map((area: OptionProps) => ({
-											idArea: area.value,
-											nom: area.label,
-										})),
-									},
-								],
+							updatedList[yearIndex].listaProgramas.push({
+								idPrograma: selectedProgram?.value,
+								nom: selectedProgram?.label,
+								listaAreas: data.map((area: OptionProps) => ({
+									idArea: area.value,
+									nom: area.label,
+								})),
 							});
 						}
-
-						return updatedList;
+					}
+				} else {
+					updatedList.push({
+						anio: Number(selectedYear?.label),
+						listaProgramas: [
+							{
+								idPrograma: selectedProgram?.value,
+								nom: selectedProgram?.label,
+								listaAreas: data.map((area: OptionProps) => ({
+									idArea: area.value,
+									nom: area.label,
+									listaAreas: [],
+								})),
+							},
+						],
 					});
-					break;
-
-				default:
-					break;
-			}
+				}
+				return updatedList;
+			});
 		},
-		[selectedYear, selectedProgram],
+		[selectedYear?.label, selectedProgram?.value, selectedProgram?.label],
 	);
 
 	const onSubmit = (data: UserData) => {
-		// NOTE: reemplazar data.areas por currentCompleteAreaList
 		data.areas = currentCompleteAreaList;
 		console.log(data);
-	};
-
-	const toggleShowPassword = () => {
-		setShowPassword(!showPassword);
 	};
 
 	const generateFieldName = useCallback(
 		(type: 'anio' | 'programas' | 'areas'): any => {
 			const yearIndex = selectedYear ? Number(selectedYear.value) : 0;
-			console.log(selectedYear);
+			// console.log(selectedYear);
 
 			if (type === 'anio') {
 				return `areas.${yearIndex}.anio`;
@@ -271,12 +235,20 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 		[currentCompleteAreaList, selectedProgram, selectedYear],
 	);
 
+	const toggleShowPassword = () => {
+		setShowPassword(!showPassword);
+	};
+	// TODO: probablemente quitar esta función y utilizar watch en vez del estado local
 	const handleYearChange = useCallback(
 		(selectedOption: SingleValue<OptionProps>) => {
 			setSelectedYear(selectedOption);
-			console.log(watch(generateFieldName('anio')));
+			setValue(generateFieldName('anio'), selectedOption?.label || '', {
+				shouldValidate: true,
+				shouldDirty: true,
+			});
+			console.log(watch()); // Debería reflejar el valor actualizado
 		},
-		[generateFieldName, watch],
+		[generateFieldName, setValue, watch],
 	);
 
 	const handleProgramChange = useCallback((selectedOption: SingleValue<OptionProps>) => {
@@ -405,12 +377,13 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 								render={({ field }) => (
 									<Select
 										{...field}
-										options={getYearOptions()}
-										onChange={(selectedOption) => {
-											handleYearChange(selectedOption);
-											field.onChange(selectedOption?.value || null);
-										}}
-										value={selectedYear}
+										options={yearOptions}
+										// TODO: Ver que hacer con esto
+										// onChange={(selectedOption) => {
+										// 	handleYearChange(selectedOption);
+										// 	// field.onChange(selectedOption?.value || null);
+										// }}
+										// value={selectedYear}
 									/>
 								)}
 							/>
