@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
 	Form,
@@ -11,7 +11,7 @@ import {
 	Tab,
 	Container,
 } from 'react-bootstrap';
-import Select, { MultiValue } from 'react-select';
+import Select, { MultiValue, SingleValue } from 'react-select';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -58,11 +58,18 @@ interface OptionProps {
 const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const { bases } = useSelector((state: RootState) => state.metas);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
-	const [selectedYear, setSelectedYear] = useState<OptionProps | null>(null);
-	const [selectedProgram, setSelectedProgram] = useState<OptionProps | null>(null);
-	const [loadingPrograms, setLoadingPrograms] = useState<boolean>(false);
-	const [loadingAreas, setLoadingAreas] = useState<boolean>(false);
 	const [currentCompleteAreaList, setCurrentCompleteAreaList] = useState<Area[]>(userData.areas);
+
+	const [selectedYear, setSelectedYear] = useState<OptionProps | null>(null);
+	
+	const [loadingPrograms, setLoadingPrograms] = useState<boolean>(false);
+	const [selectedProgram, setSelectedProgram] = useState<OptionProps | null>(null);
+	const [userProgramsOptions, setUserProgramsOptions] = useState<OptionProps[]>([]);
+	const [allProgramsOptions, setAllProgramsOptions] = useState<OptionProps[]>([]);
+	
+	const [loadingAreas, setLoadingAreas] = useState<boolean>(false);
+	const [userAreasOptions, setUserAreasOptions] = useState<OptionProps[]>([]);
+	const [allAreasOptions, setAllAreasOptions] = useState<OptionProps[]>([]);
 
 	const yearOptions = useMemo(
 		() =>
@@ -72,38 +79,30 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 			})),
 		[bases.lAreasProgramasAnios],
 	);
-	const { handleSubmit, control, setValue } = useForm<UserData>({
+	const { handleSubmit, control, watch, setValue } = useForm<UserData>({
 		defaultValues: userData,
 	});
 
-	const getPrograms = useCallback(
-		(type = 'all'): OptionProps[] => {
-			if (selectedYear === null) {
-				return [];
-			}
+	useEffect(() => {
+		setLoadingPrograms(true);
+		setUserProgramsOptions([]);
+		setAllProgramsOptions([]);
 
-			setLoadingPrograms(true);
+		const allPrograms = bases.lAreasProgramasAnios
+			.filter((item) => item.anio === Number(selectedYear?.label))
+			.flatMap((item) => item.listaProgramas)
+			.map((program) => ({ label: program.nom, value: program.idPrograma }));
 
-			const programs = bases.lAreasProgramasAnios
-				.filter((item) => item.anio === Number(selectedYear.label))
-				.flatMap((item) => item.listaProgramas)
-				.map((program) => ({ label: program.nom, value: program.idPrograma }));
+		const userPrograms = allPrograms.filter((program) =>
+			currentCompleteAreaList.filter((area) => area.anio === Number(selectedYear?.label))
+				.flatMap((area) => area.listaProgramas)
+				.some((userProgram) => userProgram.idPrograma === program.value),
+		);
 
-			const filteredPrograms =
-				type === 'user'
-					? programs.filter((program) =>
-							currentCompleteAreaList
-								.filter((area) => area.anio === Number(selectedYear?.label))
-								.flatMap((area) => area.listaProgramas)
-								.some((userProgram) => userProgram.idPrograma === program.value),
-					  )
-					: programs;
-
-			setLoadingPrograms(false);
-			return filteredPrograms;
-		},
-		[bases.lAreasProgramasAnios, currentCompleteAreaList, selectedYear],
-	);
+		setLoadingPrograms(false);
+		setAllProgramsOptions(allPrograms);
+		setUserProgramsOptions(userPrograms);
+	}, [bases.lAreasProgramasAnios, currentCompleteAreaList, selectedYear]);
 
 	const getAreas = useCallback(
 		(type = 'all'): OptionProps[] => {
@@ -244,13 +243,17 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 		setShowPassword(!showPassword);
 	};
 
+	const handleProgramChange = useCallback((selectedOption: SingleValue<OptionProps>) => {
+		setSelectedProgram(selectedOption);
+	}, []);
+
 	const handleAddProgram = () => {
 		MySwal.fire({
 			title: 'Agregar Programa',
 			animation: false,
-			html: getPrograms('all')
+			html: allProgramsOptions
 				.map((program) => {
-					const isSelected = getPrograms('user').some(
+					const isSelected = userProgramsOptions.some(
 						(selected) => selected.value === program.value,
 					);
 					return `<button class="swal2-program-button btn btn-primary btn-sm m-1" data-value="${
@@ -276,7 +279,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 				buttons.forEach((button) => {
 					button.addEventListener('click', () => {
 						const selectedValue = parseInt(button.getAttribute('data-value') as string);
-						const selectedProgram = getPrograms('all').find(
+						const selectedProgram = allProgramsOptions.find(
 							(program) => program.value === selectedValue,
 						);
 						if (selectedProgram) {
@@ -374,6 +377,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 												shouldDirty: true,
 											});
 											setSelectedProgram(null);
+											console.log(watch(generateFieldName('anio')));
 										}}
 										value={selectedYear}
 									/>
@@ -390,9 +394,10 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 										render={({ field }) => (
 											<Select
 												{...field}
-												options={getPrograms('user')}
+												options={userProgramsOptions}
 												onChange={(selectedOption) => {
-													setSelectedProgram(selectedOption);
+													handleProgramChange(selectedOption);
+													field.onChange(selectedOption);
 												}}
 												placeholder='No hay programas cargados'
 												className='flex-grow-1'
