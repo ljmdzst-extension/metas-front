@@ -18,7 +18,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import FormInput from '@/components/Common/FormInput';
-import { Area, UserData } from '@/types/UserProps';
+import { Area, programasNom, UserData } from '@/types/UserProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { Add } from '@mui/icons-material';
@@ -78,22 +78,24 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 
 	const getPrograms = useCallback(
 		(type = 'all'): OptionProps[] => {
-			if (selectedYear === null) {
-				return [];
-			}
+			if (!selectedYear) return [];
 
 			setLoadingPrograms(true);
 
-			const programs = bases.lAreasProgramasAnios
-				.filter((item) => item.anio === Number(selectedYear.label))
-				.flatMap((item) => item.listaProgramas)
-				.map((program) => ({ label: program.nom, value: program.idPrograma }));
+			const yearPrograms =
+				bases.lAreasProgramasAnios.find((item) => item.anio === Number(selectedYear.label))
+					?.listaProgramas || [];
+
+			const programs = yearPrograms.map((program) => ({
+				label: program.nom,
+				value: program.idPrograma,
+			}));
 
 			const filteredPrograms =
 				type === 'user'
 					? programs.filter((program) =>
 							currentCompleteAreaList
-								.filter((area) => area.anio === Number(selectedYear?.label))
+								.filter((area) => area.anio === Number(selectedYear.label))
 								.flatMap((area) => area.listaProgramas)
 								.some((userProgram) => userProgram.idPrograma === program.value),
 					  )
@@ -107,18 +109,19 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 
 	const getAreas = useCallback(
 		(type = 'all'): OptionProps[] => {
-			if (selectedProgram === null) {
-				return [];
-			}
+			if (!selectedProgram || !selectedYear) return [];
 
 			setLoadingAreas(true);
 
-			const areas = bases.lAreasProgramasAnios
-				.filter((item) => item.anio === Number(selectedYear?.label))
-				.flatMap((item) => item.listaProgramas)
-				.filter((program) => program.idPrograma === selectedProgram.value)
-				.flatMap((program) => program.listaAreas)
-				.map((area) => ({ label: area.nom, value: area.idArea }));
+			const yearPrograms =
+				bases.lAreasProgramasAnios.find((item) => item.anio === Number(selectedYear.label))
+					?.listaProgramas || [];
+
+			const programAreas =
+				yearPrograms.find((program) => program.idPrograma === selectedProgram.value)?.listaAreas ||
+				[];
+
+			const areas = programAreas.map((area) => ({ label: area.nom, value: area.idArea }));
 
 			const filteredAreas =
 				type === 'user'
@@ -134,11 +137,13 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 			setLoadingAreas(false);
 			return filteredAreas;
 		},
-		[selectedYear?.label, selectedProgram, currentCompleteAreaList, bases.lAreasProgramasAnios],
+		[selectedYear, selectedProgram, currentCompleteAreaList, bases.lAreasProgramasAnios],
 	);
 
 	const editAreaData = useCallback(
-		(type: string, data: any) => {
+		(type: string, data: OptionProps | OptionProps[]) => {
+			const dataArray = Array.isArray(data) ? data : [data];
+
 			setCurrentCompleteAreaList((prevState) => {
 				const updatedList = [...prevState];
 				const yearIndex = updatedList.findIndex(
@@ -146,44 +151,31 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 				);
 
 				if (yearIndex !== -1) {
-					if (type === 'add-program') {
-						const programIndex = updatedList[yearIndex].listaProgramas.findIndex(
-							(program) => program.idPrograma === data.value,
-						);
+					const yearPrograms = updatedList[yearIndex].listaProgramas;
 
-						if (programIndex === -1) {
-							updatedList[yearIndex].listaProgramas.push({
-								idPrograma: data.value,
-								nom: data.label,
-								listaAreas: [],
-							});
-						}
-					} else if (type === 'add-area') {
-						const programIndex = updatedList[yearIndex].listaProgramas.findIndex(
+					if (
+						type === 'add-program' &&
+						!yearPrograms.some((program) => program.idPrograma === dataArray[0].value)
+					) {
+						yearPrograms.push({
+							idPrograma: dataArray[0].value,
+							nom: dataArray[0].label as programasNom,
+							listaAreas: [],
+						});
+					}
+
+					if (type === 'add-area') {
+						const program = yearPrograms.find(
 							(program) => program.idPrograma === selectedProgram?.value,
 						);
 
-						if (programIndex !== -1) {
-							data.forEach((area: OptionProps) => {
-								const areaIndex = updatedList[yearIndex].listaProgramas[
-									programIndex
-								].listaAreas.findIndex((existingArea) => existingArea.idArea === area.value);
-
-								if (areaIndex === -1) {
-									updatedList[yearIndex].listaProgramas[programIndex].listaAreas.push({
-										idArea: area.value,
-										nom: area.label,
-									});
+						if (program) {
+							dataArray.forEach((area) => {
+								if (
+									!program.listaAreas.some((existingArea) => existingArea.idArea === area.value)
+								) {
+									program.listaAreas.push({ idArea: area.value, nom: area.label });
 								}
-							});
-						} else {
-							updatedList[yearIndex].listaProgramas.push({
-								idPrograma: selectedProgram?.value,
-								nom: selectedProgram?.label,
-								listaAreas: data.map((area: OptionProps) => ({
-									idArea: area.value,
-									nom: area.label,
-								})),
 							});
 						}
 					}
@@ -192,12 +184,11 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 						anio: Number(selectedYear?.label),
 						listaProgramas: [
 							{
-								idPrograma: selectedProgram?.value,
-								nom: selectedProgram?.label,
-								listaAreas: data.map((area: OptionProps) => ({
+								idPrograma: selectedProgram?.value as number,
+								nom: selectedProgram?.label as programasNom,
+								listaAreas: dataArray.map((area) => ({
 									idArea: area.value,
 									nom: area.label,
-									listaAreas: [],
 								})),
 							},
 						],
@@ -206,7 +197,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 				return updatedList;
 			});
 		},
-		[selectedYear?.label, selectedProgram?.value, selectedProgram?.label],
+		[selectedYear, selectedProgram],
 	);
 
 	const onSubmit = (data: UserData) => {
@@ -216,8 +207,9 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 
 	const generateFieldName = useCallback(
 		(type: 'anio' | 'programas' | 'areas'): any => {
-			const yearIndex = selectedYear ? Number(selectedYear.value) : 0;
-			// console.log(selectedYear);
+			if (!selectedYear) return '';
+
+			const yearIndex = Number(selectedYear.value);
 
 			if (type === 'anio') {
 				return `areas.${yearIndex}.anio`;
@@ -422,7 +414,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 												onChange={(selectedOption) => {
 													const selectedAreas = selectedOption as MultiValue<OptionProps>;
 													field.onChange(selectedAreas);
-													editAreaData('add-area', selectedAreas);
+													editAreaData('add-area', selectedAreas as OptionProps[]);
 												}}
 												isClearable
 												isMulti
