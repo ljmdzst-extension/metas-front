@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
 	Form,
@@ -21,7 +21,7 @@ import FormInput from '@/components/Common/FormInput';
 import { Area, programasNom, UserData } from '@/types/UserProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
-import { Add } from '@mui/icons-material';
+import { Add, Undo } from '@mui/icons-material';
 
 const MySwal = withReactContent(Swal);
 
@@ -63,6 +63,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const [loadingPrograms, setLoadingPrograms] = useState<boolean>(false);
 	const [loadingAreas, setLoadingAreas] = useState<boolean>(false);
 	const [currentCompleteAreaList, setCurrentCompleteAreaList] = useState<Area[]>(userData.areas);
+	const [areaHistory, setAreaHistory] = useState<(typeof userData.areas)[]>([]);
 
 	const yearOptions = useMemo(
 		() =>
@@ -72,6 +73,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 			})),
 		[bases.lAreasProgramasAnios],
 	);
+
 	const { handleSubmit, control, setValue } = useForm<UserData>({
 		defaultValues: userData,
 	});
@@ -137,7 +139,12 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 			setLoadingAreas(false);
 			return filteredAreas;
 		},
-		[selectedYear, selectedProgram, currentCompleteAreaList, bases.lAreasProgramasAnios],
+		[
+			selectedYear,
+			selectedProgram,
+			currentCompleteAreaList,
+			bases.lAreasProgramasAnios
+		],
 	);
 
 	const editAreaData = useCallback(
@@ -194,6 +201,8 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 						],
 					});
 				}
+
+				setAreaHistory((prevHistory) => [...prevHistory, JSON.parse(JSON.stringify(updatedList))]);
 				return updatedList;
 			});
 		},
@@ -281,6 +290,26 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 		});
 	};
 
+	// NOTE: Funcionalidad deshacer cambios de areas
+
+	useEffect(() => {
+		setAreaHistory([userData.areas]);
+	}, [userData.areas]);
+
+	const handleUndo = () => {
+		setAreaHistory((prevHistory) => {
+			if (prevHistory.length > 0) {
+				// Remover el último estado del historial y actualizar el estado actual
+				const newHistory = prevHistory.slice(0, -1);
+				setCurrentCompleteAreaList(newHistory[newHistory.length - 1]);
+				console.log('Estado nuevo', newHistory[newHistory.length - 1]);
+				console.log('Estado borrado', newHistory);
+				return newHistory;
+			}
+			return prevHistory;
+		});
+	};
+
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)} className='d-flex flex-column h-100'>
 			<div className='d-flex justify-content-end'>
@@ -351,7 +380,17 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 				<Tab eventKey='metas' title='Planificaciones y resultados'>
 					<Container>
 						<Form.Group controlId='formYear' className='mb-2'>
-							<Form.Label>Año</Form.Label>
+							<div className=' d-flex justify-content-between align-items-center '>
+								<Form.Label>Año</Form.Label>
+								<Button
+									size='sm'
+									variant='outlined'
+									onClick={handleUndo}
+									className={areaHistory.length === 1 ? 'disabled' : ''}
+								>
+									Deshacer <Undo />
+								</Button>
+							</div>
 							<Controller
 								name={generateFieldName('anio')}
 								control={control}
@@ -416,10 +455,10 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 													field.onChange(selectedAreas);
 													editAreaData('add-area', selectedAreas as OptionProps[]);
 												}}
-												isClearable
 												isMulti
 												placeholder='Agregar Área'
 												className='flex-grow-1'
+												styles={{ multiValueRemove: (base) => ({ ...base, visibility: 'hidden' }) }}
 												value={getAreas('user')}
 											/>
 										)}
