@@ -18,7 +18,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import FormInput from '@/components/Common/FormInput';
-import { Area, programasNom, UserData } from '@/types/UserProps';
+import { Area, PermisoNombre, programasNom, UserData } from '@/types/UserProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { Add, Undo } from '@mui/icons-material';
@@ -56,6 +56,11 @@ interface OptionProps {
 	label: string;
 }
 
+interface Permiso {
+	value: PermisoNombre;
+	label: string;
+}
+
 const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const { bases } = useSelector((state: RootState) => state.metas);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -65,6 +70,15 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const [loadingAreas, setLoadingAreas] = useState<boolean>(false);
 	const [currentCompleteAreaList, setCurrentCompleteAreaList] = useState<Area[]>(userData.areas);
 	const [areaHistory, setAreaHistory] = useState<(typeof userData.areas)[]>([userData.areas]);
+
+	const permisoOptions: Permiso[] = useMemo(
+		() =>
+			Object.keys(PermisoNombre).map((key) => ({
+				value: PermisoNombre[key as keyof typeof PermisoNombre],
+				label: key.replace(/([A-Z])/g, ' $1').trim(),
+			})),
+		[],
+	);
 
 	const yearOptions = useMemo(
 		() =>
@@ -297,7 +311,6 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	};
 
 	// NOTE: Funcionalidad deshacer cambios de areas
-
 	const handleUndo = () => {
 		setAreaHistory((prevHistory) => {
 			if (prevHistory.length > 0) {
@@ -313,6 +326,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	// NOTE: Guardar Usuario
 
 	const onSubmit = async (data: UserData) => {
+		// TODO: volver a chequear cuando se arregle el back y agregar alertas
 		try {
 			data.areas = currentCompleteAreaList;
 			console.log(data);
@@ -392,6 +406,24 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 				<Tab eventKey='metas' title='Planificaciones y resultados'>
 					<Container>
 						<Form.Group controlId='formYear' className='mb-2'>
+							<Controller
+								name='permisos'
+								control={control}
+								render={({ field }) => (
+									<Select
+										{...field}
+										options={permisoOptions}
+										isMulti
+										getOptionLabel={(option) => option.label}
+										getOptionValue={(option) => option.value}
+										placeholder='Select permissions'
+										onChange={(selectedOptions: MultiValue<Permiso>) => {
+											field.onChange(selectedOptions);
+										}}
+									/>
+								)}
+							/>
+
 							<div className=' d-flex justify-content-between align-items-center '>
 								<Form.Label>Año</Form.Label>
 								<Button
