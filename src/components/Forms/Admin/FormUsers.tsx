@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
 	Form,
@@ -63,7 +63,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const [loadingPrograms, setLoadingPrograms] = useState<boolean>(false);
 	const [loadingAreas, setLoadingAreas] = useState<boolean>(false);
 	const [currentCompleteAreaList, setCurrentCompleteAreaList] = useState<Area[]>(userData.areas);
-	const [areaHistory, setAreaHistory] = useState<(typeof userData.areas)[]>([]);
+	const [areaHistory, setAreaHistory] = useState<(typeof userData.areas)[]>([userData.areas]);
 
 	const yearOptions = useMemo(
 		() =>
@@ -139,75 +139,82 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 			setLoadingAreas(false);
 			return filteredAreas;
 		},
-		[
-			selectedYear,
-			selectedProgram,
-			currentCompleteAreaList,
-			bases.lAreasProgramasAnios
-		],
+		[selectedYear, selectedProgram, currentCompleteAreaList, bases.lAreasProgramasAnios],
 	);
 
-	const editAreaData = useCallback(
-		(type: string, data: OptionProps | OptionProps[]) => {
-			const dataArray = Array.isArray(data) ? data : [data];
+	let isUpdating = false; // Bandera para evitar actualizaciones múltiples
 
-			setCurrentCompleteAreaList((prevState) => {
-				const updatedList = [...prevState];
-				const yearIndex = updatedList.findIndex(
-					(area) => area.anio === Number(selectedYear?.label),
-				);
+	const editAreaData = (type: string, data: OptionProps | OptionProps[]) => {
+		if (isUpdating) return; // Evita que se ejecute si ya está en proceso
+		isUpdating = true; // Indica que una actualización está en proceso
 
-				if (yearIndex !== -1) {
-					const yearPrograms = updatedList[yearIndex].listaProgramas;
+		const dataArray = Array.isArray(data) ? data : [data];
 
-					if (
-						type === 'add-program' &&
-						!yearPrograms.some((program) => program.idPrograma === dataArray[0].value)
-					) {
-						yearPrograms.push({
-							idPrograma: dataArray[0].value,
-							nom: dataArray[0].label as programasNom,
-							listaAreas: [],
-						});
-					}
+		setCurrentCompleteAreaList((prevState) => {
+			const updatedList: Area[] = JSON.parse(JSON.stringify(prevState));
+			const yearIndex = updatedList.findIndex((area) => area.anio === Number(selectedYear?.label));
 
-					if (type === 'add-area') {
-						const program = yearPrograms.find(
-							(program) => program.idPrograma === selectedProgram?.value,
-						);
+			if (yearIndex !== -1) {
+				const yearPrograms = updatedList[yearIndex].listaProgramas;
 
-						if (program) {
-							dataArray.forEach((area) => {
-								if (
-									!program.listaAreas.some((existingArea) => existingArea.idArea === area.value)
-								) {
-									program.listaAreas.push({ idArea: area.value, nom: area.label });
-								}
-							});
-						}
-					}
-				} else {
-					updatedList.push({
-						anio: Number(selectedYear?.label),
-						listaProgramas: [
-							{
-								idPrograma: selectedProgram?.value as number,
-								nom: selectedProgram?.label as programasNom,
-								listaAreas: dataArray.map((area) => ({
-									idArea: area.value,
-									nom: area.label,
-								})),
-							},
-						],
+				if (
+					type === 'add-program' &&
+					!yearPrograms.some((program) => program.idPrograma === dataArray[0].value)
+				) {
+					yearPrograms.push({
+						idPrograma: dataArray[0].value,
+						nom: dataArray[0].label as programasNom,
+						listaAreas: [],
 					});
 				}
 
-				setAreaHistory((prevHistory) => [...prevHistory, JSON.parse(JSON.stringify(updatedList))]);
-				return updatedList;
+				if (type === 'add-area') {
+					const program = yearPrograms.find(
+						(program) => program.idPrograma === selectedProgram?.value,
+					);
+
+					if (program) {
+						dataArray.forEach((area) => {
+							if (!program.listaAreas.some((existingArea) => existingArea.idArea === area.value)) {
+								program.listaAreas.push({ idArea: area.value, nom: area.label });
+							}
+						});
+					}
+				}
+			} else {
+				updatedList.push({
+					anio: Number(selectedYear?.label),
+					listaProgramas: [
+						{
+							idPrograma: selectedProgram?.value as number,
+							nom: selectedProgram?.label as programasNom,
+							listaAreas: dataArray.map((area) => ({
+								idArea: area.value,
+								nom: area.label,
+							})),
+						},
+					],
+				});
+			}
+
+			setAreaHistory((prevHistory) => {
+				const lastHistoryItem = prevHistory[prevHistory.length - 1];
+
+				// Convertir las listas a strings para comparación sencilla
+				const lastItemString = JSON.stringify(lastHistoryItem);
+				const updatedListString = JSON.stringify(updatedList);
+
+				if (lastItemString !== updatedListString) {
+					return [...prevHistory, updatedList];
+				}
+				return prevHistory;
 			});
-		},
-		[selectedYear, selectedProgram],
-	);
+
+			isUpdating = false; // Resetea la bandera para permitir futuras actualizaciones
+
+			return updatedList;
+		});
+	};
 
 	const onSubmit = (data: UserData) => {
 		data.areas = currentCompleteAreaList;
@@ -291,10 +298,6 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	};
 
 	// NOTE: Funcionalidad deshacer cambios de areas
-
-	useEffect(() => {
-		setAreaHistory([userData.areas]);
-	}, [userData.areas]);
 
 	const handleUndo = () => {
 		setAreaHistory((prevHistory) => {
