@@ -22,6 +22,7 @@ import { Area, programasNom, UserData } from '@/types/UserProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { Add, Undo } from '@mui/icons-material';
+import { putUsers } from '@/services';
 
 const MySwal = withReactContent(Swal);
 
@@ -142,6 +143,39 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 		[selectedYear, selectedProgram, currentCompleteAreaList, bases.lAreasProgramasAnios],
 	);
 
+	const generateFieldName = useCallback(
+		(type: 'anio' | 'programas' | 'areas'): any => {
+			if (!selectedYear) return '';
+
+			const yearIndex = Number(selectedYear.value);
+
+			if (type === 'anio') {
+				return `areas.${yearIndex}.anio`;
+			}
+
+			if (!selectedProgram) return '';
+
+			const programIndex = currentCompleteAreaList[yearIndex]?.listaProgramas.findIndex(
+				(program) => program.idPrograma === selectedProgram.value,
+			);
+
+			if (type === 'programas') {
+				return `areas.${yearIndex}.listaProgramas.${programIndex}.nom`;
+			} else if (type === 'areas') {
+				return `areas.${yearIndex}.listaProgramas.${programIndex}.listaAreas`;
+			}
+
+			return '';
+		},
+		[currentCompleteAreaList, selectedProgram, selectedYear],
+	);
+
+	const toggleShowPassword = () => {
+		setShowPassword(!showPassword);
+	};
+
+	// NOTE: Funcionalidad para agregar programas y areas
+
 	let isUpdating = false; // Bandera para evitar actualizaciones múltiples
 
 	const editAreaData = (type: string, data: OptionProps | OptionProps[]) => {
@@ -216,42 +250,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 		});
 	};
 
-	const onSubmit = (data: UserData) => {
-		data.areas = currentCompleteAreaList;
-		console.log(data);
-	};
-
-	const generateFieldName = useCallback(
-		(type: 'anio' | 'programas' | 'areas'): any => {
-			if (!selectedYear) return '';
-
-			const yearIndex = Number(selectedYear.value);
-
-			if (type === 'anio') {
-				return `areas.${yearIndex}.anio`;
-			}
-
-			if (!selectedProgram) return '';
-
-			const programIndex = currentCompleteAreaList[yearIndex]?.listaProgramas.findIndex(
-				(program) => program.idPrograma === selectedProgram.value,
-			);
-
-			if (type === 'programas') {
-				return `areas.${yearIndex}.listaProgramas.${programIndex}.nom`;
-			} else if (type === 'areas') {
-				return `areas.${yearIndex}.listaProgramas.${programIndex}.listaAreas`;
-			}
-
-			return '';
-		},
-		[currentCompleteAreaList, selectedProgram, selectedYear],
-	);
-
-	const toggleShowPassword = () => {
-		setShowPassword(!showPassword);
-	};
-
+	// NOTE: Alerta Agregar Programa
 	const handleAddProgram = () => {
 		MySwal.fire({
 			title: 'Agregar Programa',
@@ -305,12 +304,22 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 				// Remover el último estado del historial y actualizar el estado actual
 				const newHistory = prevHistory.slice(0, -1);
 				setCurrentCompleteAreaList(newHistory[newHistory.length - 1]);
-				console.log('Estado nuevo', newHistory[newHistory.length - 1]);
-				console.log('Estado borrado', newHistory);
 				return newHistory;
 			}
 			return prevHistory;
 		});
+	};
+
+	// NOTE: Guardar Usuario
+
+	const onSubmit = async (data: UserData) => {
+		try {
+			data.areas = currentCompleteAreaList;
+			console.log(data);
+			await putUsers(data);
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	return (
