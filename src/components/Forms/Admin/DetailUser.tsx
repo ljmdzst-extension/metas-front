@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Card, Button, ListGroup, ListGroupItem, Container, Row, Col } from 'react-bootstrap';
+
 import { UserData } from '@/types/UserProps';
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 interface DetailsUserProps {
 	user: UserData;
@@ -15,53 +15,132 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 		setShowPassword(!showPassword);
 	};
 
-	const renderValue = (key: string, value: any) => {
-		if (key === 'pass') {
-			return (
-				<span>
-					{showPassword ? String(value) : '********'}
-					<IconButton onClick={toggleShowPassword} style={{ marginLeft: '10px' }}>
-						{showPassword ? <VisibilityOff /> : <Visibility />}
-					</IconButton>
-				</span>
-			);
-		} else if (Array.isArray(value)) {
-			return (
-				<ul>
-					{value.map((item, index) => (
-						<li key={index}>
-							{Object.entries(item).map(([k, v]) => (
-								<p key={k}>
-									<strong>{k}:</strong> {String(v)}
-								</p>
-							))}
-						</li>
-					))}
-				</ul>
-			);
-		} else if (typeof value === 'object' && value !== null) {
-			return (
-				<div>
-					{Object.entries(value).map(([k, v]) => (
-						<p key={k}>
-							<strong>{k}:</strong> {String(v)}
-						</p>
-					))}
-				</div>
-			);
-		} else {
-			return String(value);
-		}
-	};
+	const renderPassword = (password: string) => (
+		<span>
+			{showPassword ? password : '********'}
+			<Button variant='link' onClick={toggleShowPassword} className='p-0 ml-2'>
+				{showPassword ? <VisibilityOff /> : <Visibility />}
+			</Button>
+		</span>
+	);
+
+	const renderList = (list: any[], renderItem: (item: any) => JSX.Element) => (
+		<ListGroup>
+			{list.map((item, index) => (
+				<ListGroupItem key={index}>{renderItem(item)}</ListGroupItem>
+			))}
+		</ListGroup>
+	);
 
 	return (
-		<div style={{ textAlign: 'left' }}>
-			{Object.entries(user).map(([key, value]) => (
-				<p key={key}>
-					<strong>{key}:</strong> {renderValue(key, value)}
-				</p>
-			))}
-		</div>
+		<Container>
+			<Row className='mb-3'>
+				<Col>
+					<Card>
+						<Card.Header>Datos Personales</Card.Header>
+						<Card.Body>
+							<Card.Text>
+								<strong>Nombre:</strong> {user.persona.nom}
+							</Card.Text>
+							<Card.Text>
+								<strong>Apellido:</strong> {user.persona.ape}
+							</Card.Text>
+							<Card.Text>
+								<strong>Email:</strong> {user.usuario.email || 'No proporcionado'}
+							</Card.Text>
+							<Card.Text>
+								<strong>Teléfono:</strong> {user.persona.tel || 'No proporcionado'}
+							</Card.Text>
+							<Card.Text>
+								<strong>Dirección:</strong> {user.persona.dom || 'No proporcionado'}
+							</Card.Text>
+						</Card.Body>
+					</Card>
+				</Col>
+			</Row>
+
+			<Row className='mb-3'>
+				<Col>
+					<Card>
+						<Card.Header>Usuario</Card.Header>
+						<Card.Body>
+							<Card.Text>
+								<strong>ID Usuario:</strong> {user.usuario.idUsuario}
+							</Card.Text>
+							<Card.Text>
+								<strong>Email:</strong> {user.usuario.email}
+							</Card.Text>
+							<Card.Text>
+								<strong>Contraseña:</strong> {renderPassword(user.usuario.pass)}
+							</Card.Text>
+						</Card.Body>
+					</Card>
+				</Col>
+			</Row>
+
+			<Row className='mb-3'>
+				<Col>
+					<Card>
+						<Card.Header>Categorías</Card.Header>
+						<Card.Body>
+							{renderList(user.categorias, (categoria) => (
+								<span>
+									<strong>Nombre:</strong> {categoria.nombre}
+								</span>
+							))}
+						</Card.Body>
+					</Card>
+				</Col>
+			</Row>
+
+			<Row className='mb-3'>
+				<Col>
+					<Card>
+						<Card.Header>Permisos</Card.Header>
+						<Card.Body>
+							{renderList(user.permisos, (permiso) => (
+								<span>
+									<strong>Nombre:</strong> {permiso.nombre}
+								</span>
+							))}
+						</Card.Body>
+					</Card>
+				</Col>
+			</Row>
+
+			<Row className='mb-3'>
+				<Col>
+					<Card>
+						<Card.Header>Áreas</Card.Header>
+						<Card.Body>
+							{renderList(user.areas, (area) => (
+								<div>
+									<p>
+										<strong>Año:</strong> {area.anio}
+									</p>
+									<p>
+										<strong>Programas:</strong>
+									</p>
+									{renderList(area.listaProgramas, (programa) => (
+										<div>
+											<p>
+												<strong>Nombre:</strong> {programa.nom}
+											</p>
+											<p>
+												<strong>Áreas:</strong>
+											</p>
+											{renderList(programa.listaAreas, (area) => (
+												<span>{area.nom}</span>
+											))}
+										</div>
+									))}
+								</div>
+							))}
+						</Card.Body>
+					</Card>
+				</Col>
+			</Row>
+		</Container>
 	);
 };
 

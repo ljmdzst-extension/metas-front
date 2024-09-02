@@ -6,10 +6,10 @@ import {
 	Row,
 	Col,
 	InputGroup,
-	CloseButton,
 	Tabs,
 	Tab,
 	Container,
+	FormGroup,
 } from 'react-bootstrap';
 import Select, { MultiValue } from 'react-select';
 import IconButton from '@mui/material/IconButton';
@@ -18,10 +18,10 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import FormInput from '@/components/Common/FormInput';
-import { Area, PermisoNombre, programasNom, UserData } from '@/types/UserProps';
+import { Area, programasNom, UserData } from '@/types/UserProps';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
-import { Add, Undo } from '@mui/icons-material';
+import { Add, Close, Undo } from '@mui/icons-material';
 import { putUsers } from '@/services';
 
 const MySwal = withReactContent(Swal);
@@ -57,9 +57,14 @@ interface OptionProps {
 }
 
 interface Permiso {
-	value: PermisoNombre;
-	label: string;
+	idPermiso: number;
+	nombre: string;
 }
+
+const permisosOptions: Permiso[] = [
+	{ idPermiso: 1, nombre: 'METAS_LECTURA' },
+	{ idPermiso: 2, nombre: 'METAS_EDICION' },
+];
 
 const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const { bases } = useSelector((state: RootState) => state.metas);
@@ -70,15 +75,6 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	const [loadingAreas, setLoadingAreas] = useState<boolean>(false);
 	const [currentCompleteAreaList, setCurrentCompleteAreaList] = useState<Area[]>(userData.areas);
 	const [areaHistory, setAreaHistory] = useState<(typeof userData.areas)[]>([userData.areas]);
-
-	const permisoOptions: Permiso[] = useMemo(
-		() =>
-			Object.keys(PermisoNombre).map((key) => ({
-				value: PermisoNombre[key as keyof typeof PermisoNombre],
-				label: key.replace(/([A-Z])/g, ' $1').trim(),
-			})),
-		[],
-	);
 
 	const yearOptions = useMemo(
 		() =>
@@ -339,7 +335,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)} className='d-flex flex-column h-100'>
 			<div className='d-flex justify-content-end'>
-				<CloseButton onClick={onClose} />
+				<Close onClick={onClose} fontSize="small" className=' cursor-pointer' />
 			</div>
 			<Tabs variant='tabs' transition className=' mb-2' fill>
 				<Tab eventKey='user' title='Usuario'>
@@ -405,25 +401,29 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 				</Tab>
 				<Tab eventKey='metas' title='Planificaciones y resultados'>
 					<Container>
-						<Form.Group controlId='formYear' className='mb-2'>
+						<FormGroup controlId='formPermisos' className='mb-2'>
+							<Form.Label>Permisos</Form.Label>
 							<Controller
 								name='permisos'
 								control={control}
 								render={({ field }) => (
 									<Select
 										{...field}
-										options={permisoOptions}
+										options={permisosOptions}
 										isMulti
-										getOptionLabel={(option) => option.label}
-										getOptionValue={(option) => option.value}
+										getOptionLabel={(option) => option.nombre}
+										getOptionValue={(option) => option.idPermiso.toString()}
 										placeholder='Select permissions'
 										onChange={(selectedOptions: MultiValue<Permiso>) => {
+											console.log(selectedOptions);
 											field.onChange(selectedOptions);
 										}}
 									/>
 								)}
 							/>
-
+						</FormGroup>
+						<Form.Label className='w-100 text-center'> Seccion Programas y Areas</Form.Label>
+						<Form.Group controlId='formMetas' className='mb-2'>
 							<div className=' d-flex justify-content-between align-items-center '>
 								<Form.Label>Año</Form.Label>
 								<Button
