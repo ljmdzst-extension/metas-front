@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { Card, Button, ListGroup, ListGroupItem, Container, Row, Col } from 'react-bootstrap';
+import {
+	Card,
+	Button,
+	ListGroup,
+	ListGroupItem,
+	Container,
+	Tabs,
+	Tab,
+} from 'react-bootstrap';
 
 import { UserData } from '@/types/UserProps';
-import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 interface DetailsUserProps {
 	user: UserData;
@@ -27,16 +35,18 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 	const renderList = (list: any[], renderItem: (item: any) => JSX.Element) => (
 		<ListGroup>
 			{list.map((item, index) => (
-				<ListGroupItem key={index}>{renderItem(item)}</ListGroupItem>
+				<ListGroupItem key={index} className="text-start">
+					{renderItem(item)}
+				</ListGroupItem>
 			))}
 		</ListGroup>
 	);
 
 	return (
 		<Container>
-			<Row className='mb-3'>
-				<Col>
-					<Card>
+			<Tabs variant='tabs' transition fill className='mb-2'>
+				<Tab title='Personal' eventKey={'personal'} className='mb-3'>
+					<Card className="text-start">
 						<Card.Header>Datos Personales</Card.Header>
 						<Card.Body>
 							<Card.Text>
@@ -46,9 +56,6 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 								<strong>Apellido:</strong> {user.persona.ape}
 							</Card.Text>
 							<Card.Text>
-								<strong>Email:</strong> {user.usuario.email || 'No proporcionado'}
-							</Card.Text>
-							<Card.Text>
 								<strong>Teléfono:</strong> {user.persona.tel || 'No proporcionado'}
 							</Card.Text>
 							<Card.Text>
@@ -56,12 +63,9 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 							</Card.Text>
 						</Card.Body>
 					</Card>
-				</Col>
-			</Row>
-
-			<Row className='mb-3'>
-				<Col>
-					<Card>
+				</Tab>
+				<Tab title='Cuenta' eventKey={'account'} className='mb-3'>
+					<Card className="text-start">
 						<Card.Header>Usuario</Card.Header>
 						<Card.Body>
 							<Card.Text>
@@ -75,42 +79,28 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 							</Card.Text>
 						</Card.Body>
 					</Card>
-				</Col>
-			</Row>
-
-			<Row className='mb-3'>
-				<Col>
-					<Card>
+				</Tab>
+				<Tab title='Permisos y Categorías' eventKey={'permissions'} className='mb-3'>
+					<Card className="text-start">
 						<Card.Header>Categorías</Card.Header>
 						<Card.Body>
 							{renderList(user.categorias, (categoria) => (
-								<span>
-									<strong>Nombre:</strong> {categoria.nombre}
-								</span>
+								<li>{categoria.nombre}</li>
 							))}
 						</Card.Body>
 					</Card>
-				</Col>
-			</Row>
 
-			<Row className='mb-3'>
-				<Col>
-					<Card>
+					<Card className="text-start">
 						<Card.Header>Permisos</Card.Header>
 						<Card.Body>
 							{renderList(user.permisos, (permiso) => (
-								<span>
-									<strong>Nombre:</strong> {permiso.nombre}
-								</span>
+								<li>{permiso.nombre}</li>
 							))}
 						</Card.Body>
 					</Card>
-				</Col>
-			</Row>
-
-			<Row className='mb-3'>
-				<Col>
-					<Card>
+				</Tab>
+				<Tab title='Areas' eventKey={'areas'} className='mb-3'>
+					<Card className="text-start">
 						<Card.Header>Áreas</Card.Header>
 						<Card.Body>
 							{renderList(user.areas, (area) => (
@@ -123,14 +113,10 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 									</p>
 									{renderList(area.listaProgramas, (programa) => (
 										<div>
-											<p>
-												<strong>Nombre:</strong> {programa.nom}
-											</p>
-											<p>
-												<strong>Áreas:</strong>
-											</p>
+											<p>{programa.nom}</p>
+											<p><strong>Áreas:</strong></p>
 											{renderList(programa.listaAreas, (area) => (
-												<span>{area.nom}</span>
+												<li>{area.nom}</li>
 											))}
 										</div>
 									))}
@@ -138,8 +124,8 @@ const DetailsUser: React.FC<DetailsUserProps> = ({ user }) => {
 							))}
 						</Card.Body>
 					</Card>
-				</Col>
-			</Row>
+				</Tab>
+			</Tabs>
 		</Container>
 	);
 };
