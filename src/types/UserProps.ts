@@ -1,6 +1,6 @@
 export interface UserFetch {
 	ok: boolean;
-	data: UserData[];
+	data: UserData;
 	error: null;
 }
 
@@ -47,6 +47,7 @@ export enum CategoriaNombre {
 	Eyc = 'EYC',
 	EycEcoFinan = 'EYC_ECO_FINAN',
 	GestionEyc = 'GESTION_EYC',
+	GestionUnl = 'GESTION_UNL',
 	ProgEXT = 'PROG_EXT',
 }
 
@@ -58,6 +59,7 @@ export interface Permiso {
 export enum PermisoNombre {
 	MetasEdicion = 'METAS_EDICION',
 	MetasLectura = 'METAS_LECTURA',
+	PropIPLectura = 'PROP_IP_LECTURA',
 }
 
 export interface Persona {
@@ -97,3 +99,31 @@ export interface UserFormData {
 	programas: number[];
 	areas: number[];
 }
+
+// NOTE: Listado de Usuarios
+export interface UserListFetch {
+	ok: boolean;
+	data: UserShortData[];
+	error: null;
+}
+
+export interface UserShortData {
+	idUsuario:  string;
+	nroDoc: string;
+	ape: string;
+	nom: string;
+	email: string;
+	categorias: Categoria[];
+	permisos: Permiso[];
+}
+
+export interface Categoria {
+	idCategoria: number;
+	nombre: CategoriaNombre;
+}
+
+export interface Permiso {
+	idPermiso: number;
+	nombre: PermisoNombre;
+}
+

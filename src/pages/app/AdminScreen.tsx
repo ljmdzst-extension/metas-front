@@ -7,34 +7,36 @@ import FormUsers from '@/components/Forms/Admin/FormUsers';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
 import DetailsUser from '@/components/Forms/Admin/DetailUser';
-import { getAllUsers } from '@/services';
-import { Categoria, UserData } from '@/types/UserProps';
+import { getAllUsers, getUserByID } from '@/services';
+import { Categoria, Permiso, UserData, UserShortData } from '@/types/UserProps';
 import { errorAlert } from '@/utils/Alerts';
 
 const MySwal = withReactContent(Swal);
 
 interface UserTableData {
 	nroDoc: string;
+	nombreCompleto: string;
 	email: string;
-	pass: string;
 	categorias: Categoria[];
+	permisos: Permiso[];
 }
 
-const mapUserDataForTable = (user: UserData): UserTableData => {
-	const { usuario } = user;
+const mapUserDataForTable = (user: UserShortData): UserTableData => {
+	const { nroDoc, nom, ape, email, categorias, permisos } = user;
 
 	return {
-		nroDoc: usuario.nroDoc,
-		email: usuario.email,
-		pass: usuario.pass,
-		categorias: user.categorias,
+		nroDoc: nroDoc,
+		nombreCompleto: `${nom} ${ape}`,
+		email: email,
+		categorias: categorias,
+		permisos: permisos,
 	};
 };
 
 const AdminScreen = () => {
 	const navigate = useNavigate();
-	const [users, setUsers] = useState<UserData[]>([]);
-	const [filteredUsers, setFilteredUsers] = useState<UserData[]>(users);
+	const [users, setUsers] = useState<UserShortData[]>([]);
+	const [filteredUsers, setFilteredUsers] = useState<UserShortData[]>(users);
 	const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
 	const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -55,19 +57,23 @@ const AdminScreen = () => {
 		fetchUsers();
 	}, []);
 
-	const handleAction = (action: 'view' | 'edit', user: UserTableData) => {
-		const originalUser = users.find((u) => u.usuario.nroDoc === user.nroDoc); // Encuentra el usuario original por Documento
-		if (!originalUser) return;
-		console.log(originalUser);
+	const handleAction = async (action: 'view' | 'edit', item: UserTableData) => {
+		// buscar id por documento
+		const idUsuario = users.find((user) => user.nroDoc === item.nroDoc)?.idUsuario;
+		if (!idUsuario) return;
+		const response = await getUserByID(idUsuario);
+		const completeUser = response.data;
+		if (!completeUser) return;
+		console.log(completeUser);
 		if (action === 'view') {
 			MySwal.fire({
 				title: 'User Details',
-				html: <DetailsUser user={originalUser} />,
+				html: <DetailsUser user={completeUser} />,
 				showConfirmButton: false,
 				width: '600px',
 			});
 		} else if (action === 'edit') {
-			setSelectedUser(originalUser);
+			setSelectedUser(completeUser);
 		}
 	};
 
@@ -78,50 +84,51 @@ const AdminScreen = () => {
 		setSelectedUser(null);
 	};
 
-	useEffect(() => {
-		const lowercasedQuery = searchQuery.toLowerCase();
+	// useEffect(() => {
+	// 	const lowercasedQuery = searchQuery.toLowerCase();
 
-		const filterUser = (user: UserData): boolean => {
-			const personaMatches = Object.values(user.persona).some((value) =>
-				value?.toString().toLowerCase().includes(lowercasedQuery),
-			);
+	// 	const filterUser = (user: UserData): boolean => {
+	// 		const personaMatches = Object.values(user.persona).some((value) =>
+	// 			value?.toString().toLowerCase().includes(lowercasedQuery),
+	// 		);
 
-			const usuarioMatches = Object.values(user.usuario).some((value) =>
-				value?.toString().toLowerCase().includes(lowercasedQuery),
-			);
+	// 		const usuarioMatches = Object.values(user.usuario).some((value) =>
+	// 			value?.toString().toLowerCase().includes(lowercasedQuery),
+	// 		);
 
-			const categoriasMatches = user.categorias.some((categoria) =>
-				categoria.nombre.toLowerCase().includes(lowercasedQuery),
-			);
+	// 		const categoriasMatches = user.categorias.some((categoria) =>
+	// 			categoria.nombre.toLowerCase().includes(lowercasedQuery),
+	// 		);
 
-			const permisosMatches = user.permisos.some((permiso) =>
-				permiso.nombre.toLowerCase().includes(lowercasedQuery),
-			);
+	// 		const permisosMatches = user.permisos.some((permiso) =>
+	// 			permiso.nombre.toLowerCase().includes(lowercasedQuery),
+	// 		);
 
-			const areasMatches = user.areas.some((area) =>
-				Object.values(area).some((value) =>
-					Array.isArray(value)
-						? value.some((subValue) => subValue.nom.toLowerCase().includes(lowercasedQuery))
-						: value?.toString().toLowerCase().includes(lowercasedQuery),
-				),
-			);
+	// 		const areasMatches = user.areas.some((area) =>
+	// 			Object.values(area).some((value) =>
+	// 				Array.isArray(value)
+	// 					? value.some((subValue) => subValue.nom.toLowerCase().includes(lowercasedQuery))
+	// 					: value?.toString().toLowerCase().includes(lowercasedQuery),
+	// 			),
+	// 		);
 
-			return (
-				personaMatches || usuarioMatches || categoriasMatches || permisosMatches || areasMatches
-			);
-		};
+	// 		return (
+	// 			personaMatches || usuarioMatches || categoriasMatches || permisosMatches || areasMatches
+	// 		);
+	// 	};
 
-		const filteredData = users.filter(filterUser);
-		setFilteredUsers(filteredData);
-	}, [searchQuery, users]);
+	// 	const filteredData = users.filter(filterUser);
+	// 	setFilteredUsers(filteredData);
+	// }, [searchQuery, users]);
 
 	const mappedFilteredUsers = filteredUsers.map(mapUserDataForTable);
 
 	const tableHeaders = {
 		nroDoc: 'Documento',
+		nombreCompleto: 'Nombre',
 		email: 'Email',
-		pass: 'Contraseña',
 		categorias: 'Categoría',
+		permisos: 'Permisos',
 	};
 
 	return (
@@ -164,11 +171,11 @@ const AdminScreen = () => {
 					</Col>
 					{selectedUser && (
 						<Col md={4} className='border rounded p-2 bg-color-slate'>
-							<FormUsers
+							{/* <FormUsers
 								userData={selectedUser}
 								onSave={handleSave}
 								onClose={() => setSelectedUser(null)}
-							/>
+							/> */}
 						</Col>
 					)}
 				</Row>

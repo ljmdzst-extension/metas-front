@@ -1,7 +1,7 @@
 import { Edit, Visibility, VisibilityOff } from '@mui/icons-material';
 import { Table, Button, Badge } from 'react-bootstrap';
 import { useState } from 'react';
-import { Categoria } from '@/types/UserProps';
+import { Categoria, Permiso } from '@/types/UserProps';
 
 interface CommonTableProps<T extends object> {
 	data: T[];
@@ -32,11 +32,29 @@ const CommonTable = <T extends object>({ data, headers, onAction }: CommonTableP
 			);
 		}
 
+		// Renderizar categorías
 		if (key === 'categorias' && Array.isArray(item[key])) {
 			return (
-				<Badge bg="secondary">
-					{(item[key] as unknown as Categoria[]).map((categoria) => categoria.nombre).join(', ')}
-				</Badge>
+				<div>
+					{(item[key] as Categoria[]).map((categoria) => (
+						<Badge bg='secondary' key={categoria.idCategoria} className='me-1'>
+							{categoria.nombre}
+						</Badge>
+					))}
+				</div>
+			);
+		}
+
+		// Renderizar permisos (Similar a las categorías)
+		if (key === 'permisos' && Array.isArray(item[key])) {
+			return (
+				<div>
+					{(item[key] as Permiso[]).map((permiso) => (
+						<Badge bg='info' key={permiso.idPermiso} className='me-1'>
+							{permiso.nombre}
+						</Badge>
+					))}
+				</div>
 			);
 		}
 
@@ -57,11 +75,11 @@ const CommonTable = <T extends object>({ data, headers, onAction }: CommonTableP
 				{data.map((item, index) => (
 					<tr key={index}>
 						{keys.map((key) => (
-							<td key={String(key)} className=' align-middle'>
+							<td key={String(key)} className='align-middle'>
 								{renderCell(key, item, index)}
 							</td>
 						))}
-						<td className=' d-flex justify-content-start gap-1'>
+						<td className='d-flex justify-content-start gap-1'>
 							<Button variant='outline-info' size='sm' onClick={() => onAction('view', item)}>
 								<Visibility onClick={() => onAction('view', item)} />
 							</Button>
