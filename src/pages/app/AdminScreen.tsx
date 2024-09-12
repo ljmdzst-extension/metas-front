@@ -10,6 +10,7 @@ import DetailsUser from '@/components/Forms/Admin/DetailUser';
 import { getAllUsers, getUserByID } from '@/services';
 import { Categoria, Permiso, UserData, UserShortData } from '@/types/UserProps';
 import { errorAlert } from '@/utils/Alerts';
+import useFilteredUsers from '@/hooks/useFilteredUsers'
 
 const MySwal = withReactContent(Swal);
 
@@ -36,91 +37,54 @@ const mapUserDataForTable = (user: UserShortData): UserTableData => {
 const AdminScreen = () => {
 	const navigate = useNavigate();
 	const [users, setUsers] = useState<UserShortData[]>([]);
-	const [filteredUsers, setFilteredUsers] = useState<UserShortData[]>(users);
 	const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
 	const [searchQuery, setSearchQuery] = useState<string>('');
 
 	// NOTE: Obtiene todos los usuarios
-	useEffect(() => {
-		const fetchUsers = async () => {
-			try {
-				const response = await getAllUsers();
-				if (response.ok) {
-					setUsers(response.data);
-					setFilteredUsers(response.data);
-				}
-			} catch (err) {
-				errorAlert((err as Error).message);
-			}
-		};
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await getAllUsers();
+        if (response.ok) {
+          setUsers(response.data);
+        }
+      } catch (err) {
+        errorAlert((err as Error).message);
+      }
+    };
 
-		fetchUsers();
-	}, []);
+    fetchUsers();
+  }, []);
 
 	const handleAction = async (action: 'view' | 'edit', item: UserTableData) => {
-		// buscar id por documento
-		const idUsuario = users.find((user) => user.nroDoc === item.nroDoc)?.idUsuario;
-		if (!idUsuario) return;
-		const response = await getUserByID(idUsuario);
-		const completeUser = response.data;
-		if (!completeUser) return;
-		console.log(completeUser);
-		if (action === 'view') {
-			MySwal.fire({
-				title: 'User Details',
-				html: <DetailsUser user={completeUser} />,
-				showConfirmButton: false,
-				width: '600px',
-			});
-		} else if (action === 'edit') {
-			setSelectedUser(completeUser);
+		try {
+			const idUsuario = users.find(user => user.nroDoc === item.nroDoc)?.idUsuario;
+			if (!idUsuario) return;
+			
+			const response = await getUserByID(idUsuario);
+			const completeUser = response.data;
+	
+			if (!completeUser) return;
+			
+			if (action === 'view') {
+				MySwal.fire({
+					title: 'Información de usuario',
+					html: <DetailsUser user={completeUser} />,
+					showConfirmButton: false,
+					width: '600px',
+				});
+			} else if (action === 'edit') {
+				setSelectedUser(completeUser);
+			}
+		} catch (err) {
+			errorAlert('No se pudo obtener la información del usuario');
+			console.error(err);
 		}
 	};
+	
 
-	const handleSave = (userData: UserData) => {
-		setUsers((prevUsers) =>
-			prevUsers.map((user) => (user.persona.nroDoc === userData.persona.nroDoc ? userData : user)),
-		);
-		setSelectedUser(null);
-	};
 
-	// useEffect(() => {
-	// 	const lowercasedQuery = searchQuery.toLowerCase();
-
-	// 	const filterUser = (user: UserData): boolean => {
-	// 		const personaMatches = Object.values(user.persona).some((value) =>
-	// 			value?.toString().toLowerCase().includes(lowercasedQuery),
-	// 		);
-
-	// 		const usuarioMatches = Object.values(user.usuario).some((value) =>
-	// 			value?.toString().toLowerCase().includes(lowercasedQuery),
-	// 		);
-
-	// 		const categoriasMatches = user.categorias.some((categoria) =>
-	// 			categoria.nombre.toLowerCase().includes(lowercasedQuery),
-	// 		);
-
-	// 		const permisosMatches = user.permisos.some((permiso) =>
-	// 			permiso.nombre.toLowerCase().includes(lowercasedQuery),
-	// 		);
-
-	// 		const areasMatches = user.areas.some((area) =>
-	// 			Object.values(area).some((value) =>
-	// 				Array.isArray(value)
-	// 					? value.some((subValue) => subValue.nom.toLowerCase().includes(lowercasedQuery))
-	// 					: value?.toString().toLowerCase().includes(lowercasedQuery),
-	// 			),
-	// 		);
-
-	// 		return (
-	// 			personaMatches || usuarioMatches || categoriasMatches || permisosMatches || areasMatches
-	// 		);
-	// 	};
-
-	// 	const filteredData = users.filter(filterUser);
-	// 	setFilteredUsers(filteredData);
-	// }, [searchQuery, users]);
-
+	const filteredUsers = useFilteredUsers(users, searchQuery);
 	const mappedFilteredUsers = filteredUsers.map(mapUserDataForTable);
 
 	const tableHeaders = {
@@ -156,11 +120,11 @@ const AdminScreen = () => {
 					className=' w-50 mx-auto mb-2'
 				/>
 			</div>
-			<Container fluid>
+			<Container fluid >
 				<Row>
 					<Col
 						md={selectedUser ? 8 : 12}
-						style={{ overflowY: 'scroll', maxHeight: '65vh' }}
+						style={{ overflowY: 'scroll', maxHeight: '70vh' }}
 						className='custom-scrollbar'
 					>
 						<CommonTable<UserTableData>
@@ -170,12 +134,8 @@ const AdminScreen = () => {
 						/>
 					</Col>
 					{selectedUser && (
-						<Col md={4} className='border rounded p-2 bg-color-slate'>
-							{/* <FormUsers
-								userData={selectedUser}
-								onSave={handleSave}
-								onClose={() => setSelectedUser(null)}
-							/> */}
+						<Col md={4} className='border rounded p-2 bg-color-slate' style={{ maxHeight: '70vh' }}>
+							<FormUsers userData={selectedUser} onClose={() => setSelectedUser(null)} />
 						</Col>
 					)}
 				</Row>

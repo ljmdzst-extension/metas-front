@@ -34,7 +34,6 @@ Swal.mixin({
 
 interface FormUsersProps {
 	userData: UserData;
-	onSave: (userData: UserData) => void;
 	onClose: () => void;
 }
 
@@ -327,6 +326,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 			data.areas = currentCompleteAreaList;
 			console.log(data);
 			await putUsers(data);
+			onClose();
 		} catch (err) {
 			console.log(err);
 		}
@@ -400,7 +400,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 					</Container>
 				</Tab>
 				<Tab eventKey='metas' title='Planificaciones y resultados'>
-					<Container>
+					<Container className=' custom-scrollbar overflow-y-auto ' fluid style={{ maxHeight: '70vh' }}>
 						<FormGroup controlId='formPermisos' className='mb-2'>
 							<Form.Label>Permisos</Form.Label>
 							<Controller
