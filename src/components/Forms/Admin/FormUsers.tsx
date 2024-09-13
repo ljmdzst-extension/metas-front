@@ -23,6 +23,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { Add, Close, Undo } from '@mui/icons-material';
 import { putUsers } from '@/services';
+import { successAlert } from '@/utils/Alerts'
 
 const MySwal = withReactContent(Swal);
 
@@ -326,6 +327,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 			data.areas = currentCompleteAreaList;
 			console.log(data);
 			await putUsers(data);
+			successAlert('Usuario actualizado correctamente');
 			onClose();
 		} catch (err) {
 			console.log(err);
