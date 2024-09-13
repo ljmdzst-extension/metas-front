@@ -16,7 +16,8 @@ import useAlert from '@/hooks/useAlert';
 import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
 import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import { getListaActividadesPorArea, postActivity } from '@/services/api/private/metas';
-import PlanificationPanel from '@/components/Metas/Panels/PlanificationPanel'
+import PlanificationPanel from '@/components/Metas/Panels/PlanificationPanel';
+import { PanelActivityInfo } from '@/components/Metas/Panels/PanelActivityInfo';
 
 interface Activity {
 	idActividad: number;
@@ -330,18 +331,19 @@ export default function ActivityScreen() {
 					style={{ backgroundColor: '#fefefe' }}
 				>
 					{!isPlanificationOpen && (
-						<Row>
-							<Col className='MenuOptions'>
-								{/* <div className='Options'>Carga de Presupuesto</div> */}
-								<Button disabled>Carga de Presupuesto</Button>
-							</Col>
-							<Col className='MenuOptions'>
-								<Link to={`${location.pathname}/resumen`} style={{ textDecoration: 'none' }}>
-									{/* <div className='Options'>Ver Resumen</div> */}
-									<Button>Ver Resumen</Button>
-								</Link>
-							</Col>
-						</Row>
+						// <Row>
+						// 	<Col className='MenuOptions'>
+						// 		{/* <div className='Options'>Carga de Presupuesto</div> */}
+						// 		<Button disabled>Carga de Presupuesto</Button>
+						// 	</Col>
+						// 	<Col className='MenuOptions'>
+						// 		<Link to={`${location.pathname}/resumen`} style={{ textDecoration: 'none' }}>
+						// 			{/* <div className='Options'>Ver Resumen</div> */}
+						// 			<Button>Ver Resumen</Button>
+						// 		</Link>
+						// 	</Col>
+						// </Row>
+						<PanelActivityInfo cantidadActividades={arrayActivity.length} />
 					)}
 
 					{isPlanificationOpen && (
