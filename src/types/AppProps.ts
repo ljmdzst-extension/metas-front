@@ -74,3 +74,22 @@ export interface ListaMeta {
 	observaciones: null;
 	valoracion: number;
 }
+
+// PROGRAMAS
+
+export interface FetchProgramasProps {
+	ok: boolean;
+	data: Programa[];
+	error: string | null;
+}
+
+export interface Programa {
+	idPrograma: number;
+	nom: string;
+	listaAreas: Area[];
+}
+
+export interface Area {
+	idArea: number;
+	nom: string;
+}

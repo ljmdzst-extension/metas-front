@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom';
-import ProjectHistory from '@/components/List/ProjectHistory';
-import GeneralPanel from '@/components/Panel/GeneralPanel';
+import ProjectHistory from '@/components/Propuestas/List/ProjectHistory';
+import GeneralPanel from '@/components/Common/PanelLayout/GeneralPanel';
 import { projectHistoryProps } from '@/types/ProjectsProps';
 
 import data from '@/mocks/historyExample.json';
-import SideBarSumm from '@/components/Panel/component/SideBarSumm';
+import SideBarSumm from '@/components/Common/PanelLayout/component/SideBarSumm';
 
 const ProjectSumScreen = () => {
 	const typeData: projectHistoryProps[] = data.map((item) => {

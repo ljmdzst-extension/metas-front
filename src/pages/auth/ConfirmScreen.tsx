@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Swal from 'sweetalert2';
 import useAlert from '@/hooks/useAlert';
-import LoadingSpinner from '@/components/Spinner/LoadingSpinner';
+import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
+import { validateEmail } from '@/services';
 
 const ConfirmScreen = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -14,19 +15,11 @@ const ConfirmScreen = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const emailConfirm = async () => {
-			try {
-				const response = await fetch(
-					`${import.meta.env.VITE_API_BASE_URL_AUTH}/validar/${validationString}`,
-					{
-						method: 'PUT',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-					},
-				);
-
-				if (response.status === 200) {
+		if (!validationString) {
+			navigate('/register');
+		} else {
+			validateEmail(validationString)
+				.then(() => {
 					Swal.fire({
 						title: 'Éxito!',
 						text: 'Usuario validado correctamente',
@@ -34,21 +27,15 @@ const ConfirmScreen = () => {
 						confirmButtonText: 'Ok',
 					});
 					navigate('/login');
-				} else {
-					const data = await response.json(); // Parsear la respuesta JSON
-					throw new Error(data.error || 'No se pudo validar el usuario');
-				}
-			} catch (error: any) {
-				errorAlert(
-					error.message || 'Ocurrió un error al validar el usuario, contacte al administrador',
-				);
-				navigate('/register');
-			} finally {
-				setIsLoading(false);
-			}
-		};
-
-		emailConfirm();
+				})
+				.catch((error) => {
+					errorAlert(error);
+					navigate('/register');
+				})
+				.finally(() => {
+					setIsLoading(false);
+				});
+		}
 	}, [validationString, navigate]);
 
 	return (

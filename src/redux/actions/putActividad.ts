@@ -1,22 +1,14 @@
 import { AppDispatch } from '../store';
-import { CargarDatosActividadAction } from './activityAction';
+import { cargarDatosActividad } from './activityAction';
 import { errorAlert, successAlert } from '@/utils/Alerts';
+import { putActivity } from '@/services/api/private/metas';
+import { Actividad } from '@/types/ActivityProps';
 
-export const guardarActividad = (dato: any, dispatch: AppDispatch) => {
-	const token = localStorage.getItem('token');
-	fetch(`${import.meta.env.VITE_API_BASE_URL_METAS}/actividad`, {
-		method: 'PUT',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${token}`,
-		},
-		body: JSON.stringify(dato),
-	})
-		.then((resp) => resp.json())
+export const guardarActividad = (dato: Actividad, dispatch: AppDispatch) => {
+	putActivity(dato)
 		.then((data) => {
 			data.ok ? successAlert('Actividad guardada') : errorAlert(`Error al guardar: ${data.error}`);
-			dispatch(CargarDatosActividadAction(dato.idActividad));
-
+			dispatch(cargarDatosActividad(dato.idActividad));
 			return null;
 		})
 		.catch((error) => errorAlert(JSON.stringify(error)));

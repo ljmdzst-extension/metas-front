@@ -1,0 +1,182 @@
+[
+	{
+		"id": 1,
+		"nom": "John",
+		"ape": "Doe",
+		"email": "john.doe@example.com",
+		"pass": "password123",
+		"roles": ["Admin", "User"],
+		"areas": [1, 2]
+	},
+	{
+		"id": 2,
+		"nom": "Jane",
+		"ape": "Smith",
+		"email": "jane.smith@example.com",
+		"pass": "password456",
+		"roles": ["User"],
+		"areas": [2, 3]
+	},
+	{
+		"id": 3,
+		"nom": "Alice",
+		"ape": "Johnson",
+		"email": "alice.johnson@example.com",
+		"pass": "password789",
+		"roles": ["Manager"],
+		"areas": [1, 3]
+	},
+	{
+		"id": 4,
+		"nom": "Bob",
+		"ape": "Brown",
+		"email": "bob.brown@example.com",
+		"pass": "password101",
+		"roles": ["Admin"],
+		"areas": [1]
+	},
+	{
+		"id": 5,
+		"nom": "Charlie",
+		"ape": "Davis",
+		"email": "charlie.davis@example.com",
+		"pass": "password102",
+		"roles": ["User", "Manager"],
+		"areas": [2]
+	},
+	{
+		"id": 6,
+		"nom": "Meghan",
+		"ape": "Whitaker",
+		"email": "baileymargaret@gmail.com",
+		"pass": "+q@GY9R+7y",
+		"roles": ["Admin"],
+		"areas": [3, 2]
+	},
+	{
+		"id": 7,
+		"nom": "Amanda",
+		"ape": "Martinez",
+		"email": "david58@brown.com",
+		"pass": "83FzVisq@f",
+		"roles": ["Admin"],
+		"areas": [1, 2]
+	},
+	{
+		"id": 8,
+		"nom": "Brian",
+		"ape": "Bartlett",
+		"email": "cannonkyle@silva-schaefer.info",
+		"pass": "^*Tx0B4kPl",
+		"roles": ["Admin", "Manager"],
+		"areas": [3, 1, 2]
+	},
+	{
+		"id": 9,
+		"nom": "Jessica",
+		"ape": "Davis",
+		"email": "andersonlori@martin.com",
+		"pass": "5&3O_#lz*2",
+		"roles": ["Manager"],
+		"areas": [1, 3, 2]
+	},
+	{
+		"id": 10,
+		"nom": "Tara",
+		"ape": "Kelly",
+		"email": "kimberly92@gomez.biz",
+		"pass": "s1Y3F5t+I&",
+		"roles": ["Manager", "Admin"],
+		"areas": [3]
+	},
+	{
+		"id": 11,
+		"nom": "Jared",
+		"ape": "Lopez",
+		"email": "dolson@hotmail.com",
+		"pass": "l#Pe+w&0&8",
+		"roles": ["Admin"],
+		"areas": [1, 2, 3]
+	},
+	{
+		"id": 12,
+		"nom": "Alexis",
+		"ape": "Brown",
+		"email": "diane20@johns.net",
+		"pass": "C3HBYYAV!h",
+		"roles": ["Admin", "User"],
+		"areas": [2, 3]
+	},
+	{
+		"id": 13,
+		"nom": "Isaac",
+		"ape": "Ross",
+		"email": "pricesamuel@hotmail.com",
+		"pass": "(TvOGQJdG7",
+		"roles": ["Admin"],
+		"areas": [2, 1, 3]
+	},
+	{
+		"id": 14,
+		"nom": "Amber",
+		"ape": "Lloyd",
+		"email": "donnanicholson@hotmail.com",
+		"pass": "+16)LciT1!",
+		"roles": ["Manager", "User"],
+		"areas": [1]
+	},
+	{
+		"id": 15,
+		"nom": "Benjamin",
+		"ape": "Morris",
+		"email": "uhenderson@ortega.biz",
+		"pass": "38x2^8zY(W",
+		"roles": ["User", "Admin", "Manager"],
+		"areas": [1, 2]
+	},
+	{
+		"id": 16,
+		"nom": "Gina",
+		"ape": "Vega",
+		"email": "lawrencearnold@yahoo.com",
+		"pass": "p3oRV%bs@E",
+		"roles": ["Manager", "User", "Admin"],
+		"areas": [2]
+	},
+	{
+		"id": 17,
+		"nom": "Scott",
+		"ape": "Mcconnell",
+		"email": "fharrell@reed.com",
+		"pass": ")&*SkSgM2$",
+		"roles": ["Admin", "Manager"],
+		"areas": [1]
+	},
+	{
+		"id": 18,
+		"nom": "John",
+		"ape": "Gutierrez",
+		"email": "katherine69@hotmail.com",
+		"pass": "T#E4Podr&C",
+		"roles": ["Manager", "Admin"],
+		"areas": [3, 2, 1]
+	},
+	{
+		"id": 19,
+		"nom": "Ashlee",
+		"ape": "King",
+		"email": "xhamilton@gmail.com",
+		"pass": "#E06OFlqT(",
+		"roles": ["User", "Manager", "Admin"],
+		"areas": [3, 2]
+	},
+	{
+		"id": 20,
+		"nom": "Jessica",
+		"ape": "Kirby",
+		"email": "jamessanford@hotmail.com",
+		"pass": "$2BhDZs76$",
+		"roles": ["Admin", "Manager"],
+		"areas": [1, 3]
+	}
+]

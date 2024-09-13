@@ -1,23 +1,20 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { FechBasesProps } from '@/types/BasesProps';
+import { FetchBasesProps } from '@/types/BasesProps';
+import { getBases as getBasesService } from '@/services/api/private/metas';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL_METAS;
-
-export const getBases = createAsyncThunk(
-	'get/bases',
-	async (credential: { token: string }, thunkAPI) => {
-		// const token = localStorage.getItem('token');
-		const response = await fetch(`${baseURL}/bases`, {
-			headers: {
-				Authorization: `Bearer ${credential.token}`,
-			},
-		});
-
-		if (!response.ok) {
-			const errorData: FechBasesProps = await response.json();
-			return thunkAPI.rejectWithValue(errorData);
+export const getBases = createAsyncThunk<
+	FetchBasesProps, // Tipo de datos que la acción retornará
+	void, // Tipo de argumento que la acción recibe (si no hay argumento, usa void)
+	{ rejectValue: { error: string } } // Tipo de valor de rechazo
+>('get/bases', async (_, thunkAPI) => {
+	try {
+		const data = await getBasesService();
+		return data;
+	} catch (error) {
+		if (error instanceof Error) {
+			return thunkAPI.rejectWithValue({ error: error.message });
+		} else {
+			return thunkAPI.rejectWithValue({ error: 'An unknown error occurred' });
 		}
-		const data: FechBasesProps = await response.json();
-		return data.data;
-	},
-);
+	}
+});

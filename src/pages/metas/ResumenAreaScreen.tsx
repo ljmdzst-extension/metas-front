@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppDispatch, RootState } from '@/redux/store';
-import ElementoResumen from '@/components/DataRender/ElementoResumen';
 import { ArrowBack, Replay } from '@mui/icons-material';
 import { InputGroup, Form, Button } from 'react-bootstrap';
 import { Actividad } from '@/types/ActivityProps';
-import { getBases } from '@/redux/actions/metasActions';
-import useAlert from '@/hooks/useAlert';
+import { getAreasResumen } from '@/services/api/private/metas';
+import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
+import ElementoResumen from '@/components/Metas/DataRender/ElementoResumen'
 
 interface Area {
 	idArea: number;
@@ -25,26 +23,7 @@ const ResumenAreaScreen = () => {
 
 	const [search, setSearch] = useState<string>('');
 
-	const { token } = useSelector((state: RootState) => state.authSlice);
-	const { bases } = useSelector((state: RootState) => state.metasSlice);
-	const dispatch = useDispatch<AppDispatch>();
-
-	const { errorAlert } = useAlert();
-
 	const elementRef = useRef(null);
-
-	useEffect(() => {
-		const dispachBases = async () => {
-			const action = await dispatch(getBases({ token }));
-			if (getBases.rejected.match(action)) {
-				const { error } = action.payload as { error: string };
-				errorAlert(error);
-			}
-		};
-		if (!bases) {
-			dispachBases();
-		}
-	}, [bases, dispatch, navigate, token]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(e.target.value);
@@ -75,30 +54,17 @@ const ResumenAreaScreen = () => {
 		const stringAreaData = localStorage.getItem('currentArea');
 		const areaData = JSON.parse(stringAreaData!) as Area;
 
-		try {
-			let endpoint = `${import.meta.env.VITE_API_BASE_URL_METAS}/areas/resumen/${idArea}/${
-				areaData.anio
-			}/${offset}/5`;
-
-			if (search.length > 3) {
-				endpoint = endpoint + `/${search}`;
-			}
-			const res = await fetch(endpoint, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
+		if (idArea) {
+			getAreasResumen(idArea, areaData.anio, offset.toString(), '5').then((res) => {
+				if (res.data.length === 0) {
+					setHasMore(false);
+				} else {
+					setTimeout(() => {
+						setData((data) => [...data, ...res.data]);
+						setOffset((offset) => offset + 5);
+					}, 2000);
+				}
 			});
-			const resJson = await res.json();
-			if (resJson.data.length === 0) {
-				setHasMore(false);
-			} else {
-				setTimeout(() => {
-					setData((data) => [...data, ...resJson.data]);
-					setOffset((offset) => offset + 5);
-				}, 2000);
-			}
-		} catch (err) {
-			console.log(err);
 		}
 	};
 
@@ -131,9 +97,9 @@ const ResumenAreaScreen = () => {
 					<ElementoResumen element={el} key={el.desc + '-' + index} />
 				))}
 				{hasMore && (
-					<p className=' text-secondary text-uppercase p-2' ref={elementRef}>
-						Cargando datos
-					</p>
+					<div className='d-flex align-items-center h-100' ref={elementRef}>
+						<LoadingSpinner />
+					</div>
 				)}
 			</div>
 		</div>

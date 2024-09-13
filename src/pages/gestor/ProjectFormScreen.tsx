@@ -1,6 +1,7 @@
-import FormMembers from '@/components/Forms/gestor/FormMembers';
-import GeneralPanel from '@/components/Panel/GeneralPanel';
-import SideBarNav from '@/components/Panel/component/SideBarNav';
+
+import GeneralPanel from '@/components/Common/PanelLayout/GeneralPanel';
+import SideBarNav from '@/components/Common/PanelLayout/component/SideBarNav';
+import FormMembers from '@/components/Propuestas/forms/FormMembers'
 import data from '@/mocks/formAExample.json';
 
 const ProjectFormScreen = () => {

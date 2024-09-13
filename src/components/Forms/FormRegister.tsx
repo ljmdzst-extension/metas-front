@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { Button, Col, Form, FormSelect, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { RegisterProps } from '@/types/AuthProps';
@@ -16,27 +15,51 @@ export interface UnidadesAcademicas {
 }
 
 const FormRegister = () => {
-	const [unidadesAcademicas, setUnidadesAcademicas] = React.useState([]);
+	const [unidadesAcademicas, setUnidadesAcademicas] = React.useState<UnidadesAcademicas[]>([]);
 
 	const dispatch = useDispatch<AppDispatch>();
-	const { loading } = useSelector((state: RootState) => state.authSlice);
+	const { loading } = useSelector((state: RootState) => state.auth);
 	const { errorAlert } = useAlert();
 
-	const validations = Yup.object().shape({
-		dni: Yup.string().required('Campo requerido'),
-		ape: Yup.string().required('Campo requerido'),
-		nom: Yup.string().required('Campo requerido'),
-		email: Yup.string().email('El campo debe ser un correo valido').required('Campo requerido'),
-		pass: Yup.string().required('Campo requerido'),
-		confirmPass: Yup.string()
-			.required('Campo requerido')
-			.oneOf([Yup.ref('pass')], 'Las contraseñas no coinciden'),
-		idUnidadAcademica: Yup.number()
-			.required('Campo requerido')
-			.test('is-not-zero', 'Campo requerido', (value) => value !== 0)
-			.typeError('Campo requerido')
-			.positive('Campo requerido'),
-	});
+	const validationRules = {
+		dni: { required: 'Campo requerido' },
+		ape: { required: 'Campo requerido' },
+		nom: { required: 'Campo requerido' },
+		email: {
+			required: 'Campo requerido',
+			pattern: {
+				value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+				message: 'El campo debe ser un correo valido',
+			},
+		},
+		pass: { required: 'Campo requerido' },
+		confirmPass: {
+			required: 'Campo requerido',
+			validate: (value: string, context: RegisterProps) =>
+				value === context.pass || 'Las contraseñas no coinciden',
+		},
+		idUnidadAcademica: {
+			required: 'Campo requerido',
+			validate: (value: number) => value !== 0 || 'Campo requerido',
+		},
+	};
+
+	const FormInput = ({ control, name, label, type = 'text', rules }: any) => (
+		<Form.Group controlId={`form${name}`}>
+			<Form.Label>{label}</Form.Label>
+			<Controller
+				name={name}
+				control={control}
+				rules={rules}
+				render={({ field, fieldState: { error } }) => (
+					<>
+						<Form.Control size='sm' type={type} isInvalid={!!error} {...field} />
+						<Form.Control.Feedback type='invalid'>{error?.message}</Form.Control.Feedback>
+					</>
+				)}
+			/>
+		</Form.Group>
+	);
 
 	const getUnidadesAcademicas = async () => {
 		await fetch(`${import.meta.env.VITE_API_BASE_URL_AUTH}/bases/`, {
@@ -56,7 +79,19 @@ const FormRegister = () => {
 		getUnidadesAcademicas();
 	}, []);
 
-	const handleRegister = async (values: RegisterProps) => {
+	const { control, handleSubmit } = useForm<RegisterProps>({
+		defaultValues: {
+			dni: '',
+			ape: '',
+			nom: '',
+			email: '',
+			idUnidadAcademica: 0,
+			pass: '',
+			confirmPass: '',
+		},
+	});
+
+	const handleRegister: SubmitHandler<RegisterProps> = async (values) => {
 		const action = await dispatch(registerAsync(values));
 		if (registerAsync.rejected.match(action)) {
 			const { error } = action.payload as { error: string };
@@ -72,179 +107,119 @@ const FormRegister = () => {
 	};
 
 	return (
-		<Formik
-			initialValues={
-				{
-					dni: '',
-					ape: '',
-					nom: '',
-					email: '',
-					idUnidadAcademica: -1,
-					pass: '',
-					confirmPass: '',
-				} as RegisterProps
-			}
-			onSubmit={(values) => {
-				handleRegister(values);
-			}}
-			validationSchema={validations}
+		<Form
+			onSubmit={handleSubmit(handleRegister)}
+			className='border rounded p-5 bg-color-slate'
+			noValidate
 		>
-			{({ errors, touched, values, handleBlur, handleChange, handleSubmit }) => {
-				return (
-					<Form onSubmit={handleSubmit} className='border rounded p-5 bg-color-slate' noValidate>
-						<p>Complete con sus datos</p>
-						<Row>
-							<Col>
-								<Form.Group className='position-relative mb-4'>
-									<Form.Control
-										type='text'
-										placeholder='DNI'
-										name='dni'
-										onChange={handleChange}
-										onBlur={handleBlur}
-										value={values.dni}
-										isInvalid={!!errors.dni && touched.dni}
-										aria-describedby='inputGroupPrepend'
-									/>
-									<Form.Control.Feedback type='invalid' tooltip>
-										{errors.dni}
-									</Form.Control.Feedback>
-								</Form.Group>
-							</Col>
-							<Col></Col>
-						</Row>
-						<Row>
-							<Col>
-								<Form.Group className=' position-relative mb-4'>
-									<Form.Control
-										type='text'
-										placeholder='Nombre'
-										name='nom'
-										onChange={handleChange}
-										onBlur={handleBlur}
-										value={values.nom}
-										isInvalid={!!errors.nom && touched.nom}
-										aria-describedby='inputGroupPrepend'
-									/>
-									<Form.Control.Feedback type='invalid' tooltip>
-										{errors.nom}
-									</Form.Control.Feedback>
-								</Form.Group>
-							</Col>
-							<Col>
-								<Form.Group className=' position-relative mb-4'>
-									<Form.Control
-										type='text'
-										placeholder='Apellido'
-										name='ape'
-										onChange={handleChange}
-										onBlur={handleBlur}
-										value={values.ape}
-										isInvalid={!!errors.ape && touched.ape}
-										aria-describedby='inputGroupPrepend'
-									/>
-									<Form.Control.Feedback type='invalid' tooltip>
-										{errors.ape}
-									</Form.Control.Feedback>
-								</Form.Group>
-							</Col>
-						</Row>
+			<p>Complete con sus datos</p>
+			<Row>
+				<Col>
+					<FormInput
+						control={control}
+						name='dni'
+						label='DNI'
+						type='text'
+						rules={validationRules.dni}
+					/>
+				</Col>
+				<Col></Col>
+			</Row>
+			<Row>
+				<Col>
+					<FormInput
+						control={control}
+						name='nom'
+						label='Nombre'
+						type='text'
+						rules={validationRules.nom}
+					/>
+				</Col>
+				<Col>
+					<FormInput
+						control={control}
+						name='ape'
+						label='Apellido'
+						type='text'
+						rules={validationRules.ape}
+					/>
+				</Col>
+			</Row>
 
-						<Form.Group className=' position-relative mb-4'>
-							<Form.Control
-								type='email'
-								placeholder='Email'
-								name='email'
-								onChange={handleChange}
-								onBlur={handleBlur}
-								value={values.email}
-								isInvalid={!!errors.email && touched.email}
-								aria-describedby='inputGroupPrepend'
-							/>
-							<Form.Control.Feedback type='invalid' tooltip>
-								{errors.email}
-							</Form.Control.Feedback>
-						</Form.Group>
+			<FormInput
+				control={control}
+				name='email'
+				label='Email'
+				type='email'
+				rules={validationRules.email}
+			/>
 
-						<Form.Group className=' position-relative mb-4'>
+			<Form.Group className=' position-relative mb-4'>
+				<Form.Label>Unidad Académica</Form.Label>
+				<Controller
+					name='idUnidadAcademica'
+					control={control}
+					rules={validationRules.idUnidadAcademica}
+					render={({ field, fieldState: { error } }) => (
+						<>
 							<FormSelect
-								aria-label='Default select example'
-								name='idUnidadAcademica'
-								isInvalid={!!errors.idUnidadAcademica && touched.idUnidadAcademica}
-								value={values.idUnidadAcademica}
-								onChange={handleChange}
+								aria-label='Seleccione una unidad academica'
+								isInvalid={!!error}
+								{...field}
 							>
-								<option>Seleccione una unidad academica</option>
-								{unidadesAcademicas.length > 0 &&
-									unidadesAcademicas?.map((unidadAcademica: UnidadesAcademicas) => (
-										<option
-											key={unidadAcademica.idUnidadAcademica}
-											value={unidadAcademica.idUnidadAcademica}
-										>
-											{unidadAcademica.nom}
-										</option>
-									))}
+								<option value={0}>Seleccione una unidad academica</option>
+								{unidadesAcademicas.map((unidadAcademica: UnidadesAcademicas) => (
+									<option
+										key={unidadAcademica.idUnidadAcademica}
+										value={unidadAcademica.idUnidadAcademica}
+									>
+										{unidadAcademica.nom}
+									</option>
+								))}
 							</FormSelect>
-						</Form.Group>
-						<Row>
-							<Col>
-								<Form.Group className=' position-relative mb-4'>
-									<Form.Control
-										type='password'
-										placeholder='Contraseña'
-										name='pass'
-										onChange={handleChange}
-										onBlur={handleBlur}
-										value={values.pass}
-										isInvalid={!!errors.pass && touched.pass}
-									/>
-									<Form.Control.Feedback type='invalid' tooltip className='   '>
-										{errors.pass}
-									</Form.Control.Feedback>
-								</Form.Group>
-							</Col>
-							<Col>
-								<Form.Group className=' position-relative mb-4'>
-									<Form.Control
-										type='password'
-										placeholder='Confirmar contraseña'
-										name='confirmPass'
-										onChange={handleChange}
-										onBlur={handleBlur}
-										value={values.confirmPass}
-										isInvalid={!!errors.confirmPass && touched.confirmPass}
-									/>
-									<Form.Control.Feedback type='invalid' tooltip>
-										{errors.confirmPass}
-									</Form.Control.Feedback>
-								</Form.Group>
-							</Col>
-						</Row>
+							<Form.Control.Feedback type='invalid'>{error?.message}</Form.Control.Feedback>
+						</>
+					)}
+				/>
+			</Form.Group>
+			<Row>
+				<Col>
+					<FormInput
+						control={control}
+						name='pass'
+						label='Contraseña'
+						type='password'
+						rules={validationRules.pass}
+					/>
+				</Col>
+				<Col>
+					<FormInput
+						control={control}
+						name='confirmPass'
+						label='Confirmar contraseña'
+						type='password'
+						rules={validationRules.confirmPass}
+					/>
+				</Col>
+			</Row>
 
-						<div className='d-flex justify-content-center'>
-							<Button variant='primary' type='submit' className='btn-primary' disabled={loading}>
-								{loading ? 'Registrando...' : 'Registrarse'}
-							</Button>
-						</div>
+			<div className='d-flex justify-content-center'>
+				<Button variant='primary' type='submit' className='btn-primary' disabled={loading}>
+					{loading ? 'Registrando...' : 'Registrarse'}
+				</Button>
+			</div>
 
-						<div className=' mt-4'>
-							<p>Una vez registrado, se le enviará un mail para validar el registro.</p>
-							<p>
-								Ya posee un usuario? Ingrese{' '}
-								<Link
-									to={'/login'}
-									style={{ color: '#08473f' }}
-									className=' text-decoration-underline'
-								>
-									aqui
-								</Link>
-								.
-							</p>
-						</div>
-					</Form>
-				);
-			}}
-		</Formik>
+			<div className=' mt-4'>
+				<p>Una vez registrado, se le enviará un mail para validar el registro.</p>
+				<p>
+					Ya posee un usuario? Ingrese{' '}
+					<Link to={'/login'} style={{ color: '#08473f' }} className=' text-decoration-underline'>
+						aqui
+					</Link>
+					.
+				</p>
+			</div>
+		</Form>
 	);
 };
 

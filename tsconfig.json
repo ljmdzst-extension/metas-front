@@ -5,6 +5,7 @@
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
 		"module": "ESNext",
 		"skipLibCheck": true,
+		"sourceMap": true,
 
 		/* Bundler mode */
 		"moduleResolution": "bundler",
@@ -32,7 +33,9 @@
 			"pages/*": ["src/pages/*"],
 			"appRedux/*": ["src/redux/*"],
 			"types/*": ["src/types/*"],
-			"utils/*": ["src/utils/*"]
+			"utils/*": ["src/utils/*"],
+			"services/*": ["src/services/*"],
+			"navigation/*": ["src/navigation/*"]
 		}
 	},
 	"include": ["src", "custom.d.ts"],

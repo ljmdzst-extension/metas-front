@@ -1,7 +1,8 @@
-// Metas Bases
-export interface FechBasesProps {
+
+export interface FetchBasesProps {
 	ok: boolean;
 	data: BasesDataProps;
+	error: string;
 }
 
 export interface BasesDataProps {
@@ -10,13 +11,39 @@ export interface BasesDataProps {
 	listaProgramasSIPPE: ListaProgramasSIPPE[];
 	listaRelaciones: ListaRelacione[];
 	listaValoraciones: ListaValoracione[];
-	unidadesAcademicas: ListaRelacione[];
+	unidadesAcademicas: UnidadesAcademica[];
+	lAreasProgramasAnios: LAreasProgramasAnio[];
 }
 
 export interface LArea {
 	idRelacion: number;
 	nom: string;
 	idTipoRelacion: number;
+}
+
+export interface LAreasProgramasAnio {
+	anio: number;
+	listaProgramas: ListaPrograma[];
+}
+
+export interface ListaPrograma {
+	idPrograma: number;
+	nom: programasNom;
+	listaAreas: ListaArea[];
+}
+
+export interface ListaArea {
+	idArea: number;
+	nom: string;
+}
+
+export enum programasNom {
+	FormaciónYCapacitación = 'Formación y Capacitación',
+	IntegraciónDeFunciones = 'Integración de Funciones',
+	IntervenciónSociocultural = 'Intervención Sociocultural',
+	ProgramasDeExtensiónSIPPPE = 'Programas de extensión (SIPPPE)',
+	Publicaciones = 'Publicaciones',
+	ÁreasEstratégicas = 'Áreas Estratégicas',
 }
 
 export interface ListaObjetivo {
@@ -62,4 +89,24 @@ export enum TipoRelacionNom {
 export interface ListaValoracione {
 	idValoracion: number;
 	nom: string;
+}
+
+export interface UnidadesAcademica {
+	idUnidadAcademica: number;
+	nom: string;
+}
+
+
+// INSTITUCIONES 
+
+export interface FetchInstituciones {
+	ok:    boolean;
+	data:  Institucion[];
+	error: null | string;
+}
+
+export interface Institucion {
+	idInstitucion: number;
+	nom:           string;
+	ubicacion:     string;
 }
