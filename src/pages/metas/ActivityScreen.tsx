@@ -24,7 +24,8 @@ interface Activity {
 	desc: string;
 }
 
-interface Area {
+interface AreaData {
+	idPrograma: number;
 	idArea: number;
 	nom: string;
 	listaActividades: Actividad[]; // Reemplaza esto con el tipo correcto si es necesario
@@ -32,9 +33,9 @@ interface Area {
 }
 
 export default function ActivityScreen() {
-	const initialAreaValue: Area = localStorage.getItem('currentArea')
-		? (JSON.parse(localStorage.getItem('currentArea')!) as Area) // Usamos ! para decirle a TypeScript que estamos seguros de que localStorage.getItem('currentArea') no será null
-		: { idArea: 0, nom: '', listaActividades: [], anio: '' }; // O proporciona un valor predeterminado adecuado para el tipo Area
+	const initialAreaValue: AreaData = localStorage.getItem('currentArea')
+		? (JSON.parse(localStorage.getItem('currentArea')!) as AreaData) // Usamos ! para decirle a TypeScript que estamos seguros de que localStorage.getItem('currentArea') no será null
+		: { idArea: 0, nom: '', listaActividades: [], anio: '', idPrograma: 0 }; // O proporciona un valor predeterminado adecuado para el tipo Area
 
 	const [show, setShow] = useState(false);
 	const [isLoadingModal, setIsLoadingModal] = useState<boolean>(false);
@@ -46,13 +47,12 @@ export default function ActivityScreen() {
 	const [arrayActivity, setArrayActivity] = useState<Activity[]>([]);
 	const [isLoadingArrayActivity, setIsLoadingArrayActivity] = useState<boolean>(true);
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
-	const [area, setArea] = useState<Area>(initialAreaValue);
+	const [area, setArea] = useState<AreaData>(initialAreaValue);
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
 	const [searchedActivities, setSearchedActivities] = useState<Activity[]>([]);
 
 	const navigation = useNavigate();
 	const { errorAlert } = useAlert();
-	const location = useLocation();
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { isLoading, hayCambios } = useSelector((state: RootState) => state.actividad);
@@ -331,19 +331,12 @@ export default function ActivityScreen() {
 					style={{ backgroundColor: '#fefefe' }}
 				>
 					{!isPlanificationOpen && (
-						// <Row>
-						// 	<Col className='MenuOptions'>
-						// 		{/* <div className='Options'>Carga de Presupuesto</div> */}
-						// 		<Button disabled>Carga de Presupuesto</Button>
-						// 	</Col>
-						// 	<Col className='MenuOptions'>
-						// 		<Link to={`${location.pathname}/resumen`} style={{ textDecoration: 'none' }}>
-						// 			{/* <div className='Options'>Ver Resumen</div> */}
-						// 			<Button>Ver Resumen</Button>
-						// 		</Link>
-						// 	</Col>
-						// </Row>
-						<PanelActivityInfo cantidadActividades={arrayActivity.length} />
+						<PanelActivityInfo
+							anio={initialAreaValue.anio}
+							idArea={initialAreaValue.idArea}
+							idPrograma={initialAreaValue.idPrograma}
+							cantidadActividades={arrayActivity.length}
+						/>
 					)}
 
 					{isPlanificationOpen && (

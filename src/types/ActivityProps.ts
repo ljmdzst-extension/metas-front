@@ -1,4 +1,3 @@
-
 export interface FetchActividad {
 	ok: boolean;
 	data: Actividad;
@@ -56,7 +55,7 @@ export interface Meta {
 	descripcion: string;
 	resultado: string;
 	observaciones: string;
-	valoracion: number ;
+	valoracion: number;
 }
 
 export interface Ubicacione {
@@ -68,12 +67,24 @@ export interface Ubicacione {
 // NOTE: FetchLista
 
 export interface FetchListaActividades {
-	ok:    boolean;
-	data:  actividadDesc[];
+	ok: boolean;
+	data: actividadDesc[];
 	error: null;
 }
 
 export interface actividadDesc {
 	idActividad: number;
-	desc:        string;
+	desc: string;
+}
+
+export interface fetchUploadFile {
+	ok: boolean;
+	data: any;
+	error: string;
+}
+
+export interface fetchDownloadFile {
+	ok: boolean;
+	data: any;
+	error: string;
 }

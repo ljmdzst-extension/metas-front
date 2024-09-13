@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Col } from 'react-bootstrap';
+import { Button, Card, Col } from 'react-bootstrap';
 
 interface CardProps {
 	title: string;
@@ -12,6 +12,9 @@ interface CardProps {
 	customButton?: React.ReactNode; // Botón personalizado
 	centerText?: boolean; // Prop para centrar el texto
 	infoFontSize?: string; // Tamaño personalizado para el font-size de "info"
+	buttonVariant?: string; // Variante del botón (puede ser un color de Bootstrap o un color custom)
+	buttonSize?: 'sm' | 'lg'; // Tamaño del botón (pequeño o grande)
+	buttonDisabled?: boolean; // Deshabilitar el botón
 }
 
 const InfoCard: React.FC<CardProps> = ({
@@ -24,7 +27,10 @@ const InfoCard: React.FC<CardProps> = ({
 	textColor = variant === 'light' ? 'dark' : 'white',
 	customButton,
 	centerText = false,
-	infoFontSize = '1rem', // Tamaño de fuente por defecto para "info"
+	infoFontSize = '1rem',
+	buttonVariant = 'primary', 
+	buttonSize = 'sm', 
+	buttonDisabled = false, 
 }) => {
 	const textAlignmentClass = centerText ? 'text-center' : '';
 
@@ -54,12 +60,15 @@ const InfoCard: React.FC<CardProps> = ({
 						? customButton
 						: buttonLabel &&
 						  onButtonClick && (
-								<button
-									className={`btn btn-${variant === 'light' ? 'primary' : 'light'}`}
+								<Button
+									variant={buttonVariant}
 									onClick={onButtonClick}
+									size={buttonSize}
+									disabled={buttonDisabled}
+									className={`mt-2`}
 								>
 									{buttonLabel}
-								</button>
+								</Button>
 						  )}
 				</Card.Body>
 			</Card>

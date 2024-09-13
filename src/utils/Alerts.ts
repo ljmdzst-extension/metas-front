@@ -19,8 +19,7 @@ export const errorAlert = (message: string) => {
 	});
 	if (message === 'Sesión de usuario expirada.') {
 		console.log('Sesión de usuario expirada.');
-		localStorage.removeItem('token');
-		localStorage.removeItem('user');
+		localStorage.clear();
 		window.location.href = '/login';
 	}
 
