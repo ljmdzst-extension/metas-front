@@ -1,7 +1,7 @@
 import { ArrowBack } from '@mui/icons-material';
 import { Col, Container, FormControl, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CommonTable from '@/components/Common/CommonTable';
 import FormUsers from '@/components/Forms/Admin/FormUsers';
 import withReactContent from 'sweetalert2-react-content';
@@ -10,7 +10,7 @@ import DetailsUser from '@/components/Forms/Admin/DetailUser';
 import { getAllUsers, getUserByID } from '@/services';
 import { Categoria, Permiso, UserData, UserShortData } from '@/types/UserProps';
 import { errorAlert } from '@/utils/Alerts';
-import useFilteredUsers from '@/hooks/useFilteredUsers'
+import useFilteredUsers from '@/hooks/useFilteredUsers';
 
 const MySwal = withReactContent(Swal);
 
@@ -40,32 +40,31 @@ const AdminScreen = () => {
 	const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
 	const [searchQuery, setSearchQuery] = useState<string>('');
 
+	const fetchUsers = useCallback(async () => {
+		try {
+			const response = await getAllUsers();
+			if (response.ok) {
+				setUsers(response.data);
+			}
+		} catch (err) {
+			errorAlert((err as Error).message);
+		}
+	}, []);
 	// NOTE: Obtiene todos los usuarios
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await getAllUsers();
-        if (response.ok) {
-          setUsers(response.data);
-        }
-      } catch (err) {
-        errorAlert((err as Error).message);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+	useEffect(() => {
+		fetchUsers();
+	}, [fetchUsers]);
 
 	const handleAction = async (action: 'view' | 'edit', item: UserTableData) => {
 		try {
-			const idUsuario = users.find(user => user.nroDoc === item.nroDoc)?.idUsuario;
+			const idUsuario = users.find((user) => user.nroDoc === item.nroDoc)?.idUsuario;
 			if (!idUsuario) return;
-			
+
 			const response = await getUserByID(idUsuario);
 			const completeUser = response.data;
-	
+
 			if (!completeUser) return;
-			
+
 			if (action === 'view') {
 				MySwal.fire({
 					title: 'Información de usuario',
@@ -81,8 +80,6 @@ const AdminScreen = () => {
 			console.error(err);
 		}
 	};
-	
-
 
 	const filteredUsers = useFilteredUsers(users, searchQuery);
 	const mappedFilteredUsers = filteredUsers.map(mapUserDataForTable);
@@ -120,7 +117,7 @@ const AdminScreen = () => {
 					className=' w-50 mx-auto mb-2'
 				/>
 			</div>
-			<Container fluid >
+			<Container fluid>
 				<Row>
 					<Col
 						md={selectedUser ? 8 : 12}
@@ -135,7 +132,11 @@ const AdminScreen = () => {
 					</Col>
 					{selectedUser && (
 						<Col md={4} className='border rounded p-2 bg-color-slate' style={{ maxHeight: '70vh' }}>
-							<FormUsers userData={selectedUser} onClose={() => setSelectedUser(null)} />
+							<FormUsers
+								userData={selectedUser}
+								onClose={() => setSelectedUser(null)}
+								updateList={fetchUsers}
+							/>
 						</Col>
 					)}
 				</Row>

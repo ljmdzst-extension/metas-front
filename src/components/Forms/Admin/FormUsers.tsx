@@ -23,7 +23,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { Add, Close, Undo } from '@mui/icons-material';
 import { putUsers } from '@/services';
-import { successAlert } from '@/utils/Alerts'
+import { errorAlert, successAlert } from '@/utils/Alerts';
 
 const MySwal = withReactContent(Swal);
 
@@ -36,6 +36,7 @@ Swal.mixin({
 interface FormUsersProps {
 	userData: UserData;
 	onClose: () => void;
+	updateList: () => void;
 }
 
 const validationRules = {
@@ -66,7 +67,7 @@ const permisosOptions: Permiso[] = [
 	{ idPermiso: 2, nombre: 'METAS_EDICION' },
 ];
 
-const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
+const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose, updateList }) => {
 	const { bases } = useSelector((state: RootState) => state.metas);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [selectedYear, setSelectedYear] = useState<OptionProps | null>(null);
@@ -328,8 +329,10 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 			console.log(data);
 			await putUsers(data);
 			successAlert('Usuario actualizado correctamente');
+			await updateList();
 			onClose();
 		} catch (err) {
+			errorAlert((err as Error).message);
 			console.log(err);
 		}
 	};
@@ -337,7 +340,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)} className='d-flex flex-column h-100'>
 			<div className='d-flex justify-content-end'>
-				<Close onClick={onClose} fontSize="small" className=' cursor-pointer' />
+				<Close onClick={onClose} fontSize='small' className=' cursor-pointer' />
 			</div>
 			<Tabs variant='tabs' transition className=' mb-2' fill>
 				<Tab eventKey='user' title='Usuario'>
@@ -402,7 +405,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 					</Container>
 				</Tab>
 				<Tab eventKey='metas' title='Planificaciones y resultados'>
-					<Container className=' custom-scrollbar overflow-y-auto ' fluid style={{ maxHeight: '70vh' }}>
+					<Container className=' custom-scrollbar overflow-y-scroll ' style={{ maxHeight: '50vh' }}>
 						<FormGroup controlId='formPermisos' className='mb-2'>
 							<Form.Label>Permisos</Form.Label>
 							<Controller
@@ -424,15 +427,15 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 								)}
 							/>
 						</FormGroup>
-						<Form.Label className='w-100 text-center'> Seccion Programas y Areas</Form.Label>
+						<Form.Label className='w-100 text-center text-decoration-underline m-1'> Seccion Programas y Areas</Form.Label>
 						<Form.Group controlId='formMetas' className='mb-2'>
 							<div className=' d-flex justify-content-between align-items-center '>
 								<Form.Label>Año</Form.Label>
 								<Button
 									size='sm'
-									variant='outlined'
+									variant='warning'
 									onClick={handleUndo}
-									className={areaHistory.length === 1 ? 'disabled' : ''}
+									className={` mb-2 ${areaHistory.length === 1 ? 'disabled' : ''}`}
 								>
 									Deshacer <Undo />
 								</Button>
@@ -520,7 +523,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose }) => {
 					<div className=' d-flex justify-content-center align-items-center'>Gestor</div>
 				</Tab>
 			</Tabs>
-			<Button type='submit' variant='primary' className='mt-auto'>
+			<Button size='sm' type='submit' variant='primary' className='mt-auto'>
 				Guardar
 			</Button>
 		</Form>
