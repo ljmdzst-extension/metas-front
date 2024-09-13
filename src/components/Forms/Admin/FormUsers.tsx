@@ -395,7 +395,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose, updateList }) 
 												</div>
 											)}
 										/>
-										<IconButton onClick={toggleShowPassword} className='ml-2'>
+										<IconButton onClick={toggleShowPassword} size='small' >
 											{showPassword ? <VisibilityOff /> : <Visibility />}
 										</IconButton>
 									</div>
