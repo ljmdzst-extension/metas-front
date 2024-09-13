@@ -16,8 +16,7 @@ export default function NavBar() {
 	const navigate = useNavigate();
 
 	const handleLogout = () => {
-		localStorage.removeItem('token');
-		localStorage.removeItem('user');
+		localStorage.clear();
 		dispatch(logout());
 		Swal.fire({
 			title: 'Sesión cerrada',

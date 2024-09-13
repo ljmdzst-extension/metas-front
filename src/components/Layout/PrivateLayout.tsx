@@ -16,20 +16,23 @@ const PrivateLayout = ({ children }: any) => {
   const navigate = useNavigate();
   const location = useLocation();
   const availableHeight = useAvailableHeight();
+  const { isBasesLoaded } = useSelector((state: RootState) => state.metas); // Suponiendo que hay un estado para cargar las bases
 
   // Lógica de autenticación gestionada por el hook
   useAuth();
 
-  // Fetch de bases de datos
+  // Fetch de bases de datos solo si no están cargadas
   useEffect(() => {
-    const fetchBases = async () => {
-      const action = await dispatch(getBases());
-      if (getBases.rejected.match(action) && action.payload?.error) {
-        errorAlert(action.payload.error);
-      }
-    };
-    fetchBases();
-  }, [dispatch]);
+    if (!isBasesLoaded) {
+      const fetchBases = async () => {
+        const action = await dispatch(getBases());
+        if (getBases.rejected.match(action) && action.payload?.error) {
+          errorAlert(action.payload.error);
+        }
+      };
+      fetchBases();
+    }
+  }, [dispatch, isBasesLoaded]);
 
   // Redireccionar si el usuario no está logueado
   useEffect(() => {
@@ -48,8 +51,8 @@ const PrivateLayout = ({ children }: any) => {
       <div className='vh-100 pb-4' style={{ backgroundColor: '#efe6e6' }}>
         <NavBar />
         <div style={{ backgroundColor: '#efe6e6', height: availableHeight, paddingBottom: '1rem' }}>
-          {children}
-          <Outlet />
+          {children} {/* children se usa para componentes que envolvemos */}
+          <Outlet />  {/* Outlet se usa para rutas anidadas */}
         </div>
       </div>
       <Footer />

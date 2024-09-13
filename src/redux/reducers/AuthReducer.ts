@@ -69,7 +69,7 @@ const initialState: AuthState = {
 	areas,
 	categorias,
 	puedeEditar: canEdit(permisos, areas, currentArea),
-	isAdmin: false,
+	isAdmin: categorias.includes('ADMIN'),
 };
 
 const authSlice = createSlice({
@@ -116,6 +116,7 @@ const authSlice = createSlice({
 			state.categorias = action.payload.categorias;
 			state.areas = action.payload.areas;
 			state.puedeEditar = canEdit(state.permisos, state.areas, localStorage.getItem('currentArea'));
+			state.isAdmin = action.payload.categorias.includes('ADMIN');
 		});
 		builder.addCase(loginAsync.rejected, (state, action) => {
 			state.loading = false;
