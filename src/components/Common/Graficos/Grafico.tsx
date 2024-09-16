@@ -13,7 +13,6 @@ import {
 	Pie,
 	ResponsiveContainer,
 	Cell,
-	Text,
 } from 'recharts';
 
 type ChartType = 'line' | 'bar' | 'pie';
@@ -69,7 +68,7 @@ const renderCustomizedLabel = ({
 	const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
 	return (
-		<Text
+		<text
 			x={x}
 			y={y}
 			fill='white'
@@ -78,7 +77,7 @@ const renderCustomizedLabel = ({
 			scaleToFit
 		>
 			{`${(percent * 100).toFixed(0)}%`}
-		</Text>
+		</text>
 	);
 };
 
