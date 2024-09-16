@@ -5,9 +5,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import InfoCard from '@/components/Common/Cards/InfoCards';
 import useAlert from '@/hooks/useAlert';
 // TODO: Descomentar todo cuando este listo el endpoint de graficos
-// import Grafico from '@/components/Common/Graficos/Grafico';
-// import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
-// import { useGraphics } from '@/hooks/useGraphics';
+import Grafico from '@/components/Common/Graficos/Grafico';
+import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
+import { useGraphics } from '@/hooks/useGraphics';
 import { getArchivoPresupuesto, postArchivoPresupuesto } from '@/services/api/private/metas';
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 	cantidadActividades: number;
 }
 
-// type ChartType = 'line' | 'bar' | 'pie';
+type ChartType = 'line' | 'bar' | 'pie';
 
 export const PanelActivityInfo: React.FC<Props> = ({
 	cantidadActividades,
@@ -27,7 +27,7 @@ export const PanelActivityInfo: React.FC<Props> = ({
 }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
-	// const { graficoObjEst, graficoEjes, isLoading } = useGraphics({ year: Number(anio) });
+	const { graficoObjEst, graficoEjes, isLoading } = useGraphics({ year: Number(anio) });
 	const { errorAlert, successAlert } = useAlert();
 
 	// Handle navigation
@@ -70,31 +70,31 @@ export const PanelActivityInfo: React.FC<Props> = ({
 	};
 
 	// Chart configurations
-	// const chartConfigs = [
-	// 	{
-	// 		title: 'Distribución de actividades según Eje Estratégico - PIE',
-	// 		type: 'bar' as ChartType,
-	// 		data: graficoEjes || [],
-	// 		dataKey: 'eje',
-	// 		legend: true,
-	// 		colors: undefined,
-	// 	},
-	// 	{
-	// 		title: 'Actividades según LIE y objetivo del PIE',
-	// 		type: 'bar' as ChartType,
-	// 		data: graficoObjEst || [],
-	// 		dataKey: 'objEst',
-	// 		legend: false,
-	// 		colors: undefined,
-	// 	},
-	// ];
+	const chartConfigs = [
+		{
+			title: 'Distribución de actividades según Eje Estratégico - PIE',
+			type: 'bar' as ChartType,
+			data: graficoEjes || [],
+			dataKey: 'eje',
+			legend: false,
+			colors: undefined,
+		},
+		{
+			title: 'Actividades según LIE y objetivo del PIE',
+			type: 'bar' as ChartType,
+			data: graficoObjEst || [],
+			dataKey: 'objEst',
+			legend: false,
+			colors: undefined,
+		},
+	];
 
 	return (
 		<Container
-			className='py-4 h-100 overflow-y-auto custom-scrollbar'
+			className='py-4 h-100 overflow-y-auto custom-scrollbar fluid'
 			style={{ maxHeight: 'calc(100vh - 130px)', height: '100%' }}
 		>
-			<Row>
+			<Row >
 				{/* InfoCard for "Actividades" */}
 				<InfoCard
 					title='Actividades'
@@ -121,24 +121,25 @@ export const PanelActivityInfo: React.FC<Props> = ({
 					}}
 					variant='success'
 					textColor='white'
-					colProps={{ md: 4 }}
+					colProps={{ md: 8 }}
 					customButton={
 						<div className='d-flex flex-column gap-2'>
 							<Form.Group controlId='formFile'>
-								<Form.Control type='file' size='sm' onChange={handleFileChange} />
+								<Form.Control type='file' size='sm' placeholder='Presupuesto' onChange={handleFileChange} />
 							</Form.Group>
 							<Button size='sm' variant='light' onClick={handleDownloadClick}>
-								Ver
+								Descargar
 							</Button>
 						</div>
 					}
 				/>
 			</Row>
 
-			{/* <Row>
+			<Row>
 				{chartConfigs.map((item, index) => (
 					<InfoCard
 						key={index} // Add unique key for each InfoCard
+						variant='secondary'
 						title={item.title}
 						titleFontSize='1rem'
 						renderChart
@@ -148,7 +149,7 @@ export const PanelActivityInfo: React.FC<Props> = ({
 								<LoadingSpinner />
 							) : (
 								<div
-									className='d-flex flex-column border rounded w-100 h-100 p-2 text-center '
+									className='d-flex flex-column border rounded w-100 h-100 text-center '
 									style={{ backgroundColor: '#f5f5f5', minHeight: '300px', maxWidth: '100%' }}
 								>
 									{' '}
@@ -166,7 +167,7 @@ export const PanelActivityInfo: React.FC<Props> = ({
 						colProps={{ md: 6 }}
 					/>
 				))}
-			</Row> */}
+			</Row>
 		</Container>
 	);
 };

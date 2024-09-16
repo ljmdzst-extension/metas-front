@@ -60,7 +60,7 @@ const InfoCard: React.FC<CardProps> = ({
 						<div className='chart-container'>{chartComponent}</div>
 					) : (
 						<Card.Text style={{ color: textColor, fontSize: infoFontSize }}>
-							<p>{info}</p>
+							{info}
 						</Card.Text>
 					)}
 
