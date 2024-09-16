@@ -13,7 +13,7 @@ import { getProgramas } from '@/services/api/private/metas';
 const currentYear = new Date().getFullYear();
 
 export default function PanelProgramas() {
-	const [year, setYear] = useState<number>(2023);
+	const [year, setYear] = useState<number>(currentYear);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [programasTransformados, setProgramasTransformados] = useState<ProgramaProps[]>([]);
 	const [indexActivity, setIndexActivity] = useState<AreaProps[]>([]);
