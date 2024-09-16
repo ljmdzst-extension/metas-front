@@ -10,7 +10,7 @@ import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
 import { Institucione } from '@/types/ActivityProps';
 import { getInstituciones } from '@/services/api/private/metas';
-import { useGuardarActividad } from '@/hooks/useGuardarActividad'
+import { useGuardarActividad } from '@/hooks/useGuardarActividad';
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
@@ -238,13 +238,10 @@ export default function FormOrgInst() {
 				variant='success'
 				className='mt-auto mb-3 align-self-center'
 				onClick={() => {
-					guardarActividad(
-						{
-							...activity,
-							listaInstituciones: arrayInstitucion,
-						},
-						dispatch,
-					);
+					guardarActividad({
+						...activity,
+						listaInstituciones: arrayInstitucion,
+					});
 				}}
 			>
 				Guardar Actividad

@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
 import { Meta } from '@/types/ActivityProps';
-import { useGuardarActividad } from '@/hooks/useGuardarActividad'
+import { useGuardarActividad } from '@/hooks/useGuardarActividad';
 
 interface Valoracion {
 	idValoracion: number;
@@ -194,13 +194,10 @@ const FormMetas = () => {
 				variant='success'
 				className='mt-auto mb-3 align-self-center '
 				onClick={() => {
-					guardarActividad(
-						{
-							...activity,
-							listaMetas: listadoMetas,
-						},
-						dispatch,
-					);
+					guardarActividad({
+						...activity,
+						listaMetas: listadoMetas,
+					});
 				}}
 			>
 				Guardar Actividad{' '}

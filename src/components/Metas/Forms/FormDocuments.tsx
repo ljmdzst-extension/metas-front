@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
 import { Enlace } from '@/types/ActivityProps';
-import { useGuardarActividad } from '@/hooks/useGuardarActividad'
+import { useGuardarActividad } from '@/hooks/useGuardarActividad';
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
@@ -133,13 +133,10 @@ export default function FormOrgInst() {
 				variant='success'
 				className='mt-auto mb-3 align-self-center '
 				onClick={() => {
-					guardarActividad(
-						{
-							...activity,
-							listaEnlaces: arrayDocumentos,
-						},
-						dispatch,
-					);
+					guardarActividad({
+						...activity,
+						listaEnlaces: arrayDocumentos,
+					});
 				}}
 			>
 				Guardar Actividad

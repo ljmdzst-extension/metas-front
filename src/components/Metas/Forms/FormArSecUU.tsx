@@ -7,8 +7,8 @@ import { RootState } from '@/redux/store';
 import { Row, Col } from 'react-bootstrap';
 import { ListaProgramasSIPPE } from '@/types/BasesProps';
 import { ErrorOutline } from '@mui/icons-material';
-import { setHayCambios } from '@/redux/actions/activityAction'
-import { useGuardarActividad } from '@/hooks/useGuardarActividad'
+import { setHayCambios } from '@/redux/actions/activityAction';
+import { useGuardarActividad } from '@/hooks/useGuardarActividad';
 
 const animatedComponents = makeAnimated();
 
@@ -31,7 +31,7 @@ export default function FormArSecUU() {
 
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
 	const { bases, error } = useSelector((state: RootState) => state.metas);
-	const {guardarActividad } = useGuardarActividad();
+	const { guardarActividad } = useGuardarActividad();
 	const [dataLoaded, setDataLoaded] = useState(false);
 
 	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<Option[]>([]);
@@ -214,22 +214,17 @@ export default function FormArSecUU() {
 				variant='success'
 				className='mt-auto mb-3 align-self-center'
 				onClick={() => {
-					guardarActividad(
-						{
-							...activity,
-							listaRelaciones: Array.from(
-								new Set([
-									...relacionSeleccionadas1.map((el) => el.value),
-									...relacionSeleccionadas2.map((el) => el.value),
-									...relacionSeleccionadas3.map((el) => el.value),
-								]),
-							),
-							listaProgramasSIPPE: Array.from(
-								new Set([...sippeSeleccionadas.map((el) => el.value)]),
-							),
-						},
-						dispatch,
-					);
+					guardarActividad({
+						...activity,
+						listaRelaciones: Array.from(
+							new Set([
+								...relacionSeleccionadas1.map((el) => el.value),
+								...relacionSeleccionadas2.map((el) => el.value),
+								...relacionSeleccionadas3.map((el) => el.value),
+							]),
+						),
+						listaProgramasSIPPE: Array.from(new Set([...sippeSeleccionadas.map((el) => el.value)])),
+					});
 				}}
 			>
 				Guardar Actividad{' '}

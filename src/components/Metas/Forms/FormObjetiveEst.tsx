@@ -3,9 +3,9 @@ import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { setHayCambios } from '@/redux/actions/activityAction'
+import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
-import { useGuardarActividad } from '@/hooks/useGuardarActividad'
+import { useGuardarActividad } from '@/hooks/useGuardarActividad';
 
 export default function FormObjetiveEst() {
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
@@ -79,13 +79,10 @@ export default function FormObjetiveEst() {
 				variant='success'
 				className='mt-auto mb-3 align-self-center'
 				onClick={() => {
-					guardarActividad(
-						{
-							...activity,
-							listaObjetivos: objetivosSeleccionados,
-						},
-						dispatch,
-					);
+					guardarActividad({
+						...activity,
+						listaObjetivos: objetivosSeleccionados,
+					});
 				}}
 			>
 				Guardar Actividad

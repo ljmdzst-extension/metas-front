@@ -11,7 +11,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
 import { FechasPuntuale } from '@/types/ActivityProps';
-import { useGuardarActividad } from '@/hooks/useGuardarActividad'
+import { useGuardarActividad } from '@/hooks/useGuardarActividad';
 
 registerLocale('es', es);
 
@@ -230,15 +230,12 @@ export default function FormPeriodo() {
 					variant='success'
 					className='mt-auto mb-3 align-self-center '
 					onClick={() => {
-						guardarActividad(
-							{
-								...activity,
-								fechaDesde: fechaDesde,
-								fechaHasta: fechaHasta,
-								listaFechasPuntuales: listaFechasPuntuales,
-							},
-							dispatch,
-						);
+						guardarActividad({
+							...activity,
+							fechaDesde: fechaDesde,
+							fechaHasta: fechaHasta,
+							listaFechasPuntuales: listaFechasPuntuales,
+						});
 					}}
 				>
 					Guardar Actividad
