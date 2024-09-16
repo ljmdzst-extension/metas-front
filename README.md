@@ -11,9 +11,7 @@ Versión actualizada y unificación de sistemas utilizados en la Secretaría de 
 - [Instalación](#instalación)
 - [Uso](#uso)
 - [Estructura de Carpetas](#estructura-de-carpetas)
-- [Contribución](#contribución)
-- [Licencia](#licencia)
-- [Contacto](#contacto)
+
 
 ## Descripción
 
