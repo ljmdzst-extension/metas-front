@@ -169,7 +169,7 @@ export default function ActivityScreen() {
 	}, [isPlanificationOpen, onSearchChange]);
 
 	return (
-		<div className=' d-flex flex-column h-100'>
+		<div className=' d-flex flex-column h-100 mb-4'>
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton>
 					<Modal.Title>Crear Actividad</Modal.Title>
@@ -327,7 +327,7 @@ export default function ActivityScreen() {
 				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
 				<Col
 					sm={isPlanificationOpen && !puedeEditar ? '12' : 9}
-					className=' border-2 rounded-3'
+					className=' border-2 rounded-3 h-100'
 					style={{ backgroundColor: '#fefefe' }}
 				>
 					{!isPlanificationOpen && (

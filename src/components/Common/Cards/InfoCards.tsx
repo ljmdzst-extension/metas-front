@@ -2,8 +2,8 @@ import React from 'react';
 import { Button, Card, Col } from 'react-bootstrap';
 
 interface CardProps {
-	title: string;
-	info: string | number;
+	title?: string; // Make title optional
+	info?: string | number; // Make info optional
 	buttonLabel?: string;
 	onButtonClick?: () => void;
 	link?: { href: string; text: string };
@@ -11,10 +11,17 @@ interface CardProps {
 	textColor?: string; // Color personalizado para el texto
 	customButton?: React.ReactNode; // Botón personalizado
 	centerText?: boolean; // Prop para centrar el texto
+	titleFontSize?: string; // Tamaño personalizado para el font-size de "title"
 	infoFontSize?: string; // Tamaño personalizado para el font-size de "info"
 	buttonVariant?: string; // Variante del botón (puede ser un color de Bootstrap o un color custom)
 	buttonSize?: 'sm' | 'lg'; // Tamaño del botón (pequeño o grande)
 	buttonDisabled?: boolean; // Deshabilitar el botón
+	renderChart?: boolean; // Prop to render the chart
+	showTitle?: boolean; // Prop to control whether to show title
+	chartComponent?: React.ReactNode; // The chart component to render
+	colProps?: any; // Props for react-bootstrap Col to control the card size
+	height?: string; // Custom height for the card
+	maxHeight?: string; // Maximum height for the card
 }
 
 const InfoCard: React.FC<CardProps> = ({
@@ -27,21 +34,35 @@ const InfoCard: React.FC<CardProps> = ({
 	textColor = variant === 'light' ? 'dark' : 'white',
 	customButton,
 	centerText = false,
+	titleFontSize = '1.5rem',
 	infoFontSize = '1rem',
-	buttonVariant = 'primary', 
-	buttonSize = 'sm', 
-	buttonDisabled = false, 
+	buttonVariant = 'primary',
+	buttonSize = 'sm',
+	buttonDisabled = false,
+	renderChart = false,
+	showTitle = true,
+	chartComponent,
+	colProps,
+	height = 'auto', // Set default height
+	maxHeight = '400px', // Set default max height
 }) => {
 	const textAlignmentClass = centerText ? 'text-center' : '';
 
 	return (
-		<Col md={4} className='mb-4'>
-			<Card className={`h-100 shadow-sm bg-${variant}`}>
+		<Col {...colProps} className='mb-4'>
+			<Card className={`h-100 shadow-sm bg-${variant}`} style={{ height, maxHeight }}>
 				<Card.Body className={`d-flex flex-column justify-content-between ${textAlignmentClass}`}>
-					<Card.Title style={{ color: textColor }}>{title}</Card.Title>
-					<Card.Text style={{ color: textColor, fontSize: infoFontSize }}>
-						<p>{info}</p>
-					</Card.Text>
+					{showTitle && (
+						<Card.Title style={{ color: textColor, fontSize: titleFontSize }}>{title}</Card.Title>
+					)}
+
+					{renderChart && chartComponent ? (
+						<div className='chart-container'>{chartComponent}</div>
+					) : (
+						<Card.Text style={{ color: textColor, fontSize: infoFontSize }}>
+							<p>{info}</p>
+						</Card.Text>
+					)}
 
 					{link && (
 						<Card.Text>
