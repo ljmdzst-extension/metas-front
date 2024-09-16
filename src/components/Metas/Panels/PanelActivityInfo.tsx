@@ -1,7 +1,6 @@
 import InfoCard from '@/components/Common/Cards/InfoCards';
 import useAlert from '@/hooks/useAlert';
 import { getArchivoPresupuesto, postArchivoPresupuesto } from '@/services/api/private/metas';
-import { errorAlert, successAlert } from '@/utils/Alerts';
 
 import React from 'react';
 import { Button, Container, Form, Row } from 'react-bootstrap';
@@ -28,25 +27,37 @@ export const PanelActivityInfo: React.FC<Props> = ({
 	};
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		// Obtener el archivo seleccionado
 		const file = e.target.files?.[0];
-		if (file) {
-			const formData = new FormData();
-			formData.append('file', file);
+		if (!file) {
+			errorAlert('No se ha seleccionado ningún archivo');
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append('file', file);
+
+		try {
 			const res = await postArchivoPresupuesto(formData, Number(anio), idArea, idPrograma);
-			if (res) {
-				successAlert('Archivo cargado con exito');
+
+			if (res.ok) {
+				successAlert('Archivo cargado con éxito');
 			} else {
-				errorAlert('Error al cargar el archivo');
+				errorAlert(`Error al cargar el archivo: ${res.error}`);
 			}
+		} catch (error) {
+			console.error('Error inesperado al cargar el archivo:', error);
+			errorAlert('Error inesperado al cargar el archivo');
 		}
 	};
 
 	const handleDownloadClick = async () => {
-		const res = await getArchivoPresupuesto(Number(anio), idArea, idPrograma);
-		if (res) {
-			successAlert('Archivo descargado con exito');
+		const result = await getArchivoPresupuesto(Number(anio), idArea, idPrograma);
+
+		if (result.ok) {
+			successAlert('Archivo descargado con éxito');
 		} else {
-			errorAlert('Error al descargar el archivo');
+			errorAlert(`Error al descargar el archivo: ${result.error}`);
 		}
 	};
 
