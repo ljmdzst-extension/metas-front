@@ -3,10 +3,11 @@ import { Button, Container, Form, Row } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import InfoCard from '@/components/Common/Cards/InfoCards';
-import Grafico from '@/components/Common/Graficos/Grafico';
-import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import useAlert from '@/hooks/useAlert';
-import { useGraphics } from '@/hooks/useGraphics';
+// TODO: Descomentar todo cuando este listo el endpoint de graficos
+// import Grafico from '@/components/Common/Graficos/Grafico';
+// import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
+// import { useGraphics } from '@/hooks/useGraphics';
 import { getArchivoPresupuesto, postArchivoPresupuesto } from '@/services/api/private/metas';
 
 interface Props {
@@ -16,7 +17,7 @@ interface Props {
 	cantidadActividades: number;
 }
 
-type ChartType = 'line' | 'bar' | 'pie';
+// type ChartType = 'line' | 'bar' | 'pie';
 
 export const PanelActivityInfo: React.FC<Props> = ({
 	cantidadActividades,
@@ -26,7 +27,7 @@ export const PanelActivityInfo: React.FC<Props> = ({
 }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { graficoObjEst, graficoEjes, isLoading } = useGraphics({ year: Number(anio) });
+	// const { graficoObjEst, graficoEjes, isLoading } = useGraphics({ year: Number(anio) });
 	const { errorAlert, successAlert } = useAlert();
 
 	// Handle navigation
@@ -69,24 +70,24 @@ export const PanelActivityInfo: React.FC<Props> = ({
 	};
 
 	// Chart configurations
-	const chartConfigs = [
-		{
-			title: 'Distribución de actividades según Eje Estratégico - PIE',
-			type: 'bar' as ChartType,
-			data: graficoEjes || [],
-			dataKey: 'eje',
-			legend: true,
-			colors: undefined,
-		},
-		{
-			title: 'Actividades según LIE y objetivo del PIE',
-			type: 'bar' as ChartType,
-			data: graficoObjEst || [],
-			dataKey: 'objEst',
-			legend: false,
-			colors: undefined,
-		},
-	];
+	// const chartConfigs = [
+	// 	{
+	// 		title: 'Distribución de actividades según Eje Estratégico - PIE',
+	// 		type: 'bar' as ChartType,
+	// 		data: graficoEjes || [],
+	// 		dataKey: 'eje',
+	// 		legend: true,
+	// 		colors: undefined,
+	// 	},
+	// 	{
+	// 		title: 'Actividades según LIE y objetivo del PIE',
+	// 		type: 'bar' as ChartType,
+	// 		data: graficoObjEst || [],
+	// 		dataKey: 'objEst',
+	// 		legend: false,
+	// 		colors: undefined,
+	// 	},
+	// ];
 
 	return (
 		<Container
@@ -134,8 +135,7 @@ export const PanelActivityInfo: React.FC<Props> = ({
 				/>
 			</Row>
 
-			{/* Render chart InfoCards */}
-			<Row>
+			{/* <Row>
 				{chartConfigs.map((item, index) => (
 					<InfoCard
 						key={index} // Add unique key for each InfoCard
@@ -166,7 +166,7 @@ export const PanelActivityInfo: React.FC<Props> = ({
 						colProps={{ md: 6 }}
 					/>
 				))}
-			</Row>
+			</Row> */}
 		</Container>
 	);
 };
