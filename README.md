@@ -1,27 +1,104 @@
-# React + TypeScript + Vite
+# Aplicaciones Secretaría de Extensión y Cultura
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Versión actualizada y unificación de sistemas utilizados en la Secretaría de Extensión y Cultura de la UNL.
 
-Currently, two official plugins are available:
+## Tabla de Contenidos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Descripción](#descripción)
+- [Planificaciones y Resultados](#planificaciones-y-resultados)
+- [Gestor de Proyectos de Extensión](#gestor-de-proyectos-de-extensión)
+- [Gestor P.E.E.E](#gestor-peee)
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Estructura de Carpetas](#estructura-de-carpetas)
+- [Contribución](#contribución)
+- [Licencia](#licencia)
+- [Contacto](#contacto)
 
-## Expanding the ESLint configuration
+## Descripción
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Este proyecto tiene como objetivo unificar y mejorar los sistemas utilizados en la Secretaría de Extensión y Cultura de la UNL.
 
-- Configure the top-level `parserOptions` property like this:
+### Planificaciones y Resultados
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+La plataforma de planificaciones y resultados de actividades permite simplificar el proceso de planificación y registro de las propuestas desarrolladas por la Secretaría de Extensión y Cultura.
+
+### Gestor de Proyectos de Extensión
+
+Actualmente en desarrollo.
+
+### Gestor P.E.E.E
+
+Actualmente en desarrollo.
+
+## Instalación
+
+Sigue los pasos a continuación para instalar y configurar el proyecto en tu máquina local.
+
+1. **Clonar el repositorio:**
+
+   ```bash
+   git clone https://github.com/ljmdzst-extension/extension-front
+   ```
+
+2. **Instalar las dependencias:**
+
+   ```bash
+    npm install
+   ```
+
+3. **Iniciar el servidor en modo desarrollo:**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Construir para producción:**
+   ```bash
+   npm run build
+   ```
+
+## Uso
+
+Una vez que hayas instalado y configurado el proyecto, puedes usar los siguientes comandos para desarrollarlo y ejecutarlo:
+
+### Tutoriales en Video
+
+#### Tutorial para Programas
+
+[![Video](https://img.youtube.com/vi/AEZ0sKvM9dU/hqdefault.jpg)](https://www.youtube.com/watch?v=AEZ0sKvM9dU)
+
+#### Tutorial para Áreas
+
+[![Video](https://img.youtube.com/vi/0YO14hvKQXE/hqdefault.jpg)](https://www.youtube.com/watch?v=0YO14hvKQXE)
+
+## Estructura de Carpetas
+
+La estructura de carpetas del proyecto es la siguiente:
+
+```bash
+├── index.html
+├── package.json
+├── package-lock.json
+├── public
+├── README.md
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── assets
+│   ├── components
+│   ├── hooks
+│   ├── index.css
+│   ├── main.tsx
+│   ├── mocks
+│   ├── navigation
+│   ├── pages
+│   ├── redux
+│   ├── services
+│   ├── types
+│   ├── utils
+│   └── vite-env.d.ts
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
