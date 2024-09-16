@@ -89,7 +89,8 @@ export const PanelActivityInfo: React.FC<Props> = ({
 	];
 
 	return (
-		<Container className='py-4 h-100 overflow-y-auto custom-scrollbar'>
+		<Container className='py-4 h-100 overflow-y-auto custom-scrollbar'
+		style={{ maxHeight: 'calc(100vh - 130px)', height: '100%' }}>
 			<Row>
 				{/* InfoCard for "Actividades" */}
 				<InfoCard

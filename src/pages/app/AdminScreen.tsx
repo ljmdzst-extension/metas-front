@@ -9,8 +9,8 @@ import Swal from 'sweetalert2';
 import DetailsUser from '@/components/Forms/Admin/DetailUser';
 import { getAllUsers, getUserByID } from '@/services';
 import { Categoria, Permiso, UserData, UserShortData } from '@/types/UserProps';
-import { errorAlert } from '@/utils/Alerts';
 import useFilteredUsers from '@/hooks/useFilteredUsers';
+import useAlert from '@/hooks/useAlert'
 
 const MySwal = withReactContent(Swal);
 
@@ -35,6 +35,7 @@ const mapUserDataForTable = (user: UserShortData): UserTableData => {
 };
 
 const AdminScreen = () => {
+	const { errorAlert } = useAlert();
 	const navigate = useNavigate();
 	const [users, setUsers] = useState<UserShortData[]>([]);
 	const [selectedUser, setSelectedUser] = useState<UserData | null>(null);

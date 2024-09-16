@@ -4,11 +4,11 @@ import Button from 'react-bootstrap/Button';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { guardarActividad } from '@/redux/actions/putActividad';
 import { Row, Col } from 'react-bootstrap';
 import { ListaProgramasSIPPE } from '@/types/BasesProps';
 import { ErrorOutline } from '@mui/icons-material';
 import { setHayCambios } from '@/redux/actions/activityAction'
+import { useGuardarActividad } from '@/hooks/useGuardarActividad'
 
 const animatedComponents = makeAnimated();
 
@@ -31,6 +31,7 @@ export default function FormArSecUU() {
 
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
 	const { bases, error } = useSelector((state: RootState) => state.metas);
+	const {guardarActividad } = useGuardarActividad();
 	const [dataLoaded, setDataLoaded] = useState(false);
 
 	const [relacionSeleccionadas1, setRelacionSeleccionadas1] = useState<Option[]>([]);

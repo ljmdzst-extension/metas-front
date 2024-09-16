@@ -3,10 +3,10 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { Col, InputGroup, Row } from 'react-bootstrap';
+import { Col, InputGroup} from 'react-bootstrap';
 
 import formData from '@/mocks/activityFormData.json';
 import Swal from 'sweetalert2';
@@ -169,7 +169,7 @@ export default function ActivityScreen() {
 	}, [isPlanificationOpen, onSearchChange]);
 
 	return (
-		<div className=' d-flex flex-column h-100 mb-4'>
+		<div className=' d-flex flex-column h-100'>
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header closeButton>
 					<Modal.Title>Crear Actividad</Modal.Title>
@@ -284,7 +284,7 @@ export default function ActivityScreen() {
 						<>
 							{/* NOTE: NAVEGACION FORMULARIOS */}
 							{isLoading ? (
-								<></>
+								<LoadingSpinner />
 							) : (
 								<>
 									<h4 className=' text-center m-2'>Formulario</h4>

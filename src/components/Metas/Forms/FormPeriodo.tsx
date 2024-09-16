@@ -6,18 +6,19 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { guardarActividad } from '@/redux/actions/putActividad';
 import { Col, Row } from 'react-bootstrap';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
 import { FechasPuntuale } from '@/types/ActivityProps';
+import { useGuardarActividad } from '@/hooks/useGuardarActividad'
 
 registerLocale('es', es);
 
 export default function FormPeriodo() {
 	const dispatch = useDispatch();
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
+	const { guardarActividad } = useGuardarActividad();
 
 	// const [isSaving, setIsSaving] = useState<boolean>(false);
 

@@ -4,19 +4,18 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { guardarActividad } from '@/redux/actions/putActividad';
 import Swal from 'sweetalert2';
 import { FormControl, ListGroup } from 'react-bootstrap';
 import { ContentCopy, Edit, Delete, ErrorOutline } from '@mui/icons-material';
-
 import { textLimitError } from '@/utils/validacionesForms';
 import { Ubicacione } from '@/types/ActivityProps';
 import { setHayCambios } from '@/redux/actions/activityAction'
+import { useGuardarActividad } from '@/hooks/useGuardarActividad'
 
 const FormDescriptionUbication = () => {
 	const dispatch = useDispatch();
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
-
+	const {guardarActividad } = useGuardarActividad();
 	const [editandoDescripcion, setEditandoDescripcion] = useState(false);
 	const [descripcion, setDescripcion] = useState<string>(activity.desc ?? '');
 	const [ubicaciones, setUbicaciones] = useState<Ubicacione[]>(

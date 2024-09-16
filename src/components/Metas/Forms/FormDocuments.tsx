@@ -4,15 +4,16 @@ import { Form } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { guardarActividad } from '@/redux/actions/putActividad';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { setHayCambios } from '@/redux/actions/activityAction'
+import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
-import { Enlace } from '@/types/ActivityProps'
+import { Enlace } from '@/types/ActivityProps';
+import { useGuardarActividad } from '@/hooks/useGuardarActividad'
 
 export default function FormOrgInst() {
 	const dispatch = useDispatch();
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
+	const { guardarActividad } = useGuardarActividad();
 	const [arrayDocumentos, setArrayDocumentos] = useState<Enlace[]>(activity.listaEnlaces || []);
 	const [descripcion, setDescripcion] = useState('');
 	const [nombreArchivo, setNombreArchivo] = useState('');

@@ -5,14 +5,15 @@ import {
 	DataGraficoLy,
 	DataGraficoUUAA,
 } from '../types/GraphicsProps';
-import { errorAlert } from '@/utils/Alerts';
 import { getGraphicsData } from '@/services/api/private/metas';
+import useAlert from './useAlert'
 
 interface Props {
 	year?: number;
 }
 
 export const useGraphics = ({ year }: Props) => {
+	const { errorAlert } = useAlert();
 	const [isLoading, setIsLoading] = useState(true);
 	const [graficoEjes, setGraficoEjes] = useState<DataGraficoEje[]>([]);
 	const [graficoObjEst, setGraficoObjEst] = useState<DataGraficoObjEst[]>([]);
