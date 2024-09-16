@@ -89,8 +89,10 @@ export const PanelActivityInfo: React.FC<Props> = ({
 	];
 
 	return (
-		<Container className='py-4 h-100 overflow-y-auto custom-scrollbar'
-		style={{ maxHeight: 'calc(100vh - 130px)', height: '100%' }}>
+		<Container
+			className='py-4 h-100 overflow-y-auto custom-scrollbar'
+			style={{ maxHeight: 'calc(100vh - 130px)', height: '100%' }}
+		>
 			<Row>
 				{/* InfoCard for "Actividades" */}
 				<InfoCard
@@ -112,7 +114,10 @@ export const PanelActivityInfo: React.FC<Props> = ({
 				<InfoCard
 					title='Presupuesto'
 					info='Plantilla de presupuesto disponible'
-					link={{ href: '/descargar/plantilla', text: 'Descargar Plantilla' }}
+					link={{
+						href: 'https://docs.google.com/spreadsheets/d/19_60T2qLdse4AcTeF-eCcdKb5hGp6F9N/edit?usp=sharing&ouid=105932027422425501503&rtpof=true&sd=true',
+						text: 'Descargar Plantilla',
+					}}
 					variant='success'
 					textColor='white'
 					colProps={{ md: 4 }}
