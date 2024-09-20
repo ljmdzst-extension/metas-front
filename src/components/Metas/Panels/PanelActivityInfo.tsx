@@ -27,7 +27,7 @@ export const PanelActivityInfo: React.FC<Props> = ({
 }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { graficoObjEst, graficoEjes, isLoading } = useGraphics({ year: Number(anio) });
+	const { graficoObjEst, graficoEjes, isLoading } = useGraphics({ year: Number(anio), area: idArea });
 	const { errorAlert, successAlert } = useAlert();
 
 	// Handle navigation

@@ -5,14 +5,15 @@ import {
 	DataGraficoLy,
 	DataGraficoUUAA,
 } from '../types/GraphicsProps';
-import { getGraphicsData } from '@/services/api/private/metas';
-import useAlert from './useAlert'
+import { getGraphicsData, getGraphicsDataByArea } from '@/services/api/private/metas';
+import useAlert from './useAlert';
 
 interface Props {
 	year?: number;
+	area?: number;  // Nuevo parámetro opcional para área
 }
 
-export const useGraphics = ({ year }: Props) => {
+export const useGraphics = ({ year, area }: Props) => {
 	const { errorAlert } = useAlert();
 	const [isLoading, setIsLoading] = useState(true);
 	const [graficoEjes, setGraficoEjes] = useState<DataGraficoEje[]>([]);
@@ -21,23 +22,36 @@ export const useGraphics = ({ year }: Props) => {
 	const [graficoUUAA, setGraficoUUAA] = useState<DataGraficoUUAA[]>([]);
 
 	useEffect(() => {
-		getGraphicsData(year)
-			.then((data) => {
+		const fetchData = async () => {
+			try {
+				setIsLoading(true);
+				let data;
+
+				if (area) {
+					data = await getGraphicsDataByArea(year, area);
+				} else {
+					data = await getGraphicsData(year);
+				}
+
+				// Establecemos los datos recibidos en los estados correspondientes
 				setGraficoEjes(data.data.dataGraficoEjes);
 				setGraficoObjEst(data.data.dataGraficoObjEst);
 				setGraficoLy(data.data.dataGraficoLies);
 				setGraficoUUAA(data.data.dataGraficoUUAA);
-				setIsLoading(false);
-			})
-			.catch((error) => {
+			} catch (error) {
 				console.error(error);
 				if (error instanceof Error) {
 					errorAlert(error.message);
 				} else {
 					errorAlert('An unknown error occurred');
 				}
-			});
-	}, [ year]);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchData();
+	}, [year, area]);
 
 	return {
 		isLoading,
