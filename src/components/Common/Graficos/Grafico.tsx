@@ -74,7 +74,6 @@ const renderCustomizedLabel = ({
 			fill='white'
 			textAnchor={x > cx ? 'start' : 'end'}
 			dominantBaseline='central'
-			scaleToFit
 		>
 			{`${(percent * 100).toFixed(0)}%`}
 		</text>
