@@ -8,7 +8,7 @@ import Grafico from '@/components/Common/Graficos/Grafico';
 import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import { useGraphics } from '@/hooks/useGraphics';
 import { getArchivoPresupuesto, postArchivoPresupuesto } from '@/services/api/private/metas';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 interface Props {
 	anio: string;
@@ -33,7 +33,10 @@ export const PanelActivityInfo: React.FC<Props> = ({
 }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { graficoObjEst, graficoEjes, isLoading } = useGraphics({ year: Number(anio), area: idArea });
+	const { graficoObjEst, graficoEjes, isLoading } = useGraphics({
+		year: Number(anio),
+		area: idArea,
+	});
 	const { errorAlert, successAlert } = useAlert();
 
 	// Handle navigation
@@ -53,22 +56,23 @@ export const PanelActivityInfo: React.FC<Props> = ({
 			errorAlert('Solo se permiten archivos de Excel o CSV');
 			return;
 		}
-	
+
 		const { isConfirmed } = await Swal.fire({
 			title: 'Confirmación de subida',
-			text: `Se va a subir el documento ${file.name}. ¿Está seguro?`,
+			html: `Se va a subir el documento <strong>${file.name}</strong>. ¿Está seguro?<br/>Si ya hay un documento subido, será reemplazado con el actual.`,
 			icon: 'warning',
+			width: '50%',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Sí, subir',
 			cancelButtonText: 'Cancelar',
 		});
-	
+
 		if (isConfirmed) {
 			const formData = new FormData();
 			formData.append('file', file);
-	
+
 			try {
 				const res = await postArchivoPresupuesto(formData, Number(anio), idArea, idPrograma);
 				if (res.ok) {
@@ -84,7 +88,6 @@ export const PanelActivityInfo: React.FC<Props> = ({
 			errorAlert('La subida del archivo fue cancelada');
 		}
 	};
-	
 
 	// Handle file download
 	const handleDownloadClick = async () => {
@@ -121,7 +124,7 @@ export const PanelActivityInfo: React.FC<Props> = ({
 			className='py-4 h-100 overflow-y-auto custom-scrollbar fluid'
 			style={{ maxHeight: 'calc(100vh - 130px)', height: '100%' }}
 		>
-			<Row >
+			<Row>
 				{/* InfoCard for "Actividades" */}
 				<InfoCard
 					title='Actividades'
@@ -152,7 +155,12 @@ export const PanelActivityInfo: React.FC<Props> = ({
 					customButton={
 						<div className='d-flex flex-column gap-2'>
 							<Form.Group controlId='formFile'>
-								<Form.Control type='file' size='sm' placeholder='Presupuesto' onChange={handleFileChange} />
+								<Form.Control
+									type='file'
+									size='sm'
+									placeholder='Presupuesto'
+									onChange={handleFileChange}
+								/>
 							</Form.Group>
 							<Button size='sm' variant='light' onClick={handleDownloadClick}>
 								Descargar
