@@ -177,7 +177,7 @@ export const PanelActivityInfo: React.FC<Props> = ({
 							) : (
 								<div
 									className='d-flex flex-column border rounded w-100 h-100 text-center '
-									style={{ backgroundColor: '#f5f5f5', minHeight: '300px', maxWidth: '100%' }}
+									style={{ backgroundColor: '#f5f5f5', minHeight: '200px', maxWidth: '100%' }}
 								>
 									{' '}
 									<Grafico
