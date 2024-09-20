@@ -4,11 +4,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import InfoCard from '@/components/Common/Cards/InfoCards';
 import useAlert from '@/hooks/useAlert';
-// TODO: Descomentar todo cuando este listo el endpoint de graficos
 import Grafico from '@/components/Common/Graficos/Grafico';
 import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import { useGraphics } from '@/hooks/useGraphics';
 import { getArchivoPresupuesto, postArchivoPresupuesto } from '@/services/api/private/metas';
+import Swal from 'sweetalert2'
 
 interface Props {
 	anio: string;
@@ -18,6 +18,12 @@ interface Props {
 }
 
 type ChartType = 'line' | 'bar' | 'pie';
+
+const allowedMimeTypes = [
+	'application/vnd.ms-excel', // .xls
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+	'text/csv', // .csv
+];
 
 export const PanelActivityInfo: React.FC<Props> = ({
 	cantidadActividades,
@@ -43,21 +49,42 @@ export const PanelActivityInfo: React.FC<Props> = ({
 			return;
 		}
 
-		const formData = new FormData();
-		formData.append('file', file);
-
-		try {
-			const res = await postArchivoPresupuesto(formData, Number(anio), idArea, idPrograma);
-			if (res.ok) {
-				successAlert('Archivo cargado con éxito');
-			} else {
-				errorAlert(`Error al cargar el archivo: ${res.error}`);
+		if (!allowedMimeTypes.includes(file.type)) {
+			errorAlert('Solo se permiten archivos de Excel o CSV');
+			return;
+		}
+	
+		const { isConfirmed } = await Swal.fire({
+			title: 'Confirmación de subida',
+			text: `Se va a subir el documento ${file.name}. ¿Está seguro?`,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Sí, subir',
+			cancelButtonText: 'Cancelar',
+		});
+	
+		if (isConfirmed) {
+			const formData = new FormData();
+			formData.append('file', file);
+	
+			try {
+				const res = await postArchivoPresupuesto(formData, Number(anio), idArea, idPrograma);
+				if (res.ok) {
+					successAlert('Archivo cargado con éxito');
+				} else {
+					errorAlert(`Error al cargar el archivo: ${res.error}`);
+				}
+			} catch (error) {
+				console.error('Error inesperado al cargar el archivo:', error);
+				errorAlert('Error inesperado al cargar el archivo');
 			}
-		} catch (error) {
-			console.error('Error inesperado al cargar el archivo:', error);
-			errorAlert('Error inesperado al cargar el archivo');
+		} else {
+			errorAlert('La subida del archivo fue cancelada');
 		}
 	};
+	
 
 	// Handle file download
 	const handleDownloadClick = async () => {
