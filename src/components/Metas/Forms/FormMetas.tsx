@@ -7,11 +7,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Badge, Button, Form, Modal, Table } from 'react-bootstrap';
-import { guardarActividad } from '@/redux/actions/putActividad';
 import Swal from 'sweetalert2';
 import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
 import { Meta } from '@/types/ActivityProps';
+import { useGuardarActividad } from '@/hooks/useGuardarActividad';
 
 interface Valoracion {
 	idValoracion: number;
@@ -30,6 +30,7 @@ const FormMetas = () => {
 	const dispatch = useDispatch();
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
 	const { bases, error } = useSelector((state: RootState) => state.metas);
+	const { guardarActividad } = useGuardarActividad();
 	const [listadoMetas, setListadoMetas] = useState<Meta[]>(activity.listaMetas ?? []);
 	const [nuevaMeta, setNuevaMeta] = useState<Meta>(defaultNuevaMeta);
 	const [valoraciones, setValoraciones] = useState<Valoracion[]>([]);
@@ -193,13 +194,10 @@ const FormMetas = () => {
 				variant='success'
 				className='mt-auto mb-3 align-self-center '
 				onClick={() => {
-					guardarActividad(
-						{
-							...activity,
-							listaMetas: listadoMetas,
-						},
-						dispatch,
-					);
+					guardarActividad({
+						...activity,
+						listaMetas: listadoMetas,
+					});
 				}}
 			>
 				Guardar Actividad{' '}

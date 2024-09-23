@@ -3,15 +3,16 @@ import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { guardarActividad } from '@/redux/actions/putActividad';
 import { ListaObjetivo } from '@/types/BasesProps';
-import { setHayCambios } from '@/redux/actions/activityAction'
+import { setHayCambios } from '@/redux/actions/activityAction';
 import { ErrorOutline } from '@mui/icons-material';
+import { useGuardarActividad } from '@/hooks/useGuardarActividad';
 
 export default function FormPIE() {
 	const dispatch = useDispatch();
 	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
 	const { bases } = useSelector((state: RootState) => state.metas);
+	const { guardarActividad } = useGuardarActividad();
 	const [objetivos] = useState<ListaObjetivo[]>(bases?.listaObjetivos ?? []);
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>(
 		activity?.listaObjetivos ?? [],
@@ -142,13 +143,10 @@ export default function FormPIE() {
 				variant='success'
 				className=' mt-auto mb-3 align-self-center'
 				onClick={() => {
-					guardarActividad(
-						{
-							...activity,
-							listaObjetivos: objetivosSeleccionados,
-						},
-						dispatch,
-					);
+					guardarActividad({
+						...activity,
+						listaObjetivos: objetivosSeleccionados,
+					});
 				}}
 			>
 				Guardar Actividad{' '}

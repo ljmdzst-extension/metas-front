@@ -23,7 +23,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { Add, Close, Undo } from '@mui/icons-material';
 import { putUsers } from '@/services';
-import { errorAlert, successAlert } from '@/utils/Alerts';
+import useAlert from '@/hooks/useAlert';
 
 const MySwal = withReactContent(Swal);
 
@@ -69,6 +69,7 @@ const permisosOptions: Permiso[] = [
 
 const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose, updateList }) => {
 	const { bases } = useSelector((state: RootState) => state.metas);
+	const { errorAlert, successAlert } = useAlert();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [selectedYear, setSelectedYear] = useState<OptionProps | null>(null);
 	const [selectedProgram, setSelectedProgram] = useState<OptionProps | null>(null);
@@ -395,7 +396,7 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose, updateList }) 
 												</div>
 											)}
 										/>
-										<IconButton onClick={toggleShowPassword} size='small' >
+										<IconButton onClick={toggleShowPassword} size='small'>
 											{showPassword ? <VisibilityOff /> : <Visibility />}
 										</IconButton>
 									</div>
@@ -427,7 +428,10 @@ const FormUsers: React.FC<FormUsersProps> = ({ userData, onClose, updateList }) 
 								)}
 							/>
 						</FormGroup>
-						<Form.Label className='w-100 text-center text-decoration-underline m-1'> Seccion Programas y Areas</Form.Label>
+						<Form.Label className='w-100 text-center text-decoration-underline m-1'>
+							{' '}
+							Seccion Programas y Areas
+						</Form.Label>
 						<Form.Group controlId='formMetas' className='mb-2'>
 							<div className=' d-flex justify-content-between align-items-center '>
 								<Form.Label>Año</Form.Label>

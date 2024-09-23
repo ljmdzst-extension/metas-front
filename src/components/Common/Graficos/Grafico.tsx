@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import {
 	LineChart,
 	Line,
@@ -18,7 +19,7 @@ type ChartType = 'line' | 'bar' | 'pie';
 
 interface GraficoProps {
 	type: ChartType;
-	data: any[];
+	data: Record<string, any>[];
 	dataKey?: string;
 	valueKeys: string[];
 	legend?: boolean;
@@ -52,7 +53,6 @@ interface CustomizedLabelProps {
 	innerRadius: number;
 	outerRadius: number;
 	percent: number;
-	index: number;
 }
 
 const renderCustomizedLabel = ({
@@ -68,19 +68,23 @@ const renderCustomizedLabel = ({
 	const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
 	return (
-		<text x={x} y={y} fill='white' textAnchor={x > cx ? 'start' : 'end'} dominantBaseline='central'>
+		<text
+			x={x}
+			y={y}
+			fill='white'
+			textAnchor={x > cx ? 'start' : 'end'}
+			dominantBaseline='central'
+		>
 			{`${(percent * 100).toFixed(0)}%`}
 		</text>
 	);
 };
 
-interface CustomTooltipProps {
-	active: boolean;
-	payload: any[];
-	label: string;
-}
-
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) => {
+const CustomTooltip: React.FC<{ active: boolean; payload: any[]; label: string }> = ({
+	active,
+	payload,
+	label,
+}) => {
 	if (active && payload && payload.length) {
 		return (
 			<div
@@ -105,84 +109,94 @@ const Grafico: React.FC<GraficoProps> = ({
 	legend = true,
 	customColors,
 }) => {
+	const shouldHideTicks = data.length > 10;
+
+	const getColor = useMemo(() => {
+		return (name: string, index: number) => {
+			if (customColors) {
+				const customColor = customColors.find((color) => color.item === name);
+				return customColor?.color || DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+			}
+			return DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+		};
+	}, [customColors]);
+
 	if (data.length === 0) {
 		return <div>No data available</div>;
 	}
 
-	const shouldHideTicks = data.length > 10;
+	//NOTE:  Componente LineChart
+	const renderLineChart = () => (
+		<LineChart data={data}>
+			<CartesianGrid strokeDasharray='3 3' />
+			<XAxis dataKey={dataKey} tick={shouldHideTicks ? false : undefined} />
+			<YAxis />
+			<Tooltip content={<CustomTooltip active={false} payload={[]} label='' />} />
+			{legend && <Legend />}
+			{valueKeys.map((key, index) => (
+				<Line key={index} type='monotone' dataKey={key} stroke={getColor(key, index)} />
+			))}
+		</LineChart>
+	);
 
-	const getColor = (name: string, index: number) => {
-		if (customColors) {
-			const customColor = customColors.find((color) => color.item === name);
-			return customColor && customColor.color
-				? customColor.color
-				: DEFAULT_COLORS[index % DEFAULT_COLORS.length];
+	//NOTE:  Componente BarChart
+	const renderBarChart = () => (
+		<BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+			<CartesianGrid strokeDasharray='3 3' />
+			<XAxis dataKey={dataKey} tick={shouldHideTicks ? false : undefined} />
+			<YAxis />
+			<Tooltip content={<CustomTooltip active={false} payload={[]} label='' />} />
+			{legend && <Legend />}
+			{valueKeys.map((key, index) => (
+				<Bar key={index} dataKey={key} fill={getColor(key, index)}>
+					{data.map((entry, idx) => (
+						<Cell key={`cell-${idx}`} fill={getColor(entry[dataKey], idx)} />
+					))}
+				</Bar>
+			))}
+		</BarChart>
+	);
+
+	//NOTE:  Componente PieChart
+	const renderPieChart = () => (
+		<PieChart>
+			<Pie
+				dataKey='cantActividades'
+				data={data}
+				cx='50%'
+				cy='50%'
+				labelLine={false}
+				outerRadius={100}
+				fill='#8884d8'
+				label={renderCustomizedLabel}
+				nameKey={dataKey}
+			>
+				{data.map((entry, index) => (
+					<Cell key={`cell-${index}`} fill={getColor(entry[dataKey], index)} />
+				))}
+			</Pie>
+			<Tooltip />
+			{legend && <Legend />}
+		</PieChart>
+	);
+
+	const renderChart = () => {
+		switch (type) {
+			case 'line':
+				return renderLineChart();
+			case 'bar':
+				return renderBarChart();
+			case 'pie':
+				return renderPieChart();
+
 		}
-		return DEFAULT_COLORS[index % DEFAULT_COLORS.length];
 	};
 
-	switch (type) {
-		case 'line':
-			return (
-				<ResponsiveContainer width='100%' height='100%' className='border rounded mt-2 bg-white'>
-					<LineChart data={data}>
-						<CartesianGrid strokeDasharray='3 3' />
-						<XAxis dataKey={dataKey} tick={shouldHideTicks ? false : undefined} />
-						<YAxis />
-						<Tooltip content={<CustomTooltip active={false} payload={[]} label='' />} />
-						{legend && <Legend />}
-						{valueKeys.map((key, index) => (
-							<Line key={index} type='monotone' dataKey={key} stroke={getColor(key, index)} />
-						))}
-					</LineChart>
-				</ResponsiveContainer>
-			);
-		case 'bar':
-			return (
-				<ResponsiveContainer width='100%' height='100%' className='border rounded mt-2 bg-white'>
-					<BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-						<CartesianGrid strokeDasharray='3 3' />
-						<XAxis dataKey={dataKey} tick={shouldHideTicks ? false : undefined} />
-						<YAxis />
-						<Tooltip content={<CustomTooltip active={false} payload={[]} label='' />} />
-						{legend && <Legend />}
-						{valueKeys.map((key, index) => (
-							<Bar key={index} dataKey={key} fill={getColor(key, index)}>
-								{data.map((entry, idx) => (
-									<Cell key={`cell-${idx}`} fill={getColor(entry[dataKey], idx)} />
-								))}
-							</Bar>
-						))}
-					</BarChart>
-				</ResponsiveContainer>
-			);
-		case 'pie':
-			return (
-				<ResponsiveContainer width='100%' height='100%' className='border rounded mt-2 bg-white'>
-					<PieChart>
-						<Pie
-							dataKey='cantActividades'
-							data={data}
-							cx='50%'
-							cy='50%'
-							labelLine={false}
-							outerRadius={100}
-							fill='#8884d8'
-							label={renderCustomizedLabel}
-							nameKey={dataKey}
-						>
-							{data.map((entry, index) => (
-								<Cell key={`cell-${index}`} fill={getColor(entry[dataKey], index)} />
-							))}
-						</Pie>
-						<Tooltip />
-						{legend && <Legend />}
-					</PieChart>
-				</ResponsiveContainer>
-			);
-		default:
-			return null;
-	}
+	return (
+		<ResponsiveContainer width='100%' height='100%' className='border rounded bg-white'>
+			{renderChart()}
+		</ResponsiveContainer>
+	);
 };
 
 export default Grafico;

@@ -3,10 +3,10 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { Col, InputGroup, Row } from 'react-bootstrap';
+import { Col, InputGroup} from 'react-bootstrap';
 
 import formData from '@/mocks/activityFormData.json';
 import Swal from 'sweetalert2';
@@ -16,14 +16,16 @@ import useAlert from '@/hooks/useAlert';
 import { cargarDatosActividad, setHayCambios } from '@/redux/actions/activityAction';
 import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import { getListaActividadesPorArea, postActivity } from '@/services/api/private/metas';
-import PlanificationPanel from '@/components/Metas/Panels/PlanificationPanel'
+import PlanificationPanel from '@/components/Metas/Panels/PlanificationPanel';
+import { PanelActivityInfo } from '@/components/Metas/Panels/PanelActivityInfo';
 
 interface Activity {
 	idActividad: number;
 	desc: string;
 }
 
-interface Area {
+interface AreaData {
+	idPrograma: number;
 	idArea: number;
 	nom: string;
 	listaActividades: Actividad[]; // Reemplaza esto con el tipo correcto si es necesario
@@ -31,9 +33,9 @@ interface Area {
 }
 
 export default function ActivityScreen() {
-	const initialAreaValue: Area = localStorage.getItem('currentArea')
-		? (JSON.parse(localStorage.getItem('currentArea')!) as Area) // Usamos ! para decirle a TypeScript que estamos seguros de que localStorage.getItem('currentArea') no será null
-		: { idArea: 0, nom: '', listaActividades: [], anio: '' }; // O proporciona un valor predeterminado adecuado para el tipo Area
+	const initialAreaValue: AreaData = localStorage.getItem('currentArea')
+		? (JSON.parse(localStorage.getItem('currentArea')!) as AreaData) // Usamos ! para decirle a TypeScript que estamos seguros de que localStorage.getItem('currentArea') no será null
+		: { idArea: 0, nom: '', listaActividades: [], anio: '', idPrograma: 0 }; // O proporciona un valor predeterminado adecuado para el tipo Area
 
 	const [show, setShow] = useState(false);
 	const [isLoadingModal, setIsLoadingModal] = useState<boolean>(false);
@@ -45,13 +47,12 @@ export default function ActivityScreen() {
 	const [arrayActivity, setArrayActivity] = useState<Activity[]>([]);
 	const [isLoadingArrayActivity, setIsLoadingArrayActivity] = useState<boolean>(true);
 	const [isPlanificationOpen, setIsPlanificationOpen] = useState(false);
-	const [area, setArea] = useState<Area>(initialAreaValue);
+	const [area, setArea] = useState<AreaData>(initialAreaValue);
 	const [currentFormSelected, setCurrentFormSelected] = useState('');
 	const [searchedActivities, setSearchedActivities] = useState<Activity[]>([]);
 
 	const navigation = useNavigate();
 	const { errorAlert } = useAlert();
-	const location = useLocation();
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { isLoading, hayCambios } = useSelector((state: RootState) => state.actividad);
@@ -283,7 +284,7 @@ export default function ActivityScreen() {
 						<>
 							{/* NOTE: NAVEGACION FORMULARIOS */}
 							{isLoading ? (
-								<></>
+								<LoadingSpinner />
 							) : (
 								<>
 									<h4 className=' text-center m-2'>Formulario</h4>
@@ -326,22 +327,16 @@ export default function ActivityScreen() {
 				{/* NOTE: VISTA AREA - BOTONES PRESUPUESTO */}
 				<Col
 					sm={isPlanificationOpen && !puedeEditar ? '12' : 9}
-					className=' border-2 rounded-3'
+					className=' border-2 rounded-3 h-100'
 					style={{ backgroundColor: '#fefefe' }}
 				>
 					{!isPlanificationOpen && (
-						<Row>
-							<Col className='MenuOptions'>
-								{/* <div className='Options'>Carga de Presupuesto</div> */}
-								<Button disabled>Carga de Presupuesto</Button>
-							</Col>
-							<Col className='MenuOptions'>
-								<Link to={`${location.pathname}/resumen`} style={{ textDecoration: 'none' }}>
-									{/* <div className='Options'>Ver Resumen</div> */}
-									<Button>Ver Resumen</Button>
-								</Link>
-							</Col>
-						</Row>
+						<PanelActivityInfo
+							anio={initialAreaValue.anio}
+							idArea={initialAreaValue.idArea}
+							idPrograma={initialAreaValue.idPrograma}
+							cantidadActividades={arrayActivity.length}
+						/>
 					)}
 
 					{isPlanificationOpen && (
