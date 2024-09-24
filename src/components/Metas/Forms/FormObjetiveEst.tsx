@@ -1,21 +1,24 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { setHayCambios } from '@/redux/actions/activityAction';
-import { ErrorOutline } from '@mui/icons-material';
-import { useGuardarActividad } from '@/hooks/useGuardarActividad';
+import { Actividad } from '@/types/ActivityProps';
+import { useSelector } from 'react-redux'
 
-export default function FormObjetiveEst() {
-	const { activity, hayCambios } = useSelector((state: RootState) => state.actividad);
+interface Props {
+	activity: Actividad;
+	saveData: (data: Partial<Actividad>) => void;
+}
+
+export default function FormObjetiveEst({ activity, saveData }: Props) {
 	const { bases } = useSelector((state: RootState) => state.metas);
-	const { guardarActividad } = useGuardarActividad();
-	const dispatch = useDispatch();
 
 	const [objetivosSeleccionados, setObjetivosSeleccionados] = useState<number[]>(
 		activity.listaObjetivos ?? [],
 	);
+
+	useEffect(() => {
+		saveData({ listaObjetivos: objetivosSeleccionados });
+	}, [objetivosSeleccionados]);
 
 	useEffect(() => {
 		setObjetivosSeleccionados(activity.listaObjetivos ?? []);
@@ -44,19 +47,8 @@ export default function FormObjetiveEst() {
 		});
 	}, []);
 
-	const checkForChanges = useCallback(() => {
-		const cambios =
-			JSON.stringify(activity.listaObjetivos ?? []) !== JSON.stringify(objetivosSeleccionados);
-		console.log(activity.listaObjetivos, objetivosSeleccionados, cambios);
-		dispatch(setHayCambios({ valor: cambios }));
-	}, [activity.listaObjetivos, objetivosSeleccionados, dispatch]);
-
-	useEffect(() => {
-		checkForChanges();
-	}, [objetivosSeleccionados, checkForChanges]);
-
 	return (
-		<div className='d-flex flex-column h-100'>
+		<>
 			<div className='FormObjetivo w-100'>
 				<Form className='FormObj'>
 					<p className='SubtitleObj'>
@@ -75,19 +67,6 @@ export default function FormObjetiveEst() {
 					</div>
 				</Form>
 			</div>
-			<Button
-				variant='success'
-				className='mt-auto mb-3 align-self-center'
-				onClick={() => {
-					guardarActividad({
-						...activity,
-						listaObjetivos: objetivosSeleccionados,
-					});
-				}}
-			>
-				Guardar Actividad
-				{hayCambios && <ErrorOutline style={{ marginLeft: '10px', color: 'yellow' }} />}
-			</Button>
-		</div>
+		</>
 	);
 }
