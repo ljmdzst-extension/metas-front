@@ -120,7 +120,7 @@ export default function FormPeriodo({ activity, saveData }: Props) {
 
 	return (
 		<>
-			<Row className='mt-3 h-100'>
+			<Row >
 				<Col style={{ borderRight: '2px solid #acafb3' }} xs={7}>
 					<h4 className=' text-center mt-2'>Seleccionar Periodo</h4>
 					<p>

@@ -112,7 +112,7 @@ const FormMetas = ({ activity, saveData }: Props) => {
 				onClick={() => {
 					botonAgregarMeta();
 				}}
-				className='my-4 ms-auto me'
+				className='d-flex align-items-center my-2 ms-auto '
 			>
 				Agregar
 				<AddBoxRoundedIcon className=' ms-2' />

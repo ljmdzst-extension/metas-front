@@ -49,7 +49,7 @@ export default function FormPIE({ activity, saveData }: Props) {
 					Plan Institucional Estratégico
 				</a>
 			</p>
-			<div className='ConteinerEje'>
+			<div className='ContainerEje'>
 				<h4 className='TitlePie'>Ejes Transversales</h4>
 				<Form className='FormEje'>
 					{/* <p className='SubtitlePie'>
@@ -68,7 +68,7 @@ export default function FormPIE({ activity, saveData }: Props) {
 					</div>
 				</Form>
 			</div>
-			<div className='ConteinerPlan'>
+			<div className='ContainerPlan'>
 				<h4 className='TitlePie'>Plan Institucional</h4>
 				<Form className='FormPlan'>
 					{/* <p className='SubtitlePie'>

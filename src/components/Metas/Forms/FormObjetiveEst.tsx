@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { RootState } from '@/redux/store';
 import { Actividad } from '@/types/ActivityProps';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 
 interface Props {
 	activity: Actividad;
@@ -49,24 +49,22 @@ export default function FormObjetiveEst({ activity, saveData }: Props) {
 
 	return (
 		<>
-			<div className='FormObjetivo w-100'>
-				<Form className='FormObj'>
-					<p className='SubtitleObj'>
-						<span>Seleccione el/los objetivo/s estratégico/s vinculado/s a la actividad :</span>
-					</p>
-					<div className='Obj'>
-						{bases?.listaObjetivos?.slice(0, 4).map((objetivo) => (
-							<Form.Check
-								id={objetivo.idObjetivo.toString()}
-								label={objetivo.nom}
-								key={objetivo.idObjetivo}
-								checked={objetivosSeleccionados.includes(objetivo.idObjetivo)}
-								onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
-							/>
-						))}
-					</div>
-				</Form>
-			</div>
+			<Form>
+				<p className='fw-bold fs-6 mb-1'>
+					<span>Seleccione el/los objetivo/s estratégico/s vinculado/s a la actividad :</span>
+				</p>
+				<div>
+					{bases?.listaObjetivos?.slice(0, 4).map((objetivo) => (
+						<Form.Check
+							id={objetivo.idObjetivo.toString()}
+							label={objetivo.nom}
+							key={objetivo.idObjetivo}
+							checked={objetivosSeleccionados.includes(objetivo.idObjetivo)}
+							onChange={() => handleSeleccionarObjetivo(objetivo.idObjetivo)}
+						/>
+					))}
+				</div>
+			</Form>
 		</>
 	);
 }
