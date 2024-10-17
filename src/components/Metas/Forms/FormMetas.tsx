@@ -254,7 +254,7 @@ const FormMetas = ({ activity, saveData }: Props) => {
 					</Form.Select>
 				</Modal.Body>
 				<Modal.Footer>
-					<button className='btn btn-primary' onClick={guardarBotonModal}>
+					<button className='btn btn-primary-custom' onClick={guardarBotonModal}>
 						Guardar
 					</button>
 					<button className='btn btn-danger' onClick={closeModal}>

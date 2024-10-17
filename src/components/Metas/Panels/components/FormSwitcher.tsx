@@ -11,7 +11,7 @@ import {
 } from '../../Forms';
 import { AppDispatch, RootState } from '@/redux/store';
 import { useGuardarActividad } from '@/hooks/useGuardarActividad';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { setHayCambios } from '@/redux/actions/activityAction';
 import FormContainer from '../../Forms/FormContainer';
 import { Actividad } from '@/types/ActivityProps';
@@ -36,6 +36,11 @@ const FormSwitcher = ({ indexForm }: FormSwitcherProps) => {
 	const { activity } = useSelector((state: RootState) => state.actividad);
 	const { guardarActividad } = useGuardarActividad();
 	const [formData, setFormData] = useState<Actividad>(activity);
+
+	useEffect(() => {
+		setFormData(activity);
+		dispatch(setHayCambios({ valor: false }));
+	}, [activity, dispatch, indexForm]);
 
 	const modifyFormData = (updatedFields: Partial<Actividad>) => {
 		setFormData((prevData) => {

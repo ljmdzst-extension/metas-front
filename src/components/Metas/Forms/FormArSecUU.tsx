@@ -103,7 +103,7 @@ export default function FormArSecUU({ activity, saveData }: Props) {
 
 	return (
 		<>
-			<Row>
+			<Row className=' mb-3'>
 				<Col>
 					<div className='Areas'>
 						<h5>Áreas internas de la secretaría</h5>
