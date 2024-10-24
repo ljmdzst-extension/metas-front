@@ -31,7 +31,7 @@ const CommonTitle: React.FC<TitleProps> = ({
 
 	const sizeClass = sizeClassMap[size as keyof typeof sizeClassMap] || '';
 
-	const styles = {
+	const styles: React.CSSProperties = {
 		color: color,
 		textDecoration: underline ? 'underline' : 'none',
 		fontWeight: bold ? 'bold' : 'normal',

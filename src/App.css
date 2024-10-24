@@ -10,6 +10,10 @@
   /* Color principal personalizado */
   --bs-primary: #08443c;
   --bs-primary-rgb: 8, 68, 60;
+
+  /* Color secundario personalizado (Variante de verde) */
+  --bs-secondary: #256d64;
+  --bs-secondary-rgb: 37, 109, 100;
   
   /* Texto blanco para elementos primarios */
   --bs-primary-text: #ffffff;
@@ -22,9 +26,6 @@
   --bs-btn-primary-hover-border-color: #06332b;
   --bs-btn-primary-focus-shadow-rgb: 8, 68, 60;
 
-  /* Color secundario personalizado (Variante de verde) */
-  --bs-secondary: #256d64;
-  --bs-secondary-rgb: 37, 109, 100;
 
 	/* Fondo principal */
 	--bs-principal-background: #d6e9e6;
@@ -125,6 +126,17 @@
 .btn-secondary:disabled {
   background-color: #cccccc; 
   border-color: #cccccc;
+}
+
+.list-item-hover {
+    background-color: var(--bs-secondary); /* Default background color */
+    color: var(--bs-primary-text); /* Default text color */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.list-item-hover:hover {
+    background-color: var(--bs-primary); /* Background color on hover */
+    color: var(--bs-primary-text); /* Text color on hover */
 }
 
 

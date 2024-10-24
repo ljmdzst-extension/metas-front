@@ -4,13 +4,6 @@ import { ArrowBack } from '@mui/icons-material';
 type ActivityHeaderProps = {
 	name: string;
 	closePanelsFunction: () => void;
-	// hayCambios: boolean;
-	// isFormOpen: boolean;
-	// closePlanification: () => void;
-	// cleanFormSelected: () => void;
-	// handleModalShow: () => Promise<boolean>;
-	// setIsFormOpen: (open: boolean) => void;
-	// setIndexForm: (index: string) => void;
 };
 
 const ActivityHeader = ({ name, closePanelsFunction }: ActivityHeaderProps) => {

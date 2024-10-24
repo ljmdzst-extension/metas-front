@@ -5,7 +5,8 @@ import { InputGroup, Form, Button } from 'react-bootstrap';
 import { Actividad } from '@/types/ActivityProps';
 import { getAreasResumen } from '@/services/api/private/metas';
 import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
-import ElementoResumen from '@/components/Metas/DataRender/ElementoResumen'
+import ElementoResumen from '@/components/Metas/DataRender/ElementoResumen';
+import CommonTitle from '@/components/Common/Text/CommonTitle';
 
 interface Area {
 	idArea: number;
@@ -74,7 +75,11 @@ const ResumenAreaScreen = () => {
 			style={{ backgroundColor: '#fefefe' }}
 		>
 			<div className=' d-flex justify-content-between align-items-center m-2'>
-				<h3 className=' text-uppercase text-center '>Lista de Actividades</h3>
+				{/* <h3 className=' text-uppercase text-center '>Lista de Actividades</h3>
+				 */}
+				<CommonTitle underline bold textAlign='center'>
+					Lista de Actividades
+				</CommonTitle>
 				<ArrowBack className=' cursor-pointer' onClick={() => navigate(-1)} />
 			</div>
 			<InputGroup className=' w-50 m-2'>

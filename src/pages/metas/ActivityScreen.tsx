@@ -230,7 +230,13 @@ export default function ActivityScreen() {
 								<LoadingSpinner />
 							) : (
 								<div className=' d-flex flex-column h-100 p-2 '>
-									<CommonTitle bold underline size='small' textAlign='center'>
+									<CommonTitle
+										bold
+										underline
+										size='small'
+										textAlign='center'
+										color='var(--bs-secondary)'
+									>
 										Listado de Actividades
 									</CommonTitle>
 
@@ -246,14 +252,13 @@ export default function ActivityScreen() {
 											<Search />
 										</InputGroup.Text>
 									</InputGroup>
-									<ListGroup className=' mb-2 overflow-y-auto custom-scrollbar '>
+									<ListGroup className=' mb-2 overflow-y-auto custom-scrollbar pe-2 '>
 										{(searchedActivities.length > 0 ? searchedActivities : arrayActivity).map(
 											(item, index) => (
 												<ListGroup.Item
 													action
-													variant='secondary'
 													title={item.desc}
-													className='mx-auto my-1 rounded d-flex align-items-center '
+													className={`text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center list-item-hover`}
 													key={index}
 													onClick={() => {
 														handleButtonClick(item.idActividad);
@@ -304,11 +309,9 @@ export default function ActivityScreen() {
 											<ListGroup.Item
 												action
 												className={`text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center ${
-													hayCambios && currentFormSelected === item.index
-														? 'bg-warning text-dark' // bg-warning viene con texto oscuro
-														: currentFormSelected === item.index
-														? 'bg-primary text-light' // Texto blanco para bg-primary
-														: 'bg-secondary text-light' // Texto blanco para bg-secondary
+													currentFormSelected === item.index
+														? 'bg-primary text-light'
+														: 'bg-secondary text-light'
 												}`}
 												title={item.Title}
 												key={index}

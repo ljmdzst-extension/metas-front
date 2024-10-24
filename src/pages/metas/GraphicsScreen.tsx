@@ -63,7 +63,6 @@ const GraphicsScreen = () => {
 					}}
 				/>
 			</div>
-
 			<div className='d-flex justify-content-center align-items-center m-2'>
 				<label htmlFor='year-select'>Selecciona el año: </label>
 				<select id='year-select' value={year} onChange={handleYearChange}>
@@ -119,21 +118,24 @@ const GraphicsScreen = () => {
 									maxWidth: '100%',
 								}}
 							>
-								<CommonTitle padding=".2rem" size='small' textAlign='center' underline color='white'>
+								<CommonTitle
+									padding='.2rem'
+									size='small'
+									textAlign='center'
+									underline
+									color='white'
+								>
 									{item.title}
 								</CommonTitle>
-								{isLoading ? (
-									<LoadingSpinner />
-								) : (
-									<Grafico
-										dataKey={item.dataKey}
-										data={item.data}
-										type={item.type}
-										valueKeys={['cantActividades']}
-										legend={item.legend}
-										customColors={item.colors}
-									/>
-								)}
+
+								<Grafico
+									dataKey={item.dataKey}
+									data={item.data}
+									type={item.type}
+									valueKeys={['cantActividades']}
+									legend={item.legend}
+									customColors={item.colors}
+								/>
 							</div>
 						</Col>
 					))}

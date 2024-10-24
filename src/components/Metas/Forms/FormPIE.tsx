@@ -17,18 +17,24 @@ export default function FormPIE({ activity, saveData }: Props) {
 		activity?.listaObjetivos ?? [],
 	);
 
+	console.log(objetivosSeleccionados);
+
 	useEffect(() => {
 		saveData({ listaObjetivos: objetivosSeleccionados });
 	}, [objetivosSeleccionados]);
 
 	const handleSeleccionarObjetivo = (idObjetivo: number) => {
 		const objetivoIndex = objetivosSeleccionados.indexOf(idObjetivo);
+		let newSeleccionados: number[];
 		if (objetivoIndex === -1) {
-			setObjetivosSeleccionados([...objetivosSeleccionados, idObjetivo]);
+			newSeleccionados = [...objetivosSeleccionados, idObjetivo];
 		} else {
-			const newSeleccionados = objetivosSeleccionados.filter((id) => id !== idObjetivo);
-			setObjetivosSeleccionados(newSeleccionados);
+			newSeleccionados = objetivosSeleccionados.filter((id) => id !== idObjetivo);
 		}
+
+		newSeleccionados.sort((a, b) => a - b);
+
+		setObjetivosSeleccionados(newSeleccionados);
 	};
 
 	const objetivosDesde21a24 = objetivos?.slice(19, 22);
