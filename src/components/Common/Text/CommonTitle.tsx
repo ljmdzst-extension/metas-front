@@ -9,6 +9,8 @@ interface TitleProps {
 	as?: keyof JSX.IntrinsicElements;
 	truncate?: boolean;
 	padding?: string;
+	margin?: string; // Nueva prop para márgenes
+	className?: string; // Clase CSS adicional opcional
 	children: React.ReactNode;
 }
 
@@ -21,6 +23,8 @@ const CommonTitle: React.FC<TitleProps> = ({
 	as: Tag = 'h1',
 	truncate = false,
 	padding = '0',
+	margin = '0',  // Valor por defecto para márgenes
+	className = '',  // Valor por defecto para la clase
 	children,
 }) => {
 	const sizeClassMap = {
@@ -32,18 +36,19 @@ const CommonTitle: React.FC<TitleProps> = ({
 	const sizeClass = sizeClassMap[size as keyof typeof sizeClassMap] || '';
 
 	const styles: React.CSSProperties = {
-		color: color,
+		color,
 		textDecoration: underline ? 'underline' : 'none',
 		fontWeight: bold ? 'bold' : 'normal',
 		textAlign: textAlign as 'left' | 'center' | 'right',
 		whiteSpace: truncate ? 'nowrap' : 'normal',
 		overflow: truncate ? 'hidden' : 'visible',
 		textOverflow: truncate ? 'ellipsis' : 'clip',
-		padding: padding,
+		padding,
+		margin, // Aplicar márgenes opcionales
 	};
 
 	return (
-		<Tag className={sizeClass} style={styles}>
+		<Tag className={`${sizeClass} ${className}`} style={styles}>
 			{children}
 		</Tag>
 	);

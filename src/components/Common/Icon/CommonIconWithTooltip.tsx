@@ -4,9 +4,11 @@ interface Props {
 	tooltipText: string;
 	Icon: React.ElementType;
 	style?: React.CSSProperties;
+	onClick?: () => void; 
+	forcePointer?: boolean; 
 }
 
-const CommonIconWithTooltip: React.FC<Props> = ({ tooltipText, Icon, style }) => {
+const CommonIconWithTooltip: React.FC<Props> = ({ tooltipText, Icon, style, onClick, forcePointer = false }) => {
 	const renderTooltip = (props: any) => (
 		<Tooltip id='button-tooltip' {...props}>
 			{tooltipText}
@@ -14,13 +16,16 @@ const CommonIconWithTooltip: React.FC<Props> = ({ tooltipText, Icon, style }) =>
 	);
 
 	return (
-		<>
-			<OverlayTrigger placement='top' overlay={renderTooltip}>
-				<span>
-					<Icon style={style} /> 
-				</span>
-			</OverlayTrigger>
-		</>
+		<OverlayTrigger placement='top' overlay={renderTooltip}>
+			<span
+				style={{
+					cursor: onClick || forcePointer ? 'pointer' : 'default',
+				}}
+				onClick={onClick}
+			>
+				<Icon style={style} />
+			</span>
+		</OverlayTrigger>
 	);
 };
 

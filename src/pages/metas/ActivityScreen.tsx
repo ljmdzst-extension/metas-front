@@ -19,6 +19,7 @@ import { getListaActividadesPorArea, postActivity } from '@/services/api/private
 import PlanificationPanel from '@/components/Metas/Panels/PlanificationPanel';
 import { PanelActivityInfo } from '@/components/Metas/Panels/PanelActivityInfo';
 import CommonTitle from '@/components/Common/Text/CommonTitle';
+import CommonIconWithTooltip from '@/components/Common/Icon/CommonIconWithTooltip';
 
 interface Activity {
 	idActividad: number;
@@ -199,20 +200,27 @@ export default function ActivityScreen() {
 				</Modal.Body>
 			</Modal>
 			<div
-				className=' d-flex align-items-center justify-content-between border rounded-3 p-1 pb-0 px-2  my-1  '
+				className=' d-flex align-items-center justify-content-between border rounded-3 p-1 my-1'
 				style={{ backgroundColor: '#fefefe' }}
 			>
 				<CommonTitle underline bold>
 					{area?.nom}
 				</CommonTitle>
-				<ArrowBack
-					fontSize='large'
-					className={`rounded ${isPlanificationOpen ? 'd-none' : ''}`}
-					style={{ background: '#0a5d52', color: 'white' }}
-					onClick={() => {
-						navigation('/gestion/metas');
-					}}
-				/>
+				<div className={`rounded ${isPlanificationOpen ? 'd-none' : ''}`}>
+					<CommonIconWithTooltip
+						tooltipText='Atras'
+						Icon={ArrowBack}
+						onClick={() => {
+							navigation('/gestion/metas');
+						}}
+						style={{
+							background: '#0a5d52',
+							color: 'white',
+							borderRadius: '.3rem',
+							fontSize: '34px',
+						}}
+					/>
+				</div>
 			</div>
 
 			<div className={` h-100 d-flex justify-content-around gap-1 mx-3 `}>
@@ -240,7 +248,7 @@ export default function ActivityScreen() {
 										Listado de Actividades
 									</CommonTitle>
 
-									<InputGroup className='mb-3' size='sm'>
+									<InputGroup className='my-2' size='sm'>
 										<Form.Control
 											onChange={onSearchChange}
 											size='sm'

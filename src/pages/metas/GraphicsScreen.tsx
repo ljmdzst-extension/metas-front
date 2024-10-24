@@ -4,7 +4,6 @@ import Grafico from '@/components/Common/Graficos/Grafico';
 import { useGraphics } from '@/hooks/useGraphics';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
-import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 import CommonTitle from '@/components/Common/Text/CommonTitle';
 
 const currentYear = new Date().getFullYear();
@@ -36,7 +35,7 @@ const UACOLORS = [
 type ChartType = 'line' | 'bar' | 'pie';
 const GraphicsScreen = () => {
 	const [year, setYear] = useState(currentYear);
-	const { graficoEjes, graficoObjEst, graficoLy, graficoUUAA, isLoading } = useGraphics({ year });
+	const { graficoEjes, graficoObjEst, graficoLy, graficoUUAA } = useGraphics({ year });
 
 	const navigation = useNavigate();
 
@@ -73,7 +72,7 @@ const GraphicsScreen = () => {
 					))}
 				</select>
 			</div>
-			<Container fluid className='h-100 overflow-y-scroll overflow-x-hidden custom-scrollbar'>
+			<Container fluid className='h-100 overflow-y-scroll overflow-x-hidden custom-scrollbar px-5'>
 				<Row style={{ height: '90%', maxHeight: '600px' }} gap={2}>
 					{[
 						{
@@ -114,7 +113,7 @@ const GraphicsScreen = () => {
 								className='d-flex flex-column border rounded w-100 h-100 p-2 text-center '
 								style={{
 									backgroundColor: 'var(--bs-secondary)',
-									minHeight: '400px',
+									minHeight: '350px',
 									maxWidth: '100%',
 								}}
 							>
@@ -135,6 +134,7 @@ const GraphicsScreen = () => {
 									valueKeys={['cantActividades']}
 									legend={item.legend}
 									customColors={item.colors}
+									
 								/>
 							</div>
 						</Col>
