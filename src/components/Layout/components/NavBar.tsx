@@ -48,6 +48,9 @@ export default function NavBar() {
 							<Nav.Link href='/gestion'>
 								<Button variant='outline-light'>Inicio</Button>
 							</Nav.Link>
+							<Nav.Link href='/gestion/user'>
+								<Button variant='outline-light'>Usuario</Button>
+							</Nav.Link>
 							{isAdmin ? (
 								<Nav.Link href='/gestion/admin'>
 									<Button variant='outline-light'>Admin</Button>
