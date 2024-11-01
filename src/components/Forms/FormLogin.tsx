@@ -70,11 +70,11 @@ const FormLogin = () => {
 		}
 	};
 
-	const saveUserData = ({ token, nom, ape, permisos, categorias, areas }: UserData) => {
+	const saveUserData = ({ idUsuario, token, nom, ape, permisos, categorias, areas }: UserData) => {
 		const expiryDate = new Date().getTime() + TOKEN_LIFETIME_MS;
 		localStorage.setItem('token', token);
 		localStorage.setItem('tokenExpiry', expiryDate.toString());
-		localStorage.setItem('user', `${nom} ${ape}`);
+		localStorage.setItem('user', JSON.stringify({ userId: idUsuario, userName: `${nom} ${ape}` }));
 		localStorage.setItem('permisos', JSON.stringify(permisos));
 		localStorage.setItem('categorias', JSON.stringify(categorias));
 		localStorage.setItem('areas', JSON.stringify(areas));
