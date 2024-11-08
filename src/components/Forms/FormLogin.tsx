@@ -103,19 +103,19 @@ const FormLogin = () => {
 				rules={validationRules.password}
 			/>
 
-			<div className='d-flex justify-content-center mt-2'>
+			<div className='d-flex justify-content-center mt-3'>
 				<Button type='submit' className='btn btn-primary-custom' disabled={loading}>
 					{loading ? 'Ingresando...' : 'Ingresar'}
 				</Button>
 			</div>
 
-			<div>
-				<p className='mt-4'>
+			<div className=' mt-3'>
+				{/* <p>
 					¿No tienes cuenta?{' '}
 					<Link to='/register' style={{ color: '#08473f' }} className='text-decoration-underline'>
 						Registrate
 					</Link>
-				</p>
+				</p> */}
 
 				<p>
 					Si olvidó su contraseña, comuníquese con Mesa de Ayuda{' '}
