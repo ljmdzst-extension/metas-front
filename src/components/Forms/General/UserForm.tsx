@@ -66,7 +66,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, initialValues }) => {
 	const { control, handleSubmit } = useForm<UserData>({ defaultValues: initialValues });
 
 	const DocumentInputGroup = () => (
-		<Row className='mb-3'>
+		<Row className='mb-2'>
 			<Col md={6}>
 				<Form.Label>Documento</Form.Label>
 				<InputGroup>
@@ -102,9 +102,9 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, initialValues }) => {
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)} noValidate>
 			<DocumentInputGroup />
-			<Row className='mb-3'>
+			<Row>
 				{fieldsConfig.map(({ name, label, rules, disabled }, index) => (
-					<Col md={6} key={index} className='mb-3'>
+					<Col md={6} key={index}>
 						<FormInput
 							control={control}
 							name={name}
@@ -115,7 +115,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSubmit, initialValues }) => {
 					</Col>
 				))}
 			</Row>
-			<div className='d-flex justify-content-center mt-4'>
+			<div className='d-flex justify-content-center mt-2'>
 				<Button type='submit' className='btn btn-primary-custom'>
 					Actualizar
 				</Button>
