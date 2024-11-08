@@ -597,57 +597,6 @@ input.form-check-input:checked {
 	border-color: #002b4e;
 }
 
-/*FormArSecUU*/
-.FormArSecuu {
-	width: 100%;
-	min-height: 90%;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	padding: 10px;
-	gap: 20px;
-}
-.Areas {
-	width: 100%;
-	min-height: 100px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	background-color: rgb(222, 222, 222);
-	padding-top: 10px;
-	border-radius: 5px;
-}
-.Secretarias {
-	width: 100%;
-	min-height: 100px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	background-color: rgb(222, 222, 222);
-	padding-top: 10px;
-	border-radius: 5px;
-}
-.UUAA {
-	width: 100%;
-	min-height: 100px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	background-color: rgb(222, 222, 222);
-	padding-top: 10px;
-	border-radius: 5px;
-}
-
-.SelectContainers {
-	width: 90%;
-	min-height: 150px;
-}
-
-.parrafo {
-	align-self: flex-start;
-	margin-bottom: 5px;
-}
-
 /*Form Metas*/
 .FormMetas {
 	width: 100%;

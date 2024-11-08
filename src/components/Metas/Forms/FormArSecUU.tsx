@@ -3,7 +3,7 @@ import makeAnimated from 'react-select/animated';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 import { ListaProgramasSIPPE } from '@/types/BasesProps';
 import { Actividad } from '@/types/ActivityProps';
 
@@ -101,92 +101,67 @@ export default function FormArSecUU({ activity, saveData }: Props) {
 		}
 	}, [bases, error]);
 
+	const fieldsConfig = [
+		{
+			id: 'relacionSeleccionadas1',
+			label: 'Áreas internas de la secretaría',
+			placeholder: 'seleccionar',
+			options: filtrarAreas('interna_extensión'),
+			value: relacionSeleccionadas1,
+			onChange: setRelacionSeleccionadas1,
+		},
+		{
+			id: 'relacionSeleccionadas2',
+			label: 'Secretarías',
+			placeholder: 'seleccionar',
+			options: filtrarAreas('interna_unl'),
+			value: relacionSeleccionadas2,
+			onChange: setRelacionSeleccionadas2,
+		},
+		{
+			id: 'relacionSeleccionadas3',
+			label: 'Unidades Académicas involucradas',
+			placeholder: 'seleccionar',
+			options: filtrarAreas('U.A.'),
+			value: relacionSeleccionadas3,
+			onChange: setRelacionSeleccionadas3,
+		},
+		{
+			id: 'sippeSeleccionadas',
+			label: 'Programas de Extensión',
+			placeholder: 'seleccionar',
+			options: formatearSippes(),
+			value: sippeSeleccionadas,
+			onChange: setSippeSeleccionadas,
+		},
+	];
+
 	return (
-		<>
-			<Row className=' mb-3'>
-				<Col>
-					<div className='Areas'>
-						<h5>Áreas internas de la secretaría</h5>
-						<div className='SelectContainers'>
-							<p className='parrafo'>Seleccione según corresponda:</p>
-							<Select
-								styles={{
-									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
-								}}
-								closeMenuOnSelect={false}
-								components={animatedComponents}
-								isMulti
-								options={filtrarAreas('interna_extensión')}
-								placeholder={'seleccionar'}
-								value={relacionSeleccionadas1}
-								onChange={(selected) => setRelacionSeleccionadas1(selected as Option[])}
-							/>
-						</div>
-					</div>
-				</Col>
-				<Col>
-					<div className='Secretarias'>
-						<h5>Secretarías</h5>
-						<div className='SelectContainers'>
-							<p className='parrafo'>Seleccione según corresponda:</p>
-							<Select
-								closeMenuOnSelect={false}
-								components={animatedComponents}
-								isMulti
-								options={filtrarAreas('interna_unl')}
-								placeholder={'seleccionar'}
-								value={relacionSeleccionadas2}
-								onChange={(selected) => setRelacionSeleccionadas2(selected as Option[])}
-								styles={{
-									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
-								}}
-							/>
-						</div>
-					</div>
-				</Col>
-			</Row>
+		<Container fluid>
 			<Row>
-				<Col>
-					<div className='UUAA'>
-						<h5>Unidades Académicas involucradas</h5>
-						<div className='SelectContainers'>
-							<p className='parrafo'>Seleccione según corresponda:</p>
-							<Select
-								closeMenuOnSelect={false}
-								components={animatedComponents}
-								isMulti
-								options={filtrarAreas('U.A.')}
-								placeholder={'seleccionar'}
-								value={relacionSeleccionadas3}
-								onChange={(selected) => setRelacionSeleccionadas3(selected as Option[])}
-								styles={{
-									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
-								}}
-							/>
+				{fieldsConfig.map((field) => (
+					<Col md={6} key={field.id} className=' pb-2'>
+						<div className=' p-1 d-flex flex-column align-items-center border rounded bg-color-slate gap-1 p-1'>
+							<h5>{field.label}</h5>
+							<div style={{ width: '90%', minHeight: '140px' }}>
+								<p className=' align-self-start mb-1'>Seleccione según corresponda:</p>
+								<Select
+									styles={{
+										valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
+									}}
+									closeMenuOnSelect={false}
+									components={animatedComponents}
+									isMulti
+									options={field.options}
+									placeholder={field.placeholder}
+									value={field.value}
+									onChange={(selected) => field.onChange(selected as Option[])}
+								/>
+							</div>
 						</div>
-					</div>
-				</Col>
-				<Col>
-					<div className='UUAA'>
-						<h5>Programas de Extensión</h5>
-						<div className='SelectContainers'>
-							<p className='parrafo'>Seleccione según corresponda:</p>
-							<Select
-								closeMenuOnSelect={false}
-								components={animatedComponents}
-								isMulti
-								options={formatearSippes()}
-								placeholder={'seleccionar'}
-								value={sippeSeleccionadas}
-								onChange={(selected) => setSippeSeleccionadas(selected as Option[])}
-								styles={{
-									valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
-								}}
-							/>
-						</div>
-					</div>
-				</Col>
+					</Col>
+				))}
 			</Row>
-		</>
+		</Container>
 	);
 }
