@@ -261,29 +261,35 @@ export default function ActivityScreen() {
 										</InputGroup.Text>
 									</InputGroup>
 									<ListGroup className=' mb-2 overflow-y-auto custom-scrollbar pe-2 '>
-										{(searchedActivities.length > 0 ? searchedActivities : arrayActivity).map(
-											(item, index) => (
-												<ListGroup.Item
-													action
-													title={item.desc}
-													className={`text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center list-item-hover`}
-													key={index}
-													onClick={() => {
-														handleButtonClick(item.idActividad);
-													}}
-												>
-													<span
-														style={{
-															textOverflow: 'ellipsis',
-															overflow: 'hidden',
-															fontWeight: 'normal',
-															whiteSpace: 'nowrap',
+										{arrayActivity === undefined ? (
+											<ListGroup.Item className='text-center text-muted'>
+												No hay actividades disponibles.
+											</ListGroup.Item>
+										) : (
+											(searchedActivities.length > 0 ? searchedActivities : arrayActivity).map(
+												(item, index) => (
+													<ListGroup.Item
+														action
+														title={item.desc}
+														className='text-break mx-auto my-1 rounded d-flex justify-content-center align-items-center list-item-hover'
+														key={index}
+														onClick={() => {
+															handleButtonClick(item.idActividad);
 														}}
 													>
-														{item.desc}
-													</span>
-												</ListGroup.Item>
-											),
+														<span
+															style={{
+																textOverflow: 'ellipsis',
+																overflow: 'hidden',
+																fontWeight: 'normal',
+																whiteSpace: 'nowrap',
+															}}
+														>
+															{item.desc}
+														</span>
+													</ListGroup.Item>
+												),
+											)
 										)}
 									</ListGroup>
 									<Button
