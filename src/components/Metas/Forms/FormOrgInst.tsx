@@ -183,8 +183,8 @@ export default function FormOrgInst( { activity, saveData }: Props ) {
 						Agregar
 					</Button>
 				</Form>
-				<div className='ListaInstituciones'>
-					<div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+				<>
+					<div style={{ maxHeight: '250px', overflowY: 'auto' }}>
 						<Table striped bordered hover>
 							<thead>
 								<tr>
@@ -225,7 +225,7 @@ export default function FormOrgInst( { activity, saveData }: Props ) {
 							</tbody>
 						</Table>
 					</div>
-				</div>
+				</>
 			</>
 
 

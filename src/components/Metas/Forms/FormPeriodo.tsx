@@ -127,7 +127,7 @@ export default function FormPeriodo({ activity, saveData }: Props) {
 						Período que abarca desde el inicio de la planificación hasta la fecha de realización de
 						la actividad.
 					</p>
-					<div className='ConteinerRange gap-2'>
+					<div className=' d-flex justify-content-around p-4 gap-2'>
 						<div>
 							<p>Inicio:</p>
 							<DatePicker
@@ -192,10 +192,10 @@ export default function FormPeriodo({ activity, saveData }: Props) {
 							disabled={!rangeStart || !rangeEnd}
 						/>
 					</div>
-					<div className='ConteinerDaysSelected m-2 ms-0'>
+					<div className=' w-75 m-2 ms-0'>
 						<span>Fechas Seleccionadas:</span>
 						<div
-							className='ConteinerFechas custom-scrollbar'
+							className=' d-flex flex-column custom-scrollbar'
 							style={{ maxHeight: '160px', overflowY: 'auto' }}
 						>
 							{indexDates.map((date, index) => (

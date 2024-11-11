@@ -67,7 +67,7 @@ export default function PanelProgramas() {
 				<Card style={{ width: '18rem' }}>
 					<div className='imgCard'>
 						<h1>
-							<span className='fontYear'>
+							<span className=' text-white'>
 								<YearSelector year={year} onYearChange={handleYearChange} />
 							</span>
 						</h1>

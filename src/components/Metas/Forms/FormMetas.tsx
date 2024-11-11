@@ -173,7 +173,6 @@ const FormMetas = ({ activity, saveData }: Props) => {
 						<Form.Control
 							as='textarea'
 							name='descripcion'
-							className='ParrafoDescripcion'
 							placeholder={'Meta/resultado esperado'}
 							value={nuevaMeta.descripcion ?? ''}
 							onChange={(e) => {
@@ -193,7 +192,6 @@ const FormMetas = ({ activity, saveData }: Props) => {
 							as='textarea'
 							rows={4}
 							name='editResultado'
-							className='ParrafoResultado'
 							placeholder={'Resultado alcanzado'}
 							value={nuevaMeta.resultado ?? ''}
 							onChange={(e) => {
@@ -213,7 +211,6 @@ const FormMetas = ({ activity, saveData }: Props) => {
 							as='textarea'
 							rows={4}
 							name='editObservaciones'
-							className='ParrafoObservaciones'
 							placeholder={
 								'Observaciones (puede incorporarse cualquier detalle o información adicional que complemente los resultados alcanzados. También pueden ingresarse links a documentos o recursos anexo).'
 							}
@@ -232,7 +229,7 @@ const FormMetas = ({ activity, saveData }: Props) => {
 					</Form.Group>
 					<Form.Select
 						name='valoracion'
-						className={`ParrafoObservaciones ${
+						className={`${
 							nuevaMeta.valoracion === -1 ? 'placeholder-option' : ''
 						}}`}
 						value={nuevaMeta.valoracion ?? -1}
