@@ -119,8 +119,7 @@ const ResumenAreaScreen = () => {
 
 			{/* Lista de actividades */}
 			<div
-				className='list-group mx-auto custom-scrollbar overflow-y-auto gap-4'
-				style={{ height: '100%' }}
+				className=' list-group mx-auto custom-scrollbar overflow-y-auto gap-4 w-100'
 			>
 				{data.map((el, index) => (
 					<ElementoResumen element={el} key={el.desc + '-' + index} />
