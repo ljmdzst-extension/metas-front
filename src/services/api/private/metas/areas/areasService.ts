@@ -9,8 +9,9 @@ export const getAreasResumen = async (
 	year: string,
 	offset: string,
 	limit: string,
+	keyword?: string,
 ): Promise<FetchActividades> => {
-	const url = `${basePath}/resumen/${id}/${year}/${offset}/${limit}`;
+	const url = `${basePath}/resumen/${id}/${year}/${offset}/${limit}${keyword ? `/${keyword}` : ''}`;
 
 	try {
 		const response = await privateAxiosInstance.get<FetchActividades>(url);
@@ -33,7 +34,7 @@ export const getListaActividadesPorArea = async (
 	idArea: string,
 	anio: string,
 ): Promise<FetchListaActividades> => {
-	const url = `${basePath}/${idArea}/actividades/${anio}`;
+	const url = `${basePath}/${idArea}/${anio}`;
 
 	try {
 		const response = await privateAxiosInstance.get<FetchListaActividades>(url);
