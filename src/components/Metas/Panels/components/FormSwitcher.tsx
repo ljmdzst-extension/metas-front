@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { setHayCambios } from '@/redux/actions/activityAction';
 import FormContainer from '../../Forms/FormContainer';
 import { Actividad } from '@/types/ActivityProps';
+import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 
 type FormSwitcherProps = {
 	indexForm: string;
@@ -33,7 +34,7 @@ const FORM_TYPES = {
 
 const FormSwitcher = ({ indexForm }: FormSwitcherProps) => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { activity } = useSelector((state: RootState) => state.actividad);
+	const { activity, isLoading } = useSelector((state: RootState) => state.actividad);
 	const { guardarActividad } = useGuardarActividad();
 	const [formData, setFormData] = useState<Actividad>(activity);
 
@@ -88,7 +89,15 @@ const FormSwitcher = ({ indexForm }: FormSwitcherProps) => {
 			form = null;
 	}
 
-	return <FormContainer handleSave={handleSave}>{form}</FormContainer>;
+	return (
+		<>
+			{isLoading ? (
+				<LoadingSpinner />
+			) : (
+				<FormContainer handleSave={handleSave}>{form}</FormContainer>
+			)}
+		</>
+	);
 };
 
 export default FormSwitcher;

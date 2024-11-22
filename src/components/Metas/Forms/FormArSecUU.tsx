@@ -6,6 +6,7 @@ import { RootState } from '@/redux/store';
 import { Row, Col, Container } from 'react-bootstrap';
 import { ListaProgramasSIPPE } from '@/types/BasesProps';
 import { Actividad } from '@/types/ActivityProps';
+import LoadingSpinner from '@/components/Common/Spinner/LoadingSpinner';
 
 const animatedComponents = makeAnimated();
 
@@ -138,30 +139,34 @@ export default function FormArSecUU({ activity, saveData }: Props) {
 
 	return (
 		<Container fluid>
-			<Row>
-				{fieldsConfig.map((field) => (
-					<Col md={6} key={field.id} className=' pb-2'>
-						<div className=' p-1 d-flex flex-column align-items-center border rounded bg-color-slate gap-1 p-1'>
-							<h5>{field.label}</h5>
-							<div style={{ width: '90%', minHeight: '140px' }}>
-								<p className=' align-self-start mb-1'>Seleccione según corresponda:</p>
-								<Select
-									styles={{
-										valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
-									}}
-									closeMenuOnSelect={false}
-									components={animatedComponents}
-									isMulti
-									options={field.options}
-									placeholder={field.placeholder}
-									value={field.value}
-									onChange={(selected) => field.onChange(selected as Option[])}
-								/>
+			{dataLoaded ? (
+				<Row>
+					{fieldsConfig.map((field) => (
+						<Col md={6} key={field.id} className=' pb-2'>
+							<div className=' p-1 d-flex flex-column align-items-center border rounded bg-color-slate gap-1 p-1'>
+								<h5>{field.label}</h5>
+								<div style={{ width: '90%', minHeight: '140px' }}>
+									<p className=' align-self-start mb-1'>Seleccione según corresponda:</p>
+									<Select
+										styles={{
+											valueContainer: (base) => ({ ...base, maxHeight: 100, overflow: 'auto' }),
+										}}
+										closeMenuOnSelect={false}
+										components={animatedComponents}
+										isMulti
+										options={field.options}
+										placeholder={field.placeholder}
+										value={field.value}
+										onChange={(selected) => field.onChange(selected as Option[])}
+									/>
+								</div>
 							</div>
-						</div>
-					</Col>
-				))}
-			</Row>
+						</Col>
+					))}
+				</Row>
+			) : (
+				<LoadingSpinner />
+			)}
 		</Container>
 	);
 }

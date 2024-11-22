@@ -13,8 +13,6 @@ type FormContainerProps = {
 const FormContainer: React.FC<FormContainerProps> = ({ children, handleSave }) => {
 	const { hayCambios } = useSelector((state: RootState) => state.actividad);
 
-	console.log(hayCambios);
-
 	return (
 		<div className='d-flex flex-column h-100'>
 			<div className='my-2 mx-4'>{children}</div>

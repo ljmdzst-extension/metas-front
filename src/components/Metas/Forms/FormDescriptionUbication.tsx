@@ -74,7 +74,7 @@ const FormDescriptionUbication: React.FC<Props> = ({ activity, saveData }) => {
 		if (!editandoDescripcion) {
 			saveData({ desc: descripcion, listaUbicaciones: ubicaciones });
 		}
-	}, [editandoDescripcion, descripcion, ubicaciones, saveData]);
+	}, [editandoDescripcion, descripcion, ubicaciones]);
 
 	const handleEditDescripcionToggle = () => {
 		if (editandoDescripcion && textLimitError(descripcion, 2000)) return;
